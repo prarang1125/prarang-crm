@@ -34,4 +34,10 @@ class Mcity extends Model
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
+
+    // Define inverse relationship with Mcountry
+    // public function country()
+    // {
+    //     return $this->belongsTo(Mcountry::class, 'country_id', 'id');
+    // }
 }

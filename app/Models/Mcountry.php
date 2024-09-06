@@ -33,4 +33,26 @@ class Mcountry extends Model
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
+
+    // public function regions()
+    // {
+    //     return $this->hasMany(Mregion::class, 'id', 'id');
+    // }
+
+    // public function getGeography()
+    // {
+    //     $countries = Mcountry::select(
+    //         'mcountry.countryCode',
+    //         'mcountry.countryNameInEnglish',
+    //         'mcity.cityCode',
+    //         'mcity.citynameInEnglish',
+    //         'mregion.regionCode',
+    //         'mregion.regionnameInEnglish'
+    //     )
+    //     ->leftJoin('mcity', 'mcountry.id', '=', 'mcity.id')
+    //     ->leftJoin('mregion', 'mcountry.id', '=', 'mregion.id')
+    //     ->get();
+    //     return $countries;
+    // }
+
 }
