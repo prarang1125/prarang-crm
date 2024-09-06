@@ -7,23 +7,6 @@
     </div>
 @endif
 
-@php
-    // Assuming you have access to the role mapping function
-    function getRoleName($roleId) {
-        $roles = [
-            1 => 'Admin',
-            2 => 'Maker',
-            3 => 'Checker',
-            4 => 'Uploader',
-            5 => 'Analytics',
-            6 => 'Analyticsmaker',
-            7 => 'Analyticschecker',
-            8 => 'Dummy',
-        ];
-        return $roles[$roleId] ?? 'Guest'; // Default to 'Guest' if roleId is not found
-    }
-@endphp
-
 @section('content')
 <!--start page wrapper -->
 <div class="page-content">
@@ -71,7 +54,7 @@
                                     <td>{{ $user->firstName }}</td>
                                     <td>{{ $user->lastName }}</td>
                                     <td>{{ $user->emailId }}</td>
-                                    <td>{{ getRoleName($user->roleId) }}</td>
+                                    <td class="text-success">{{ $user->role->roleName }}</td>
                                     <td class="{{ $user->languageId? 'text-success':'text-success' }}">{{ $user->languageId? 'English':'Hindi' }} </td>
 
                                     <td class="{{ $user->isActive? 'text-success':'text-danger' }}">{{ $user->isActive? 'Active':'Deactive' }}

@@ -46,7 +46,7 @@ class AdminController extends Controller
 
     #this method is use for show user listing data
     public function userListing(){
-        $users = Muser::all();
+        $users = Muser::with('role')->get();
         return view('admin.user-listing', compact('users'));
     }
 
