@@ -10,11 +10,10 @@ class UserCity extends Model
     use HasFactory;
 
     protected $table = 'userCity';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'cityId';
     public $timestamps = false;
 
     protected $fillable = [
-        'cityId',
         'cityNameInHindi',
         'cityNameInEnglish',
         'countryId',

@@ -12,6 +12,9 @@
 	<script src="{{ asset('assets/plugins/sparkline-charts/jquery.sparkline.min.js') }}"></script>
 	<script src="{{ asset('assets/plugins/jquery-knob/excanvas.js') }}"></script>
 	<script src="{{ asset('assets/plugins/jquery-knob/jquery.knob.js') }}"></script>
+    <script src="{{ asset('assets/js/ckeditor5_cdn.js') }}"></script>
+    <script src="{{ asset('assets/js/custom/ckeditor.js') }}"></script>
+
 	<script>
 		$(function() {
 			$(".knob").knob();

@@ -15,6 +15,13 @@ class Mrole extends Model
 
     protected $fillable = [
         'roleName',
-        'status'
+        'status',
+        'created_at',
+        'created_by',
+        'updated_at',
+        'updated_by',
     ];
+
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
 }

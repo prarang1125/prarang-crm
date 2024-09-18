@@ -25,8 +25,8 @@
 	<link rel="stylesheet" href="{{ asset('assets/css/semi-dark.css') }}" />
 	<link rel="stylesheet" href="{{ asset('assets/css/header-colors.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/custom/login.css')}}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/custom/ckeditor.css')}}"/>
 	{{-- <title>Prarang Admin Home</title> --}}
-
     <title>@yield('title', 'Login')</title>
 </head>
 <body>

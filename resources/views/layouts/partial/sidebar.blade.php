@@ -47,27 +47,25 @@
                 </li>
                 <li> <a href="{{ url('/admin/user-listing') }}"><i class="bx bx-right-arrow-alt"></i>User</a>
                 </li>
-                <li> <a href="app-chat-box.html"><i class="bx bx-right-arrow-alt"></i>Role</a>
+                <li> <a href="{{ url('/admin/role/role-listing') }}"><i class="bx bx-right-arrow-alt"></i>Role</a>
                 </li>
-                <li> <a href="app-file-manager.html"><i class="bx bx-right-arrow-alt"></i>Language Script</a>
+                <li> <a href="{{ url('/admin/languagescript/languagescript-listing') }}"><i class="bx bx-right-arrow-alt"></i>Language Script</a>
                 </li>
-                <li> <a href="app-contact-list.html"><i class="bx bx-right-arrow-alt"></i>Country</a>
+                <li> <a href="{{ url('/admin/country/country-listing') }}"><i class="bx bx-right-arrow-alt"></i>Country</a>
                 </li>
-                <li> <a href="app-to-do.html"><i class="bx bx-right-arrow-alt"></i>Live City</a>
+                <li> <a href="{{ url('/admin/livecity/live-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>Live City</a>
                 </li>
-                <li> <a href="app-invoice.html"><i class="bx bx-right-arrow-alt"></i>City</a>
+                <li> <a href="{{ url('/admin/scities/scities-listing') }}"><i class="bx bx-right-arrow-alt"></i>City</a>
                 </li>
-                <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Region</a>
+                <li> <a href="{{ url('/admin/region/region-listing') }}"><i class="bx bx-right-arrow-alt"></i>Region</a>
                 </li>
-                <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Tag Category</a>
+                <li> <a href="{{ url('/admin/tagcategory/tag-category-listing') }}"><i class="bx bx-right-arrow-alt"></i>Tag Category</a>
                 </li>
-                <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Tag</a>
+                <li> <a href="{{ url('/admin/tag/tag-listing') }}"><i class="bx bx-right-arrow-alt"></i>Tag</a>
                 </li>
-                <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>User Country</a>
+                <li> <a href="{{ url('/admin/usercountry/user-country-listing') }}"><i class="bx bx-right-arrow-alt"></i>User Country</a>
                 </li>
-                <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>User City</a>
-                </li>
-                <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Upload Excel File</a>
+                <li> <a href="{{ url('/admin/usercity/user-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>User City</a>
                 </li>
                 <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Post</a>
                 </li>
@@ -100,7 +98,7 @@
                 <div class="menu-title">Dashboard</div>
             </a>
             <ul>
-                <li> <a href="{{ url('/admin/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Home</a>
+                <li> <a href="{{ url('/accounts/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Home</a>
                 </li>
                 <li> <a href="dashboard-eCommerce.html"><i class="bx bx-right-arrow-alt"></i>Maker</a>
                 </li>

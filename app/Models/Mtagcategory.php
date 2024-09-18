@@ -10,11 +10,10 @@ class Mtagcategory extends Model
     use HasFactory;
 
     protected $table = 'mtagcategory';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'tagCategoryId';
     public $timestamps = false;
 
     protected $fillable = [
-        'tagCategoryId',
         'tagCategoryInEnglish',
         'tagCategoryInUnicode',
         'isActive',

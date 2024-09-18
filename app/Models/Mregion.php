@@ -10,11 +10,10 @@ class Mregion extends Model
     use HasFactory;
 
     protected $table = 'mregion';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'regionId';
     public $timestamps = false;
 
     protected $fillable = [
-        'regionId',
         'regionCode',
         'regionnameInUnicode',
         'regionnameInEnglish',

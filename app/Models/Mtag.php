@@ -9,12 +9,11 @@ class Mtag extends Model
 {
     use HasFactory;
 
-    protected $tbale = 'mtag';
-    protected $primaryKey = 'id';
+    protected $table = 'mtag';
+    protected $primaryKey = 'tagId';
     public $timestamps = false;
 
-    protected $fillale = [
-        'tagId',
+    protected $fillable = [
         'tagInEnglish',
         'tagInUnicode',
         'tagCategoryId',
@@ -28,4 +27,10 @@ class Mtag extends Model
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
+
+    public function tagcategory()
+    {
+        return $this->belongsTo(Mtagcategory::class, 'tagCategoryId', 'tagCategoryId');
+    }
+
 }

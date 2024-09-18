@@ -70,6 +70,7 @@ class AdminController extends Controller
         ]);
 
         if($validator->passes()){
+            $currentDateTime = getUserCurrentTime();
             Muser::create([
                 'firstName' => $request->firstName,
                 'lastName' => $request->lastName,
@@ -77,7 +78,7 @@ class AdminController extends Controller
                 'empPassword' => bcrypt($request->empPassword),
                 'roleId' => $request->roleId,
                 'languageId' => $request->languageScriptId,
-                'created_at' => now(),
+                'created_at' => $currentDateTime,
                 'created_by' => Auth::guard('admin')->user()->userId,
                 'isActive' => 1
             ]);
@@ -93,9 +94,10 @@ class AdminController extends Controller
     public function userDelete($id)
     {
         try {
+            $currentDateTime = getUserCurrentTime();
             $user = Muser::findOrFail($id);
             $user->isActive = 0;
-            $user->updated_at = now();
+            $user->updated_at = $currentDateTime;
             $user->updated_by = Auth::guard('admin')->user()->userId;
             $user->save();
 
@@ -133,7 +135,7 @@ class AdminController extends Controller
 
         if ($validator->passes()) {
             $user = Muser::findOrFail($id);
-
+            $currentDateTime = getUserCurrentTime();
             // Update the user with additional fields
             $user->update([
                 'firstName' => $request->firstName,
@@ -143,7 +145,7 @@ class AdminController extends Controller
                 'roleId' => $request->roleId,
                 'languageId' => $request->languageId,
                 'isActive' => $request->isActive,
-                'updated_at' => now(),
+                'updated_at' => $currentDateTime,
                 'updated_by' => Auth::guard('admin')->user()->userId,
             ]);
 

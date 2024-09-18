@@ -17,6 +17,13 @@ class Mlanguagescript extends Model
         'language',
         'languageInUnicode',
         'languageUnicode',
-        'isActive'
+        'isActive',
+        'created_at',
+        'created_by',
+        'updated_at',
+        'updated_by'
     ];
+
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
 }

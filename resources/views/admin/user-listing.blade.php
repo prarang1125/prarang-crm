@@ -26,6 +26,12 @@
     <!--end breadcrumb-->
     <div class="row">
         <div class="col-xl-9 mx-auto w-100">
+            <!-- Success Message -->
+            @if(session('success'))
+                <div class="alert alert-success mt-3">
+                    {{ session('success') }}
+                </div>
+            @endif
             <h6 class="mb-0 text-uppercase">User Listing</h6>
             <hr/>
             <div class="card">
@@ -54,7 +60,7 @@
                                     <td>{{ $user->firstName }}</td>
                                     <td>{{ $user->lastName }}</td>
                                     <td>{{ $user->emailId }}</td>
-                                    <td class="text-success">{{ $user->role->roleName }}</td>
+                                    <td>{{ $user->role->roleName }}</td>
                                     <td class="{{ $user->languageId? 'text-success':'text-success' }}">{{ $user->languageId? 'English':'Hindi' }} </td>
 
                                     <td class="{{ $user->isActive? 'text-success':'text-danger' }}">{{ $user->isActive? 'Active':'Deactive' }}

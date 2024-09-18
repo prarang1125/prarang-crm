@@ -20,6 +20,12 @@
     <div class="row">
         <div class="card" style="padding-top: 15px;">
             <div class="col-xl-9 mx-auto w-100">
+                <!-- Success Message -->
+                    @if(session('success'))
+                        <div class="alert alert-success mt-3">
+                            {{ session('success') }}
+                        </div>
+                    @endif
                 <h6 class="mb-0 text-uppercase">User Edit</h6>
                 <hr/>
                 <form  action="{{ route('admin.user-update', $user->userId) }}" method="POST">

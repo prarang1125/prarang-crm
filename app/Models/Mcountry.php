@@ -10,11 +10,10 @@ class Mcountry extends Model
     use HasFactory;
 
     protected $table = 'mcountry';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'countryId';
     public $timestamps = false;
 
     protected $fillable = [
-        'countryId',
         'countryCode',
         'countryNameInUnicode',
         'countryNameInEnglish',

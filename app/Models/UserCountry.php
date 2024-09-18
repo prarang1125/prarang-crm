@@ -10,11 +10,10 @@ class UserCountry extends Model
     use HasFactory;
 
     protected $table = 'userCountry';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'countryId';
     public $timestamps = false;
 
     protected $fillable = [
-        'countryId',
         'countryCode',
         'countryNameInHindi',
         'countryNameInEnglish',
@@ -24,7 +23,7 @@ class UserCountry extends Model
         'updated_at',
         'updated_by',
     ];
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 }

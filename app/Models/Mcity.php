@@ -10,11 +10,10 @@ class Mcity extends Model
     use HasFactory;
 
     protected $table = 'mcity';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'cityId';
     public $timestamps = false;
 
     protected $fillable = [
-        'cityId',
         'cityCode',
         'citynameInUnicode',
         'citynameInEnglish',
