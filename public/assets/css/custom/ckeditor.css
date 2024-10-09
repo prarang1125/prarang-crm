@@ -1,8 +1,4 @@
 
-.ck-editor__editable_inline {
-    min-height: 300px; /* Increase height to 300px */
-}
-
 .scities-ml-negative-7 {
     margin-left: -38px;
 }
@@ -11,3 +7,55 @@
     padding-right: 24px;
     margin-bottom: 2px;
 }
+
+.forcity {
+    margin-left: 40px;
+}
+
+.image-preview-mt{
+    margin-top: 8px;
+}
+
+.thumbnail-slot {
+    position: relative;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.thumbnail-slot img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: red;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Add hover effect */
+.cardbodselect {
+    cursor: pointer; /* Hand/finger pointer */
+    transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for hover effect */
+}
+
+/* Change background and add shadow on hover */
+.cardbodselect:hover {
+    background-color: #e0e0e0; /* Change background on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+}
+
+/* Style for the selected item */
+.cardbodselect.selected {
+    background-color: #d1ffd1; /* Light green background for selected */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for the selected item */
+}
+

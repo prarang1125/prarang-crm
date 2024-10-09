@@ -32,5 +32,4 @@ class Mtag extends Model
     {
         return $this->belongsTo(Mtagcategory::class, 'tagCategoryId', 'tagCategoryId');
     }
-
 }

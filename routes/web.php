@@ -16,7 +16,8 @@ use App\Http\Controllers\admin\TagCategoryController;
 use App\Http\Controllers\admin\TagController;
 use App\Http\Controllers\admin\UserCountryController;
 use App\Http\Controllers\admin\UserCityController;
-
+use App\Http\Controllers\admin\MakerController;
+use App\Http\Controllers\admin\ChekerController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -144,6 +145,25 @@ Route::group(['prefix' => 'admin'], function(){
             Route::get('/usercity/user-city-edit/{id}', [UserCityController::class, 'userCityEdit'])->name('admin.user-city-edit');
             Route::put('/usercity/user-city-update/{id}', [UserCityController::class, 'userCityUpdate'])->name('admin.user-city-update');
         #this route is use for user city end
+
+        #this route is use for admin maker start
+            Route::get('/maker/maker-listing', [MakerController::class, 'index'])->name('admin.maker-listing');
+            Route::get('/maker/maker-register', [MakerController::class, 'makerRegister'])->name('admin.maker-register');
+            Route::post('/maker/maker-store', [MakerController::class, 'makerStore'])->name('admin.maker-store');
+            Route::get('/maker/maker-edit/{id}', [MakerController::class, 'makerEdit'])->name('admin.maker-edit');
+            Route::put('/maker/maker-update/{id}', [MakerController::class, 'makerUpdate'])->name('admin.maker-update');
+        #this route is use for admin maker end
+
+        #this route is use for admin checker start
+            Route::get('/checker/checker-listing', [ChekerController::class, 'indexMain'])->name('admin.checker-listing');
+            Route::get('/checker/checker-listing/{id}', [ChekerController::class, 'index'])->name('admin.checker-listing');
+            Route::get('/checker/checker-edit/{id}', [ChekerController::class, 'checkerEdit'])->name('admin.checker-edit');
+            Route::put('/checker/checker-update/{id}', [ChekerController::class, 'checkerUpdate'])->name('admin.checker-update');
+        #this route is use for admin checker end
+
+        #this route is use for admin uploader start
+
+        #this route is use for admin uploader end
     });
 });
 

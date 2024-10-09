@@ -11,6 +11,10 @@ use App\Models\Mrole;
 use App\Models\Mlanguagescript;
 use App\Models\Muser;
 use Illuminate\Validation\Rule;
+use App\Mail\UserRegisteredMail;
+use Illuminate\Support\Facades\Mail;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 
 class AdminController extends Controller
@@ -82,7 +86,51 @@ class AdminController extends Controller
                 'created_by' => Auth::guard('admin')->user()->userId,
                 'isActive' => 1
             ]);
+
+            // Determine login link based on roleId
+            $loginUrl = $request->roleId == 1 ? url('/admin/login') : url('/accounts/login');
+            // dd($request->roleId);
+            // dd($loginUrl);
+            // Mail::to('rohit.kprarang@gmail.com')->send(new UserRegisteredMail(
+            //     $request->firstName,
+            //     $request->emailId,
+            //     $request->empPassword,
+            //     $loginUrl
+            // ));
+
+            $mail = new PHPMailer(true);
+            try {
+                //Server settings
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'rohit.kprarang@gmail.com';
+                $mail->Password   = 'mdtgebvpenwxccor';
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port       = 587;
+
+                //Recipients
+                $mail->setFrom('rohit.kprarang@gmail.com', 'Admin');
+                $mail->addAddress($request->emailId);
+
+                //Content
+                $mail->isHTML(true);
+                $mail->Subject = 'User Registration';
+                $mail->Body    = "<h1>Welcome {$request->firstName}</h1>
+                                  <p>You have been registered successfully. You can log in using the following credentials:</p>
+                                  <p><b>Email:</b> {$request->emailId}</p>
+                                  <p><b>Password:</b> {$request->empPassword}</p>
+                                  <p>Login here: <a href='{$loginUrl}'>Login</a></p>";
+
+                $mail->send();
+                return redirect()->route('admin.user-listing');
+
+            } catch (Exception $e) {
+                return back()->with('error', "Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+            }
+
             return redirect()->route('admin.user-listing');
+
         }else{
             return redirect()->route('admin.user-register')
                 ->withInput()

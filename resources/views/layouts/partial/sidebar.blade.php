@@ -22,9 +22,9 @@
             <ul>
                 <li> <a href="{{ url('/admin/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Home</a>
                 </li>
-                <li> <a href="dashboard-eCommerce.html"><i class="bx bx-right-arrow-alt"></i>Maker</a>
+                <li> <a href="{{ url('/admin/maker/maker-listing') }}"><i class="bx bx-right-arrow-alt"></i>Maker</a>
                 </li>
-                <li> <a href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i>Checker</a>
+                <li> <a href="{{ url('/admin/checker/checker-listing') }}"><i class="bx bx-right-arrow-alt"></i>Checker</a>
                 </li>
                 <li> <a href="dashboard-digital-marketing.html"><i class="bx bx-right-arrow-alt"></i>Uploader</a>
                 </li>

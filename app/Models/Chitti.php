@@ -13,7 +13,7 @@ class Chitti extends Model
     protected $table = 'chitti';
 
     // Specify the primary key if it's not 'id'
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'chittiId';
 
     // If the primary key is not auto-incrementing, uncomment the following line:
     // public $incrementing = false;
@@ -25,7 +25,6 @@ class Chitti extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'chittiId',
         'languageId',
         'chittiname',
         'chittiUrl',
@@ -77,14 +76,43 @@ class Chitti extends Model
         'created_by',
         'updated_at',
         'updated_by'
-
     ];
 
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
     // Optionally, define the date format for the timestamps
     // protected $dateFormat = 'Y-m-d H:i:s';
+
+    public function geographyMappings()
+    {
+        return $this->hasMany(Chittigeographymapping::class, 'chittiId', 'chittiId');
+    }
+
+    public function facity()
+    {
+        return $this->hasOne(Facity::class, 'from_chittiId', 'chittiId');
+    }
+
+    public function chittiimagemappings()
+    {
+        return $this->hasMany(Chittiimagemapping::class, 'chittiId', 'chittiId');
+    }
+
+    // public function chittigeographymappings()
+    // {
+    //     return $this->hasMany(Chittigeographymapping::class, 'chittiId', 'chittiId');
+    // }
+
+    // public function chittitagmappings()
+    // {
+    //     return $this->hasMany(Chittitagmapping::class, 'chittiId', 'chittiId');
+    // }
+
+    // public function images()
+    // {
+    //     return $this->hasMany(Chittiimagemapping::class, 'chittiId', 'chittiId');
+    // }
 }
 
