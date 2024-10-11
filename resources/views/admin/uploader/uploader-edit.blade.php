@@ -1,5 +1,5 @@
 @extends('layouts.admin.admin')
-@section('title', 'Checker Edit')
+@section('title', 'Uploader Edit')
 
 @section('content')
 <!--start page wrapper -->
@@ -10,9 +10,9 @@
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
-                    <li class="breadcrumb-item"><a href="{{ url('admin/checker/checker-listing')}}"><i class="bx bx-user"></i></a>
+                    <li class="breadcrumb-item"><a href="{{ url('admin/uploader/uploader-listing')}}"><i class="bx bx-user"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Checker Edit</li>
+                    <li class="breadcrumb-item active" aria-current="page">Uploader Edit</li>
                 </ol>
             </nav>
         </div>
@@ -27,9 +27,9 @@
                         {{ session('success') }}
                     </div>
                 @endif
-                <h6 class="mb-0 text-uppercase text-primary">Checker Edit</h6>
+                <h6 class="mb-0 text-uppercase text-primary">Uploader Edit</h6>
                 <hr/>
-                <form  action="{{ route('admin.checker-update' , $chitti->chittiId) }}" method="POST" enctype="multipart/form-data">
+                <form  action="{{ route('admin.uploader-update' , $chitti->chittiId) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     {{-- image preview and image thumbnail and content section --}}
@@ -326,8 +326,8 @@
                         </div>
                     </div>
                     <div class="modal-footer mt-3">
-                        <button type="submit" class="btn btn-primary">Update Checker</button>
-                        <a href="{{ url('/admin/uploader/uploader-listing', $chitti->chittiId) }}" class="btn btn-primary">Send to Uploader</a>
+                        <button type="submit" class="btn btn-primary">Update Uploader</button>
+                        <a href="{{ url('/admin/uploader/checker-listing', $chitti->chittiId) }}" class="btn btn-primary">Send to Uploader</a>
                     </div>
                 </form>
             </div>

@@ -18,6 +18,7 @@ use App\Http\Controllers\admin\UserCountryController;
 use App\Http\Controllers\admin\UserCityController;
 use App\Http\Controllers\admin\MakerController;
 use App\Http\Controllers\admin\ChekerController;
+use App\Http\Controllers\admin\UploaderController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -162,7 +163,13 @@ Route::group(['prefix' => 'admin'], function(){
         #this route is use for admin checker end
 
         #this route is use for admin uploader start
+            Route::get('/uploader/uploader-listing', [UploaderController::class, 'indexMain'])->name('admin.uploader-listing');
 
+            Route::get('/uploader/uploader-listing/{id}', [UploaderController::class, 'index'])->name('admin.uploader-listing');
+
+            Route::get('/uploader/uploader-edit/{id}', [UploaderController::class, 'uploaderEdit'])->name('admin.uploader-edit');
+
+            Route::put('/uploader/uploader-update/{id}', [UploaderController::class, 'uploaderUpdate'])->name('admin.uploader-update');
         #this route is use for admin uploader end
     });
 });

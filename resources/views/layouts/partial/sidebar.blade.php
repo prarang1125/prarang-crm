@@ -26,7 +26,7 @@
                 </li>
                 <li> <a href="{{ url('/admin/checker/checker-listing') }}"><i class="bx bx-right-arrow-alt"></i>Checker</a>
                 </li>
-                <li> <a href="dashboard-digital-marketing.html"><i class="bx bx-right-arrow-alt"></i>Uploader</a>
+                <li> <a href="{{ url('/admin/uploader/uploader-listing') }}"><i class="bx bx-right-arrow-alt"></i>Uploader</a>
                 </li>
                 <li> <a href="dashboard-human-resources.html"><i class="bx bx-right-arrow-alt"></i>Post Analytics Maker</a>
                 </li>
