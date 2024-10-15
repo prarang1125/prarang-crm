@@ -67,7 +67,7 @@
                 </li>
                 <li> <a href="{{ url('/admin/usercity/user-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>User City</a>
                 </li>
-                <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Post</a>
+                <li> <a href="{{ url('/admin/post/post-listing') }}"><i class="bx bx-right-arrow-alt"></i>Post</a>
                 </li>
                 <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Deleted Post</a>
                 </li>

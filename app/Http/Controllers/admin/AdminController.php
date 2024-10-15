@@ -15,6 +15,10 @@ use App\Mail\UserRegisteredMail;
 use Illuminate\Support\Facades\Mail;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use App\Models\Mcountry;
+use App\Models\Mregion;
+use App\Models\Mcity;
+use App\Models\Chitti;
 
 
 class AdminController extends Controller
@@ -22,7 +26,21 @@ class AdminController extends Controller
     #this method is use for show the admin dashboard pages;
     public function index()
     {
-        return view('admin.dashboard');
+        $totalCountries = Mcountry::where('isActive', 1)->count();
+        $totalRegions   = Mregion::where('isActive', 1)->count();
+        $totalMcitys    = Mcity::where('isActive', 1)->count();
+        $totalLanguagescripts = Mlanguagescript::where('isActive', 1)->count();
+        $totalChitti = Chitti::where('finalStatus', '!=', 'deleted')->count();
+        $totalMakers = Muser::whereHas('role', function($query) {
+            $query->where('roleName', 'Maker');
+        })->where('isActive', 1)->count();
+        $totalChecker = Muser::whereHas('role', function($query) {
+            $query->where('roleName', 'Checker');
+        })->where('isActive', 1)->count();
+        $totalUploader = Muser::whereHas('role', function($query) {
+            $query->where('roleName', 'Uploader');
+        })->where('isActive', 1)->count();
+        return view('admin.dashboard', compact('totalCountries', 'totalRegions', 'totalMcitys', 'totalLanguagescripts', 'totalChitti', 'totalMakers', 'totalChecker', 'totalUploader'));
     }
 
     #this method is use for show admin user profile data

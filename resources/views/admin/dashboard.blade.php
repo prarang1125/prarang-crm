@@ -4,11 +4,11 @@
 <div class="page-content">
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
         <div class="col">
-            <a href="javascript:;">
+            <a href="{{ url('/admin/user-listing?role=Maker') }}">
             <div class="card radius-10 bg-gradient-deepblue">
                  <div class="card-body">
                     <div class="d-flex align-items-center">
-                        <h5 class="mb-0 text-white">9526</h5>
+                        <h5 class="mb-0 text-white">{{ $totalMakers }}</h5>
                         <div class="ms-auto">
                             <i class='bx bx-user fs-3 text-white'></i>
                         </div>
@@ -25,11 +25,11 @@
             </a>
         </div>
         <div class="col">
-            <a href="javascript:;">
+            <a href="{{ url('/admin/user-listing?role=Checker') }}">
             <div class="card radius-10 bg-gradient-orange">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
-                        <h5 class="mb-0 text-white">$8323</h5>
+                        <h5 class="mb-0 text-white">{{ $totalChecker }}</h5>
                         <div class="ms-auto">
                             <i class='bx bx-user fs-3 text-white'></i>
                         </div>
@@ -46,11 +46,11 @@
             </a>
         </div>
         <div class="col">
-            <a href="javascript:;">
+            <a href="{{ url('/admin/user-listing?role=Uploader') }}">
             <div class="card radius-10 bg-gradient-ohhappiness">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
-                        <h5 class="mb-0 text-white">6200</h5>
+                        <h5 class="mb-0 text-white">{{ $totalUploader }}</h5>
                         <div class="ms-auto">
                             <i class='bx bx-user fs-3 text-white'></i>
                         </div>
@@ -67,11 +67,11 @@
             </a>
         </div>
         <div class="col">
-            <a href="javascript:;">
+            <a href="{{ url('/admin/country/country-listing') }}">
             <div class="card radius-10 bg-gradient-deepblue">
                  <div class="card-body">
                     <div class="d-flex align-items-center">
-                        <h5 class="mb-0 text-white">5630</h5>
+                        <h5 class="mb-0 text-white">{{ $totalCountries }}</h5>
                         <div class="ms-auto">
                             <i class='bx bx-world fs-3 text-white'></i>
                         </div>
@@ -88,11 +88,11 @@
             </a>
         </div>
         <div class="col">
-            <a href="javascript:;">
+            <a href="{{ url('/admin/region/region-listing') }}">
             <div class="card radius-10 bg-gradient-orange">
                  <div class="card-body">
                     <div class="d-flex align-items-center">
-                        <h5 class="mb-0 text-white">5630</h5>
+                        <h5 class="mb-0 text-white">{{ $totalRegions }}</h5>
                         <div class="ms-auto">
                             <i class='bx bx-world fs-3 text-white'></i>
                         </div>
@@ -109,11 +109,11 @@
             </a>
         </div>
         <div class="col">
-            <a href="javascript:;">
+            <a href="{{ url('/admin/livecity/live-city-listing') }}">
             <div class="card radius-10 bg-gradient-ohhappiness">
                  <div class="card-body">
                     <div class="d-flex align-items-center">
-                        <h5 class="mb-0 text-white">5630</h5>
+                        <h5 class="mb-0 text-white">{{ $totalMcitys }}</h5>
                         <div class="ms-auto">
                             <i class='bx bx-world fs-3 text-white'></i>
                         </div>
@@ -130,11 +130,11 @@
             </a>
         </div>
         <div class="col">
-            <a href="javascript:;">
+            <a href="{{ url('/admin/languagescript/languagescript-listing') }}">
             <div class="card radius-10 bg-gradient-deepblue">
                  <div class="card-body">
                     <div class="d-flex align-items-center">
-                        <h5 class="mb-0 text-white">5630</h5>
+                        <h5 class="mb-0 text-white">{{ $totalLanguagescripts }}</h5>
                         <div class="ms-auto">
                             <i class='bx bx-menu fs-3 text-white'></i>
                         </div>
@@ -151,11 +151,11 @@
             </a>
         </div>
         <div class="col">
-            <a href="javascript:;">
+            <a href="{{ url('/admin/maker/maker-listing') }}">
             <div class="card radius-10 bg-gradient-orange">
                  <div class="card-body">
                     <div class="d-flex align-items-center">
-                        <h5 class="mb-0 text-white">5630</h5>
+                        <h5 class="mb-0 text-white">{{ $totalChitti }}</h5>
                         <div class="ms-auto">
                             <i class='bx bx-envelope fs-3 text-white'></i>
                         </div>
