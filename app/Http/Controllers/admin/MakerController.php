@@ -55,7 +55,7 @@ class MakerController extends Controller
     public function makerStore(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'content'   => 'required|string|max:2000',
+            'content'   => 'required|string',
             'makerImage' => 'required|image|max:2048',
             'geography' => 'required',
             'c2rselect' => 'required',
@@ -105,7 +105,7 @@ class MakerController extends Controller
             $chitti->SubTitle = $request->subtitle;
             $chitti->makerId = Auth::guard('admin')->user()->userId;
             $chitti->makerStatus = 'sent_to_checker';
-            $chitti->finalStatus = 'sent_to_checker';
+            $chitti->finalStatus = '';
             $chitti->created_at = $currentDateTime;
             $chitti->created_by = Auth::guard('admin')->user()->userId;
             $chitti->save();
@@ -203,7 +203,7 @@ class MakerController extends Controller
     public function makerUpdate(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'content'   => 'required|string|max:1000',
+            'content'   => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
             'c2rselect' => 'required',
@@ -243,57 +243,73 @@ class MakerController extends Controller
 
             // Update Chitti record
             $chitti = Chitti::findOrFail($id);
-            $chitti->update([
-                'description'   => $request->content,
-                'Title'         => $request->title,
-                'SubTitle'      => $request->subtitle,
-                'makerStatus'   => 'sent_to_checker',
-                'finalStatus'   => 'sent_to_checker',
-                'updated_at'    => $currentDateTime,
-                'updated_by'    => Auth::guard('admin')->user()->userId,
-            ]);
 
-            // Update Facity record
-            Facity::where('from_chittiId', $id)->update([
-                'value'         => $request->forTheCity,
-                'updated_at'    => $currentDateTime,
-                'updated_by'    => Auth::guard('admin')->user()->userId,
-            ]);
-
-            // Update image if provided
-            if ($request->hasFile('makerImage')) {
-                $makerImage = $request->file('makerImage');
-                $makerImageName = time() . '_' . $makerImage->getClientOriginalName();
-                $makerImage->move(public_path('uploads/maker_image/'), $makerImageName);
-                $url = public_path('uploads/maker_image/') . $makerImageName;
-                $serviceAccessUrl = "admin.prarang.in/" . $url;
-
-                // Update Chitti Image Mapping
-                Chittiimagemapping::where('chittiId', $id)->update([
-                    'imageName'     => $makerImageName,
-                    'imageUrl'      => $serviceAccessUrl,
-                    'accessUrl'     => $url,
+            if ($request->action === 'send_to_checker')
+            {
+                $chitti->update([
+                    'checkerStatus'   => 'sent_to_uploader',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);
+
+                // Redirect to the checker listing
+                return redirect()->route('admin.maker-listing', $chitti->chittiId)
+                    ->with('success', 'Sent to Checker successfully.');
             }
+            else
+            {
+                $chitti->update([
+                    'description'   => $request->content,
+                    'Title'         => $request->title,
+                    'SubTitle'      => $request->subtitle,
+                    'makerStatus'   => 'sent_to_checker',
+                    'finalStatus'   => '',
+                    'updated_at'    => $currentDateTime,
+                    'updated_by'    => Auth::guard('admin')->user()->userId,
+                ]);
 
-            // Update Geography Mapping
-            Chittigeographymapping::where('chittiId', $id)->update([
-                'areaId'        => $request->c2rselect,
-                'geographyId'   => $request->geography,
-                'updated_at'    => $currentDateTime,
-                'updated_by'    => Auth::guard('admin')->user()->userId,
-            ]);
+                // Update Facity record
+                Facity::where('from_chittiId', $id)->update([
+                    'value'         => $request->forTheCity,
+                    'updated_at'    => $currentDateTime,
+                    'updated_by'    => Auth::guard('admin')->user()->userId,
+                ]);
 
-            // Update Tag Mapping
-            Chittitagmapping::where('chittiId', $id)->update([
-                'tagId'         => $request->isCultureNature,
-                'updated_at'    => $currentDateTime,
-                'updated_by'    => Auth::guard('admin')->user()->userId,
-            ]);
+                // Update image if provided
+                if ($request->hasFile('makerImage')) {
+                    $makerImage = $request->file('makerImage');
+                    $makerImageName = time() . '_' . $makerImage->getClientOriginalName();
+                    $makerImage->move(public_path('uploads/maker_image/'), $makerImageName);
+                    $url = public_path('uploads/maker_image/') . $makerImageName;
+                    $serviceAccessUrl = "admin.prarang.in/" . $url;
 
-            return redirect()->route('admin.maker-listing')->with('success', 'Maker updated successfully.');
+                    // Update Chitti Image Mapping
+                    Chittiimagemapping::where('chittiId', $id)->update([
+                        'imageName'     => $makerImageName,
+                        'imageUrl'      => $serviceAccessUrl,
+                        'accessUrl'     => $url,
+                        'updated_at'    => $currentDateTime,
+                        'updated_by'    => Auth::guard('admin')->user()->userId,
+                    ]);
+                }
+
+                // Update Geography Mapping
+                Chittigeographymapping::where('chittiId', $id)->update([
+                    'areaId'        => $request->c2rselect,
+                    'geographyId'   => $request->geography,
+                    'updated_at'    => $currentDateTime,
+                    'updated_by'    => Auth::guard('admin')->user()->userId,
+                ]);
+
+                // Update Tag Mapping
+                Chittitagmapping::where('chittiId', $id)->update([
+                    'tagId'         => $request->isCultureNature,
+                    'updated_at'    => $currentDateTime,
+                    'updated_by'    => Auth::guard('admin')->user()->userId,
+                ]);
+
+                return redirect()->route('admin.maker-listing')->with('success', 'Maker updated successfully.');
+            }
         } else {
             return redirect()->back()
                 ->withInput()

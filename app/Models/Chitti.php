@@ -114,5 +114,10 @@ class Chitti extends Model
     // {
     //     return $this->hasMany(Chittiimagemapping::class, 'chittiId', 'chittiId');
     // }
+
+    public function city()
+    {
+        return $this->belongsTo(Mcity::class, 'cityId', 'cityId');
+    }
 }
 

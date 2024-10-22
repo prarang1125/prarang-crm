@@ -25,7 +25,9 @@ class UploaderController extends Controller
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
         ->whereNotNull('Title')
         ->where('Title', '!=', '')
-        ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
+        ->where('uploaderStatus', '!=', '')
+        ->where('uploaderStatus', 'sent_to_uploader')
+        ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
         ->get();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         return view('admin.uploader.uploader-listing', compact('chittis', 'geographyOptions'));
@@ -38,6 +40,8 @@ class UploaderController extends Controller
         ->where('chittiId', $id)
         ->whereNotNull('Title')
         ->where('Title', '!=', '')
+        ->where('uploaderStatus', '!=', '')
+        ->where('uploaderStatus', 'sent_to_uploader')
         ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
         ->get();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();

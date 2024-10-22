@@ -14,11 +14,17 @@
                         </div>
                     </div>
                     <div class="progress my-3 bg-light-transparent" style="height:3px;">
-                        <div class="progress-bar bg-white" role="progressbar" style="width: 55%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-white" role="progressbar"
+                            style="width: {{ $growthMakers > 100 ? 100 : $growthMakers }}%"
+                            aria-valuenow="{{ $growthMakers }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
                     </div>
                     <div class="d-flex align-items-center text-white">
                         <p class="mb-0">REGISTERED  Maker</p>
-                        <p class="mb-0 ms-auto">+4.2%<span><i class='bx bx-up-arrow-alt'></i></span></p>
+                        <p class="mb-0 ms-auto">
+                            {{ $growthMakers > 0 ? '+' : '' }}{{ number_format($growthMakers, 1) }}%
+                            <span><i class='bx bx-up-arrow-alt'></i></span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -35,11 +41,17 @@
                         </div>
                     </div>
                     <div class="progress my-3 bg-light-transparent" style="height:3px;">
-                        <div class="progress-bar bg-white" role="progressbar" style="width: 55%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-white" role="progressbar"
+                             style="width: {{ $growthChecker > 100 ? 100 : $growthChecker }}%"
+                             aria-valuenow="{{ $growthChecker }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
                     </div>
                     <div class="d-flex align-items-center text-white">
                         <p class="mb-0">REGISTERED Checker</p>
-                        <p class="mb-0 ms-auto">+1.2%<span><i class='bx bx-up-arrow-alt'></i></span></p>
+                        <p class="mb-0 ms-auto">
+                            {{ $growthChecker > 0 ? '+' : '' }}{{ number_format($growthChecker, 1) }}%
+                            <span><i class='bx bx-up-arrow-alt'></i></span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -56,11 +68,17 @@
                         </div>
                     </div>
                     <div class="progress my-3 bg-light-transparent" style="height:3px;">
-                        <div class="progress-bar bg-white" role="progressbar" style="width: 55%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-white" role="progressbar"
+                             style="width: {{ $growthUploader > 100 ? 100 : $growthUploader }}%"
+                             aria-valuenow="{{ $growthUploader }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
                     </div>
                     <div class="d-flex align-items-center text-white">
                         <p class="mb-0">REGISTERED Uploader</p>
-                        <p class="mb-0 ms-auto">+5.2%<span><i class='bx bx-up-arrow-alt'></i></span></p>
+                        <p class="mb-0 ms-auto">
+                            {{ $growthUploader > 0 ? '+' : '' }}{{ number_format($growthUploader, 1) }}%
+                            <span><i class='bx bx-up-arrow-alt'></i></span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -77,11 +95,17 @@
                         </div>
                     </div>
                     <div class="progress my-3 bg-light-transparent" style="height:3px;">
-                        <div class="progress-bar bg-white" role="progressbar" style="width: 55%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-white" role="progressbar"
+                             style="width: {{ $growthCountries > 100 ? 100 : $growthCountries }}%"
+                             aria-valuenow="{{ $growthCountries }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
                     </div>
                     <div class="d-flex align-items-center text-white">
                         <p class="mb-0">TOTAL COUNTRY</p>
-                        <p class="mb-0 ms-auto">+2.2%<span><i class='bx bx-up-arrow-alt'></i></span></p>
+                        <p class="mb-0 ms-auto">
+                            {{ $growthCountries > 0 ? '+' : '' }}{{ number_format($growthCountries, 1) }}%
+                            <span><i class='bx bx-up-arrow-alt'></i></span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -98,11 +122,17 @@
                         </div>
                     </div>
                     <div class="progress my-3 bg-light-transparent" style="height:3px;">
-                        <div class="progress-bar bg-white" role="progressbar" style="width: 55%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-white" role="progressbar"
+                             style="width: {{ $growthRegions > 100 ? 100 : $growthRegions }}%"
+                             aria-valuenow="{{ $growthRegions }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
                     </div>
                     <div class="d-flex align-items-center text-white">
                         <p class="mb-0">TOTAL REGION</p>
-                        <p class="mb-0 ms-auto">+2.2%<span><i class='bx bx-up-arrow-alt'></i></span></p>
+                        <p class="mb-0 ms-auto">
+                            {{ $growthRegions > 0 ? '+' : '' }}{{ number_format($growthRegions, 1) }}%
+                            <span><i class='bx bx-up-arrow-alt'></i></span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -119,11 +149,17 @@
                         </div>
                     </div>
                     <div class="progress my-3 bg-light-transparent" style="height:3px;">
-                        <div class="progress-bar bg-white" role="progressbar" style="width: 55%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-white" role="progressbar"
+                             style="width: {{ $growthMcitys > 100 ? 100 : $growthMcitys }}%"
+                             aria-valuenow="{{ $growthMcitys }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
                     </div>
                     <div class="d-flex align-items-center text-white">
                         <p class="mb-0">TOTAL CITY</p>
-                        <p class="mb-0 ms-auto">+2.2%<span><i class='bx bx-up-arrow-alt'></i></span></p>
+                        <p class="mb-0 ms-auto">
+                            {{ $growthMcitys > 0 ? '+' : '' }}{{ number_format($growthMcitys, 1) }}%
+                            <span><i class='bx bx-up-arrow-alt'></i></span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -140,11 +176,17 @@
                         </div>
                     </div>
                     <div class="progress my-3 bg-light-transparent" style="height:3px;">
-                        <div class="progress-bar bg-white" role="progressbar" style="width: 55%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-white" role="progressbar"
+                             style="width: {{ $growthLanguagescripts > 100 ? 100 : $growthLanguagescripts }}%"
+                             aria-valuenow="{{ $growthLanguagescripts }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
                     </div>
                     <div class="d-flex align-items-center text-white">
                         <p class="mb-0">TOTAL LANGUAGE SCRIPT</p>
-                        <p class="mb-0 ms-auto">+2.2%<span><i class='bx bx-up-arrow-alt'></i></span></p>
+                        <p class="mb-0 ms-auto">
+                            {{ $growthLanguagescripts > 0 ? '+' : '' }}{{ number_format($growthLanguagescripts, 1) }}%
+                            <span><i class='bx bx-up-arrow-alt'></i></span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -161,11 +203,17 @@
                         </div>
                     </div>
                     <div class="progress my-3 bg-light-transparent" style="height:3px;">
-                        <div class="progress-bar bg-white" role="progressbar" style="width: 55%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-white" role="progressbar"
+                             style="width: {{ $growthChitti > 100 ? 100 : $growthChitti }}%"
+                             aria-valuenow="{{ $growthChitti }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
                     </div>
                     <div class="d-flex align-items-center text-white">
                         <p class="mb-0">TOTAL LETTER</p>
-                        <p class="mb-0 ms-auto">+2.2%<span><i class='bx bx-up-arrow-alt'></i></span></p>
+                        <p class="mb-0 ms-auto">
+                            {{ $growthChitti > 0 ? '+' : '' }}{{ number_format($growthChitti, 1) }}%
+                            <span><i class='bx bx-up-arrow-alt'></i></span>
+                        </p>
                     </div>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 @extends('layouts.admin.admin')
-@section('title', 'Maker Edit')
+@section('title', 'Post Edit')
 
 @section('content')
 <!--start page wrapper -->
@@ -10,9 +10,9 @@
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
-                    <li class="breadcrumb-item"><a href="{{ url('admin/maker/maker-listing')}}"><i class="bx bx-user"></i></a>
+                    <li class="breadcrumb-item"><a href="{{ url('admin/post/post-listing')}}"><i class="bx bx-user"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Maker Edit</li>
+                    <li class="breadcrumb-item active" aria-current="page">Post Edit</li>
                 </ol>
             </nav>
         </div>
@@ -29,7 +29,7 @@
                 @endif
                 <h6 class="mb-0 text-uppercase text-primary">Maker Edit</h6>
                 <hr/>
-                <form  action="{{ route('admin.maker-update' , $chitti->chittiId) }}" method="POST" enctype="multipart/form-data">
+                <form  action="{{ route('admin.post-update' , $chitti->chittiId) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     {{-- image preview and image thumbnail and content section --}}
@@ -328,6 +328,7 @@
                     <div class="modal-footer mt-3">
                         {{-- <button type="submit" class="btn btn-primary">Update Maker</button>
                         <a href="{{ route('admin.checker-listing', $chitti->chittiId) }}" class="btn btn-primary">Send to Checker</a> --}}
+
                         <button type="submit" class="btn btn-primary" name="action" value="update_maker">Update Maker</button>
                         <button type="submit" class="btn btn-primary" name="action" value="send_to_checker">Send to Checker</button>
                     </div>

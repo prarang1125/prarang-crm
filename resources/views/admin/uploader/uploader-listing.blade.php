@@ -79,7 +79,7 @@
                                             @endif
                                         </td>
                                     @endforeach
-                                    <td>{{ $chitti->checkerStatus }}</td>
+                                    <td>{{ $chitti->uploaderStatus }}</td>
 
                                     <td class="">
                                         <a href="{{ route('admin.uploader-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>

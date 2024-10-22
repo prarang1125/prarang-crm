@@ -26,6 +26,8 @@ class AdminController extends Controller
     #this method is use for show the admin dashboard pages;
     public function index()
     {
+        $upperLimit = 100;
+        // Current data counts
         $totalCountries = Mcountry::where('isActive', 1)->count();
         $totalRegions   = Mregion::where('isActive', 1)->count();
         $totalMcitys    = Mcity::where('isActive', 1)->count();
@@ -40,7 +42,21 @@ class AdminController extends Controller
         $totalUploader = Muser::whereHas('role', function($query) {
             $query->where('roleName', 'Uploader');
         })->where('isActive', 1)->count();
-        return view('admin.dashboard', compact('totalCountries', 'totalRegions', 'totalMcitys', 'totalLanguagescripts', 'totalChitti', 'totalMakers', 'totalChecker', 'totalUploader'));
+
+        // Calculate growth percentages based on the upper limit (100)
+        $growthCountries = calculatePercentage($totalCountries, $upperLimit);
+        $growthRegions   = calculatePercentage($totalRegions, $upperLimit);
+        $growthMcitys    = calculatePercentage($totalMcitys, $upperLimit);
+        $growthLanguagescripts = calculatePercentage($totalLanguagescripts, $upperLimit);
+        $growthChitti    = calculatePercentage($totalChitti, $upperLimit);
+        $growthMakers    = calculatePercentage($totalMakers, $upperLimit);
+        $growthChecker   = calculatePercentage($totalChecker, $upperLimit);
+        $growthUploader  = calculatePercentage($totalUploader, $upperLimit);
+
+        // Pass these values to the view
+        return view('admin.dashboard', compact(
+            'totalCountries', 'totalRegions', 'totalMcitys', 'totalLanguagescripts','totalChitti', 'totalMakers', 'totalChecker', 'totalUploader', 'growthCountries','growthRegions', 'growthMcitys', 'growthLanguagescripts', 'growthChitti','growthMakers', 'growthChecker', 'growthUploader'
+        ));
     }
 
     #this method is use for show admin user profile data
@@ -67,8 +83,15 @@ class AdminController extends Controller
     // }
 
     #this method is use for show user listing data
-    public function userListing(){
-        $users = Muser::with('role')->get();
+    public function userListing(Request $request) {
+        $role = $request->query('role');
+        if ($role) {
+            $users = Muser::whereHas('role', function($query) use ($role) {
+                $query->where('roleName', $role);
+            })->get();
+        } else {
+            $users = Muser::with('role')->get();
+        }
         return view('admin.user-listing', compact('users'));
     }
 

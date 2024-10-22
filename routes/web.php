@@ -20,6 +20,8 @@ use App\Http\Controllers\admin\MakerController;
 use App\Http\Controllers\admin\ChekerController;
 use App\Http\Controllers\admin\UploaderController;
 use App\Http\Controllers\admin\PostController;
+use App\Http\Controllers\admin\DeletedPostController;
+use App\Http\Controllers\admin\PostAnalyticsMakerController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -170,9 +172,24 @@ Route::group(['prefix' => 'admin'], function(){
             Route::put('/uploader/uploader-update/{id}', [UploaderController::class, 'uploaderUpdate'])->name('admin.uploader-update');
         #this route is use for admin uploader end
 
-        #this route is use for admin post start /admin/post/post-listing
-        Route::get('/post/post-listing', [PostController::class, 'index'])->name('admin.post-listing');
+        #this route is use for admin post start
+            Route::get('/post/post-listing', [PostController::class, 'index'])->name('admin.post-listing');
+            Route::get('/post/post-edit/{id}', [PostController::class, 'postEdit'])->name('admin.post-edit');
+            Route::put('/post/post-update/{id}', [PostController::class, 'postUpdate'])->name('admin.post-update');
+            Route::post('/post/post-delete/{id}', [PostController::class, 'postDelete'])->name('admin.post-delete');
+            Route::post('/admin/send-to-checker/{id}', [PostController::class, 'sendToChecker'])->name('admin.send-to-checker');
         #this route is use for admin post end
+
+        #this route is use for admin deleted post listing start
+            Route::get('/deleted-post/deleted-post-listing', [DeletedPostController::class, 'index'])->name('admin.deleted-post-listing');
+        #this route is use for admin deleted post listing end
+
+        #this route is use for admin post analytics maker start
+            Route::get('/postanalyticsmaker/post-analytics-maker-city-listing', [PostAnalyticsMakerController::class, 'index'])->name('admin.post-analytics-maker-city-listing');
+
+            Route::get('/postanalyticsmaker/post-analytics-maker-listing', [PostAnalyticsMakerController::class, 'postAnalyticsMakerListing'])->name('admin.post-analytics-maker-listing');
+        #this route is use for admin post analytics maker end
+
     });
 });
 
