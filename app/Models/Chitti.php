@@ -72,6 +72,9 @@ class Chitti extends Model
         'postStatusMakerChecker',
         'monthDay',
         'writercolor',
+        'cityId',
+        'areaId',
+        'geographyId',
         'created_at',
         'created_by',
         'updated_at',
@@ -117,7 +120,7 @@ class Chitti extends Model
 
     public function city()
     {
-        return $this->belongsTo(Mcity::class, 'cityId', 'cityId');
+        return $this->belongsTo(Mcity::class, 'cityId', 'cityId'); // adjust the foreign key if necessary
     }
 }
 
