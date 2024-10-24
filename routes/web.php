@@ -188,7 +188,7 @@ Route::group(['prefix' => 'admin'], function(){
             Route::get('/postanalyticsmaker/post-analytics-maker-city-listing', [PostAnalyticsMakerController::class, 'index'])->name('admin.post-analytics-maker-city-listing');
             Route::get('/postanalyticsmaker/post-analytics-maker-listing', [PostAnalyticsMakerController::class, 'postAnalyticsMakerListing'])->name('admin.post-analytics-maker-listing');
 
-            Route::get('/postanalyticsmaker/post-analytics-maker-edit/{id}', [PostAnalyticsMakerController::class, 'postAnalyticsMakerEdit'])->name('admin.post-analytics-maker-edit');
+            Route::get('/postanalyticsmaker/post-analytics-maker-create/{id}', [PostAnalyticsMakerController::class, 'postAnalyticsMakerEdit'])->name('admin.post-analytics-maker-create');
         #this route is use for admin post analytics maker end
     });
 });

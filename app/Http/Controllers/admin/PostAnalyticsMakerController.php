@@ -35,8 +35,8 @@ class PostAnalyticsMakerController extends Controller
 
     public function postAnalyticsMakerEdit($id)
     {
-        dd($id);
-        return view('admin.postanalyticsmaker.post-analytics-maker-edit');
+        // dd($id);
+        return view('admin.postanalyticsmaker.post-analytics-maker-create');
     }
 
 }
