@@ -52,7 +52,7 @@
                                     {{-- <th scope="row" class="text-center">{{ $index }}</th> --}}
                                     <td class="">{{ $index }}</td>
                                     <td class="">
-                                        <a href="{{ route('admin.post-analytics-maker-edit', ['id' => $chitti->chittiId]) }}" class="text-primary">
+                                        <a href="{{ route('admin.post-analytics-maker-create', ['id' => $chitti->chittiId]) }}" class="text-primary">
                                             {{ $chitti->Title }}
                                         </a>
                                     </td>
