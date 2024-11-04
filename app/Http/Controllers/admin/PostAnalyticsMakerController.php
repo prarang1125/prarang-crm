@@ -36,7 +36,9 @@ class PostAnalyticsMakerController extends Controller
     public function postAnalyticsMakerEdit($id)
     {
         // dd($id);
-        return view('admin.postanalyticsmaker.post-analytics-maker-create');
+        $chittis = Chitti::where('chittiId', $id)->get();
+        dd($chittis);
+        return view('admin.postanalyticsmaker.post-analytics-maker-create', compact('chittis'));
     }
 
 }
