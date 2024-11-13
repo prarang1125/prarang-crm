@@ -33,12 +33,61 @@ class PostAnalyticsMakerController extends Controller
         return view('admin.postanalyticsmaker.post-analytics-maker-listing', compact('chittis'));
     }
 
-    public function postAnalyticsMakerEdit($id)
+    #this method is use for  show the post analytics maker edit data and page
+    public function postAnalyticsMakerEdit(Request $request)
     {
-        // dd($id);
-        return view('admin.postanalyticsmaker.post-analytics-maker-create');
+        $cid = $request->query('id');
+        $cityCode = $request->query('city');
+        $chitti  = Chitti::where('chittiId', $cid)->where('areaId', $cityCode)->first();
+        return view('admin.postanalyticsmaker.post-analytics-maker-create', compact('chitti'));
     }
 
+    // this method is use for update the post analytics method
+    public function postAnalyticsMakerUpdate(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'postNumber'   => 'required|string',
+            'titleOfPost'  => 'required|string',
+            'uploadDate'   => 'required|date',
+            'numberOfDays' => 'required|integer',
+            'nameOfCity'   => 'required|string',
+            'advertisementInPost' => 'required|in:Yes,No',
+            'postViewershipFrom'  => 'required|date',
+            'to'     => 'required|date',
+            'citySubscribers'    => 'required|integer',
+            'total'  => 'required|integer',
+            'prarangApplication' => 'nullable|string',
+            'facebookLinkClick'  => 'nullable|integer',
+            'websiteGd' => 'nullable|string',
+            'monthDay'  => 'nullable|string',
+            'email'     => 'nullable|email',
+            'sponsored' => 'nullable|string',
+            'instagram' => 'nullable|string',
+        ]);
+
+        $chitti = Chitti::findOrFail($id);
+        $chitti->update([
+            'postViewershipDate'    => $request->postViewershipFrom,
+            'postViewershipDateTo'  => $request->to,
+            'noofDaysfromUpload'    => $request->numberOfDays,
+            'citySubscriber'        => $request->citySubscribers,
+            'totalViewerCount'      => $request->total,
+            'prarangApplication'    => $request->prarangApplication,
+            'websiteCount'          => $request->websiteGd,
+            'emailCount'            => $request->email,
+            'sponsoredBy'           => $request->sponsored,
+            'instagramCount'        => $request->instagram,
+            'advertisementPost'     => $request->advertisementInPost,
+            'analyticsMaker'        => Auth::guard('admin')->user()->userId,
+            'monthDay'              => $request->monthDay,
+            'fb_link_click'         => $request->facebookLinkClick,
+            'postStatusMakerChecker' => 'send_to_post_checker',
+        ]);
+
+        // Redirect with success message
+        return back()->with('success', 'Data updated successfully.');
+
+    }
 }
 
 ?>
