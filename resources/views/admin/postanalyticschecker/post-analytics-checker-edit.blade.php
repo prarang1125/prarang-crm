@@ -1,5 +1,5 @@
 @extends('layouts.admin.admin')
-@section('title', 'New Maker Analytics Register')
+@section('title', 'New Checker Analytics Register')
 
 @section('content')
 <!--start page wrapper -->
@@ -12,7 +12,7 @@
                 <ol class="breadcrumb mb-0 p-0">
                     {{-- <li class="breadcrumb-item"><a href="{{ url('admin/postanalyticsmaker/post-analytics-maker-listing')}}"><i class="bx bx-user"></i></a>
                     </li> --}}
-                    <li class="breadcrumb-item active" aria-current="page">Maker Analytics Register</li>
+                    <li class="breadcrumb-item active" aria-current="page">Checker Analytics Register</li>
                 </ol>
             </nav>
         </div>
@@ -27,9 +27,9 @@
                         {{ session('success') }}
                     </div>
                 @endif
-                <h6 class="mb-0 text-uppercase text-primary">Create New Maker Analytics</h6>
+                <h6 class="mb-0 text-uppercase text-primary">Create New Checker Analytics</h6>
                 <hr/>
-                <form  action="{{ route('admin.post-analytics-maker-update', $chitti->chittiId) }}" method="POST" enctype="multipart/form-data">
+                <form  action="" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -89,8 +89,6 @@
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
-
-
                         <div class="col-md-3">
                             <label for="postViewershipFrom" class="form-label">Post Viewership From</label>
                             <input type="text" class="form-control  @error('postViewershipFrom') is-invalid @enderror" id="postViewershipFrom" name="postViewershipFrom" value="{{ old('postViewershipFrom', \Carbon\Carbon::parse($chitti->created_at)->format('Y-m-d') ?? '') }}" readonly>
@@ -98,7 +96,6 @@
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
-
                         <div class="col-md-3">
                             <label for="to" class="form-label">To</label>
                             <input type="date" class="form-control @error('to') is-invalid @enderror" id="to" name="to" value="{{ old('to', date('Y-m-d')) }}">
@@ -154,14 +151,6 @@
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
-
-                        <div class="col-md-6">
-                            <label for="monthDay" class="form-label">Month Day</label>
-                            <input type="text" class="form-control  @error('monthDay') is-invalid @enderror" id="monthDay" name="monthDay" value="{{ old('monthDay') }}" >
-                            @error('monthDay')
-                                <p class="invalid-feedback">{{ $message }}</p>
-                            @enderror
-                        </div>
                     </div>
 
                     <div class="row mt-1">
@@ -193,7 +182,9 @@
                     </div>
 
                     <div class="modal-footer mt-3">
-                        <button type="submit" class="btn btn-primary">Send to checker</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="submit" class="btn btn-primary">Send to maker</button>
+                        <button type="submit" class="btn btn-primary">Approve</button>
                     </div>
                 </form>
             </div>

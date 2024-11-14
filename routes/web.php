@@ -22,6 +22,8 @@ use App\Http\Controllers\admin\UploaderController;
 use App\Http\Controllers\admin\PostController;
 use App\Http\Controllers\admin\DeletedPostController;
 use App\Http\Controllers\admin\PostAnalyticsMakerController;
+use App\Http\Controllers\admin\PostAnalyticsCheckerController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -186,13 +188,18 @@ Route::group(['prefix' => 'admin'], function(){
 
         #this route is use for admin post analytics maker start
             Route::get('/postanalyticsmaker/post-analytics-maker-city-listing', [PostAnalyticsMakerController::class, 'index'])->name('admin.post-analytics-maker-city-listing');
-
             Route::get('/postanalyticsmaker/post-analytics-maker-listing', [PostAnalyticsMakerController::class, 'postAnalyticsMakerListing'])->name('admin.post-analytics-maker-listing');
-
             Route::get('/postanalyticsmaker/post-analytics-maker-create', [PostAnalyticsMakerController::class, 'postAnalyticsMakerEdit'])->name('admin.post-analytics-maker-create');
-
             Route::put('/postanalyticsmaker/post-analytics-maker/update/{id}', [PostAnalyticsMakerController::class, 'postAnalyticsMakerUpdate'])->name('admin.post-analytics-maker-update');
         #this route is use for admin post analytics maker end
+
+        #this route is use for admin post analytics checker start
+        Route::get('/postanalyticschecker/post-analytics-checker-city-listing', [PostAnalyticsCheckerController::class, 'index'])->name('admin.post-analytics-checker-city-listing');
+
+        Route::get('/postanalyticschecker/post-analytics-checker-listing', [PostAnalyticsCheckerController::class, 'postAnalyticsCheckerListing'])->name('admin.post-analytics-checker-listing');
+
+        Route::get('/postanalyticschecker/post-analytics-checker-edit', [PostAnalyticsCheckerController::class, 'postAnalyticsChckerEdit'])->name('admin.post-analytics-checker-edit');
+        #this route is use for admin post analytics checker end
     });
 });
 

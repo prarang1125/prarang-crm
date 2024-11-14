@@ -122,5 +122,10 @@ class Chitti extends Model
     {
         return $this->belongsTo(Mcity::class, 'cityId', 'cityId'); // adjust the foreign key if necessary
     }
+
+    public function analyticsMaker()
+    {
+        return $this->belongsTo(Muser::class, 'analyticsMaker', 'userId');
+    }
 }
 
