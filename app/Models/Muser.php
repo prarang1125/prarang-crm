@@ -67,4 +67,10 @@ class Muser extends Authenticatable
     {
         return $this->hasOne(Mlanguagescript::class, 'id', 'languageId');
     }
+
+    public function analyticsMaker()
+    {
+        return $this->belongsTo(Muser::class, 'analyticsMaker', 'userId');
+    }
+
 }

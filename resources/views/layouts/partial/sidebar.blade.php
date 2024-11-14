@@ -30,7 +30,7 @@
                 </li>
                 <li> <a href="{{ url('/admin/postanalyticsmaker/post-analytics-maker-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>Post Analytics Maker</a>
                 </li>
-                <li> <a href="dashboard-human-resources.html"><i class="bx bx-right-arrow-alt"></i>Post Analytics Checker</a>
+                <li> <a href="{{ url('/admin/postanalyticschecker/post-analytics-checker-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>Post Analytics Checker</a>
                 </li>
                 <li> <a href="dashboard-human-resources.html"><i class="bx bx-right-arrow-alt"></i>Post Analytics</a>
                 </li>
