@@ -199,6 +199,10 @@ Route::group(['prefix' => 'admin'], function(){
         Route::get('/postanalyticschecker/post-analytics-checker-listing', [PostAnalyticsCheckerController::class, 'postAnalyticsCheckerListing'])->name('admin.post-analytics-checker-listing');
 
         Route::get('/postanalyticschecker/post-analytics-checker-edit', [PostAnalyticsCheckerController::class, 'postAnalyticsChckerEdit'])->name('admin.post-analytics-checker-edit');
+
+        Route::put('/postanalyticschecker/post-analytics-checker/update/{id}', [PostAnalyticsCheckerController::class, 'postAnalyticsCheckerUpdate'])->name('admin.post-analytics-checker-update');
+
+        Route::get('/postanalyticschecker/post-analytics-checker/approve/{id}', [PostAnalyticsCheckerController::class, 'postAnalyticsCheckerApprove'])->name('admin.post-analytics-checker-approve');
         #this route is use for admin post analytics checker end
     });
 });

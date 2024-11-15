@@ -60,7 +60,7 @@ class PostAnalyticsMakerController extends Controller
             'facebookLinkClick'  => 'nullable|integer',
             'websiteGd' => 'nullable|string',
             'monthDay'  => 'nullable|string',
-            'email'     => 'nullable|email',
+            'email'     => 'nullable|string',
             'sponsored' => 'nullable|string',
             'instagram' => 'nullable|string',
         ]);
