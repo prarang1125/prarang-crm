@@ -111,7 +111,7 @@
                     <div class="row mt-1">
                         <div class="col-md-6">
                             <label for="citySubscribers" class="form-label">City Subscribers(FB)</label>
-                            <input type="text" class="form-control  @error('citySubscribers') is-invalid @enderror" id="citySubscribers" name="citySubscribers" value="{{ old('citySubscribers') }}" >
+                            <input type="text" class="form-control  @error('citySubscribers') is-invalid @enderror" id="citySubscribers" name="citySubscribers" id="citySubscribers" value="{{ old('citySubscribers') }}" oninput="calculateTotal()">
                             @error('citySubscribers')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -129,7 +129,7 @@
                     <div class="row mt-1">
                         <div class="col-md-6">
                             <label for="prarangApplication" class="form-label">Prarang Application</label>
-                            <input type="text" class="form-control  @error('prarangApplication') is-invalid @enderror" id="prarangApplication" name="prarangApplication" value="{{ old('prarangApplication') }}" >
+                            <input type="text" class="form-control  @error('prarangApplication') is-invalid @enderror" id="prarangApplication" name="prarangApplication" value="{{ old('prarangApplication') }}" oninput="calculateTotal()">
                             @error('prarangApplication')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -139,7 +139,7 @@
                     <div class="row mt-1">
                         <div class="col-md-6">
                             <label for="facebookLinkClick" class="form-label">Facebook Link Click</label>
-                            <input type="text" class="form-control  @error('facebookLinkClick') is-invalid @enderror" id="facebookLinkClick" name="facebookLinkClick" value="{{ old('facebookLinkClick') }}" >
+                            <input type="text" class="form-control  @error('facebookLinkClick') is-invalid @enderror" id="facebookLinkClick" name="facebookLinkClick" value="{{ old('facebookLinkClick') }}" oninput="calculateTotal()">
                             @error('facebookLinkClick')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -149,7 +149,7 @@
                     <div class="row mt-1">
                         <div class="col-md-6">
                             <label for="websiteGd" class="form-label">Website (Google+Direct)</label>
-                            <input type="text" class="form-control  @error('websiteGd') is-invalid @enderror" id="websiteGd" name="websiteGd" value="{{ old('websiteGd') }}" >
+                            <input type="text" class="form-control  @error('websiteGd') is-invalid @enderror" id="websiteGd" name="websiteGd" value="{{ old('websiteGd') }}" oninput="calculateTotal()">
                             @error('websiteGd')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -167,7 +167,7 @@
                     <div class="row mt-1">
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>
-                            <input type="text" class="form-control  @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" >
+                            <input type="text" class="form-control  @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" oninput="calculateTotal()">
                             @error('email')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -185,7 +185,7 @@
                     <div class="row mt-1">
                         <div class="col-md-6">
                             <label for="instagram" class="form-label">Instagram</label>
-                            <input type="text" class="form-control  @error('instagram') is-invalid @enderror" id="instagram" name="instagram" value="{{ old('instagram') }}" >
+                            <input type="text" class="form-control  @error('instagram') is-invalid @enderror" id="instagram" name="instagram" value="{{ old('instagram') }}" oninput="calculateTotal()">
                             @error('instagram')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror

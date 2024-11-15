@@ -29,7 +29,7 @@
                 @endif
                 <h6 class="mb-0 text-uppercase text-primary">Create New Checker Analytics</h6>
                 <hr/>
-                <form  action="" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.post-analytics-checker-update', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -108,7 +108,7 @@
                     <div class="row mt-1">
                         <div class="col-md-6">
                             <label for="citySubscribers" class="form-label">City Subscribers(FB)</label>
-                            <input type="text" class="form-control  @error('citySubscribers') is-invalid @enderror" id="citySubscribers" name="citySubscribers" value="{{ old('citySubscribers') }}" >
+                            <input type="text" class="form-control  @error('citySubscribers') is-invalid @enderror" id="citySubscribers" name="citySubscribers" value="{{ old('citySubscribers', $chitti->citySubscriber ?? '') }}" oninput="calculateTotal()">
                             @error('citySubscribers')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -116,7 +116,7 @@
 
                         <div class="col-md-6">
                             <label for="total" class="form-label">Total</label>
-                            <input type="text" class="form-control  @error('total') is-invalid @enderror" id="total" name="total" value="{{ old('total') }}" readonly>
+                            <input type="text" class="form-control  @error('total') is-invalid @enderror" id="total" name="total" value="{{ old('total', $chitti->totalViewerCount ?? '') }}" readonly>
                             @error('total')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -126,7 +126,7 @@
                     <div class="row mt-1">
                         <div class="col-md-6">
                             <label for="prarangApplication" class="form-label">Prarang Application</label>
-                            <input type="text" class="form-control  @error('prarangApplication') is-invalid @enderror" id="prarangApplication" name="prarangApplication" value="{{ old('prarangApplication') }}" >
+                            <input type="text" class="form-control  @error('prarangApplication') is-invalid @enderror" id="prarangApplication" name="prarangApplication" value="{{ old('prarangApplication', $chitti->prarangApplication ?? '') }}" oninput="calculateTotal()">
                             @error('prarangApplication')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -135,18 +135,8 @@
 
                     <div class="row mt-1">
                         <div class="col-md-6">
-                            <label for="facebookLinkClick" class="form-label">Facebook Link Click</label>
-                            <input type="text" class="form-control  @error('facebookLinkClick') is-invalid @enderror" id="facebookLinkClick" name="facebookLinkClick" value="{{ old('facebookLinkClick') }}" >
-                            @error('facebookLinkClick')
-                                <p class="invalid-feedback">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="row mt-1">
-                        <div class="col-md-6">
                             <label for="websiteGd" class="form-label">Website (Google+Direct)</label>
-                            <input type="text" class="form-control  @error('websiteGd') is-invalid @enderror" id="websiteGd" name="websiteGd" value="{{ old('websiteGd') }}" >
+                            <input type="text" class="form-control  @error('websiteGd') is-invalid @enderror" id="websiteGd" name="websiteGd" value="{{ old('websiteGd', $chitti->websiteCount ?? '') }}" oninput="calculateTotal()">
                             @error('websiteGd')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -156,7 +146,7 @@
                     <div class="row mt-1">
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>
-                            <input type="text" class="form-control  @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" >
+                            <input type="text" class="form-control  @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $chitti->emailCount ?? '') }}" oninput="calculateTotal()">
                             @error('email')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -164,7 +154,7 @@
 
                         <div class="col-md-6">
                             <label for="sponsored" class="form-label">This Post was Sponsored by</label>
-                            <input type="text" class="form-control  @error('sponsored') is-invalid @enderror" id="sponsored" name="sponsored" value="{{ old('sponsored') }}" >
+                            <input type="text" class="form-control  @error('sponsored') is-invalid @enderror" id="sponsored" name="sponsored" value="{{ old('sponsored', $chitti->sponsoredBy ?? '') }}" >
                             @error('sponsored')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -174,7 +164,7 @@
                     <div class="row mt-1">
                         <div class="col-md-6">
                             <label for="instagram" class="form-label">Instagram</label>
-                            <input type="text" class="form-control  @error('instagram') is-invalid @enderror" id="instagram" name="instagram" value="{{ old('instagram') }}" >
+                            <input type="text" class="form-control  @error('instagram') is-invalid @enderror" id="instagram" name="instagram" value="{{ old('instagram', $chitti->instagramCount) }}" oninput="calculateTotal()">
                             @error('instagram')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -182,9 +172,22 @@
                     </div>
 
                     <div class="modal-footer mt-3">
-                        <button type="submit" class="btn btn-primary">Update</button>
-                        <button type="submit" class="btn btn-primary">Send to maker</button>
-                        <button type="submit" class="btn btn-primary">Approve</button>
+                        <div class="col-md-6"></div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <button type="submit" name="update" id="update" class="btn btn-primary">Update</button>
+                            </div>
+                        </div>
+                        <div class="col-md-2" style="text-align:center;">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary">Send to maker</button>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <a href="{{ route('admin.post-analytics-checker-approve', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&approve={{ 'approve' }}" class="btn btn-primary">Approve</a>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>

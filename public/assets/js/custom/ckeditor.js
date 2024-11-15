@@ -5,3 +5,15 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
+// total post analytics maker data
+function calculateTotal() {
+    const fields = ['citySubscribers', 'prarangApplication', 'facebookLinkClick', 'websiteGd', 'email', 'instagram'];
+    let total = 0;
+
+    fields.forEach(field => {
+        const value = parseFloat(document.getElementById(field).value) || 0;
+        total += value;
+    });
+
+    document.getElementById('total').value = total;
+}
