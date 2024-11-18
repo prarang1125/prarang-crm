@@ -23,6 +23,7 @@ use App\Http\Controllers\admin\PostController;
 use App\Http\Controllers\admin\DeletedPostController;
 use App\Http\Controllers\admin\PostAnalyticsMakerController;
 use App\Http\Controllers\admin\PostAnalyticsCheckerController;
+use App\Http\Controllers\admin\PostAnalyticsController;
 
 
 Route::get('/', function () {
@@ -209,9 +210,13 @@ Route::group(['prefix' => 'admin'], function(){
             Route::put('/postanalyticschecker/post-analytics-checker-sendtomaker/sendtomaker/{id}', [PostAnalyticsCheckerController::class, 'postAnalyticsCheckerSendToMaker'])->name('admin.post-analytics-checker-sendtomaker');
         #this route is use for admin post analytics checker end
 
-        #this route is use for show the listing of post maker analytics which is rejected by checker
+        #this route is use for show the listing of post maker analytics which is rejected by checker start
             Route::get('/postanalyticsmaker/post-analytics-from-checker-listing', [PostAnalyticsMakerController::class, 'postAnalyticsListReturnFromCheckerL'])->name('admin.post-analytics-from-checker-listing');
+        #this route is use for show the listing of post maker analytics which is rejected by checker end
 
+        #this route is use for post analytics start
+            Route::get('/postanalytics/post-analytics-listing', [PostAnalyticsController::class, 'index'])->name('admin.post-analytics-listing');
+        #this route is use for post analytics end
     });
 });
 
