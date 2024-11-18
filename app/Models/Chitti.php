@@ -75,6 +75,8 @@ class Chitti extends Model
         'cityId',
         'areaId',
         'geographyId',
+        'post_anlytics_rtrn_to_mkr',
+        'post_anlytics_rtrn_to_mkr_id',
         'created_at',
         'created_by',
         'updated_at',

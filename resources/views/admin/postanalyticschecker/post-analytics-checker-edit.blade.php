@@ -180,9 +180,10 @@
                         </div>
                         <div class="col-md-2" style="text-align:center;">
                             <div class="form-group">
-                                <button type="button" class="btn btn-primary">Send to maker</button>
+                                <a href="{{ route('admin.post-analytics-checker-return-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}" class="btn btn-primary">Send to maker</a>
                             </div>
                         </div>
+                        {{-- @dd($chitti->chittiId) --}}
                         <div class="col-md-1">
                             <div class="form-group">
                                 <a href="{{ route('admin.post-analytics-checker-approve', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&approve={{ 'approve' }}" class="btn btn-primary">Approve</a>

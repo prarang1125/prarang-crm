@@ -16,8 +16,11 @@ class PostAnalyticsMakerController extends Controller
     #this method is use for show the listing of live city maker
     public function index()
     {
-        $mcitys = Mcity::where('isActive', 1)->get();
-        return view('admin.postanalyticsmaker.post-analytics-maker-city-listing', compact('mcitys'));
+        $mcitys  = Mcity::where('isActive', 1)->get();
+        $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
+        $chittis = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->get();
+
+        return view('admin.postanalyticsmaker.post-analytics-maker-city-listing', compact('mcitys', 'notification', 'chittis'));
     }
 
 
@@ -30,6 +33,7 @@ class PostAnalyticsMakerController extends Controller
         // $areaId = (int) $numericPart;
         // $chittis = Chitti::with('city')->where('cityId', $areaId)->get();
         $chittis = Chitti::where('areaId', $cityCode)->get();
+        // $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
         return view('admin.postanalyticsmaker.post-analytics-maker-listing', compact('chittis'));
     }
 
@@ -82,11 +86,19 @@ class PostAnalyticsMakerController extends Controller
             'monthDay'              => $request->monthDay,
             'fb_link_click'         => $request->facebookLinkClick,
             'postStatusMakerChecker' => 'send_to_post_checker',
+            'post_anlytics_rtrn_to_mkr_id' => 1
         ]);
 
         // Redirect with success message
         return back()->with('success', 'Data updated successfully.');
 
+    }
+
+    #this method is use for show the listing of rejected post ananlytics via checker
+    public function postAnalyticsListReturnFromCheckerL()
+    {
+        $chittis = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->get();
+        return view('admin.postanalyticsmaker.post-analytics-rejected-from-checker-listing', compact('chittis'));
     }
 }
 
