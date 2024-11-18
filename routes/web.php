@@ -194,16 +194,24 @@ Route::group(['prefix' => 'admin'], function(){
         #this route is use for admin post analytics maker end
 
         #this route is use for admin post analytics checker start
-        Route::get('/postanalyticschecker/post-analytics-checker-city-listing', [PostAnalyticsCheckerController::class, 'index'])->name('admin.post-analytics-checker-city-listing');
+            Route::get('/postanalyticschecker/post-analytics-checker-city-listing', [PostAnalyticsCheckerController::class, 'index'])->name('admin.post-analytics-checker-city-listing');
 
-        Route::get('/postanalyticschecker/post-analytics-checker-listing', [PostAnalyticsCheckerController::class, 'postAnalyticsCheckerListing'])->name('admin.post-analytics-checker-listing');
+            Route::get('/postanalyticschecker/post-analytics-checker-listing', [PostAnalyticsCheckerController::class, 'postAnalyticsCheckerListing'])->name('admin.post-analytics-checker-listing');
 
-        Route::get('/postanalyticschecker/post-analytics-checker-edit', [PostAnalyticsCheckerController::class, 'postAnalyticsChckerEdit'])->name('admin.post-analytics-checker-edit');
+            Route::get('/postanalyticschecker/post-analytics-checker-edit', [PostAnalyticsCheckerController::class, 'postAnalyticsChckerEdit'])->name('admin.post-analytics-checker-edit');
 
-        Route::put('/postanalyticschecker/post-analytics-checker/update/{id}', [PostAnalyticsCheckerController::class, 'postAnalyticsCheckerUpdate'])->name('admin.post-analytics-checker-update');
+            Route::put('/postanalyticschecker/post-analytics-checker/update/{id}', [PostAnalyticsCheckerController::class, 'postAnalyticsCheckerUpdate'])->name('admin.post-analytics-checker-update');
 
-        Route::get('/postanalyticschecker/post-analytics-checker/approve/{id}', [PostAnalyticsCheckerController::class, 'postAnalyticsCheckerApprove'])->name('admin.post-analytics-checker-approve');
+            Route::get('/postanalyticschecker/post-analytics-checker/approve/{id}', [PostAnalyticsCheckerController::class, 'postAnalyticsCheckerApprove'])->name('admin.post-analytics-checker-approve');
+
+            Route::get('/postanalyticschecker/post-analytics-checker-return-region/{id}', [PostAnalyticsCheckerController::class, 'postAnalyticsCheckerReturnRegion'])->name('admin.post-analytics-checker-return-region');
+
+            Route::put('/postanalyticschecker/post-analytics-checker-sendtomaker/sendtomaker/{id}', [PostAnalyticsCheckerController::class, 'postAnalyticsCheckerSendToMaker'])->name('admin.post-analytics-checker-sendtomaker');
         #this route is use for admin post analytics checker end
+
+        #this route is use for show the listing of post maker analytics which is rejected by checker
+            Route::get('/postanalyticsmaker/post-analytics-from-checker-listing', [PostAnalyticsMakerController::class, 'postAnalyticsListReturnFromCheckerL'])->name('admin.post-analytics-from-checker-listing');
+
     });
 });
 

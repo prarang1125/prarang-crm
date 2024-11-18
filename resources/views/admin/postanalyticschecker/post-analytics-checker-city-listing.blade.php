@@ -26,7 +26,7 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <h6 class="mb-0 text-uppercase">Live Maker City Listing</h6>
+            <h6 class="mb-0 text-uppercase">Live Checker City Listing</h6>
             <hr/>
             <div class="card">
                 <div class="card-body">

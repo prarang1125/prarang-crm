@@ -21,10 +21,14 @@ class PostAnalyticsCheckerController extends Controller
         return view('admin.postanalyticschecker.post-analytics-checker-city-listing', compact('mcitys'));
     }
 
+    #this method is use for show the listing of post anlytics checker
     public function postAnalyticsCheckerListing(Request $request)
     {
         $cityCode = $request->query('cityCode');
-        $chittis = Chitti::where('areaId', $cityCode)->get();
+        $chittis = Chitti::where('areaId', $cityCode)
+                    ->where('postStatusMakerChecker', 'send_to_post_checker')
+                    ->where('post_anlytics_rtrn_to_mkr_id', 1)
+                    ->get();
         foreach ($chittis as $chitti) {
             $anlyticsMaker =  $chitti->analyticsMaker;
         }
@@ -45,10 +49,11 @@ class PostAnalyticsCheckerController extends Controller
         $cid = $request->query('id');
         $cityCode = $request->query('city');
         $chitti  = Chitti::where('chittiId', $cid)->where('areaId', $cityCode)->first();
-        // dd($chitti);
+        // dd($cid);
         return view('admin.postanalyticschecker.post-analytics-checker-edit', compact('chitti'));
     }
 
+    #this method is use for update postanalytics data
     public function postAnalyticsCheckerUpdate(Request $request, $id)
     {
         $checkerId = $request->query('checkerId');
@@ -90,6 +95,7 @@ class PostAnalyticsCheckerController extends Controller
         return back()->with('success', 'Data updated successfully.');
     }
 
+    #this method is use for approve checker post analytics.
     public function postAnalyticsCheckerApprove(Request $request, $id)
     {
         $checkerId   = $request->query('checkerId');
@@ -106,6 +112,41 @@ class PostAnalyticsCheckerController extends Controller
             'analyticsChecker'  => $checkerId
         ]);
         return back()->with('success', 'Post Analytics have been approved successfully');
+    }
+
+    #this method is use for make page for write the region of return to maker
+    public function postAnalyticsCheckerReturnRegion(Request $request, $id)
+    {
+        $cityCode   = $request->query('City');
+        $checkerId  = $request->query('checkerId');
+        // dd($id);
+        $chitti = Chitti::where('areaId', $cityCode)
+            ->where('chittiId', $id)
+            ->first();
+        return view('admin.postanalyticschecker.post-analytics-checker-return-region', compact('chitti'));
+    }
+
+    #this method is use for return to post analytics maker with region and soft delete from post analytic checker
+    public function postAnalyticsCheckerSendToMaker(Request $request, $id)
+    {
+        $checkerId   = $request->query('checkerId');
+        $City        = $request->query('City');
+        $currentDate = date("d-M-y H:i:s");
+
+        $validated = $request->validate([
+            'returnToMakerWithRegion'   => 'required|string',
+        ]);
+        // dd
+        $chitti = Chitti::findOrFail($id);
+        $chitti->update([
+            'analyticsChecker'          => $checkerId,
+            'checkerReason'             => $request->returnToMakerWithRegion,
+            'post_anlytics_rtrn_to_mkr' => $request->returnToMakerWithRegion,
+            'dateOfReturnToMaker'       => $currentDate,
+            'postStatusMakerChecker'    => 'return_post_from_checker',
+            'post_anlytics_rtrn_to_mkr_id' => 0,
+        ]);
+        return back()->with('success', 'Post Analytics have been return maker post analytics from checker successfully');
     }
 }
 

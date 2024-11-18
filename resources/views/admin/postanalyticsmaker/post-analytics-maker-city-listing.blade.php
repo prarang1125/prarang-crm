@@ -26,7 +26,17 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <h6 class="mb-0 text-uppercase">Live Maker City Listing</h6>
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 text-uppercase">Live Maker City Listing</h6>
+                <a class="nav-link dropdown-toggle-nocaret position-relative"
+                href="{{ route('admin.post-analytics-from-checker-listing') }}"
+                role="button">
+                    @if($notification > 0)
+                        <span class="alert-count">{{ $notification }}</span>
+                    @endif
+                    <i class="bx bx-bell"></i>
+                </a>
+            </div>
             <hr/>
             <div class="card">
                 <div class="card-body">
