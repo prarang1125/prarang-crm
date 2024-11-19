@@ -29,12 +29,13 @@
                 @endif
                 <h6 class="mb-0 text-uppercase text-primary">Create New Maker Analytics</h6>
                 <hr/>
-                <form  action="{{ url('/admin/country/country-store') }}" method="POST" enctype="multipart/form-data">
+                <form  action="{{ route('admin.post-analytics-maker-update', $chitti->chittiId) }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    @method('PUT')
                     <div class="row">
                         <div class="col-md-2">
                             <label for="postNumber" class="form-label">Post Number</label>
-                            <input type="text" class="form-control  @error('postNumber') is-invalid @enderror" id="postNumber" name="postNumber" value="{{ old('postNumber') }}" >
+                            <input type="text" class="form-control  @error('postNumber') is-invalid @enderror" id="postNumber" name="postNumber" value="{{ old('postNumber', $chitti->chittiId ?? '') }}" readonly>
                             @error('postNumber')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -42,7 +43,7 @@
 
                         <div class="col-md-3">
                             <label for="titleOfPost" class="form-label">Title of Post</label>
-                            <input type="text" class="form-control  @error('titleOfPost') is-invalid @enderror" id="titleOfPost" name="titleOfPost" value="{{ old('titleOfPost') }}" >
+                            <input type="text" class="form-control  @error('titleOfPost') is-invalid @enderror" id="titleOfPost" name="titleOfPost" value="{{ old('postNumber', $chitti->Title ?? '') }}" readonly>
                             @error('titleOfPost')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -50,7 +51,7 @@
 
                         <div class="col-md-2">
                             <label for="uploadDate" class="form-label">Upload Date</label>
-                            <input type="text" class="form-control  @error('uploadDate') is-invalid @enderror" id="uploadDate" name="uploadDate" value="{{ old('uploadDate') }}" >
+                            <input type="text" class="form-control  @error('uploadDate') is-invalid @enderror" id="uploadDate" name="uploadDate" value="{{ old('uploadDate', \Carbon\Carbon::parse($chitti->created_at)->format('Y-m-d') ?? '') }}" readonly>
                             @error('uploadDate')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -58,7 +59,7 @@
 
                         <div class="col-md-2">
                             <label for="numberOfDays" class="form-label">Number of Days</label>
-                            <input type="text" class="form-control  @error('numberOfDays') is-invalid @enderror" id="numberOfDays" name="numberOfDays" value="{{ old('numberOfDays') }}" >
+                            <input type="text" class="form-control  @error('numberOfDays') is-invalid @enderror" id="numberOfDays" name="numberOfDays" value="{{ old('numberOfDays', (int) \Carbon\Carbon::parse($chitti->created_at ?? now())->diffInDays(now())) }}" readonly>
                             @error('numberOfDays')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -66,7 +67,7 @@
 
                         <div class="col-md-3">
                             <label for="nameOfCity" class="form-label">Name of City</label>
-                            <input type="text" class="form-control  @error('nameOfCity') is-invalid @enderror" id="nameOfCity" name="nameOfCity" value="{{ old('nameOfCity') }}" >
+                            <input type="text" class="form-control  @error('nameOfCity') is-invalid @enderror" id="nameOfCity" name="nameOfCity" value="{{ old('nameOfCity', $chitti->city->cityNameInEnglish ?? 'N/A') }}" readonly>
                             @error('nameOfCity')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -74,17 +75,25 @@
                     </div>
 
                     <div class="row mt-1">
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <label for="advertisementInPost" class="form-label">Advertisement in Post</label>
-                            <input type="text" class="form-control  @error('advertisementInPost') is-invalid @enderror" id="advertisementInPost" name="advertisementInPost" value="{{ old('advertisementInPost') }}" >
+                            <div class="select-wrapper">
+                                <select class="form-control @error('advertisementInPost') is-invalid @enderror" id="advertisementInPost" name="advertisementInPost">
+                                    <option value="" selected disabled>Select</option>
+                                    <option value="Yes" {{ old('advertisementInPost') == 'Yes' ? 'selected' : '' }}>Yes</option>
+                                    <option value="No" {{ old('advertisementInPost') == 'No' ? 'selected' : '' }}>No</option>
+                                </select>
+                                <span class="select-arrow">&#9662;</span> <!-- Unicode arrow symbol -->
+                            </div>
                             @error('advertisementInPost')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <div class="col-md-4">
+
+                        <div class="col-md-3">
                             <label for="postViewershipFrom" class="form-label">Post Viewership From</label>
-                            <input type="text" class="form-control  @error('postViewershipFrom') is-invalid @enderror" id="postViewershipFrom" name="postViewershipFrom" value="{{ old('postViewershipFrom') }}" >
+                            <input type="text" class="form-control  @error('postViewershipFrom') is-invalid @enderror" id="postViewershipFrom" name="postViewershipFrom" value="{{ old('postViewershipFrom', \Carbon\Carbon::parse($chitti->created_at)->format('Y-m-d') ?? '') }}" readonly>
                             @error('postViewershipFrom')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -92,7 +101,7 @@
 
                         <div class="col-md-3">
                             <label for="to" class="form-label">To</label>
-                            <input type="text" class="form-control  @error('to') is-invalid @enderror" id="to" name="to" value="{{ old('to') }}" >
+                            <input type="date" class="form-control  @error('to') is-invalid @enderror" id="to" name="to" value="{{ old('to') }}" onchange="calculateTotal()">
                             @error('to')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -110,7 +119,7 @@
 
                         <div class="col-md-6">
                             <label for="total" class="form-label">Total</label>
-                            <input type="text" class="form-control  @error('total') is-invalid @enderror" id="total" name="total" value="{{ old('total') }}" >
+                            <input type="text" class="form-control  @error('total') is-invalid @enderror" id="total" name="total" value="{{ old('total') }}" readonly>
                             @error('total')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -184,7 +193,7 @@
                     </div>
 
                     <div class="modal-footer mt-3">
-                        <button type="submit" class="btn btn-primary">Create</button>
+                        <button type="submit" class="btn btn-primary">Send to checker</button>
                     </div>
                 </form>
             </div>
