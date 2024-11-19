@@ -20,17 +20,23 @@ class PostAnalyticsMakerController extends Controller
         return view('admin.postanalyticsmaker.post-analytics-maker-city-listing', compact('mcitys'));
     }
 
+
     #this method is use for show the listing post analytics maker according to city
     public function postAnalyticsMakerListing(Request $request)
     {
         // Get the cityCode from the request
         $cityCode = $request->query('cityCode');
-
-        $chittis = Chitti::whereHas('geographyMappings.city', function ($query) use ($cityCode) {
-            $query->where('cityCode', $cityCode);
-        })->get();
-
+        // $numericPart = preg_replace('/[^0-9]/', '', $cityCode);
+        // $areaId = (int) $numericPart;
+        // $chittis = Chitti::with('city')->where('cityId', $areaId)->get();
+        $chittis = Chitti::where('areaId', $cityCode)->get();
         return view('admin.postanalyticsmaker.post-analytics-maker-listing', compact('chittis'));
+    }
+
+    public function postAnalyticsMakerEdit($id)
+    {
+        dd($id);
+        return view('admin.postanalyticsmaker.post-analytics-maker-edit');
     }
 
 }

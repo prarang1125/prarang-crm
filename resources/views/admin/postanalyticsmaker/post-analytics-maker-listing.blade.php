@@ -33,7 +33,7 @@
                     <table class="table mb-0 table-hover">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col" class="">#</th>
+                                {{-- <th scope="col" class="">#</th> --}}
                                 <th scope="col" class="">Post Number</th>
                                 <th scope="col" class="">Title</th>
                                 <th scope="col" class="">Upload Date</th>
@@ -49,16 +49,20 @@
                             @php $index = 1;  @endphp
                             @foreach ($chittis as $chitti)
                                 <tr>
-                                    <th scope="row" class="text-center">{{ $index }}</th>
-                                    <td class="">{{ $chitti->chittiId }}</td>
-                                    <td class="">{{ $chitti->Title }}</td>
-                                    <td class="">{{ $chitti->updated_at }}</td>
-                                    <td class="">{{ 'No. of days from Upload' }}</td>
-                                    <td class="">{{ 'Area' }}</td>
+                                    {{-- <th scope="row" class="text-center">{{ $index }}</th> --}}
+                                    <td class="">{{ $index }}</td>
+                                    <td class="">
+                                        <a href="{{ route('admin.post-analytics-maker-edit', ['id' => $chitti->chittiId]) }}" class="text-primary">
+                                            {{ $chitti->Title }}
+                                        </a>
+                                    </td>
+                                    <td class="">{{ $chitti->created_at }}</td>
+                                    <td class="">{{ (int) \Carbon\Carbon::parse($chitti->created_at)->diffInDays(now()) }}</td>
+                                    <td class="">{{ $chitti->city->cityNameInEnglish ?? 'N/A' }} </td>
                                     <td class="">{{ 'Ad' }}</td>
                                     <td class="">{{ 'Total Viewership' }}</td>
-                                    <td class="">{{ 'Status' }}</td>
-                                    <td class="">{{ 'Sent Time' }}</td>
+                                    <td class="">{{ $chitti->makerStatus }}</td>
+                                    <td class="">{{ $chitti->updated_at ?? '' }}</td>
                                 </tr>
                                 @php $index++;  @endphp
                             @endforeach

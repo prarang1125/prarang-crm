@@ -97,6 +97,16 @@ class MakerController extends Controller
             // dd($content);
 
             $chitti = new Chitti();
+            $area_id = $request->c2rselect;
+            $areaIdCode = '';
+            if($request->geography == 6){//6 is use for city
+                $areaIdCode = 'c'.$area_id;
+            }elseif($request->geography == 5){//5 is use for region
+                $areaIdCode = 'r'.$area_id;
+            }elseif($request->geography == 7){// 7 is use for country
+                $areaIdCode = 'con'.$area_id;
+            }
+
             $chitti->languageId = 1;
             $chitti->description = $request->content;
             $chitti->dateOfCreation =  $currentDateTime;
@@ -106,6 +116,9 @@ class MakerController extends Controller
             $chitti->makerId = Auth::guard('admin')->user()->userId;
             $chitti->makerStatus = 'sent_to_checker';
             $chitti->finalStatus = '';
+            $chitti->cityId = $area_id;
+            $chitti->areaId = $areaIdCode;
+            $chitti->geographyId = $request->geography;
             $chitti->created_at = $currentDateTime;
             $chitti->created_by = Auth::guard('admin')->user()->userId;
             $chitti->save();
