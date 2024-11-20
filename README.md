@@ -1,3 +1,3 @@
 ## Prarang CRM
 ### Prarang Admin
-- [NEw](https://prarang.in)
+- [Prarang.in](https://prarang.in)
