@@ -21,6 +21,7 @@ use App\Http\Controllers\admin\ChekerController;
 use App\Http\Controllers\admin\UploaderController;
 use App\Http\Controllers\admin\PostController;
 use App\Http\Controllers\admin\DeletedPostController;
+use App\Http\Controllers\admin\PortalController;
 use App\Http\Controllers\admin\PostAnalyticsMakerController;
 use App\Http\Controllers\admin\PostAnalyticsCheckerController;
 use App\Http\Controllers\admin\PostAnalyticsController;
@@ -217,6 +218,11 @@ Route::group(['prefix' => 'admin'], function(){
         #this route is use for post analytics start
             Route::get('/postanalytics/post-analytics-listing', [PostAnalyticsController::class, 'index'])->name('admin.post-analytics-listing');
         #this route is use for post analytics end
+
+
+        // Portal ->Vivek
+        Route::resource('portal', PortalController::class);
+
     });
 });
 
