@@ -27,7 +27,7 @@ use App\Http\Controllers\admin\PostAnalyticsController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return "<a href='/admin/login'>Admin Login</a><br><a href='/accounts/login'>Other Login</a><br>". Hash::make('password') ;
 });
 
 Route::group(['prefix' => 'accounts'], function(){
@@ -219,7 +219,6 @@ Route::group(['prefix' => 'admin'], function(){
         #this route is use for post analytics end
     });
 });
-
 
 
 
