@@ -37,8 +37,9 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col" class="">Sr.</th>
-                                    <th scope="col" class="">CityId</th>
+                                   
                                     <th scope="col" class="">CityName</th>
+                                    <th scope="col" class="">CityId</th>
                                     <th scope="col" class="">CityCode </th>
                                     <th scope="col" class="">Local Name</th>
                                     <th scope="col" class="">Local Language</th>                                   
@@ -49,8 +50,9 @@
                                 @foreach($portals as $portal)
                                 <tr>
                                     <td>{{ $loop->iteration + ($portals->currentPage() - 1) * $portals->perPage() }}</td>
-                                    <td>{{ $portal->city_id }}</td>
+                                  
                                     <td>{{ $portal->city_name }}</td>
+                                    <td>{{ $portal->city_id }}</td>
                                     <td>{{ $portal->city_code }}</td>
                                     <td>{{ $portal->city_name_local }}</td>
                                     <td>{{ $portal->local_lang }}</td>
