@@ -27,7 +27,7 @@ use App\Http\Controllers\admin\PostAnalyticsController;
 
 
 Route::get('/', function () {
-    return "<a href='/admin/login'>Admin Login</a><br><a href='/login'>Other Login</a><br>". Hash::make('password') ;
+    return "<a href='/admin/login'>Admin Login</a><br><a href='/accounts/login'>Other Login</a><br>". Hash::make('password') ;
 });
 
 Route::group(['prefix' => 'accounts'], function(){
