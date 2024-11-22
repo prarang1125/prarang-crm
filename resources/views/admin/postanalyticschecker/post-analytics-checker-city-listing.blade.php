@@ -1,5 +1,5 @@
 @extends('layouts.admin.admin')
-@section('title', 'Live Maker City Listing')
+@section('title', 'Live Checker City Listing')
 
 @section('content')
 <!--start page wrapper -->
@@ -10,9 +10,9 @@
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
-                    <li class="breadcrumb-item"><a href="{{ url('admin/postanalyticsmaker/post-analytics-maker-city-listing')}}"><i class="bx bx-user"></i></a>
+                    <li class="breadcrumb-item"><a href="{{ url('admin/postanalyticschecker/post-analytics-checker-city-listing')}}"><i class="bx bx-user"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Live Maker City Listing</li>
+                    <li class="breadcrumb-item active" aria-current="page">Live Checker City Listing</li>
                 </ol>
             </nav>
         </div>
@@ -26,17 +26,7 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <div class="d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 text-uppercase">Live Maker City Listing</h6>
-                <a class="nav-link dropdown-toggle-nocaret position-relative"
-                href="{{ route('admin.post-analytics-from-checker-listing') }}"
-                role="button">
-                    @if($notification > 0)
-                        <span class="alert-count">{{ $notification }}</span>
-                    @endif
-                    <i class="bx bx-bell"></i>
-                </a>
-            </div>
+            <h6 class="mb-0 text-uppercase">Live Checker City Listing</h6>
             <hr/>
             <div class="card">
                 <div class="card-body">
@@ -54,12 +44,12 @@
                                 <tr>
                                     <th scope="row" class="text-center">{{ $index }}</th>
                                     <td class="text-center">
-                                        <a href="{{ route('admin.post-analytics-maker-listing', ['cityCode' => $mcity->cityCode]) }}" class="text-primary">
+                                        <a href="{{ route('admin.post-analytics-checker-listing', ['cityCode' => $mcity->cityCode]) }}" class="text-primary">
                                             {{ $mcity->cityNameInEnglish }}
                                         </a>
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{ route('admin.post-analytics-maker-listing', ['cityCode' => $mcity->cityCode]) }}" class="text-primary">
+                                        <a href="{{ route('admin.post-analytics-checker-listing', ['cityCode' => $mcity->cityCode]) }}" class="text-primary">
                                             {{ $mcity->cityNameInUnicode }}
                                         </a>
                                     </td>

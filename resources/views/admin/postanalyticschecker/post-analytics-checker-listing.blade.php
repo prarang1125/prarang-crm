@@ -1,5 +1,5 @@
 @extends('layouts.admin.admin')
-@section('title', 'Post Analytics Maker Listing')
+@section('title', 'Post Analytics Checker Listing')
 
 @section('content')
 <!--start page wrapper -->
@@ -10,9 +10,9 @@
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
-                    <li class="breadcrumb-item"><a href="{{ url('admin/postanalyticsmaker/post-analytics-maker-city-listing')}}"><i class="bx bx-user"></i></a>
+                    <li class="breadcrumb-item"><a href="{{ url('admin/postanalyticschecker/post-analytics-checker-city-listing')}}"><i class="bx bx-user"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Post Analytics Maker Listing</li>
+                    <li class="breadcrumb-item active" aria-current="page">Post Analytics Checker Listing</li>
                 </ol>
             </nav>
         </div>
@@ -26,45 +26,46 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <h6 class="mb-0 text-uppercase">Post Analytics Maker Listing</h6>
+            <h6 class="mb-0 text-uppercase">Post Analytics Checker Listing</h6>
             <hr/>
             <div class="card">
                 <div class="card-body">
                     <table class="table mb-0 table-hover">
                         <thead class="thead-light">
                             <tr>
-                                {{-- <th scope="col" class="">#</th> --}}
                                 <th scope="col" class="">Post Number</th>
                                 <th scope="col" class="">Title</th>
+                                <th scope="col" class="">Name of Analytics Maker</th>
                                 <th scope="col" class="">Upload Date</th>
                                 <th scope="col" class="">No. of days from Upload</th>
                                 <th scope="col" class="">Area</th>
                                 <th scope="col" class="">Ad</th>
                                 <th scope="col" class="">Total Viewership</th>
                                 <th scope="col" class="">Status</th>
-                                <th scope="col" class="">Sent Time</th>
                             </tr>
                         </thead>
                         <tbody>
                             @php $index = 1;  @endphp
                             @foreach ($chittis as $chitti)
                                 <tr>
-                                    {{-- <th scope="row" class="text-center">{{ $index }}</th> --}}
                                     <td class="">{{ $index }}</td>
                                     <td class="">
-                                        <a href="{{ route('admin.post-analytics-maker-create', ['id' => $chitti->chittiId, 'city' => $chitti->city->cityCode ?? 'N/A']) }}" class="text-primary">
-                                            {{ $chitti->Title }}
+                                        <a class="text-primary">{{$chitti->Title}}
                                         </a>
                                     </td>
-                                    <td class="">{{ $chitti->created_at }}</td>
+                                    <td class="">{{ $muserMaker ?? 'N/A' }} </td>
+                                    <td class="">{{ \Carbon\Carbon::parse($chitti->created_at)->format('Y-m-d') }}</td>
                                     <td class="">{{ (int) \Carbon\Carbon::parse($chitti->created_at)->diffInDays(now()) }}</td>
                                     <td class="">{{ $chitti->city->cityNameInEnglish ?? 'N/A' }} </td>
-                                    <td class="">{{ 'Ad' }}</td>
-                                    <td class="">{{ 'Total Viewership' }}</td>
-                                    <td class="">{{ $chitti->makerStatus }}</td>
-                                    <td class="">{{ $chitti->updated_at ?? '' }}</td>
+                                    <td class="">{{ 'N/A' }} </td>
+                                    <td class="">{{ $chitti->totalViewerCount }}</td>
+                                    <td class="">
+                                        <a href="{{ route('admin.post-analytics-checker-edit', ['id' => $chitti->chittiId, 'city' => $chitti->city->cityCode ?? 'N/A']) }}" class="text-primary">
+                                            {{ 'Review' }}
+                                        </a>
+                                    </td>
                                 </tr>
-                                @php $index++;  @endphp
+                            @php $index++;  @endphp
                             @endforeach
                         </tbody>
                     </table>

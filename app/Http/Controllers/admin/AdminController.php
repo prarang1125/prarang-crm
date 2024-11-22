@@ -210,7 +210,7 @@ class AdminController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'firstName' => 'required|string|max:255',
-            'lastName' => 'required|string|max:255',
+            'lastName' => 'required|string|max:255', 
             'emailId' => [
                 'required',
                 'email',
