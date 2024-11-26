@@ -26,7 +26,7 @@ class MakerController extends Controller
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
         ->whereNotNull('Title')
         ->where('Title', '!=', '')
-        ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'makerStatus', 'checkerStatus')
+        ->select('*')
         ->get();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         return view('admin.maker.maker-listing', compact('chittis', 'geographyOptions'));

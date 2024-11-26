@@ -34,6 +34,8 @@
                 </li>
                 <li> <a href="{{ url('/admin/postanalytics/post-analytics-listing') }}"><i class="bx bx-right-arrow-alt"></i>Post Analytics</a>
                 </li>
+                <li> <a href="{{ url('/admin/misreport/mis-report') }}"><i class="bx bx-right-arrow-alt"></i>MIS Report</a>
+                </li>
             </ul>
         </li>
         <li>

@@ -24,6 +24,7 @@ use App\Http\Controllers\admin\DeletedPostController;
 use App\Http\Controllers\admin\PostAnalyticsMakerController;
 use App\Http\Controllers\admin\PostAnalyticsCheckerController;
 use App\Http\Controllers\admin\PostAnalyticsController;
+use App\Http\Controllers\admin\MisReportController;
 
 
 Route::get('/', function () {
@@ -216,7 +217,12 @@ Route::group(['prefix' => 'admin'], function(){
 
         #this route is use for post analytics start
             Route::get('/postanalytics/post-analytics-listing', [PostAnalyticsController::class, 'index'])->name('admin.post-analytics-listing');
+            Route::get('/post-analytics/export', [PostAnalyticsController::class, 'export'])->name('postanalytics.export');
         #this route is use for post analytics end
+
+        #this route is use for MIS Report start
+        Route::get('/misreport/mis-report', [MisReportController::class, 'index'])->name('admin.mis-report');
+        #this route is use for MIS Report end
     });
 });
 
