@@ -86,7 +86,7 @@
                     <table class="table mb-0 table-hover mt=4">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col" class="">Date</th>
+                                {{-- <th scope="col" class="">Date</th> --}}
                                 <th scope="col" class="">S.No</th>
                                 <th scope="col" class="">Geography</th>
                                 <th scope="col" class="">Area</th>

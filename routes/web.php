@@ -222,6 +222,7 @@ Route::group(['prefix' => 'admin'], function(){
 
         #this route is use for MIS Report start
         Route::get('/misreport/mis-report', [MisReportController::class, 'index'])->name('admin.mis-report');
+        Route::post('/misreport/mis-report-generate', [MisReportController::class, 'generateMisReport'])->name('admin.mis-report-generate');
         #this route is use for MIS Report end
     });
 });

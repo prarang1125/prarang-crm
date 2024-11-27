@@ -34,17 +34,18 @@
                         <label class="mb-0 text-primary">Use date filters and download excel file of the MIS Report.</label>
                     </div>
                 </div>
-                <form  action="" method="POST" enctype="multipart/form-data">
+                <form  action="{{ route('admin.mis-report-generate') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-
                     <div class="row mt-3">
                         <div class="col-md-6">
-                            <label for="inputGeography" class="form-label">Name of User-City/ Geography</label>
-                            <select id="inputGeography" class="form-select @error('geography') is-invalid @enderror" name="geography">
-                                <option selected disabled>All</option>
-                                {{-- @foreach($geographyOptions as $geographyOption)
-                                    <option value="{{ $geographyOption->id }}">{{ $geographyOption->labelInEnglish }}</option>
-                                @endforeach --}}
+                            <label for="geography" class="form-label">Name of User-City/ Geography</label>
+                            <select id="geography" class="form-select @error('geography') is-invalid @enderror" name="geography[]" multiple>
+                                <option value="all" selected>All</option>
+                                @foreach($misreports as $misreport)
+                                    <option value="{{ $misreport->id }}">
+                                        {{ $misreport->userCity->cityNameInEnglish ?? 'N/A' }}
+                                    </option>
+                                @endforeach
                             </select>
                             @error('geography')
                                 <p class="invalid-feedback">{{ $message }}</p>
@@ -62,8 +63,54 @@
 
                     <div class="modal-footer mt-3">
                         <button type="submit" class="btn btn-primary">Generate MIS Report</button>
-                        <a href="" class="btn btn-primary">reset</a>
+                        <a href="{{ route('admin.mis-report') }}" class="btn btn-primary">Reset</a>
                     </div>
+                </form>
+                <form  action="" method="POST" enctype="multipart/form-data">
+                    <div class="table-responsive mt-4">
+                        <table class="table mb-0 table-hover mt=4">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col" class="">UserName</th>
+                                    <th scope="col" class="">MobileNumber</th>
+                                    <th scope="col" class="">EmailId</th>
+                                    <th scope="col" class="">DateOfJoining</th>
+                                    <th scope="col" class="">AppDownloadDate</th>
+                                    <th scope="col" class="">TotalColorFeeds</th>
+                                    <th scope="col" class="">AppUsageTime</th>
+                                    <th scope="col" class="">FeedsComments</th>
+                                    <th scope="col" class="">FeedsLikes</th>
+                                    <th scope="col" class="">FeedShares</th>
+                                    <th scope="col" class="">SavedBank</th>
+                                    <th scope="col" class="">LucknowColorFeeds</th>
+                                    <th scope="col" class="">MeerutColorFeeds</th>
+                                    <th scope="col" class="">RampurColorFeeds</th>
+                                    <th scope="col" class="">JaunpurColorFeeds</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="">John Doe</td>
+                                    <td class="">1234567890</td>
+                                    <td class="">john.doe@example.com</td>
+                                    <td class="">2023-01-15</td>
+                                    <td class="">2023-02-01</td>
+                                    <td class="">50</td>
+                                    <td class="">120 minutes</td>
+                                    <td class="">25</td>
+                                    <td class="">100</td>
+                                    <td class="">30</td>
+                                    <td class="">Yes</td>
+                                    <td class="">20</td>
+                                    <td class="">15</td>
+                                    <td class="">10</td>
+                                    <td class="">5</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer mt-3">
+                        <button type="submit" class="btn btn-primary">Download MIS Report</button>
                 </form>
             </div>
         </div>
