@@ -129,5 +129,16 @@ class Chitti extends Model
     {
         return $this->belongsTo(Muser::class, 'analyticsMaker', 'userId');
     }
+
+    public function likes()
+    {
+        return $this->hasMany(Chittilike::class, 'chittiId', 'chittiId');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Chitticomment::class, 'chittiId', 'chittiId');
+    }
+
 }
 
