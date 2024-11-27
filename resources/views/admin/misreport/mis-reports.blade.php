@@ -36,13 +36,14 @@
                 </div>
                 <form  action="{{ route('admin.mis-report-generate') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+
                     <div class="row mt-3">
                         <div class="col-md-6">
-                            <label for="geography" class="form-label">Name of User-City/ Geography</label>
-                            <select id="geography" class="form-select @error('geography') is-invalid @enderror" name="geography[]" multiple>
-                                <option value="all" selected>All</option>
+                            <label for="inputGeography" class="form-label">Name of User-City/ Geography</label>
+                            <select id="inputGeography" class="form-select @error('geography') is-invalid @enderror" name="geography">
+                                <option selected>All</option>
                                 @foreach($misreports as $misreport)
-                                    <option value="{{ $misreport->id }}">
+                                    <option value="{{ $misreport->Id }}">
                                         {{ $misreport->userCity->cityNameInEnglish ?? 'N/A' }}
                                     </option>
                                 @endforeach
@@ -63,7 +64,7 @@
 
                     <div class="modal-footer mt-3">
                         <button type="submit" class="btn btn-primary">Generate MIS Report</button>
-                        <a href="{{ route('admin.mis-report') }}" class="btn btn-primary">Reset</a>
+                        <a href="" class="btn btn-primary">Reset</a>
                     </div>
                 </form>
                 <form  action="" method="POST" enctype="multipart/form-data">
