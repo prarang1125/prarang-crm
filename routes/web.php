@@ -25,6 +25,7 @@ use App\Http\Controllers\admin\PostAnalyticsMakerController;
 use App\Http\Controllers\admin\PostAnalyticsCheckerController;
 use App\Http\Controllers\admin\PostAnalyticsController;
 use App\Http\Controllers\admin\MisReportController;
+use App\Http\Controllers\admin\CKEditorController;
 
 
 Route::get('/', function () {
@@ -85,10 +86,10 @@ Route::group(['prefix' => 'admin'], function(){
         #this route is use for country
             Route::get('/country/country-listing', [CountryController::class, 'index'])->name('admin.country-listing');
             Route::get('/country/country-register', [CountryController::class, 'countryRegister'])->name('admin.country-register');
-            Route::post('/country/country-store', [countryController::class, 'countryStore'])->name('admin.country-store');
-            Route::post('/country/country-delete/{id}', [countryController::class, 'countrytDelete'])->name('admin.country-delete');
-            Route::get('/country/country-edit/{id}', [countryController::class, 'countryEdit'])->name('admin.country-edit');
-            Route::put('/country-update/{id}', [countryController::class, 'countryUpdate'])->name('admin.country-update');
+            Route::post('/country/country-store', [CountryController::class, 'countryStore'])->name('admin.country-store');
+            Route::post('/country/country-delete/{id}', [CountryController::class, 'countrytDelete'])->name('admin.country-delete');
+            Route::get('/country/country-edit/{id}', [CountryController::class, 'countryEdit'])->name('admin.country-edit');
+            Route::put('/country-update/{id}', [CountryController::class, 'countryUpdate'])->name('admin.country-update');
         #this route is use for country end
 
         #this route is use for live-city
@@ -223,7 +224,14 @@ Route::group(['prefix' => 'admin'], function(){
         #this route is use for MIS Report start
         Route::get('/misreport/mis-report', [MisReportController::class, 'index'])->name('admin.mis-report');
         Route::post('/misreport/mis-report-generate', [MisReportController::class, 'generateMisReport'])->name('admin.mis-report-generate');
+        Route::post('/misreport/export', [MisReportController::class, 'export'])->name('admin.generate-mis-report-export');
         #this route is use for MIS Report end
+
+        #upload image using ck-editor start
+        // Route::post('/ckeditor/upload', [CKEditorController::class, 'upload'])->name('admin.ckeditor-upload');
+        Route::post('/admin/ckeditor-upload', [CKEditorController::class, 'upload'])->name('admin.ckeditor-upload');
+
+        #upload image using ck-editor end
     });
 });
 
