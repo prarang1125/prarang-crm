@@ -329,7 +329,7 @@
                         {{-- <button type="submit" class="btn btn-primary">Update Maker</button>
                         <a href="{{ route('admin.checker-listing', $chitti->chittiId) }}" class="btn btn-primary">Send to Checker</a> --}}
 
-                        <button type="submit" class="btn btn-primary" name="action" value="update_maker">Update Maker</button>
+                        <button type="submit" class="btn btn-primary" name="action" value="update_maker">Update Post</button>
                         <button type="submit" class="btn btn-primary" name="action" value="send_to_checker">Send to Checker</button>
                     </div>
                 </form>

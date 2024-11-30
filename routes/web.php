@@ -222,15 +222,13 @@ Route::group(['prefix' => 'admin'], function(){
         #this route is use for post analytics end
 
         #this route is use for MIS Report start
-        Route::get('/misreport/mis-report', [MisReportController::class, 'index'])->name('admin.mis-report');
-        Route::post('/misreport/mis-report-generate', [MisReportController::class, 'generateMisReport'])->name('admin.mis-report-generate');
-        Route::post('/misreport/export', [MisReportController::class, 'export'])->name('admin.generate-mis-report-export');
+            Route::get('/misreport/mis-report', [MisReportController::class, 'index'])->name('admin.mis-report');
+            Route::post('/misreport/mis-report-generate', [MisReportController::class, 'generateMisReport'])->name('admin.mis-report-generate');
+            Route::post('/misreport/export', [MisReportController::class, 'export'])->name('admin.generate-mis-report-export');
         #this route is use for MIS Report end
 
         #upload image using ck-editor start
-        // Route::post('/ckeditor/upload', [CKEditorController::class, 'upload'])->name('admin.ckeditor-upload');
-        Route::post('/admin/ckeditor-upload', [CKEditorController::class, 'upload'])->name('admin.ckeditor-upload');
-
+            Route::post('/admin/ckeditor-upload', [CKEditorController::class, 'upload'])->name('admin.ckeditor-upload');
         #upload image using ck-editor end
     });
 });
