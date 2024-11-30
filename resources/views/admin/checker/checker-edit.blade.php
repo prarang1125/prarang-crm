@@ -329,6 +329,7 @@
                         {{-- <button type="submit" class="btn btn-primary">Update Checker</button>
                         <a href="{{ url('/admin/uploader/uploader-listing', $chitti->chittiId) }}" class="btn btn-primary">Send to Uploader</a> --}}
                         <button type="submit" class="btn btn-primary" name="action" value="update_checker">Update Checker</button>
+                        <button type="submit" class="btn btn-primary" name="action" value="send_to_maker">Send to Maker</button>
                         <button type="submit" class="btn btn-primary" name="action" value="send_to_uploader">Send to Uploader</button>
                     </div>
                 </form>
