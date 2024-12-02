@@ -77,6 +77,8 @@ class Chitti extends Model
         'geographyId',
         'post_anlytics_rtrn_to_mkr',
         'post_anlytics_rtrn_to_mkr_id',
+        'return_chitti_post_from_checker',
+        'return_chitti_post_from_checker_id',
         'created_at',
         'created_by',
         'updated_at',

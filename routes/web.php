@@ -230,6 +230,15 @@ Route::group(['prefix' => 'admin'], function(){
         #upload image using ck-editor start
             Route::post('/admin/ckeditor-upload', [CKEditorController::class, 'upload'])->name('admin.ckeditor-upload');
         #upload image using ck-editor end
+
+        #checker chitti-post return to maker with region start
+        Route::get('/checker/checker-chitti-return-to-maker-region/{id}', [ChekerController::class, 'checkerChittiReturnMakerRegion'])->name('admin.checker-chitti-return-to-maker-region');
+
+        Route::put('/checker/chitti-checker-sendtomaker/sendtomaker/{id}', [ChekerController::class, 'checkerChittiSendToMaker'])->name('admin.chitti-checker-sendtomaker');
+        #checker chitti-post return to maker with region end
+
+        #show the listing of rejected maker
+        Route::get('/maker/chitti-rejected-from-checker-listing', [MakerController::class, 'chittiListReturnFromCheckerL'])->name('admin.post-return-from-checker-listing');
     });
 });
 

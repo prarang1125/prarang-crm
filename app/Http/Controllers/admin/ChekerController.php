@@ -26,7 +26,7 @@ class ChekerController extends Controller
         ->whereNotNull('Title')
         ->where('Title', '!=', '')
         ->where('checkerStatus', '!=', '')
-        ->where('checkerStatus', 'sent_to_uploader')
+        ->where('makerStatus', 'sent_to_checker')
         ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
         ->get();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
@@ -41,7 +41,7 @@ class ChekerController extends Controller
         ->whereNotNull('Title')
         ->where('Title', '!=', '')
         ->where('checkerStatus', '!=', '')
-        ->where('checkerStatus', 'sent_to_uploader')
+        ->where('makerStatus', 'sent_to_checker')
         ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
         ->get();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
@@ -235,14 +235,40 @@ class ChekerController extends Controller
                 return redirect()->route('admin.checker-listing', $chitti->chittiId)
                     ->with('success', 'Sent to Uploader successfully.');
             }
+            // elseif($request->action === 'send_to_maker')
+            // {
+            //     $currentDate = date("d-M-y H:i:s");
+            //     $chitti->update([
+            //         'dateOfReturnToMaker'       => $currentDate,
+            //         'returnDateMaker'           => $currentDate ,
+            //         'makerStatus'               => 'return_chitti_post_from_checker',
+            //         'checkerId'                 => Auth::guard('admin')->user()->userId,
+            //         'checkerReason'             => $request->returnChittiToMakerWithRegion,
+            //         'return_chitti_post_from_checker'    => $request->returnChittiToMakerWithRegion,
+            //         'postStatusMakerChecker'             => 'return_chitti_post_from_checker',
+            //         'return_chitti_post_from_checker_id' => 1,
+            //         'checkerStatus'         => 'Null',
+            //         'uploaderStatus'        => 'Null',
+            //         'finalStatus'           => 'Null',
+            //     ]);
+            //     return redirect()->route('admin.checker-listing', ['id' => $chitti->chittiId])->with('success', 'Checker updated successfully.');
+            // }
             else
             {
+                $currentDate = date("d-M-y H:i:s");
                 $chitti->update([
+                    'dateOfReturnToMaker'       => $currentDate,
+                    'returnDateMaker'           => $currentDate ,
+                    'makerStatus'               => 'return_chitti_post_from_checker',
+                    'checkerId'                 => Auth::guard('admin')->user()->userId,
+                    'postStatusMakerChecker'    => 'return_chitti_post_from_checker',
+                    'return_chitti_post_from_checker_id' => 1,
                     'description'   => $request->content,
                     'Title'         => $request->title,
                     'SubTitle'      => $request->subtitle,
                     'checkerStatus'   => 'sent_to_uploader',
-                    'uploaderStatus'   => '',
+                    'uploaderStatus'        => 'Null',
+                    'finalStatus'           => 'Null',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);
@@ -287,12 +313,52 @@ class ChekerController extends Controller
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);
 
-                return redirect()->route('admin.checker-listing', ['id' => $chitti->chittiId])->with('success', 'Checker updated successfully.');
+                return redirect()->route('admin.checker-listing', ['id' => $chitti->chittiId])->with('success', 'Chitti Post have been return to maker from checker successfully.');
             }
         } else {
             return redirect()->back()
                 ->withInput()
                 ->withErrors($validator);
         }
+    }
+
+    #this method is use for return from checker to maker with region
+    public function checkerChittiReturnMakerRegion(Request $request, $id)
+    {
+        $cityCode   = $request->query('City');
+        $checkerId  = $request->query('checkerId');
+
+        $chitti = Chitti::where('areaId', $cityCode)
+            ->where('chittiId', $id)
+            ->first();
+        return view('admin.checker.chitti-checker-return-to-maker-with-region', compact('chitti'));
+    }
+
+    #this method is use for update eturn from checker to maker with region
+    public function checkerChittiSendToMaker(Request $request, $id)
+    {
+        $checkerId   = $request->query('checkerId');
+        $City        = $request->query('City');
+        $currentDate = date("d-M-y H:i:s");
+
+        $validated = $request->validate([
+            'returnChittiToMakerWithRegion'   => 'required|string',
+        ]);
+
+        $chitti = Chitti::findOrFail($id);
+        $chitti->update([
+            'dateOfReturnToMaker'       => $currentDate,
+            'returnDateMaker'           => $currentDate ,
+            'makerStatus'               => 'return_chitti_post_from_checker',
+            'checkerId'                 => $checkerId,
+            'checkerReason'             => $request->returnChittiToMakerWithRegion,
+            'return_chitti_post_from_checker'    => $request->returnChittiToMakerWithRegion,
+            'postStatusMakerChecker'             => 'return_chitti_post_from_checker',
+            'return_chitti_post_from_checker_id' => 1,
+            'checkerStatus'         => 'Null',
+            'uploaderStatus'        => 'Null',
+            'finalStatus'           => 'Null',
+        ]);
+        return back()->with('success', 'Chitti Post have been return to maker from checker successfully');
     }
 }
