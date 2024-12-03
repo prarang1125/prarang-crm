@@ -55,7 +55,7 @@ class RegionController extends Controller
             $mregion->regionCode = 'r' . $newId;
             $mregion->regionnameInUnicode = $request->regionnameInUnicode;
             $mregion->regionnameInEnglish = $request->regionnameInEnglish;
-            $mregion->isActive = 0;
+            $mregion->isActive = 1;
             $mregion->image = $regionImageName;
             $mregion->map = $regionMapName;
             $mregion->Image_Name   = $regionImageName;

@@ -36,13 +36,15 @@
                 </div>
                 <form  action="{{ route('admin.mis-report-generate') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+
                     <div class="row mt-3">
                         <div class="col-md-6">
-                            <label for="geography" class="form-label">Name of User-City/ Geography</label>
-                            <select id="geography" class="form-select @error('geography') is-invalid @enderror" name="geography[]" multiple>
-                                <option value="all" selected>All</option>
+                            <label for="inputGeography" class="form-label">Name of User-City/ Geography</label>
+                            <select id="inputGeography" class="form-select @error('geography') is-invalid @enderror" name="geography">
+                                {{-- <option value="Select" selected>Select</option> --}}
+                                <option value="All" selected>All</option>
                                 @foreach($misreports as $misreport)
-                                    <option value="{{ $misreport->id }}">
+                                    <option value="{{ $misreport->Id }}">
                                         {{ $misreport->userCity->cityNameInEnglish ?? 'N/A' }}
                                     </option>
                                 @endforeach
@@ -66,7 +68,9 @@
                         <a href="{{ route('admin.mis-report') }}" class="btn btn-primary">Reset</a>
                     </div>
                 </form>
-                <form  action="" method="POST" enctype="multipart/form-data">
+                <form  action="{{ route('admin.generate-mis-report-export') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    {{-- @if(isset($misreports) && $misreports->isNotEmpty()) --}}
                     <div class="table-responsive mt-4">
                         <table class="table mb-0 table-hover mt=4">
                             <thead class="thead-light">
@@ -89,28 +93,35 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="">John Doe</td>
-                                    <td class="">1234567890</td>
-                                    <td class="">john.doe@example.com</td>
-                                    <td class="">2023-01-15</td>
-                                    <td class="">2023-02-01</td>
-                                    <td class="">50</td>
-                                    <td class="">120 minutes</td>
-                                    <td class="">25</td>
-                                    <td class="">100</td>
-                                    <td class="">30</td>
-                                    <td class="">Yes</td>
-                                    <td class="">20</td>
-                                    <td class="">15</td>
-                                    <td class="">10</td>
-                                    <td class="">5</td>
-                                </tr>
+                                @foreach($misreports as $misreport)
+                                    <tr>
+                                        <td class="">{{ $misreport->UserName }}</td>
+                                        <td class="">{{ $misreport->MobileNumber }}</td>
+                                        <td class="">{{ $misreport->EmailId }}</td>
+                                        <td class="">{{ $misreport->DateOfJoining }}</td>
+                                        <td class="">{{ $misreport->AppDownloadDate }}</td>
+                                        <td class="">{{ $misreport->TotalColorFeeds }}</td>
+                                        <td class="">{{ $misreport->AppUsageTime }}</td>
+                                        <td class="">{{ $misreport->FeedsComments }}</td>
+                                        <td class="">{{ $misreport->FeedsLikes }}</td>
+                                        <td class="">{{ $misreport->FeedShares }}</td>
+                                        <td class="">{{ $misreport->SavedBank }}</td>
+                                        <td class="">{{ $misreport->LucknowColorFeeds }}</td>
+                                        <td class="">{{ $misreport->MeerutColorFeeds }}</td>
+                                        <td class="">{{ $misreport->RampurColorFeeds }}</td>
+                                        <td class="">{{ $misreport->JaunpurColorFeeds }}</td>
+                                    </tr>
+                                    @endforeach
                             </tbody>
                         </table>
                     </div>
                     <div class="modal-footer mt-3">
+                        <input type="hidden" name="geography" value="{{ request('geography') }}">
+                        <input type="hidden" name="start_date" value="{{ request('start_date') }}">
+                        <input type="hidden" name="end_date" value="{{ request('end_date') }}">
                         <button type="submit" class="btn btn-primary">Download MIS Report</button>
+                    </div>
+                    {{-- @endif --}}
                 </form>
             </div>
         </div>
