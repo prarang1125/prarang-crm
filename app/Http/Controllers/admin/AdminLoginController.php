@@ -26,7 +26,7 @@ class AdminLoginController extends Controller
             'language' => 'required|in:english,hindi',
         ]);
 
-        // $user = Muser::find(1);
+        $user = Muser::find(1);
 
         // echo "<pre>";
         // print_r($user);

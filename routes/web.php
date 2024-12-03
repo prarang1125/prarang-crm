@@ -41,6 +41,24 @@ Route::group(['prefix' => 'accounts'], function(){
     Route::group(['middleware' => 'auth'], function(){
         Route::get('logout', [LoginController::class, 'logout'])->name('accounts.logout');
         Route::get('dashboard', [AccountsController::class, 'index'])->name('accounts.dashboard');
+
+        // Routes for Makers
+        Route::middleware('role:maker')->group(function () {
+            Route::get('/maker/dashboard', [MakerController::class, 'index'])->name('maker.dashboard');
+            Route::get('/maker/profile', [MakerController::class, 'profile'])->name('maker.profile');
+        });
+
+        // Routes for Checkers
+        // Route::middleware('role:checker')->group(function () {
+        //     Route::get('/checker/dashboard', [ChekerController::class, 'index'])->name('checker.dashboard');
+        //     Route::get('/checker/profile', [ChekerController::class, 'profile'])->name('checker.profile');
+        // });
+
+        // Routes for Uploaders
+        // Route::middleware('role:uploader')->group(function () {
+        //     Route::get('/uploader/dashboard', [UploaderController::class, 'index'])->name('uploader.dashboard');
+        //     Route::get('/uploader/profile', [UploaderController::class, 'profile'])->name('uploader.profile');
+        // });
     });
 });
 
@@ -232,13 +250,13 @@ Route::group(['prefix' => 'admin'], function(){
         #upload image using ck-editor end
 
         #checker chitti-post return to maker with region start
-        Route::get('/checker/checker-chitti-return-to-maker-region/{id}', [ChekerController::class, 'checkerChittiReturnMakerRegion'])->name('admin.checker-chitti-return-to-maker-region');
-
-        Route::put('/checker/chitti-checker-sendtomaker/sendtomaker/{id}', [ChekerController::class, 'checkerChittiSendToMaker'])->name('admin.chitti-checker-sendtomaker');
+            Route::get('/checker/checker-chitti-return-to-maker-region/{id}', [ChekerController::class, 'checkerChittiReturnMakerRegion'])->name('admin.checker-chitti-return-to-maker-region');
+            Route::put('/checker/chitti-checker-sendtomaker/sendtomaker/{id}', [ChekerController::class, 'checkerChittiSendToMaker'])->name('admin.chitti-checker-sendtomaker');
         #checker chitti-post return to maker with region end
 
-        #show the listing of rejected maker
-        Route::get('/maker/chitti-rejected-from-checker-listing', [MakerController::class, 'chittiListReturnFromCheckerL'])->name('admin.post-return-from-checker-listing');
+        #show the listing of rejected maker start
+            Route::get('/maker/chitti-rejected-from-checker-listing', [MakerController::class, 'chittiListReturnFromCheckerL'])->name('admin.post-return-from-checker-listing');
+        #show the listing of rejected maker end
     });
 });
 
