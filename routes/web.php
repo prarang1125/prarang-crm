@@ -26,6 +26,7 @@ use App\Http\Controllers\admin\PostAnalyticsCheckerController;
 use App\Http\Controllers\admin\PostAnalyticsController;
 use App\Http\Controllers\admin\MisReportController;
 use App\Http\Controllers\admin\CKEditorController;
+use App\Http\Controllers\accounts\AccMakerController;
 
 
 Route::get('/', function () {
@@ -41,24 +42,26 @@ Route::group(['prefix' => 'accounts'], function(){
     Route::group(['middleware' => 'auth'], function(){
         Route::get('logout', [LoginController::class, 'logout'])->name('accounts.logout');
         Route::get('dashboard', [AccountsController::class, 'index'])->name('accounts.dashboard');
+        Route::get('/maker/dashboard', [AccMakerController::class, 'index'])->name('accounts.maker-dashboard');
 
         // Routes for Makers
-        Route::middleware('role:maker')->group(function () {
-            Route::get('/maker/dashboard', [MakerController::class, 'index'])->name('maker.dashboard');
-            Route::get('/maker/profile', [MakerController::class, 'profile'])->name('maker.profile');
-        });
+        // Route::middleware('role:maker')->group(function () {
+        //     // dd('data is here');
+        //     Route::get('/maker/dashboard', [AccMakerController::class, 'index'])->name('maker.dashboard');
+        //     // Route::get('/maker/profile', [MakerController::class, 'profile'])->name('maker.profile');
+        // });
 
         // Routes for Checkers
-        // Route::middleware('role:checker')->group(function () {
-        //     Route::get('/checker/dashboard', [ChekerController::class, 'index'])->name('checker.dashboard');
-        //     Route::get('/checker/profile', [ChekerController::class, 'profile'])->name('checker.profile');
-        // });
+        Route::middleware('role:checker')->group(function () {
+            Route::get('/checker/dashboard', [ChekerController::class, 'index'])->name('checker.dashboard');
+            // Route::get('/checker/profile', [ChekerController::class, 'profile'])->name('checker.profile');
+        });
 
         // Routes for Uploaders
-        // Route::middleware('role:uploader')->group(function () {
-        //     Route::get('/uploader/dashboard', [UploaderController::class, 'index'])->name('uploader.dashboard');
-        //     Route::get('/uploader/profile', [UploaderController::class, 'profile'])->name('uploader.profile');
-        // });
+        Route::middleware('role:uploader')->group(function () {
+            Route::get('/uploader/dashboard', [UploaderController::class, 'index'])->name('uploader.dashboard');
+            // Route::get('/uploader/profile', [UploaderController::class, 'profile'])->name('uploader.profile');
+        });
     });
 });
 

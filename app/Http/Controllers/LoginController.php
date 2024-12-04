@@ -37,30 +37,34 @@ class LoginController extends Controller
         // $user->save();
         // dd($request->email);
         // dd($request->password);
+
         if($validator->passes()){
 
             $credentials = [
                 'emailId' => $request->email,
                 'password' => $request->password, // Use 'password' key here
             ];
+
             // dd(Auth::attempt($credentials));
             // if(Auth::attempt($credentials)){
             //     return redirect()->route('accounts.dashboard');
             #strat new code for specific page access maker checker and uploader
             if (Auth::attempt($credentials)) {
-                $user = Auth::user(); // Authenticated user
-                // dd($user);
-                // Role-based redirection
-                // dd($user->roleId);
+                $user = Auth::user();
                 switch ($user->roleId) {
-                    case 2:
-                        return redirect()->route('maker.dashboard');
-                    case 3:
+                    case "2":
+                        // dd("data2");
+                        return redirect()->route('accounts.maker-dashboard');
+                    case "3":
+                        // dd("data3");
                         return redirect()->route('checker.dashboard');
-                    case 4:
+                    case "4":
+                        // dd("data4");
                         return redirect()->route('uploader.dashboard');
                     default:
-                        return redirect()->route('accounts.dashboard');
+                        // dd("data5");
+                        Auth::logout();
+                        return redirect()->route('accounts.login')->with('error', 'Unauthorized access');
                 }
                 #end new code for specific page access maker checker and uploader
             }else{

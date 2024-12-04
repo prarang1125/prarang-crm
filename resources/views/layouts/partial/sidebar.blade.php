@@ -100,9 +100,26 @@
                 <div class="menu-title">Dashboard</div>
             </a>
             <ul>
-                <li> <a href="{{ url('/accounts/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Home</a>
-                </li>
-                <li> <a href="dashboard-eCommerce.html"><i class="bx bx-right-arrow-alt"></i>Maker</a>
+                @php
+                    $user = Auth::user();
+                @endphp
+
+                @if($user->roleId == "2")
+                    <li>
+                        <a href="{{ url('/accounts/dashboard') }}">
+                            <i class="bx bx-right-arrow-alt"></i> Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/accounts/maker/dashboard') }}">
+                            <i class="bx bx-right-arrow-alt"></i> Maker
+                        </a>
+                    </li>
+                @elseif ($user->roleId == "3")
+                    <li> <a href="dashboard-eCommerce.html"><i class="bx bx-right-arrow-alt"></i>Checker</a>
+                @elseif ($user->roleId == "4")
+                    <li> <a href="dashboard-eCommerce.html"><i class="bx bx-right-arrow-alt"></i>Uploader</a>
+                @endif
             </ul>
         </li>
     @endif
