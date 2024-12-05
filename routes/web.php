@@ -26,6 +26,7 @@ use App\Http\Controllers\admin\PostAnalyticsCheckerController;
 use App\Http\Controllers\admin\PostAnalyticsController;
 use App\Http\Controllers\admin\MisReportController;
 use App\Http\Controllers\admin\CKEditorController;
+use App\Http\Controllers\accounts\AccMakerController;
 
 
 Route::get('/', function () {
@@ -41,6 +42,35 @@ Route::group(['prefix' => 'accounts'], function(){
     Route::group(['middleware' => 'auth'], function(){
         Route::get('logout', [LoginController::class, 'logout'])->name('accounts.logout');
         Route::get('dashboard', [AccountsController::class, 'index'])->name('accounts.dashboard');
+
+        #this method is use for account maker listing start
+        Route::get('/maker-dashboard', [AccMakerController::class, 'index'])->name('accounts.maker-dashboard');
+
+        Route::get('/maker/acc-maker-register', [AccMakerController::class, 'accMakerRegister'])->name('accounts.acc-maker-register');
+        #this method is use for account maker listing end
+
+        #show the listing of rejected maker start
+        Route::get('/maker/acc-chitti-rejected-from-checker-listing', [AccMakerController::class, 'accChittiListReturnFromCheckerL'])->name('accounts.acc-post-return-from-checker-listing');
+        #show the listing of rejected maker end
+
+        // Routes for Makers
+        // Route::middleware('role:maker')->group(function () {
+        //     // dd('data is here');
+        //     Route::get('/maker/dashboard', [AccMakerController::class, 'index'])->name('maker.dashboard');
+        //     // Route::get('/maker/profile', [MakerController::class, 'profile'])->name('maker.profile');
+        // });
+
+        // Routes for Checkers
+        Route::middleware('role:checker')->group(function () {
+            Route::get('/checker/dashboard', [ChekerController::class, 'index'])->name('checker.dashboard');
+            // Route::get('/checker/profile', [ChekerController::class, 'profile'])->name('checker.profile');
+        });
+
+        // Routes for Uploaders
+        Route::middleware('role:uploader')->group(function () {
+            Route::get('/uploader/dashboard', [UploaderController::class, 'index'])->name('uploader.dashboard');
+            // Route::get('/uploader/profile', [UploaderController::class, 'profile'])->name('uploader.profile');
+        });
     });
 });
 
@@ -232,13 +262,13 @@ Route::group(['prefix' => 'admin'], function(){
         #upload image using ck-editor end
 
         #checker chitti-post return to maker with region start
-        Route::get('/checker/checker-chitti-return-to-maker-region/{id}', [ChekerController::class, 'checkerChittiReturnMakerRegion'])->name('admin.checker-chitti-return-to-maker-region');
-
-        Route::put('/checker/chitti-checker-sendtomaker/sendtomaker/{id}', [ChekerController::class, 'checkerChittiSendToMaker'])->name('admin.chitti-checker-sendtomaker');
+            Route::get('/checker/checker-chitti-return-to-maker-region/{id}', [ChekerController::class, 'checkerChittiReturnMakerRegion'])->name('admin.checker-chitti-return-to-maker-region');
+            Route::put('/checker/chitti-checker-sendtomaker/sendtomaker/{id}', [ChekerController::class, 'checkerChittiSendToMaker'])->name('admin.chitti-checker-sendtomaker');
         #checker chitti-post return to maker with region end
 
-        #show the listing of rejected maker
-        Route::get('/maker/chitti-rejected-from-checker-listing', [MakerController::class, 'chittiListReturnFromCheckerL'])->name('admin.post-return-from-checker-listing');
+        #show the listing of rejected maker start
+            Route::get('/maker/chitti-rejected-from-checker-listing', [MakerController::class, 'chittiListReturnFromCheckerL'])->name('admin.post-return-from-checker-listing');
+        #show the listing of rejected maker end
     });
 });
 
