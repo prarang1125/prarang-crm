@@ -1,5 +1,5 @@
 @extends('layouts.admin.admin')
-@section('title', 'Maker Listing')
+@section('title', 'Account Maker Listing')
 
 @section('content')
 <!--start page wrapper -->
@@ -10,9 +10,9 @@
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
-                    <li class="breadcrumb-item"><a href="{{ url('admin/maker/maker-listing')}}"><i class="bx bx-user"></i></a>
+                    <li class="breadcrumb-item"><a href="{{ url('/accounts/maker-dashboard')}}"><i class="bx bx-user"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Maker Listing</li>
+                    <li class="breadcrumb-item active" aria-current="page">Account Maker Listing</li>
                 </ol>
             </nav>
         </div>
@@ -28,20 +28,20 @@
             @endif
             {{-- <h6 class="mb-0 text-uppercase">Maker Listing</h6> --}}
             <div class="d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 text-uppercase">Maker Listing</h6>
+                <h6 class="mb-0 text-uppercase">Account Maker Listing</h6>
                 <a class="nav-link dropdown-toggle-nocaret position-relative"
-                href="{{ route('admin.post-return-from-checker-listing') }}"
+                href="{{ route('accounts.acc-post-return-from-checker-listing') }}"
                 role="button">
-                    @if($notification > 0)
+                    {{-- @if($notification > 0) --}}
                         <span class="alert-count">{{ $notification }}</span>
-                    @endif
+                    {{-- @endif --}}
                     <i class="bx bx-bell"></i>
                 </a>
             </div>
             <hr/>
             <div class="card">
                 <div class="card-body d-flex justify-content-end align-items-end">
-                    <a href="{{ url('/admin/maker/maker-register') }}" class="btn btn-primary">Add New Maker</a>
+                    <a href="{{ url('/accounts/maker/acc-maker-register') }}" class="btn btn-primary">Add New Maker</a>
                 </div>
                 <div class="card-body">
                     <table class="table mb-0 table-hover">

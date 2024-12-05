@@ -111,7 +111,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url('/accounts/maker/dashboard') }}">
+                        <a href="{{ url('/accounts/maker-dashboard') }}">
                             <i class="bx bx-right-arrow-alt"></i> Maker
                         </a>
                     </li>

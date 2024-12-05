@@ -42,7 +42,16 @@ Route::group(['prefix' => 'accounts'], function(){
     Route::group(['middleware' => 'auth'], function(){
         Route::get('logout', [LoginController::class, 'logout'])->name('accounts.logout');
         Route::get('dashboard', [AccountsController::class, 'index'])->name('accounts.dashboard');
-        Route::get('/maker/dashboard', [AccMakerController::class, 'index'])->name('accounts.maker-dashboard');
+
+        #this method is use for account maker listing start
+        Route::get('/maker-dashboard', [AccMakerController::class, 'index'])->name('accounts.maker-dashboard');
+
+        Route::get('/maker/acc-maker-register', [AccMakerController::class, 'accMakerRegister'])->name('accounts.acc-maker-register');
+        #this method is use for account maker listing end
+
+        #show the listing of rejected maker start
+        Route::get('/maker/acc-chitti-rejected-from-checker-listing', [AccMakerController::class, 'accChittiListReturnFromCheckerL'])->name('accounts.acc-post-return-from-checker-listing');
+        #show the listing of rejected maker end
 
         // Routes for Makers
         // Route::middleware('role:maker')->group(function () {
