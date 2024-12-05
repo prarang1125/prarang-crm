@@ -28,10 +28,11 @@ use App\Http\Controllers\admin\PostAnalyticsController;
 use App\Http\Controllers\admin\MisReportController;
 use App\Http\Controllers\admin\CKEditorController;
 use App\Http\Controllers\accounts\AccMakerController;
+use App\Http\Controllers\accounts\AccCKEditorController;
 
 
 Route::get('/', function () {
-    return "<a href='/admin/login'>Admin Login</a><br><a href='/accounts/login'>Other Login</a><br>". Hash::make('password') ;
+    return "<a href='/admin/login'>Admin Login</a><br><a href='/accounts/login'>Other Login</a><br>" ;
 });
 
 Route::group(['prefix' => 'accounts'], function(){
@@ -45,13 +46,21 @@ Route::group(['prefix' => 'accounts'], function(){
         Route::get('dashboard', [AccountsController::class, 'index'])->name('accounts.dashboard');
 
         #this method is use for account maker listing start
-        Route::get('/maker-dashboard', [AccMakerController::class, 'index'])->name('accounts.maker-dashboard');
+            Route::get('/maker-dashboard', [AccMakerController::class, 'index'])->name('accounts.maker-dashboard');
 
-        Route::get('/maker/acc-maker-register', [AccMakerController::class, 'accMakerRegister'])->name('accounts.acc-maker-register');
+            Route::get('/maker/acc-maker-register', [AccMakerController::class, 'accMakerRegister'])->name('accounts.acc-maker-register');
+
+            Route::post('/maker/acc-maker-store', [AccMakerController::class, 'accMakerStore'])->name('accounts.acc-maker-store');
+
+            Route::get('/maker/acc-maker-edit/{id}', [AccMakerController::class, 'AccMakerEdit'])->name('admin.maker-edit');
         #this method is use for account maker listing end
 
+        #upload image using accounts ck-editor start
+            Route::post('/accounts/acc-ckeditor-upload', [AccCKEditorController::class, 'accUpload'])->name('accounts.acc-ckeditor-upload');
+        #upload image using accounts ck-editor end
+
         #show the listing of rejected maker start
-        Route::get('/maker/acc-chitti-rejected-from-checker-listing', [AccMakerController::class, 'accChittiListReturnFromCheckerL'])->name('accounts.acc-post-return-from-checker-listing');
+            Route::get('/maker/acc-chitti-rejected-from-checker-listing', [AccMakerController::class, 'accChittiListReturnFromCheckerL'])->name('accounts.acc-post-return-from-checker-listing');
         #show the listing of rejected maker end
 
         // Routes for Makers
