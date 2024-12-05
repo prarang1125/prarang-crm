@@ -21,6 +21,7 @@ use App\Http\Controllers\admin\ChekerController;
 use App\Http\Controllers\admin\UploaderController;
 use App\Http\Controllers\admin\PostController;
 use App\Http\Controllers\admin\DeletedPostController;
+use App\Http\Controllers\admin\PortalController;
 use App\Http\Controllers\admin\PostAnalyticsMakerController;
 use App\Http\Controllers\admin\PostAnalyticsCheckerController;
 use App\Http\Controllers\admin\PostAnalyticsController;
@@ -30,7 +31,7 @@ use App\Http\Controllers\accounts\AccMakerController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return "<a href='/admin/login'>Admin Login</a><br><a href='/accounts/login'>Other Login</a><br>". Hash::make('password') ;
 });
 
 Route::group(['prefix' => 'accounts'], function(){
@@ -269,9 +270,12 @@ Route::group(['prefix' => 'admin'], function(){
         #show the listing of rejected maker start
             Route::get('/maker/chitti-rejected-from-checker-listing', [MakerController::class, 'chittiListReturnFromCheckerL'])->name('admin.post-return-from-checker-listing');
         #show the listing of rejected maker end
+
+        // Portal ->Vivek
+        Route::resource('portal', PortalController::class);
+
     });
 });
-
 
 
 

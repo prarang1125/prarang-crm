@@ -60,6 +60,10 @@
                 <li> <a href="{{ url('/admin/scities/scities-listing') }}"><i class="bx bx-right-arrow-alt"></i>City</a>
                 </li>
                 <li> <a href="{{ url('/admin/region/region-listing') }}"><i class="bx bx-right-arrow-alt"></i>Region</a>
+                    {{-- Portal: Vivek --}}
+                    <li> <a href="{{ route('portal.index') }}"><i class="bx bx-right-arrow-alt"></i>Portals</a>
+                    </li>
+                    {{-- End Portal:Vivek --}}
                 </li>
                 <li> <a href="{{ url('/admin/tagcategory/tag-category-listing') }}"><i class="bx bx-right-arrow-alt"></i>Tag Category</a>
                 </li>
