@@ -34,6 +34,8 @@
                 </li>
                 <li> <a href="{{ url('/admin/postanalytics/post-analytics-listing') }}"><i class="bx bx-right-arrow-alt"></i>Post Analytics</a>
                 </li>
+                <li> <a href="{{ url('/admin/misreport/mis-report') }}"><i class="bx bx-right-arrow-alt"></i>MIS Report</a>
+                </li>
             </ul>
         </li>
         <li>
@@ -102,74 +104,26 @@
                 <div class="menu-title">Dashboard</div>
             </a>
             <ul>
-                <li> <a href="{{ url('/accounts/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Home</a>
-                </li>
-                <li> <a href="dashboard-eCommerce.html"><i class="bx bx-right-arrow-alt"></i>Maker</a>
-                </li>
-                <li> <a href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i>Checker</a>
-                </li>
-                <li> <a href="dashboard-digital-marketing.html"><i class="bx bx-right-arrow-alt"></i>Uploader</a>
-                </li>
-                <li> <a href="dashboard-human-resources.html"><i class="bx bx-right-arrow-alt"></i>Post Analytics Maker</a>
-                </li>
-                <li> <a href="dashboard-human-resources.html"><i class="bx bx-right-arrow-alt"></i>Post Analytics Checker</a>
-                </li>
-                <li> <a href="dashboard-human-resources.html"><i class="bx bx-right-arrow-alt"></i>Post Analytics</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="javascript:;" class="has-arrow">
-                <div class="parent-icon"><i class="lni lni-user"></i>
-                </div>
-                <div class="menu-title">Admin</div>
-            </a>
-            <ul>
-                <li> <a href="app-emailbox.html"><i class="bx bx-right-arrow-alt"></i>User</a>
-                </li>
-                <li> <a href="app-chat-box.html"><i class="bx bx-right-arrow-alt"></i>Role</a>
-                </li>
-                <li> <a href="app-file-manager.html"><i class="bx bx-right-arrow-alt"></i>Language Script</a>
-                </li>
-                <li> <a href="app-contact-list.html"><i class="bx bx-right-arrow-alt"></i>Country</a>
-                </li>
-                <li> <a href="app-to-do.html"><i class="bx bx-right-arrow-alt"></i>Live City</a>
-                </li>
-                <li> <a href="app-invoice.html"><i class="bx bx-right-arrow-alt"></i>City</a>
-                </li>
-                <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Region</a>
-                </li>
-                <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Tag Category</a>
-                </li>
-                <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Tag</a>
-                </li>
-                <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>User Country</a>
-                </li>
-                <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>User City</a>
-                </li>
-                <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Upload Excel File</a>
-                </li>
-                <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Post</a>
-                </li>
-                <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Deleted Post</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="javascript:;" class="has-arrow">
-                <div class="parent-icon"><i class='bx bx-cart'></i>
-                </div>
-                <div class="menu-title">eCommerce</div>
-            </a>
-            <ul>
-                <li> <a href="ecommerce-products.html"><i class="bx bx-right-arrow-alt"></i>Products</a>
-                </li>
-                <li> <a href="ecommerce-products-details.html"><i class="bx bx-right-arrow-alt"></i>Product Details</a>
-                </li>
-                <li> <a href="ecommerce-add-new-products.html"><i class="bx bx-right-arrow-alt"></i>Add New Products</a>
-                </li>
-                <li> <a href="ecommerce-orders.html"><i class="bx bx-right-arrow-alt"></i>Orders</a>
-                </li>
+                @php
+                    $user = Auth::user();
+                @endphp
+
+                @if($user->roleId == "2")
+                    <li>
+                        <a href="{{ url('/accounts/dashboard') }}">
+                            <i class="bx bx-right-arrow-alt"></i> Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/accounts/maker-dashboard') }}">
+                            <i class="bx bx-right-arrow-alt"></i> Maker
+                        </a>
+                    </li>
+                @elseif ($user->roleId == "3")
+                    <li> <a href="dashboard-eCommerce.html"><i class="bx bx-right-arrow-alt"></i>Checker</a>
+                @elseif ($user->roleId == "4")
+                    <li> <a href="dashboard-eCommerce.html"><i class="bx bx-right-arrow-alt"></i>Uploader</a>
+                @endif
             </ul>
         </li>
     @endif

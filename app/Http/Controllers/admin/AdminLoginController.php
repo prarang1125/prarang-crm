@@ -26,7 +26,14 @@ class AdminLoginController extends Controller
             // 'language' => 'required|in:english,hindi',
         ]);
 
-       
+        // $user = Muser::find(1);
+
+        // echo "<pre>";
+        // print_r($user);
+        // echo "<pre>";
+        // // die();
+        // $user->empPassword = bcrypt('test');  // Make sure to use the correct column name
+        // $user->save();
 
         if($validator->passes()){
          

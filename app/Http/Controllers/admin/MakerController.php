@@ -26,10 +26,13 @@ class MakerController extends Controller
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
         ->whereNotNull('Title')
         ->where('Title', '!=', '')
-        ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'makerStatus', 'checkerStatus')
+        ->where('makerStatus', '=', 'sent_to_checker')
+        // ->where('checkerStatus', '=','maker_to_checker')
+        ->select('*')
         ->get();
+        $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-        return view('admin.maker.maker-listing', compact('chittis', 'geographyOptions'));
+        return view('admin.maker.maker-listing', compact('chittis', 'geographyOptions', 'notification'));
     }
 
     #this method is use for maker make new post
@@ -260,9 +263,14 @@ class MakerController extends Controller
             if ($request->action === 'send_to_checker')
             {
                 $chitti->update([
-                    'checkerStatus'   => 'sent_to_uploader',
+                    'makerStatus'   => 'sent_to_checker',
+                    // 'checkerStatus' => 'maker_to_checker',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
+                    'return_chitti_post_from_checker_id' => 0,
+                    'returnDateToChecker' => $currentDateTime,
+                    'makerId'       => Auth::guard('admin')->user()->userId,
+                    'finalStatus'   => 'Null',
                 ]);
 
                 // Redirect to the checker listing
@@ -276,9 +284,13 @@ class MakerController extends Controller
                     'Title'         => $request->title,
                     'SubTitle'      => $request->subtitle,
                     'makerStatus'   => 'sent_to_checker',
-                    'finalStatus'   => '',
+                    'makerId'       => Auth::guard('admin')->user()->userId,
+                    'finalStatus'   => 'Null',
+                    // 'checkerStatus' => 'Null',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
+                    'return_chitti_post_from_checker_id' => 0,
+                    'returnDateToChecker' => $currentDateTime,
                 ]);
 
                 // Update Facity record
@@ -329,4 +341,20 @@ class MakerController extends Controller
                 ->withErrors($validator);
         }
     }
+
+    #this method is use for show the listing of return post via checker
+    public function chittiListReturnFromCheckerL()
+    {
+        // $chittis = Chitti::where('makerStatus', 'return_chitti_post_from_checker')->get();
+        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        ->whereNotNull('Title')
+        ->where('Title', '!=', '')
+        ->where('return_chitti_post_from_checker_id',  1)
+        ->select('*')
+        ->get();
+        $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
+        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        return view('admin.maker.chitti-rejected-from-checker-listing', compact('geographyOptions', 'notification', 'chittis'));
+    }
+
 }

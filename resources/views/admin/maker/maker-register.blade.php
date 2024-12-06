@@ -294,7 +294,10 @@
     </div>
 </div>
 <!--end page wrapper -->
-
+<script>
+    const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
+    const csrfToken = "{{ csrf_token() }}";
+</script>
 <script>
 //JavaScript for Image Preview and Thumbnails start
 const defaultImageSrc = '/img/blankImage2.png'; // Default main image URL

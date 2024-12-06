@@ -12,7 +12,7 @@
                         <li class="breadcrumb-item"><a href="{{ url('/admin/user-profile')}}"><i class="bx bx-user"></i>
                         </a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">User Profilep</li>
+                        <li class="breadcrumb-item active" aria-current="page">User Profile</li>
                     </ol>
                 </nav>
             </div>

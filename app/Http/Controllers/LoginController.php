@@ -20,14 +20,14 @@ class LoginController extends Controller
     // This method will authenticate admin
     public function authenticate(Request $request)
     {
-        // $user = Auth::muser();
+        // $user = Auth::Muser();
         $validator = Validator::make($request->all(),[
             'email' => 'required|email',
             'password' => 'required',
             'language' => 'required|in:english,hindi',
         ]);
 
-        $user = Muser::find(2);
+        // $user = Muser::find(2);
 
         // echo "<pre>";
         // print_r($user);
@@ -35,6 +35,8 @@ class LoginController extends Controller
         // // die();
         // $user->empPassword = bcrypt('usertesting');  // Make sure to use the correct column name
         // $user->save();
+        // dd($request->email);
+        // dd($request->password);
 
         if($validator->passes()){
 
@@ -43,8 +45,28 @@ class LoginController extends Controller
                 'password' => $request->password, 
             ];
 
-            if(Auth::attempt($credentials)){
-                return redirect()->route('accounts.dashboard');
+            // dd(Auth::attempt($credentials));
+            // if(Auth::attempt($credentials)){
+            //     return redirect()->route('accounts.dashboard');
+            #strat new code for specific page access maker checker and uploader
+            if (Auth::attempt($credentials)) {
+                $user = Auth::user();
+                switch ($user->roleId) {
+                    case "2":
+                        // dd("data2");
+                        return redirect()->route('accounts.maker-dashboard');
+                    case "3":
+                        // dd("data3");
+                        return redirect()->route('checker.dashboard');
+                    case "4":
+                        // dd("data4");
+                        return redirect()->route('uploader.dashboard');
+                    default:
+                        // dd("data5");
+                        Auth::logout();
+                        return redirect()->route('accounts.login')->with('error', 'Unauthorized access');
+                }
+                #end new code for specific page access maker checker and uploader
             }else{
                 return redirect()->route('accounts.login')->with('error', 'Either mail or password is incorrect');
             }
