@@ -178,7 +178,166 @@ class AccMakerController extends Controller
         }
     }
 
+    #this method is use for accounts maker edit
+    public function accMakerEdit($id)
+    {
+        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->findOrFail($id);
+        $image = $chitti->chittiimagemappings()->first();
+        // $chittiTagMapping = Chittitagmapping::where('chittiId', $id)->first();
+        $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
 
+        $timelines = Mtag::where('tagCategoryId', 1)->get();
+        $manSenses = Mtag::where('tagCategoryId', 2)->get();
+        $manInventions = Mtag::where('tagCategoryId', 3)->get();
+        $geographys = Mtag::where('tagCategoryId', 4)->get();
+        $faunas = Mtag::where('tagCategoryId', 5)->get();
+        $floras = Mtag::where('tagCategoryId', 6)->get();
+
+        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        $regions = Mregion::all();
+        $cities = Mcity::all();
+        $countries = Mcountry::all();
+        $geographyMapping = $chitti->geographyMappings->first();
+        $facityValue = $chitti->facity ? $chitti->facity->value : null;
+
+        $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
+
+        // Check if chittiTagMapping, tag, and tagcategory are set before accessing tagCategoryInUnicode
+        // $tagCategoryInUnicode = $chittiTagMapping && $chittiTagMapping->tag && $chittiTagMapping->tag->tagcategory
+        //     ? $chittiTagMapping->tag->tagcategory->tagCategoryInUnicode
+        //     : null;
+
+        // dd($tagCategoryInUnicode);
+        // return view('admin.maker.maker-edit', compact('chitti', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping'));
+
+        return view('accounts.maker.acc-maker-edit', compact('chitti', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
+    }
+
+    public function accMakerUpdate(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'content'   => 'required|string',
+            'makerImage' => 'nullable|image|max:2048',
+            'geography' => 'required',
+            'c2rselect' => 'required',
+            'title'     => 'required|string|max:255',
+            'subtitle' => 'required|string|max:255',
+            'forTheCity' => 'required|boolean',
+            'isCultureNature' => 'required|boolean',
+        ]);
+
+        if ($validator->passes()) {
+
+            $currentDateTime = getUserCurrentTime();
+
+            // Handle content images (base64 to file conversion and updating the content HTML)
+            $content = $request->content;
+            $dom = new \DomDocument();
+            @$dom->loadHtml($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            $images = $dom->getElementsByTagName('img');
+
+            foreach ($images as $img) {
+                $src = $img->getAttribute('src');
+
+                if (Str::startsWith($src, 'data:image')) {
+                    preg_match('/data:image\/(?<mime>.*?)\;base64,(?<data>.*)/', $src, $matches);
+                    $imageData = base64_decode($matches['data']);
+                    $imageMime = $matches['mime'];
+                    $imageName = time() . '_' . uniqid() . '.' . $imageMime;
+                    $path = public_path('uploads/content_images/') . $imageName;
+                    file_put_contents($path, $imageData);
+
+                    // Replace base64 with file URL
+                    $img->setAttribute('src', asset('uploads/content_images/' . $imageName));
+                }
+            }
+            // Save updated content with image URLs
+            $content = $dom->saveHTML();
+
+            // Update Chitti record
+            $chitti = Chitti::findOrFail($id);
+
+            if ($request->action === 'send_to_checker')
+            {
+                $chitti->update([
+                    'makerStatus'   => 'sent_to_checker',
+                    // 'checkerStatus' => 'maker_to_checker',
+                    'updated_at'    => $currentDateTime,
+                    'updated_by'    => Auth::user()->userId,
+                    'return_chitti_post_from_checker_id' => 0,
+                    'returnDateToChecker' => $currentDateTime,
+                    'makerId'       => Auth::user()->userId,
+                    'finalStatus'   => 'Null',
+                ]);
+
+                // Redirect to the checker listing
+                return redirect()->route('accounts.maker-dashboard', $chitti->chittiId)
+                    ->with('success', 'Sent to Checker successfully.');
+            }
+            else
+            {
+                $chitti->update([
+                    'description'   => $request->content,
+                    'Title'         => $request->title,
+                    'SubTitle'      => $request->subtitle,
+                    'makerStatus'   => 'sent_to_checker',
+                    'makerId'       => Auth::user()->userId,
+                    'finalStatus'   => 'Null',
+                    // 'checkerStatus' => 'Null',
+                    'updated_at'    => $currentDateTime,
+                    'updated_by'    => Auth::user()->userId,
+                    'return_chitti_post_from_checker_id' => 0,
+                    'returnDateToChecker' => $currentDateTime,
+                ]);
+
+                // Update Facity record
+                Facity::where('from_chittiId', $id)->update([
+                    'value'         => $request->forTheCity,
+                    'updated_at'    => $currentDateTime,
+                    'updated_by'    => Auth::user()->userId,
+                ]);
+
+                // Update image if provided
+                if ($request->hasFile('makerImage')) {
+                    $makerImage = $request->file('makerImage');
+                    $makerImageName = time() . '_' . $makerImage->getClientOriginalName();
+                    $makerImage->move(public_path('uploads/maker_image/'), $makerImageName);
+                    $url = public_path('uploads/maker_image/') . $makerImageName;
+                    $serviceAccessUrl = "admin.prarang.in/" . $url;
+
+                    // Update Chitti Image Mapping
+                    Chittiimagemapping::where('chittiId', $id)->update([
+                        'imageName'     => $makerImageName,
+                        'imageUrl'      => $serviceAccessUrl,
+                        'accessUrl'     => $url,
+                        'updated_at'    => $currentDateTime,
+                        'updated_by'    => Auth::user()->userId,
+                    ]);
+                }
+
+                // Update Geography Mapping
+                Chittigeographymapping::where('chittiId', $id)->update([
+                    'areaId'        => $request->c2rselect,
+                    'geographyId'   => $request->geography,
+                    'updated_at'    => $currentDateTime,
+                    'updated_by'    => Auth::user()->userId,
+                ]);
+
+                // Update Tag Mapping
+                Chittitagmapping::where('chittiId', $id)->update([
+                    'tagId'         => $request->isCultureNature,
+                    'updated_at'    => $currentDateTime,
+                    'updated_by'    => Auth::user()->userId,
+                ]);
+
+                return redirect()->route('accounts.maker-dashboard')->with('success', 'Maker updated successfully.');
+            }
+        } else {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors($validator);
+        }
+    }
 
     #this method is use for account chitti return from checker
     public function accChittiListReturnFromCheckerL()

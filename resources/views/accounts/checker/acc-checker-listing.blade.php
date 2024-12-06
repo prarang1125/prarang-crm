@@ -1,5 +1,5 @@
 @extends('layouts.admin.admin')
-@section('title', 'Account Maker Listing')
+@section('title', 'Accounts Checker Listing')
 
 @section('content')
 <!--start page wrapper -->
@@ -10,9 +10,9 @@
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
-                    <li class="breadcrumb-item"><a href="{{ url('/accounts/maker-dashboard')}}"><i class="bx bx-user"></i></a>
+                    <li class="breadcrumb-item"><a href="{{ url('accounts/checker/dashboard')}}"><i class="bx bx-user"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Account Maker Listing</li>
+                    <li class="breadcrumb-item active" aria-current="page">Accounts Checker Listing</li>
                 </ol>
             </nav>
         </div>
@@ -26,23 +26,12 @@
                     {{ session('success') }}
                 </div>
             @endif
-            {{-- <h6 class="mb-0 text-uppercase">Maker Listing</h6> --}}
-            <div class="d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 text-uppercase">Account Maker Listing</h6>
-                <a class="nav-link dropdown-toggle-nocaret position-relative"
-                href="{{ route('accounts.acc-post-return-from-checker-listing') }}"
-                role="button">
-                    {{-- @if($notification > 0) --}}
-                        <span class="alert-count">{{ $notification }}</span>
-                    {{-- @endif --}}
-                    <i class="bx bx-bell"></i>
-                </a>
-            </div>
+            <h6 class="mb-0 text-uppercase">Accounts Checker Listing</h6>
             <hr/>
             <div class="card">
-                <div class="card-body d-flex justify-content-end align-items-end">
-                    <a href="{{ url('/accounts/maker/acc-maker-register') }}" class="btn btn-primary">Add New Maker</a>
-                </div>
+                {{-- <div class="card-body d-flex justify-content-end align-items-end">
+                    <a href="{{ url('/admin/checker/checker-register') }}" class="btn btn-primary">Add New Maker</a>
+                </div> --}}
                 <div class="card-body">
                     <table class="table mb-0 table-hover">
                         <thead class="thead-light">
@@ -61,9 +50,11 @@
                             @foreach ($chittis as $chitti)
                                 <tr>
                                     <th scope="row" class="" data-id="{{ $chitti->chittiId }}">{{ $index }}</th>
-                                    <td class=""><a href="{{ route('accounts.acc-maker-edit', $chitti->chittiId) }}" class="text-primary">
+                                    <td class="">
+                                        <a href="{{ route('accounts.acc-checker-edit', $chitti->chittiId) }}" class="text-primary">
                                         {{ $chitti->Title }}
-                                    </a></td>
+                                        </a>
+                                    </td>
                                     <td class="">{{ $chitti->dateOfCreation }}</td>
                                     @foreach ($chitti->geographyMappings as $mapping)
                                         @php
@@ -88,15 +79,15 @@
                                             @endif
                                         </td>
                                     @endforeach
-                                    <td>{{ $chitti->makerStatus }}</td>
+                                    <td>{{ $chitti->checkerStatus }}</td>
 
                                     <td class="">
-                                        <a href="{{ route('accounts.acc-maker-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
+                                        <a href="{{ route('accounts.acc-checker-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
 
-                                        <form action="{{ route('admin.live-city-delete', '$mcity->cityId') }}" method="POST" style="display:inline;">
+                                        {{-- <form action="{{ route('admin.live-city-delete', '$mcity->cityId') }}" method="POST" style="display:inline;">
                                             @csrf
                                             <button type="submit" class="btn btn-sm btn-danger delete-user">Delete</button>
-                                        </form>
+                                        </form> --}}
                                         {{-- <a href="{{ route('admin.maker-update', $chitti->chittiId) }}" class="btn btn-sm btn-primary update-user mt-3">Send to checker</a> --}}
                                     </td>
                                 </tr>

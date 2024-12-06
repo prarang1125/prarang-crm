@@ -57,7 +57,7 @@ class LoginController extends Controller
                         return redirect()->route('accounts.maker-dashboard');
                     case "3":
                         // dd("data3");
-                        return redirect()->route('checker.dashboard');
+                        return redirect()->route('accounts.checker.dashboard');
                     case "4":
                         // dd("data4");
                         return redirect()->route('uploader.dashboard');

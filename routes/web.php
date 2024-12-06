@@ -29,6 +29,7 @@ use App\Http\Controllers\admin\MisReportController;
 use App\Http\Controllers\admin\CKEditorController;
 use App\Http\Controllers\accounts\AccMakerController;
 use App\Http\Controllers\accounts\AccCKEditorController;
+use App\Http\Controllers\accounts\AccChekerController;
 
 
 Route::get('/', function () {
@@ -52,8 +53,17 @@ Route::group(['prefix' => 'accounts'], function(){
 
             Route::post('/maker/acc-maker-store', [AccMakerController::class, 'accMakerStore'])->name('accounts.acc-maker-store');
 
-            Route::get('/maker/acc-maker-edit/{id}', [AccMakerController::class, 'AccMakerEdit'])->name('admin.maker-edit');
+            Route::get('/maker/acc-maker-edit/{id}', [AccMakerController::class, 'accMakerEdit'])->name('accounts.acc-maker-edit');
+
+            Route::put('/maker/acc-maker-update/{id}', [AccMakerController::class, 'accMakerUpdate'])->name('accounts.acc-maker-update');
         #this method is use for account maker listing end
+
+        // Routes for Makers
+        // Route::middleware('role:maker')->group(function () {
+        //     // dd('data is here');
+        //     Route::get('/maker/dashboard', [AccMakerController::class, 'index'])->name('maker.dashboard');
+        //     // Route::get('/maker/profile', [MakerController::class, 'profile'])->name('maker.profile');
+        // });
 
         #upload image using accounts ck-editor start
             Route::post('/accounts/acc-ckeditor-upload', [AccCKEditorController::class, 'accUpload'])->name('accounts.acc-ckeditor-upload');
@@ -63,18 +73,20 @@ Route::group(['prefix' => 'accounts'], function(){
             Route::get('/maker/acc-chitti-rejected-from-checker-listing', [AccMakerController::class, 'accChittiListReturnFromCheckerL'])->name('accounts.acc-post-return-from-checker-listing');
         #show the listing of rejected maker end
 
-        // Routes for Makers
-        // Route::middleware('role:maker')->group(function () {
-        //     // dd('data is here');
-        //     Route::get('/maker/dashboard', [AccMakerController::class, 'index'])->name('maker.dashboard');
-        //     // Route::get('/maker/profile', [MakerController::class, 'profile'])->name('maker.profile');
-        // });
+
+        #this method is use for account checker listing start
+            Route::get('/checker/dashboard', [AccChekerController::class, 'accIndexMain'])->name('accounts.checker-dashboard');
+
+            Route::get('/checker/checker-listing/{id}', [AccChekerController::class, 'accIndex'])->name('accounts.acc-checker-listing');
+
+            Route::get('/checker/acc-checker-edit/{id}', [AccChekerController::class, 'accCheckerEdit'])->name('accounts.acc-checker-edit');
+        #this method is use for account checker listing end
 
         // Routes for Checkers
-        Route::middleware('role:checker')->group(function () {
-            Route::get('/checker/dashboard', [ChekerController::class, 'index'])->name('checker.dashboard');
-            // Route::get('/checker/profile', [ChekerController::class, 'profile'])->name('checker.profile');
-        });
+        // Route::middleware('role:checker')->group(function () {
+        //     Route::get('/checker/dashboard', [ChekerController::class, 'index'])->name('checker.dashboard');
+        //     // Route::get('/checker/profile', [ChekerController::class, 'profile'])->name('checker.profile');
+        // });
 
         // Routes for Uploaders
         Route::middleware('role:uploader')->group(function () {
