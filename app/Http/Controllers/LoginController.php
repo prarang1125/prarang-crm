@@ -40,7 +40,7 @@ class LoginController extends Controller
 
             $credentials = [
                 'emailId' => $request->email,
-                'password' => $request->password, // Use 'password' key here
+                'password' => $request->password, 
             ];
 
             if(Auth::attempt($credentials)){
