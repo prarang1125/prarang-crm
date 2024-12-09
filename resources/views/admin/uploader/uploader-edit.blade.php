@@ -326,8 +326,9 @@
                         </div>
                     </div>
                     <div class="modal-footer mt-3">
-                        <button type="submit" class="btn btn-primary">Update Uploader</button>
-                        <a href="{{ url('/admin/uploader/checker-listing', $chitti->chittiId) }}" class="btn btn-primary">Send to Uploader</a>
+                        <button type="submit" name="action" value="update_uploader" class="btn btn-primary">Update Uploader</button>
+                        <button type="submit" name="action" value="approvd" class="btn btn-primary">Send to Uploader</button>
+                        {{-- <a href="{{ route('admin.uploader-listing-detail', $chitti->chittiId) }}" class="btn btn-primary">Send to Uploader</a> --}}
                     </div>
                 </form>
             </div>

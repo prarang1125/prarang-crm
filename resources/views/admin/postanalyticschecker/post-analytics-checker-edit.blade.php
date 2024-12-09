@@ -196,5 +196,19 @@
     </div>
 </div>
 <!--end page wrapper -->
+
+<script>
+    function calculateTotal() {
+        const fields = ['citySubscribers', 'prarangApplication', 'facebookLinkClick', 'websiteGd', 'email', 'instagram'];
+        let total = 0;
+
+        fields.forEach(field => {
+            const value = parseInt(document.getElementById(field)?.value || 0);
+            total += isNaN(value) ? 0 : value;
+        });
+
+        document.getElementById('total').value = total;
+    }
+</script>
 @endsection
 
