@@ -273,7 +273,7 @@ Route::group(['prefix' => 'admin'], function(){
 
         // Portal ->Vivek
         Route::resource('portal', PortalController::class);
-
+        
     });
 });
 
