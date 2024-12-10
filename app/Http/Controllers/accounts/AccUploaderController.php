@@ -12,51 +12,50 @@ use App\Models\Makerlebal;
 use App\Models\Chittitagmapping;
 use App\Models\Mtag;
 use App\Models\Mregion;
-use App\Models\Mcity;
 use App\Models\Mcountry;
+use App\Models\Mcity;
 use App\Models\Facity;
 use App\Models\Chittiimagemapping;
 use App\Models\Chittigeographymapping;
 
-
-class AccChekerController extends Controller
+class AccUploaderController extends Controller
 {
     public function accIndexMain()
     {
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
         ->whereNotNull('Title')
         ->where('Title', '!=', '')
-        ->where('checkerStatus', '!=', '')
-        ->where('makerStatus', 'sent_to_checker')
-        ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
+        ->where('uploaderStatus', '!=', '')
+        ->whereIn('uploaderStatus', ['checker_to_uploader', 'sent_to_uploader'])
+        // ->where('finalStatus', '=', 'sent_to_uploader')
+        ->select('*')
         ->get();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-        return view('accounts.checker.acc-checker-listing', compact('chittis', 'geographyOptions'));
+        return view('accounts.uploader.acc-uploader-listing', compact('chittis', 'geographyOptions'));
     }
 
-    #this method is use for show the listing of accounts checker
-    public function accIndex($id)
+    #this method is use for show the accounts listing of uploader
+    public function index($id)
     {
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
         ->where('chittiId', $id)
         ->whereNotNull('Title')
         ->where('Title', '!=', '')
-        ->where('checkerStatus', '!=', '')
-        ->where('makerStatus', 'sent_to_checker')
-        ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
+        ->where('uploaderStatus', '!=', '')
+        ->whereIn('uploaderStatus', ['checker_to_uploader', 'sent_to_uploader'])
+        // ->where('finalStatus', '=', 'approved')
+        // ->where('finalStatus', '=', 'sent_to_uploader')
+        ->select('*')
         ->get();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-        return view('accounts.checker.acc-checker-listing', compact('chittis', 'geographyOptions'));
+        return view('accounts.uploader.acc-uploader-listing', compact('chittis', 'geographyOptions'));
     }
 
-    #this method is use for accounts checker edit
-    public function accCheckerEdit($id)
+    public function accUploaderEdit($id)
     {
         $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->findOrFail($id);
         $image = $chitti->chittiimagemappings()->first();
-        // $chittiTagMapping = Chittitagmapping::where('chittiId', $id)->first();
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
-        // dd($chittiTagMapping);
         $timelines = Mtag::where('tagCategoryId', 1)->get();
         $manSenses = Mtag::where('tagCategoryId', 2)->get();
         $manInventions = Mtag::where('tagCategoryId', 3)->get();
@@ -73,13 +72,13 @@ class AccChekerController extends Controller
 
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
 
-        return view('accounts.checker.acc-checker-edit', compact('chitti', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
+        return view('accounts.uploader.acc-uploader-edit', compact('chitti', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
     }
 
-    public function accCheckerUpdate(Request $request, $id)
+    public function accUploaderUpdate(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'content'   => 'required|string',
+            'content'   => 'required|string|max:2000',
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
             'c2rselect' => 'required',
@@ -119,50 +118,28 @@ class AccChekerController extends Controller
             // Save the updated content with proper image URLs
             $content = $dom->saveHTML();
 
-            // Update Chitti record
+            // Update Chitti record with approved
             $chitti = Chitti::findOrFail($id);
-
-            if ($request->action === 'send_to_uploader')
-            {
+            if ($request->action === 'approved'){
                 $chitti->update([
-                    'uploaderStatus'   => 'checker_to_uploader',
-                    'checkerStatus'    => 'sent_to_uploader',
+                    'description'   => $request->content,
+                    'Title'         => $request->title,
+                    'SubTitle'      => $request->subtitle,
+                    'checkerStatus' => 'sent_to_uploader',
+                    'finalStatus'   => 'approved',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
                 ]);
 
-                // Redirect to the checker listing
-                return redirect()->route('accounts.checker-dashboard', $chitti->chittiId)
-                    ->with('success', 'Sent to Uploader successfully.');
-            }
-            elseif($request->action === 'update_checker')
-            {
-                $currentDate = date("d-M-y H:i:s");
+                return redirect()->route('accounts.uploader-dashboard', ['id' => $chitti->chittiId])->with('success', 'Uploader updated successfully.');
+            }else{
+                // Update Chitti record
                 $chitti->update([
-                    'makerStatus'               => 'sent_to_checker',
-                    'checkerId'                 => Auth::user()->userId,
-                    'checkerStatus'         => 'Null',
-                    'uploaderStatus'        => 'Null',
-                    'finalStatus'           => 'Null',
-                ]);
-                return redirect()->route('accounts.checker-dashboard', ['id' => $chitti->chittiId])->with('success', 'Checker updated successfully.');
-            }
-            else
-            {
-                $currentDate = date("d-M-y H:i:s");
-                $chitti->update([
-                    'dateOfReturnToMaker'       => $currentDate,
-                    'returnDateMaker'           => $currentDate ,
-                    'makerStatus'               => 'return_chitti_post_from_checker',
-                    'checkerId'                 => Auth::user()->userId,
-                    'postStatusMakerChecker'    => 'return_chitti_post_from_checker',
-                    'return_chitti_post_from_checker_id' => 1,
                     'description'   => $request->content,
                     'Title'         => $request->title,
                     'SubTitle'      => $request->subtitle,
                     'checkerStatus'   => 'sent_to_uploader',
-                    'uploaderStatus'        => 'Null',
-                    'finalStatus'           => 'Null',
+                    'finalStatus'   => 'sent_to_uploader',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
                 ]);
@@ -207,7 +184,7 @@ class AccChekerController extends Controller
                     'updated_by'    => Auth::user()->userId,
                 ]);
 
-                return redirect()->route('accounts.checker-dashboard', ['id' => $chitti->chittiId])->with('success', 'Chitti Post have been return to maker from checker successfully.');
+                return redirect()->route('accounts.uploader-dashboard', ['id' => $chitti->chittiId])->with('success', 'Uploader updated successfully.');
             }
         } else {
             return redirect()->back()
@@ -215,45 +192,4 @@ class AccChekerController extends Controller
                 ->withErrors($validator);
         }
     }
-
-    #this method is use for return from accounts checker to maker with region
-    public function accCheckerChittiReturnMakerRegion(Request $request, $id)
-    {
-        $cityCode   = $request->query('City');
-        $checkerId  = $request->query('checkerId');
-
-        $chitti = Chitti::where('areaId', $cityCode)
-            ->where('chittiId', $id)
-            ->first();
-        return view('accounts.checker.acc-chitti-checker-return-to-maker-with-region', compact('chitti'));
-    }
-
-    #this method is use for update eturn from checker to maker with region
-    public function accCheckerChittiSendToMaker(Request $request, $id)
-    {
-        $checkerId   = $request->query('checkerId');
-        $City        = $request->query('City');
-        $currentDate = date("d-M-y H:i:s");
-
-        $validated = $request->validate([
-            'returnChittiToMakerWithRegion'   => 'required|string',
-        ]);
-
-        $chitti = Chitti::findOrFail($id);
-        $chitti->update([
-            'dateOfReturnToMaker'       => $currentDate,
-            'returnDateMaker'           => $currentDate ,
-            'makerStatus'               => 'return_chitti_post_from_checker',
-            'checkerId'                 => $checkerId,
-            'checkerReason'             => $request->returnChittiToMakerWithRegion,
-            'return_chitti_post_from_checker'    => $request->returnChittiToMakerWithRegion,
-            'postStatusMakerChecker'             => 'return_chitti_post_from_checker',
-            'return_chitti_post_from_checker_id' => 1,
-            'checkerStatus'         => 'Null',
-            'uploaderStatus'        => 'Null',
-            'finalStatus'           => 'Null',
-        ]);
-        return back()->with('success', 'Chitti Post have been return to maker from checker successfully');
-    }
-
 }

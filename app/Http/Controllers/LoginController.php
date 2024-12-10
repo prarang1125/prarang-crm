@@ -53,16 +53,12 @@ class LoginController extends Controller
                 $user = Auth::user();
                 switch ($user->roleId) {
                     case "2":
-                        // dd("data2");
                         return redirect()->route('accounts.maker-dashboard');
                     case "3":
-                        // dd("data3");
-                        return redirect()->route('accounts.checker.dashboard');
+                        return redirect()->route('accounts.checker-dashboard');
                     case "4":
-                        // dd("data4");
-                        return redirect()->route('uploader.dashboard');
+                        return redirect()->route('accounts.uploader-dashboard');
                     default:
-                        // dd("data5");
                         Auth::logout();
                         return redirect()->route('accounts.login')->with('error', 'Unauthorized access');
                 }

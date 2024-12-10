@@ -30,6 +30,7 @@ use App\Http\Controllers\admin\CKEditorController;
 use App\Http\Controllers\accounts\AccMakerController;
 use App\Http\Controllers\accounts\AccCKEditorController;
 use App\Http\Controllers\accounts\AccChekerController;
+use App\Http\Controllers\accounts\AccUploaderController;
 
 
 Route::get('/', function () {
@@ -80,7 +81,14 @@ Route::group(['prefix' => 'accounts'], function(){
             Route::get('/checker/checker-listing/{id}', [AccChekerController::class, 'accIndex'])->name('accounts.acc-checker-listing');
 
             Route::get('/checker/acc-checker-edit/{id}', [AccChekerController::class, 'accCheckerEdit'])->name('accounts.acc-checker-edit');
+
+            Route::put('/checker/acc-checker-update/{id}', [AccChekerController::class, 'accCheckerUpdate'])->name('accounts.acc-checker-update');
         #this method is use for account checker listing end
+
+        #accounts checker chitti-post return to maker with region start
+            Route::get('/checker/acc-checker-chitti-return-to-maker-region/{id}', [AccChekerController::class, 'accCheckerChittiReturnMakerRegion'])->name('accounts.acc-checker-chitti-return-to-maker-region');
+            Route::put('/checker/acc-chitti-checker-sendtomaker/sendtomaker/{id}', [AccChekerController::class, 'accCheckerChittiSendToMaker'])->name('accounts.acc-chitti-checker-sendtomaker');
+        #accounts checker chitti-post return to maker with region end
 
         // Routes for Checkers
         // Route::middleware('role:checker')->group(function () {
@@ -88,11 +96,21 @@ Route::group(['prefix' => 'accounts'], function(){
         //     // Route::get('/checker/profile', [ChekerController::class, 'profile'])->name('checker.profile');
         // });
 
+        #this method is use for account uploader listing start
+            Route::get('/uploader/dashboard', [AccUploaderController::class, 'accIndexMain'])->name('accounts.uploader-dashboard');
+
+            Route::get('/uploader/uploader-listing/{id}', [AccUploaderController::class, 'accIndex'])->name('accounts.acc-uploader-listing');
+
+            Route::get('/uploader/acc-uploader-edit/{id}', [AccUploaderController::class, 'accUploaderEdit'])->name('accounts.acc-uploader-edit');
+
+            Route::put('/uploader/aac-uploader-update/{id}', [AccUploaderController::class, 'accUploaderUpdate'])->name('accounts.acc-uploader-update');
+        #this method is use for account uploader listing end
+
         // Routes for Uploaders
-        Route::middleware('role:uploader')->group(function () {
-            Route::get('/uploader/dashboard', [UploaderController::class, 'index'])->name('uploader.dashboard');
+        // Route::middleware('role:uploader')->group(function () {
+        //     Route::get('/uploader/dashboard', [UploaderController::class, 'index'])->name('uploader.dashboard');
             // Route::get('/uploader/profile', [UploaderController::class, 'profile'])->name('uploader.profile');
-        });
+        // });
     });
 });
 

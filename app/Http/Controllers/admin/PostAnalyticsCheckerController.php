@@ -138,7 +138,7 @@ class PostAnalyticsCheckerController extends Controller
         $validated = $request->validate([
             'returnToMakerWithRegion'   => 'required|string',
         ]);
-        // dd
+
         $chitti = Chitti::findOrFail($id);
         $chitti->update([
             'analyticsChecker'          => $checkerId,

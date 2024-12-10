@@ -1,5 +1,5 @@
 @extends('layouts.admin.admin')
-@section('title', 'Accounts Checker Listing')
+@section('title', 'Accounts Uploader Listing')
 
 @section('content')
 <!--start page wrapper -->
@@ -10,9 +10,9 @@
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
-                    <li class="breadcrumb-item"><a href="{{ url('accounts/checker/dashboard')}}"><i class="bx bx-user"></i></a>
+                    <li class="breadcrumb-item"><a href="{{ url('accounts/uploader/dashboard')}}"><i class="bx bx-user"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Accounts Checker Listing</li>
+                    <li class="breadcrumb-item active" aria-current="page">Accounts Uploader Listing</li>
                 </ol>
             </nav>
         </div>
@@ -26,7 +26,7 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <h6 class="mb-0 text-uppercase">Accounts Checker Listing</h6>
+            <h6 class="mb-0 text-uppercase">Accounts Uploader Listing</h6>
             <hr/>
             <div class="card">
                 {{-- <div class="card-body d-flex justify-content-end align-items-end">
@@ -51,7 +51,7 @@
                                 <tr>
                                     <th scope="row" class="" data-id="{{ $chitti->chittiId }}">{{ $index }}</th>
                                     <td class="">
-                                        <a href="{{ route('accounts.acc-checker-edit', $chitti->chittiId) }}" class="text-primary">
+                                        <a href="{{ route('accounts.acc-uploader-edit', $chitti->chittiId) }}" class="text-primary">
                                         {{ $chitti->Title }}
                                         </a>
                                     </td>
@@ -79,10 +79,19 @@
                                             @endif
                                         </td>
                                     @endforeach
-                                    <td>{{ $chitti->checkerStatus }}</td>
+                                    @if ($chitti->finalStatus == 'approved')
+                                        <td>{{ $chitti->finalStatus }}</td>
+                                    @elseif ($chitti->finalStatus == 'sent_to_uploader')
+                                        <td>{{ $chitti->uploaderStatus }}</td>
+                                    @elseif ($chitti->uploaderStatus == 'checker_to_uploader')
+                                        <td>{{ $chitti->uploaderStatus }}</td>
+                                    @else
+                                        <td> {{ 'N/A' }} </td>
+                                    @endif
+
 
                                     <td class="">
-                                        <a href="{{ route('accounts.acc-checker-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
+                                        <a href="{{ route('accounts.acc-uploader-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
 
                                         {{-- <form action="{{ route('admin.live-city-delete', '$mcity->cityId') }}" method="POST" style="display:inline;">
                                             @csrf
