@@ -49,7 +49,6 @@ class PostAnalyticsCheckerController extends Controller
         $cid = $request->query('id');
         $cityCode = $request->query('city');
         $chitti  = Chitti::where('chittiId', $cid)->where('areaId', $cityCode)->first();
-        // dd($cid);
         return view('admin.postanalyticschecker.post-analytics-checker-edit', compact('chitti'));
     }
 
@@ -77,13 +76,16 @@ class PostAnalyticsCheckerController extends Controller
             'instagram' => 'nullable|string',
         ]);
 
+        $total = [$request->citySubscribers, $request->prarangApplication, $request->websiteGd, $request->email, $request->instagram];
+        $totalSum = array_sum(array_map('intval', $total));
+
         $chitti = Chitti::findOrFail($id);
         $chitti->update([
             'postViewershipDate'    => $request->postViewershipFrom,
             'postViewershipDateTo'  => $request->to,
             'noofDaysfromUpload'    => $request->numberOfDays,
             'citySubscriber'        => $request->citySubscribers,
-            'totalViewerCount'      => $request->total,
+            'totalViewerCount'      => $totalSum,
             'prarangApplication'    => $request->prarangApplication,
             'websiteCount'          => $request->websiteGd,
             'emailCount'            => $request->email,
@@ -136,7 +138,7 @@ class PostAnalyticsCheckerController extends Controller
         $validated = $request->validate([
             'returnToMakerWithRegion'   => 'required|string',
         ]);
-        // dd
+
         $chitti = Chitti::findOrFail($id);
         $chitti->update([
             'analyticsChecker'          => $checkerId,

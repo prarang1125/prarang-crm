@@ -37,14 +37,15 @@
                     <div class="col-lg-8">
                         <div class="card">
                             <div class="card-body">
-                                {{-- <form id="userProfileForm"> --}}
+                                <form  action="{{ url('/admin/update-user-profile', Auth::guard('admin')->user()->userId) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
+                                    @method('PUT')
                                     <div class="row mb-3">
                                         <div class="col-sm-3">
                                             <h6 class="mb-0">Full Name</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            <input type="text" class="form-control" value="{{ Auth::guard('admin')->user()->firstName }} {{ Auth::guard('admin')->user()->lastName }}" />
+                                            <input type="text" name="first_last_name" class="form-control" value="{{ Auth::guard('admin')->user()->firstName }} {{ Auth::guard('admin')->user()->lastName }}" />
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -52,7 +53,7 @@
                                             <h6 class="mb-0">Email</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            <input type="text" class="form-control" value="{{ Auth::guard('admin')->user()->emailId }}" />
+                                            <input type="text" name="email_id" class="form-control" value="{{ Auth::guard('admin')->user()->emailId }}" />
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -60,7 +61,7 @@
                                             <h6 class="mb-0">Role</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            <input type="text" class="form-control" value="{{ $roleName }}" />
+                                            <input type="text" name="role_name" class="form-control" value="{{ $roleName }}" />
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -68,16 +69,32 @@
                                             <h6 class="mb-0">Language</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            <input type="text" class="form-control" value="{{ $language }}" />
+                                            <input type="text" name="language" class="form-control" value="{{ $language }}" />
                                         </div>
                                     </div>
-                                    {{-- <div class="row">
+                                    <div class="row mb-3">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">Password</h6>
+                                        </div>
+                                        <div class="col-sm-9 text-secondary">
+                                            <input type="password" name="password" class="form-control" value="{{ Auth::guard('admin')->user()->empPassword }}" />
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">Reset Password</h6>
+                                        </div>
+                                        <div class="col-sm-9 text-secondary">
+                                            <input type="password" name="reset_password" class="form-control" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-sm-3"></div>
                                         <div class="col-sm-9 text-secondary">
                                             <input type="submit" id="submitForm" class="btn btn-primary px-4" value="Save Changes" />
                                         </div>
-                                    </div> --}}
-                                {{-- </form> --}}
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>

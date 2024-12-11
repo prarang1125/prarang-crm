@@ -27,7 +27,7 @@ class MakerController extends Controller
         ->whereNotNull('Title')
         ->where('Title', '!=', '')
         ->where('makerStatus', '=', 'sent_to_checker')
-        // ->where('checkerStatus', '=','maker_to_checker')
+        // ->where('checkerStatus', '!=','maker_to_checker')
         ->select('*')
         ->get();
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
@@ -264,7 +264,7 @@ class MakerController extends Controller
             {
                 $chitti->update([
                     'makerStatus'   => 'sent_to_checker',
-                    // 'checkerStatus' => 'maker_to_checker',
+                    'checkerStatus' => 'maker_to_checker',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                     'return_chitti_post_from_checker_id' => 0,

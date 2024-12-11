@@ -337,7 +337,10 @@
     </div>
 </div>
 <!--end page wrapper -->
-
+<script>
+    const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
+    const csrfToken = "{{ csrf_token() }}";
+</script>
 <script>
 function previewImage() {
     const input = document.getElementById('makerImage');
