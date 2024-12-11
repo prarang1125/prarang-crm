@@ -25,6 +25,9 @@ use App\Http\Controllers\admin\PortalController;
 use App\Http\Controllers\admin\PostAnalyticsMakerController;
 use App\Http\Controllers\admin\PostAnalyticsCheckerController;
 use App\Http\Controllers\admin\PostAnalyticsController;
+use App\Http\Controllers\admin\MisReportController;
+use App\Http\Controllers\admin\CKEditorController;
+use App\Http\Controllers\accounts\AccMakerController;
 
 
 Route::get('/', function () {
@@ -40,6 +43,35 @@ Route::group(['prefix' => 'accounts'], function(){
     Route::group(['middleware' => 'auth'], function(){
         Route::get('logout', [LoginController::class, 'logout'])->name('accounts.logout');
         Route::get('dashboard', [AccountsController::class, 'index'])->name('accounts.dashboard');
+
+        #this method is use for account maker listing start
+        Route::get('/maker-dashboard', [AccMakerController::class, 'index'])->name('accounts.maker-dashboard');
+
+        Route::get('/maker/acc-maker-register', [AccMakerController::class, 'accMakerRegister'])->name('accounts.acc-maker-register');
+        #this method is use for account maker listing end
+
+        #show the listing of rejected maker start
+        Route::get('/maker/acc-chitti-rejected-from-checker-listing', [AccMakerController::class, 'accChittiListReturnFromCheckerL'])->name('accounts.acc-post-return-from-checker-listing');
+        #show the listing of rejected maker end
+
+        // Routes for Makers
+        // Route::middleware('role:maker')->group(function () {
+        //     // dd('data is here');
+        //     Route::get('/maker/dashboard', [AccMakerController::class, 'index'])->name('maker.dashboard');
+        //     // Route::get('/maker/profile', [MakerController::class, 'profile'])->name('maker.profile');
+        // });
+
+        // Routes for Checkers
+        Route::middleware('role:checker')->group(function () {
+            Route::get('/checker/dashboard', [ChekerController::class, 'index'])->name('checker.dashboard');
+            // Route::get('/checker/profile', [ChekerController::class, 'profile'])->name('checker.profile');
+        });
+
+        // Routes for Uploaders
+        Route::middleware('role:uploader')->group(function () {
+            Route::get('/uploader/dashboard', [UploaderController::class, 'index'])->name('uploader.dashboard');
+            // Route::get('/uploader/profile', [UploaderController::class, 'profile'])->name('uploader.profile');
+        });
     });
 });
 
@@ -85,10 +117,10 @@ Route::group(['prefix' => 'admin'], function(){
         #this route is use for country
             Route::get('/country/country-listing', [CountryController::class, 'index'])->name('admin.country-listing');
             Route::get('/country/country-register', [CountryController::class, 'countryRegister'])->name('admin.country-register');
-            Route::post('/country/country-store', [countryController::class, 'countryStore'])->name('admin.country-store');
-            Route::post('/country/country-delete/{id}', [countryController::class, 'countrytDelete'])->name('admin.country-delete');
-            Route::get('/country/country-edit/{id}', [countryController::class, 'countryEdit'])->name('admin.country-edit');
-            Route::put('/country-update/{id}', [countryController::class, 'countryUpdate'])->name('admin.country-update');
+            Route::post('/country/country-store', [CountryController::class, 'countryStore'])->name('admin.country-store');
+            Route::post('/country/country-delete/{id}', [CountryController::class, 'countrytDelete'])->name('admin.country-delete');
+            Route::get('/country/country-edit/{id}', [CountryController::class, 'countryEdit'])->name('admin.country-edit');
+            Route::put('/country-update/{id}', [CountryController::class, 'countryUpdate'])->name('admin.country-update');
         #this route is use for country end
 
         #this route is use for live-city
@@ -217,8 +249,27 @@ Route::group(['prefix' => 'admin'], function(){
 
         #this route is use for post analytics start
             Route::get('/postanalytics/post-analytics-listing', [PostAnalyticsController::class, 'index'])->name('admin.post-analytics-listing');
+            Route::get('/post-analytics/export', [PostAnalyticsController::class, 'export'])->name('postanalytics.export');
         #this route is use for post analytics end
 
+        #this route is use for MIS Report start
+            Route::get('/misreport/mis-report', [MisReportController::class, 'index'])->name('admin.mis-report');
+            Route::post('/misreport/mis-report-generate', [MisReportController::class, 'generateMisReport'])->name('admin.mis-report-generate');
+            Route::post('/misreport/export', [MisReportController::class, 'export'])->name('admin.generate-mis-report-export');
+        #this route is use for MIS Report end
+
+        #upload image using ck-editor start
+            Route::post('/admin/ckeditor-upload', [CKEditorController::class, 'upload'])->name('admin.ckeditor-upload');
+        #upload image using ck-editor end
+
+        #checker chitti-post return to maker with region start
+            Route::get('/checker/checker-chitti-return-to-maker-region/{id}', [ChekerController::class, 'checkerChittiReturnMakerRegion'])->name('admin.checker-chitti-return-to-maker-region');
+            Route::put('/checker/chitti-checker-sendtomaker/sendtomaker/{id}', [ChekerController::class, 'checkerChittiSendToMaker'])->name('admin.chitti-checker-sendtomaker');
+        #checker chitti-post return to maker with region end
+
+        #show the listing of rejected maker start
+            Route::get('/maker/chitti-rejected-from-checker-listing', [MakerController::class, 'chittiListReturnFromCheckerL'])->name('admin.post-return-from-checker-listing');
+        #show the listing of rejected maker end
 
         // Portal ->Vivek
         Route::resource('portal', PortalController::class);

@@ -27,8 +27,9 @@
 	<link rel="stylesheet" href="{{ asset('assets/css/header-colors.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/custom/login.css')}}" />
     <link rel="stylesheet" href="{{ asset('assets/css/custom/ckeditor.css')}}"/>
-    <link rel="stylesheet" href="{{ asset('assets/css/ckeditor5.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('assets/css/ckeditor5.css') }}"> --}}
     {{-- <link rel="stylesheet" href="{{ asset('assets/plugins/ckeditor/contents.css') }}"> --}}
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
 	{{-- <title>Prarang Admin Home</title> --}}
     <title>@yield('title', 'Login')</title>
 </head>
