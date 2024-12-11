@@ -61,7 +61,7 @@
                             @foreach ($chittis as $chitti)
                                 <tr>
                                     <th scope="row" class="" data-id="{{ $chitti->chittiId }}">{{ $index }}</th>
-                                    <td class=""><a href="{{ route('admin.maker-edit', $chitti->chittiId) }}" class="text-primary">
+                                    <td class=""><a href="{{ route('accounts.acc-maker-edit', $chitti->chittiId) }}" class="text-primary">
                                         {{ $chitti->Title }}
                                     </a></td>
                                     <td class="">{{ $chitti->dateOfCreation }}</td>
@@ -91,7 +91,7 @@
                                     <td>{{ $chitti->makerStatus }}</td>
 
                                     <td class="">
-                                        <a href="{{ route('admin.maker-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
+                                        <a href="{{ route('accounts.acc-maker-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
 
                                         <form action="{{ route('admin.live-city-delete', '$mcity->cityId') }}" method="POST" style="display:inline;">
                                             @csrf
