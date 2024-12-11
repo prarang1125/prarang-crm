@@ -143,13 +143,22 @@
                             @enderror
                         </div>
 
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <label for="subtitle" class="form-label">Sub Title</label>
                             <input type="text" class="form-control  @error('subtitle') is-invalid @enderror" id="subtitle" name="subtitle" value="{{ old('subtitle', $chitti->SubTitle) }}" >
                             @error('subtitle')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
+                        </div> --}}
+
+                        <div class="col-md-6">
+                            <label for="subtitle" class="form-label">Sub Title</label>
+                            <input type="text" class="form-control @error('subtitle') is-invalid @enderror" id="subtitle" name="subtitle" value="{{ old('subtitle', $chitti->SubTitle) }}">
+                            @error('subtitle')
+                                <p class="invalid-feedback">{{ $message }}</p>
+                            @enderror
                         </div>
+                        
                     </div>
                     {{-- title and subtitle code end--}}
 
@@ -337,7 +346,9 @@
     </div>
 </div>
 <!--end page wrapper -->
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Include PerfectScrollbar JS -->
+<script src="path/to/perfect-scrollbar.js"></script>
 <script>
 function previewImage() {
     const input = document.getElementById('makerImage');
@@ -459,6 +470,32 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+$(document).ready(function () {
+        // Check if element exists before applying PerfectScrollbar
+        var element = document.getElementById('subtitle');
+        if (element) {
+            element.addEventListener('input', function () {
+                const regex = /^[a-zA-Z\s]+$/;
+                const input = this.value;
+                const errorElement = this.nextElementSibling;
+
+                if (!regex.test(input)) {
+                    this.classList.add('is-invalid');
+                    errorElement.textContent = 'Please enter a correct text format.';
+                    errorElement.style.display = 'block';
+                } else {
+                    this.classList.remove('is-invalid');
+                    errorElement.style.display = 'none';
+                }
+            });
+
+            // Initialize PerfectScrollbar
+            new PerfectScrollbar(element.parentNode);
+        } else {
+            console.error('Element #subtitle does not exist.');
+        }
+    });
 </script>
 @endsection
 

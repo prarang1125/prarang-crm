@@ -30,9 +30,12 @@ use App\Http\Controllers\admin\CKEditorController;
 use App\Http\Controllers\accounts\AccMakerController;
 
 
-Route::get('/', function () {
-    return "<a href='/admin/login'>Admin Login</a><br><a href='/accounts/login'>Other Login</a><br>". Hash::make('password') ;
-});
+// Route::get('/', function () {
+//     return "<a href='/admin/login'>Admin Login</a><br><a href='/accounts/login'>Other Login</a><br>". Hash::make('password') ;
+// });
+
+Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
+
 
 Route::group(['prefix' => 'accounts'], function(){
     Route::group(['middleware' => 'guest'], function(){
@@ -192,6 +195,7 @@ Route::group(['prefix' => 'admin'], function(){
             Route::post('/maker/maker-store', [MakerController::class, 'makerStore'])->name('admin.maker-store');
             Route::get('/maker/maker-edit/{id}', [MakerController::class, 'makerEdit'])->name('admin.maker-edit');
             Route::put('/maker/maker-update/{id}', [MakerController::class, 'makerUpdate'])->name('admin.maker-update');
+            Route::get('/maker/maker-delete/{id}', [MakerController::class, 'makerdelete'])->name('admin.maker-delete');
         #this route is use for admin maker end
 
         #this route is use for admin checker start

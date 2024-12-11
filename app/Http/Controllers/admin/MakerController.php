@@ -27,9 +27,11 @@ class MakerController extends Controller
         ->whereNotNull('Title')
         ->where('Title', '!=', '')
         ->where('makerStatus', '=', 'sent_to_checker')
+        ->where('is_active', 1)
         // ->where('checkerStatus', '=','maker_to_checker')
         ->select('*')
         ->get();
+
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         return view('admin.maker.maker-listing', compact('chittis', 'geographyOptions', 'notification'));
@@ -63,7 +65,8 @@ class MakerController extends Controller
             'geography' => 'required',
             'c2rselect' => 'required',
             'title'     => 'required|string|max:255',
-            'subtitle' => 'required|string|max:255',
+            // 'subtitle' => 'required|string|max:255',
+            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'forTheCity' => 'required|boolean',
             'isCultureNature' => 'required|boolean',
         ]);
@@ -123,6 +126,7 @@ class MakerController extends Controller
             $chitti->areaId = $areaIdCode;
             $chitti->geographyId = $request->geography;
             $chitti->created_at = $currentDateTime;
+            $chitti->is_active = 1;
             $chitti->created_by = Auth::guard('admin')->user()->userId;
             $chitti->save();
             // get last inserted id
@@ -224,7 +228,8 @@ class MakerController extends Controller
             'geography' => 'required',
             'c2rselect' => 'required',
             'title'     => 'required|string|max:255',
-            'subtitle' => 'required|string|max:255',
+            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            // 'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
             'isCultureNature' => 'required|boolean',
         ]);
@@ -356,5 +361,19 @@ class MakerController extends Controller
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         return view('admin.maker.chitti-rejected-from-checker-listing', compact('geographyOptions', 'notification', 'chittis'));
     }
+
+    public function makerDelete($id)
+    {
+        try {
+            $chittis = Chitti::findOrFail($id);
+            $chittis->is_active = 0;
+            $chittis->save();
+    
+            return redirect()->route('admin.maker-listing')->with('success', 'Listing soft deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.maker-listing')->withErrors(['error' => 'An error occurred while trying to soft delete the listing.']);
+        }
+    }
+    
 
 }
