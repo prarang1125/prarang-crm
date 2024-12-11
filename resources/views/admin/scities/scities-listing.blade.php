@@ -1,5 +1,5 @@
 @extends('layouts.admin.admin')
-@section('title', 'S_City Listing')
+@section('title', 'City Listing')
 
 @section('content')
 <!--start page wrapper -->
@@ -12,7 +12,7 @@
                 <ol class="breadcrumb mb-0 p-0">
                     <li class="breadcrumb-item"><a href="{{ url('admin/scities/scities-listing')}}"><i class="bx bx-user"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">S_City Listing</li>
+                    <li class="breadcrumb-item active" aria-current="page">City Listing</li>
                 </ol>
             </nav>
         </div>
@@ -26,11 +26,16 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <h6 class="mb-0 text-uppercase">S_City Listing</h6>
+            <h6 class="mb-0 text-uppercase">City Listing</h6>
             <hr/>
             <div class="card">
                 <div class="card-body d-flex justify-content-end align-items-end">
-                    <a href="{{ url('/admin/scities/scities-register') }}" class="btn btn-primary">Add New S_City</a>
+                    <!-- Search Form -->
+                    <form action="{{ url('admin/scities/scities-listing') }}" method="GET" class="d-flex me-3">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search by City Name" value="{{ request()->input('search') }}">
+                        <button type="submit" class="btn btn-secondary">Search</button>
+                    </form>
+                    <a href="{{ url('/admin/scities/scities-register') }}" class="btn btn-primary">Add City</a>
                 </div>
                 <div class="card-body">
                     <table class="table mb-0 table-hover">
@@ -43,7 +48,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $index = 1;  @endphp
+                            @php
+                                $index = ($scities->currentPage() - 1) * $scities->perPage() + 1;
+                            @endphp
                             @foreach ($scities as $scity)
                                 <tr>
                                     <th scope="row" class="">{{ $index }}</th>
@@ -63,6 +70,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end mt-4">
+                        {{ $scities->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>

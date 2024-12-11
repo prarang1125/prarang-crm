@@ -43,7 +43,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $index = 1;  @endphp
+                            @php
+                                $index = ($mcountrys->currentPage() - 1) * $mcountrys->perPage() + 1;
+                            @endphp
                             @foreach ($mcountrys as $mcountry)
                                 <tr>
                                     <th scope="row" class="text-center">{{ $index }}</th>
@@ -63,6 +65,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end mt-4">
+                        {{ $mcountrys->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>

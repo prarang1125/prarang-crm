@@ -63,9 +63,15 @@ class AdminController extends Controller
     public function userProfile(){
 
         $user     = Auth::guard('admin')->user();
-        $roleName = $user->role ? $user->role->roleName : 'No Role Assigned';
-        $language = $user->languageScript ? $user->languageScript->language : 'No Language Assigned';
-        return view('admin.user-profile', compact('user', 'roleName', 'language'));
+
+
+        $roleName   = $user->role ? $user->role->roleName : 'No Role Assigned';
+        $roleId     = $user->role ? $user->role->roleID : null;
+
+        $language   = $user->languageScript ? $user->languageScript->language : 'No Language Assigned';
+        $languageId = $user->languageScript ? $user->languageScript->id : null;
+
+        return view('admin.user-profile', compact('user', 'roleName', 'language', 'roleId', 'languageId'));
     }
 
     #this method is use for update admin user profile
@@ -249,16 +255,44 @@ class AdminController extends Controller
     #this method is use for update user profile or password reset
     public function userProfileUpdate(Request $request, $id)
     {
-        dd($request->all());
-        $validator = Validator::make($request->all(), [
-            'first_last_name' => 'required|string|max:255',
-            'email_id'       => 'required|email',
-            'role_name'      => 'required|exists:mrole,roleID',
-            'languageId'     => 'required|boolean',
-            'empPassword'    => 'required|string|min:5',
-            'reset_password' => 'nullable',
 
-            'isActive' => 'required|boolean',
+        $validator = Validator::make($request->all(), [
+            'first_last_name' => 'required',
+            'email_id'       => 'required',
+            'role_name'      => 'required',
+            'role_id'        => 'nullable',
+            'language'       => 'required',
+            'language_id'    => 'nullable',
+            'password'       => 'nullable',
+            'reset_password' => 'required'
         ]);
+
+        $fullName = $request->first_last_name;
+        $names = explode(' ', $fullName);
+
+        $first_name = $names[0] ?? '';
+        $last_name = $names[1] ?? '';
+
+        if ($validator->passes()) {
+            $user = Muser::findOrFail($id);
+            $currentDateTime = getUserCurrentTime();
+            // Update the user with additional fields
+            $user->update([
+                'firstName' => $first_name,
+                'lastName'  => $last_name,
+                'emailId'   => $request->email_id,
+                'empPassword' => bcrypt($request->reset_password),
+                'roleId'      => $request->role_id,
+                'languageId' => $request->language_id,
+                'updated_at' => $currentDateTime,
+                'updated_by' => Auth::guard('admin')->user()->userId,
+            ]);
+
+            return redirect()->back()->with('success', 'your password has been reset successfully.');
+        } else {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors($validator);
+        }
     }
 }

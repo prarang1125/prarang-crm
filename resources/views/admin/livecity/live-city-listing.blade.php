@@ -30,6 +30,11 @@
             <hr/>
             <div class="card">
                 <div class="card-body d-flex justify-content-end align-items-end">
+                    <!-- Search Form -->
+                    <form action="{{ url('admin/livecity/live-city-listing') }}" method="GET" class="d-flex me-3">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search by Live City Name" value="{{ request()->input('search') }}">
+                        <button type="submit" class="btn btn-secondary">Search</button>
+                    </form>
                     <a href="{{ url('/admin/livecity/live-city-register') }}" class="btn btn-primary">Add New Live City</a>
                 </div>
                 <div class="card-body">
@@ -43,7 +48,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $index = 1;  @endphp
+                            @php
+                                $index = ($mcitys->currentPage() - 1) * $mcitys->perPage() + 1;
+                            @endphp
                             @foreach ($mcitys as $mcity)
                                 <tr>
                                     <th scope="row" class="text-center">{{ $index }}</th>
@@ -63,6 +70,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end mt-4">
+                        {{ $mcitys->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>

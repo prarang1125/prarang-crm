@@ -12,11 +12,22 @@ use Illuminate\Support\Facades\Log;
 class LiveCityController extends Controller
 {
     #this method is use for show the listing of city
-    public function index()
+    public function index(Request $request)
     {
-        $mcitys = Mcity::where('isActive', 1)->get();
+        $search = $request->input('search');
+
+        $mcitys = Mcity::where('isActive', 1)
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('cityNameInEnglish', 'like', '%' . $search . '%')
+                    ->orWhere('cityNameInUnicode', 'like', '%' . $search . '%');
+                });
+            })
+            ->paginate(5);
+
         return view('admin.livecity.live-city-listing', compact('mcitys'));
     }
+
 
     #this method is use for regidter new city
     public function liveCityRegister()

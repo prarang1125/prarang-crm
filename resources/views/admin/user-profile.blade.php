@@ -18,6 +18,25 @@
             </div>
         </div>
         <!--end breadcrumb-->
+        <!-- Display Success Message -->
+        @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
+
+        <!-- Display Validation Errors -->
+        @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
         <div class="container">
             <div class="main-body">
                 <div class="row">
@@ -62,6 +81,7 @@
                                         </div>
                                         <div class="col-sm-9 text-secondary">
                                             <input type="text" name="role_name" class="form-control" value="{{ $roleName }}" />
+                                            <input type="hidden" name="role_id" value="{{ $roleId }}" />
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -70,6 +90,7 @@
                                         </div>
                                         <div class="col-sm-9 text-secondary">
                                             <input type="text" name="language" class="form-control" value="{{ $language }}" />
+                                            <input type="hidden" name="language_id" value="{{ $languageId }}" />
                                         </div>
                                     </div>
                                     <div class="row mb-3">

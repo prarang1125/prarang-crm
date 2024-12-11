@@ -13,7 +13,7 @@ class CountryController extends Controller
     #this method is use for show country listing
     public function index()
     {
-        $mcountrys = Mcountry::where('isActive', 1)->get();
+        $mcountrys = Mcountry::where('isActive', 1)->paginate(5);
         return view('admin.country.country-listing', compact('mcountrys'));
     }
 
