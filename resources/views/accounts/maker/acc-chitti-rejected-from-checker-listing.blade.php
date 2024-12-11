@@ -6,7 +6,7 @@
 <div class="page-content">
     <!--breadcrumb-->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div class="breadcrumb-title pe-3">Admin</div>
+        <div class="breadcrumb-title pe-3">Accounts</div>
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
@@ -32,9 +32,9 @@
                 <a class="nav-link dropdown-toggle-nocaret position-relative"
                 href="{{ route('accounts.acc-post-return-from-checker-listing') }}"
                 role="button">
-                    {{-- @if($notification > 0) --}}
+                    @if($notification > 0)
                         <span class="alert-count">{{ $notification }}</span>
-                    {{-- @endif --}}
+                    @endif
                     <i class="bx bx-bell"></i>
                 </a>
             </div>
@@ -61,7 +61,7 @@
                             @foreach ($chittis as $chitti)
                                 <tr>
                                     <th scope="row" class="" data-id="{{ $chitti->chittiId }}">{{ $index }}</th>
-                                    <td class=""><a href="{{ route('admin.maker-edit', $chitti->chittiId) }}" class="text-primary">
+                                    <td class=""><a href="{{ route('accounts.acc-maker-edit', $chitti->chittiId) }}" class="text-primary">
                                         {{ $chitti->Title }}
                                     </a></td>
                                     <td class="">{{ $chitti->dateOfCreation }}</td>
@@ -91,7 +91,7 @@
                                     <td>{{ $chitti->makerStatus }}</td>
 
                                     <td class="">
-                                        <a href="{{ route('admin.maker-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
+                                        <a href="{{ route('accounts.acc-maker-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
 
                                         <form action="{{ route('admin.live-city-delete', '$mcity->cityId') }}" method="POST" style="display:inline;">
                                             @csrf

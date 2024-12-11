@@ -29,7 +29,7 @@
                 @endif
                 <h6 class="mb-0 text-uppercase text-primary">Create New Maker Account Register</h6>
                 <hr/>
-                <form  action="{{ url('/admin/maker/maker-store') }}" method="POST" enctype="multipart/form-data">
+                <form  action="{{ url('/accounts/maker/acc-maker-store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-lg-6">
@@ -295,7 +295,7 @@
 </div>
 <!--end page wrapper -->
 <script>
-    const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
+    const uploadUrl = "{{ route('accounts.acc-ckeditor-upload') }}";
     const csrfToken = "{{ csrf_token() }}";
 </script>
 <script>

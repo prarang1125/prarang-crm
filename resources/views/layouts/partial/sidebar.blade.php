@@ -120,9 +120,9 @@
                         </a>
                     </li>
                 @elseif ($user->roleId == "3")
-                    <li> <a href="dashboard-eCommerce.html"><i class="bx bx-right-arrow-alt"></i>Checker</a>
+                    <li> <a href="{{ url('/accounts/checker/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Checker</a>
                 @elseif ($user->roleId == "4")
-                    <li> <a href="dashboard-eCommerce.html"><i class="bx bx-right-arrow-alt"></i>Uploader</a>
+                    <li> <a href="{{ url('/accounts/uploader/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Uploader</a>
                 @endif
             </ul>
         </li>
