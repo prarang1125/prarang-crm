@@ -210,7 +210,7 @@ class AdminController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'firstName' => 'required|string|max:255',
-            'lastName' => 'required|string|max:255', 
+            'lastName' => 'required|string|max:255',
             'emailId' => [
                 'required',
                 'email',
@@ -244,5 +244,21 @@ class AdminController extends Controller
                 ->withInput()
                 ->withErrors($validator);
         }
+    }
+
+    #this method is use for update user profile or password reset
+    public function userProfileUpdate(Request $request, $id)
+    {
+        dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'first_last_name' => 'required|string|max:255',
+            'email_id'       => 'required|email',
+            'role_name'      => 'required|exists:mrole,roleID',
+            'languageId'     => 'required|boolean',
+            'empPassword'    => 'required|string|min:5',
+            'reset_password' => 'nullable',
+
+            'isActive' => 'required|boolean',
+        ]);
     }
 }

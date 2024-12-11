@@ -133,6 +133,8 @@ Route::group(['prefix' => 'admin'], function(){
             Route::post('users-delete/{id}', [AdminController::class, 'userDelete'])->name('admin.users-delete');
             Route::get('user-edit/{id}', [AdminController::class, 'userEdit'])->name('admin.user-edit');
             Route::put('user-update/{id}', [AdminController::class, 'userUpdate'])->name('admin.user-update');
+
+            Route::put('update-user-profile/{id}', [AdminController::class, 'userProfileUpdate'])->name('admin.user-profile-update');
         #this route is use for admin users end
 
         #this route is use for Role
