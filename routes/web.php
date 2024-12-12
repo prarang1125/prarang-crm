@@ -253,7 +253,7 @@ Route::group(['prefix' => 'admin'], function(){
             Route::get('/post/post-listing', [PostController::class, 'index'])->name('admin.post-listing');
             Route::get('/post/post-edit/{id}', [PostController::class, 'postEdit'])->name('admin.post-edit');
             Route::put('/post/post-update/{id}', [PostController::class, 'postUpdate'])->name('admin.post-update');
-            Route::post('/post/post-delete/{id}', [PostController::class, 'postDelete'])->name('admin.post-delete');
+            Route::post('/post/post-delete/{id}', [PostController::class, 'postDelete'])->name('admin.post-delete')->middleware('admin.auth');
             Route::post('/admin/send-to-checker/{id}', [PostController::class, 'sendToChecker'])->name('admin.send-to-checker');
         #this route is use for admin post end
 

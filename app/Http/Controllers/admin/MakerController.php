@@ -29,6 +29,7 @@ class MakerController extends Controller
         ->where('makerStatus', '=', 'sent_to_checker')
         // ->where('checkerStatus', '!=','maker_to_checker')
         ->select('*')
+        ->orderByDesc('dateOfCreation')
         ->get();
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
@@ -185,6 +186,9 @@ class MakerController extends Controller
     public function makerEdit($id)
     {
         $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->findOrFail($id);
+            if($chitti->checkerStatus=='maker_to_checker' || $chitti->checkerStatus=='sent_to_uploader'){
+                return redirect()->back()->with('error','not allow to edit');
+            }
         $image = $chitti->chittiimagemappings()->first();
         // $chittiTagMapping = Chittitagmapping::where('chittiId', $id)->first();
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
