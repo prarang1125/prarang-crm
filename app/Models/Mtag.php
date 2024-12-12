@@ -14,6 +14,7 @@ class Mtag extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'tagId',
         'tagInEnglish',
         'tagInUnicode',
         'tagCategoryId',

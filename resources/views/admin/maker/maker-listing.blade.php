@@ -54,6 +54,15 @@
                     <a href="{{ url('/admin/maker/maker-register') }}" class="btn btn-primary">Add New Maker</a>
                 </div>
                 <div class="card-body">
+                @if($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                     <table class="table mb-0 table-hover">
                         <thead class="thead-light">
                             <tr>
@@ -108,7 +117,7 @@
                                     <a href="{{ route('admin.maker-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
                                         <a href="{{ route('admin.maker-delete', $chitti->chittiId) }}" class="btn btn-sm btn-danger delete-user">Delete</a>
                                      @else
-                                                <a href="">Edit Title</a>
+                                            <x-post.maker.change-title :chittiId="$chitti->chittiId" />
                                     @endif
 
                                     {{-- <a href="{{ route('admin.maker-update', $chitti->chittiId) }}" class="btn btn-sm btn-primary update-user mt-3">Send to checker</a> --}}
