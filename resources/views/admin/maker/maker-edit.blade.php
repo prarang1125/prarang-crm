@@ -23,13 +23,13 @@
             <div class="col-xl-9 mx-auto w-100">
                 <!-- Success Message -->
                 @if(session('success'))
-                    <div class="alert alert-success mt-3">
-                        {{ session('success') }}
-                    </div>
+                <div class="alert alert-success mt-3">
+                    {{ session('success') }}
+                </div>
                 @endif
                 <h6 class="mb-0 text-uppercase text-primary">Maker Edit</h6>
-                <hr/>
-                <form  action="{{ route('admin.maker-update' , $chitti->chittiId) }}" method="POST" enctype="multipart/form-data">
+                <hr />
+                <form action="{{ route('admin.maker-update' , $chitti->chittiId) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     {{-- image preview and image thumbnail and content section --}}
@@ -38,7 +38,7 @@
                             <label for="content" class="form-label">Content</label>
                             <textarea class="@error('content') is-invalid @enderror" name="content" id="editor">{{ old('text',$chitti->description) }}</textarea>
                             @error('content')
-                                <p class="invalid-feedback">{{ $message }}</p>
+                            <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
                         <!-- Image Preview and Thumbnails -->
@@ -62,14 +62,14 @@
                         <div class="col-md-12">
                             <label for="makerImage" class="form-label">Upload Image</label>
                             <input type="file" class="form-control @error('makerImage') is-invalid @enderror" id="makerImage" name="makerImage"
-                            onchange="previewImage()">
+                                onchange="previewImage()">
                             @error('makerImage')
-                                <p class="invalid-feedback">{{ $message }}</p>
+                            <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                             {{-- @if($image)
                                 <p>Current Image: {{ $image->imageName }}</p>
                             @else
-                                <p>No image uploaded</p>
+                            <p>No image uploaded</p>
                             @endif --}}
                         </div>
                     </div>
@@ -81,14 +81,14 @@
                             <select id="inputGeography" class="form-select @error('geography') is-invalid @enderror" name="geography">
                                 <option selected disabled>Choose...</option>
                                 @foreach($geographyOptions as $geographyOption)
-                                    <option value="{{ $geographyOption->id }}"
-                                        {{ $geographyMapping && $geographyMapping->geographyId == $geographyOption->id ? 'selected' : '' }}>
-                                        {{ $geographyOption->labelInEnglish }}
-                                    </option>
+                                <option value="{{ $geographyOption->id }}"
+                                    {{ $geographyMapping && $geographyMapping->geographyId == $geographyOption->id ? 'selected' : '' }}>
+                                    {{ $geographyOption->labelInEnglish }}
+                                </option>
                                 @endforeach
                             </select>
                             @error('geography')
-                                <p class="invalid-feedback">{{ $message }}</p>
+                            <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
                         <div class="col-md-6">
@@ -98,36 +98,36 @@
 
                                 {{-- Display Regions if the areaId is a region --}}
                                 @if($geographyMapping && $geographyMapping->region)
-                                    @foreach($regions as $region)
-                                        <option value="{{ $region->regionId }}"
-                                            {{ $geographyMapping->areaId == $region->regionId ? 'selected' : '' }}>
-                                            {{ $region->regionnameInEnglish }}
-                                        </option>
-                                    @endforeach
+                                @foreach($regions as $region)
+                                <option value="{{ $region->regionId }}"
+                                    {{ $geographyMapping->areaId == $region->regionId ? 'selected' : '' }}>
+                                    {{ $region->regionnameInEnglish }}
+                                </option>
+                                @endforeach
                                 @endif
 
                                 {{-- Display Cities if the areaId is a city --}}
                                 @if($geographyMapping && $geographyMapping->city)
-                                    @foreach($cities as $city)
-                                        <option value="{{ $city->cityId }}"
-                                            {{ $geographyMapping->areaId == $city->cityId ? 'selected' : '' }}>
-                                            {{ $city->cityNameInEnglish }}
-                                        </option>
-                                    @endforeach
+                                @foreach($cities as $city)
+                                <option value="{{ $city->cityId }}"
+                                    {{ $geographyMapping->areaId == $city->cityId ? 'selected' : '' }}>
+                                    {{ $city->cityNameInEnglish }}
+                                </option>
+                                @endforeach
                                 @endif
 
                                 {{-- Display Countries if the areaId is a country --}}
                                 @if($geographyMapping && $geographyMapping->country)
-                                    @foreach($countries as $country)
-                                        <option value="{{ $country->countryId }}"
-                                            {{ $geographyMapping->areaId == $country->countryId ? 'selected' : '' }}>
-                                            {{ $country->countryNameInEnglish }}
-                                        </option>
-                                    @endforeach
+                                @foreach($countries as $country)
+                                <option value="{{ $country->countryId }}"
+                                    {{ $geographyMapping->areaId == $country->countryId ? 'selected' : '' }}>
+                                    {{ $country->countryNameInEnglish }}
+                                </option>
+                                @endforeach
                                 @endif
                             </select>
                             @error('c2rselect')
-                                <p class="invalid-feedback">{{ $message }}</p>
+                            <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
@@ -137,17 +137,25 @@
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <label for="title" class="form-label">Title</label>
-                            <input type="text" class="form-control  @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title', $chitti->Title) }}" >
+                            <input type="text" class="form-control  @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title', $chitti->Title) }}">
                             @error('title')
-                                <p class="invalid-feedback">{{ $message }}</p>
+                            <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
 
                         {{-- <div class="col-md-6">
                             <label for="subtitle" class="form-label">Sub Title</label>
-                            <input type="text" class="form-control  @error('subtitle') is-invalid @enderror" id="subtitle" name="subtitle" value="{{ old('subtitle', $chitti->SubTitle) }}" >
+                            <input type="text" class="form-control  @error('subtitle') is-invalid @enderror" id="subtitle" name="subtitle" value="{{ old('subtitle', $chitti->SubTitle) }}">
                             @error('subtitle')
-                                <p class="invalid-feedback">{{ $message }}</p>
+                            <p class="invalid-feedback">{{ $message }}</p>
+                            @enderror
+                        </div> --}}
+
+                        {{-- <div class="col-md-6">
+                            <label for="subtitle" class="form-label">Sub Title</label>
+                            <input type="text" class="form-control  @error('subtitle') is-invalid @enderror" id="subtitle" name="subtitle" value="{{ old('subtitle', $chitti->SubTitle) }}">
+                            @error('subtitle')
+                            <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div> --}}
 
@@ -183,7 +191,7 @@
                                 </div>
                                 <!-- Display the error message for the radio group -->
                                 @error('forTheCity')
-                                    <p class="invalid-feedback">{{ $message }}</p>
+                                <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
@@ -208,7 +216,7 @@
                                 <label class="form-check-label" for="cultureNatureNo">Nature</label>
                             </div>
                             @error('isCultureNature')
-                                <p class="invalid-feedback">{{ $message }}</p>
+                            <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
@@ -242,16 +250,17 @@
                             <!-- Content for Culture Tab 1 (Timelines) -->
                             <div class="tab-pane fade show active" id="cultureTab1" role="tabpanel">
                                 <div class="row">
-                                   @foreach ($timelines as $timeline)
-                                        <div class="col-md-4">
-                                            <div class="card">
-                                                <div class="card-body cardbodselect mt-3" style="background-color: #ff0006;color: white;">
-                                                    <i class="lni lni-close"></i>
-                                                    {{ $timeline->tagInEnglish }}
-                                                </div>
+                                    @foreach ($timelines as $timeline)
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="d-flex align-items-center">
+                                                <input type="radio" name="tagId" value="{{ $timeline->tagId }}" id="timeline{{ $timeline->id }}" class="me-2">
+                                                <label for="timeline{{ $timeline->id }}" class="mb-0">{{ $timeline->tagInEnglish }}</label>
+                                                <i class="lni lni-close ms-auto"></i>
                                             </div>
                                         </div>
-                                   @endforeach
+                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
 
@@ -259,14 +268,14 @@
                             <div class="tab-pane fade" id="cultureTab2" role="tabpanel">
                                 <div class="row">
                                     @foreach ($manSenses as $sense)
-                                        <div class="col-md-4">
-                                            <div class="card">
-                                                <div class="card-body cardbodselect mt-3" style="background-color: #ffff18;color: #282828;">
-                                                    <i class="lni lni-close"></i>
-                                                    {{ $sense->tagInEnglish }}
-                                                </div>
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #ffff18;color: #282828;">
+                                                <i class="lni lni-close"></i>
+                                                {{ $sense->tagInEnglish }}
                                             </div>
                                         </div>
+                                    </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -274,16 +283,16 @@
                             <!-- Content for Man And His Inventions -->
                             <div class="tab-pane fade" id="cultureTab3" role="tabpanel">
                                 <div class="row">
-                                   @foreach ($manInventions as $invention)
-                                        <div class="col-md-4">
-                                            <div class="card">
-                                                <div class="card-body cardbodselect mt-3" style="background-color: #1919d9;color: white;">
-                                                    <i class="lni lni-close"></i>
-                                                    {{ $invention->tagInEnglish }}
-                                                </div>
+                                    @foreach ($manInventions as $invention)
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #1919d9;color: white;">
+                                                <i class="lni lni-close"></i>
+                                                {{ $invention->tagInEnglish }}
                                             </div>
                                         </div>
-                                   @endforeach
+                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
 
@@ -291,14 +300,14 @@
                             <div class="tab-pane fade" id="natureTab1" role="tabpanel">
                                 <div class="row">
                                     @foreach ($geographys as $geography)
-                                        <div class="col-md-4">
-                                            <div class="card">
-                                                <div class="card-body cardbodselect mt-3" style="background-color: #faff98;color: #282828;">
-                                                    <i class="lni lni-close"></i>
-                                                    {{ $geography->tagInEnglish }}
-                                                </div>
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #faff98;color: #282828;">
+                                                <i class="lni lni-close"></i>
+                                                {{ $geography->tagInEnglish }}
                                             </div>
                                         </div>
+                                    </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -306,14 +315,14 @@
                             <div class="tab-pane fade" id="natureTab2" role="tabpanel">
                                 <div class="row">
                                     @foreach ($faunas as $fauna)
-                                        <div class="col-md-4">
-                                            <div class="card">
-                                                <div class="card-body cardbodselect mt-3" style="background-color: #c8ff00;color: #282828;">
-                                                    <i class="lni lni-close"></i>
-                                                    {{ $fauna->tagInEnglish }}
-                                                </div>
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #c8ff00;color: #282828;">
+                                                <i class="lni lni-close"></i>
+                                                {{ $fauna->tagInEnglish }}
                                             </div>
                                         </div>
+                                    </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -321,14 +330,14 @@
                             <div class="tab-pane fade" id="natureTab3" role="tabpanel">
                                 <div class="row">
                                     @foreach ($floras as $flora)
-                                         <div class="col-md-4">
-                                            <div class="card">
-                                                <div class="card-body cardbodselect mt-3" style=" background-color: #339933;color: #fff;">
-                                                    <i class="lni lni-close"></i>
-                                                    {{ $flora->tagInEnglish }}
-                                                </div>
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-body cardbodselect mt-3" style=" background-color: #339933;color: #fff;">
+                                                <i class="lni lni-close"></i>
+                                                {{ $flora->tagInEnglish }}
                                             </div>
-                                         </div>
+                                        </div>
+                                    </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -338,7 +347,13 @@
                         {{-- <button type="submit" class="btn btn-primary">Update Maker</button>
                         <a href="{{ route('admin.checker-listing', $chitti->chittiId) }}" class="btn btn-primary">Send to Checker</a> --}}
                         <button type="submit" class="btn btn-primary" name="action" value="update_maker">Update Maker</button>
-                        <button type="submit" class="btn btn-primary" name="action" value="send_to_checker">Send to Checker</button>
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            name="action"
+                            value="send_to_checker"
+                            onclick="return confirm('Are you sure you want to send this to the checker?')">Send to Checker
+                        </button>
                     </div>
                 </form>
             </div>
@@ -346,124 +361,134 @@
     </div>
 </div>
 <!--end page wrapper -->
+<script>
+    const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
+    const csrfToken = "{{ csrf_token() }}";
+</script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Include PerfectScrollbar JS -->
 <script src="path/to/perfect-scrollbar.js"></script>
 <script>
-function previewImage() {
-    const input = document.getElementById('makerImage');
-    const preview = document.getElementById('preview-img');
-    const thumbnail = document.querySelector('.thumbnail-slot');
+    function previewImage() {
+        const input = document.getElementById('makerImage');
+        const preview = document.getElementById('preview-img');
+        const thumbnail = document.querySelector('.thumbnail-slot');
 
-    const file = input.files[0];
-    const reader = new FileReader();
+        const file = input.files[0];
+        const reader = new FileReader();
 
-    reader.onloadend = function () {
-        preview.src = reader.result;
-        thumbnail.style.backgroundImage = 'url(' + reader.result + ')';
-    }
+        reader.onloadend = function() {
+            preview.src = reader.result;
+            thumbnail.style.backgroundImage = 'url(' + reader.result + ')';
+        }
 
-    if (file) {
-        reader.readAsDataURL(file);
-    } else {
-        preview.src = '/img/blankImage2.png';
-        thumbnail.style.backgroundImage = 'url(/img/blankImage2.png)';
-    }
-}
-document.addEventListener('DOMContentLoaded', function () {
-    // Handle radio button change event
-    const cultureRadio = document.getElementById('cultureNatureYes');
-    const natureRadio = document.getElementById('cultureNatureNo');
-    const tabsContainer = document.getElementById('cultureNatureTabs');
-
-    function toggleTabs() {
-        tabsContainer.style.display = 'block'; // Show the tab section
-        if (cultureRadio.checked) {
-            // Show culture tabs and hide nature tabs
-            document.querySelector('#culture-tab1').style.display = 'block';
-            document.querySelector('#culture-tab2').style.display = 'block';
-            document.querySelector('#culture-tab3').style.display = 'block';
-
-            document.querySelector('#nature-tab1').style.display = 'none';
-            document.querySelector('#nature-tab2').style.display = 'none';
-            document.querySelector('#nature-tab3').style.display = 'none';
-
-            // Make the first culture tab active
-            document.querySelector('#culture-tab1').click();
-        } else if (natureRadio.checked) {
-            // Show nature tabs and hide culture tabs
-            document.querySelector('#nature-tab1').style.display = 'block';
-            document.querySelector('#nature-tab2').style.display = 'block';
-            document.querySelector('#nature-tab3').style.display = 'block';
-
-            document.querySelector('#culture-tab1').style.display = 'none';
-            document.querySelector('#culture-tab2').style.display = 'none';
-            document.querySelector('#culture-tab3').style.display = 'none';
-
-            // Make the first nature tab active
-            document.querySelector('#nature-tab1').click();
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = '/img/blankImage2.png';
+            thumbnail.style.backgroundImage = 'url(/img/blankImage2.png)';
         }
     }
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle radio button change event
+        const cultureRadio = document.getElementById('cultureNatureYes');
+        const natureRadio = document.getElementById('cultureNatureNo');
+        const tabsContainer = document.getElementById('cultureNatureTabs');
 
-    // Event listeners for radio buttons
-    cultureRadio.addEventListener('change', toggleTabs);
-    natureRadio.addEventListener('change', toggleTabs);
+        function toggleTabs() {
+            tabsContainer.style.display = 'block'; // Show the tab section
+            if (cultureRadio.checked) {
+                // Show culture tabs and hide nature tabs
+                document.querySelector('#culture-tab1').style.display = 'block';
+                document.querySelector('#culture-tab2').style.display = 'block';
+                document.querySelector('#culture-tab3').style.display = 'block';
 
-    // By default, select and show Culture tabs
-    toggleTabs(); // Trigger the toggleTabs function on page load to show default selection
+                document.querySelector('#nature-tab1').style.display = 'none';
+                document.querySelector('#nature-tab2').style.display = 'none';
+                document.querySelector('#nature-tab3').style.display = 'none';
+
+                // Make the first culture tab active
+                document.querySelector('#culture-tab1').click();
+            } else if (natureRadio.checked) {
+                // Show nature tabs and hide culture tabs
+                document.querySelector('#nature-tab1').style.display = 'block';
+                document.querySelector('#nature-tab2').style.display = 'block';
+                document.querySelector('#nature-tab3').style.display = 'block';
+
+                document.querySelector('#culture-tab1').style.display = 'none';
+                document.querySelector('#culture-tab2').style.display = 'none';
+                document.querySelector('#culture-tab3').style.display = 'none';
+
+                // Make the first nature tab active
+                document.querySelector('#nature-tab1').click();
+            }
+        }
+
+        // Event listeners for radio buttons
+        cultureRadio.addEventListener('change', toggleTabs);
+        natureRadio.addEventListener('change', toggleTabs);
+
+        // By default, select and show Culture tabs
+        toggleTabs(); // Trigger the toggleTabs function on page load to show default selection
 
 
-    // Get all card-body cardbodselect elements start
-    const cardBodies = document.querySelectorAll(".cardbodselect");
-    // Add click event listener to each card-body cardbodselect
-    cardBodies.forEach(cardBody => {
-        cardBody.addEventListener("click", function() {
-            // Remove checkmark from all icons and reset to X, also remove 'selected' class
-            cardBodies.forEach(cb => {
-                const icon = cb.querySelector("i");
-                icon.classList.remove("lni-checkmark");
-                icon.classList.add("lni-close");
-                cb.classList.remove("selected");
+        // Get all card-body cardbodselect elements start
+        const cardBodies = document.querySelectorAll(".cardbodselect");
+        // Add click event listener to each card-body cardbodselect
+        cardBodies.forEach(cardBody => {
+            cardBody.addEventListener("click", function() {
+                // Remove checkmark from all icons and reset to X, also remove 'selected' class
+                cardBodies.forEach(cb => {
+                    const icon = cb.querySelector("i");
+                    icon.classList.remove("lni-checkmark");
+                    icon.classList.add("lni-close");
+                    cb.classList.remove("selected");
+                });
+
+                // Toggle the clicked card-body cardbodselect's icon to checkmark and add 'selected' class
+                const icon = this.querySelector("i");
+                icon.classList.remove("lni-close");
+                icon.classList.add("lni-checkmark");
+                this.classList.add("selected");
             });
+        });
+        // Get all card-body cardbodselect elements end
 
-            // Toggle the clicked card-body cardbodselect's icon to checkmark and add 'selected' class
-            const icon = this.querySelector("i");
-            icon.classList.remove("lni-close");
-            icon.classList.add("lni-checkmark");
-            this.classList.add("selected");
+        // Choose city, country, or region according to its geography
+        const geographySelect = document.getElementById('inputGeography');
+        const levelSelect = document.getElementById('inputLanguageScript');
+        const labelSelect = document.getElementById('inputLanguageLabel');
+
+        // Regions, Cities, and Countries are passed as JSON from Blade
+        const regions = @json($regions);
+        const cities = @json($cities);
+        const countries = @json($countries);
+
+        geographySelect.addEventListener('change', function() {
+            const selectedValue = this.value;
+            let options = [];
+
+            // Clear the existing options
+            levelSelect.innerHTML = '<option selected disabled>Choose...</option>';
+
+            // Check which geography option is selected and populate the dropdown accordingly
+            if (selectedValue == 5) { // Region selected
+                options = regions.map(region => `<option value="${region.regionId}">${region.regionnameInEnglish}</option>`);
+                labelSelect.textContent = 'Select Region'; // Update label text
+            } else if (selectedValue == 6) { // City selected
+                options = cities.map(city => `<option value="${city.cityId}">${city.cityNameInEnglish}</option>`);
+                labelSelect.textContent = 'Select City'; // Update label text
+            } else if (selectedValue == 7) { // Country selected
+                options = countries.map(country => `<option value="${country.countryId}">${country.countryNameInEnglish}</option>`);
+                labelSelect.textContent = 'Select Country'; // Update label text
+            }
+
+            // Append new options to the select dropdown
+            if (options.length > 0) {
+                levelSelect.innerHTML += options.join('');
+            }
         });
     });
-    // Get all card-body cardbodselect elements end
-
-    // Choose city, country, or region according to its geography
-    const geographySelect = document.getElementById('inputGeography');
-    const levelSelect = document.getElementById('inputLanguageScript');
-    const labelSelect = document.getElementById('inputLanguageLabel');
-
-    // Regions, Cities, and Countries are passed as JSON from Blade
-    const regions = @json($regions);
-    const cities = @json($cities);
-    const countries = @json($countries);
-
-    geographySelect.addEventListener('change', function () {
-        const selectedValue = this.value;
-        let options = [];
-
-        // Clear the existing options
-        levelSelect.innerHTML = '<option selected disabled>Choose...</option>';
-
-        // Check which geography option is selected and populate the dropdown accordingly
-        if (selectedValue == 5) { // Region selected
-            options = regions.map(region => `<option value="${region.regionId}">${region.regionnameInEnglish}</option>`);
-            labelSelect.textContent = 'Select Region'; // Update label text
-        } else if (selectedValue == 6) { // City selected
-            options = cities.map(city => `<option value="${city.cityId}">${city.cityNameInEnglish}</option>`);
-            labelSelect.textContent = 'Select City'; // Update label text
-        } else if (selectedValue == 7) { // Country selected
-            options = countries.map(country => `<option value="${country.countryId}">${country.countryNameInEnglish}</option>`);
-            labelSelect.textContent = 'Select Country'; // Update label text
-        }
-
         // Append new options to the select dropdown
         if (options.length > 0) {
             levelSelect.innerHTML += options.join('');
@@ -498,5 +523,3 @@ $(document).ready(function () {
     });
 </script>
 @endsection
-
-

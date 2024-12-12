@@ -27,9 +27,10 @@ class MakerController extends Controller
         ->whereNotNull('Title')
         ->where('Title', '!=', '')
         ->where('makerStatus', '=', 'sent_to_checker')
-        ->where('is_active', 1)
+        ->where('finalStatus', '!=', 'deleted')
         // ->where('checkerStatus', '=','maker_to_checker')
         ->select('*')
+        ->orderByDesc('dateOfCreation')
         ->get();
 
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
@@ -42,6 +43,7 @@ class MakerController extends Controller
     {
         // Fetch data from the Mtag table based on tagCategoryId
         $timelines = Mtag::where('tagCategoryId', 1)->get();
+        // dd($timelines);
         $manSenses = Mtag::where('tagCategoryId', 2)->get();
         $manInventions = Mtag::where('tagCategoryId', 3)->get();
         $geographys = Mtag::where('tagCategoryId', 4)->get();
@@ -59,6 +61,7 @@ class MakerController extends Controller
     #this method is use for store maker data
     public function makerStore(Request $request)
     {
+        // dd($request);
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
             'makerImage' => 'required|image|max:2048',
@@ -69,7 +72,7 @@ class MakerController extends Controller
             'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'forTheCity' => 'required|boolean',
             'isCultureNature' => 'required|boolean',
-            'selected_tab' => 'required',
+           
         ]);
         if($validator->passes())
         {
@@ -174,7 +177,7 @@ class MakerController extends Controller
 
             $chittitagmapping = new Chittitagmapping();
             $chittitagmapping->chittiId = $lastId;
-            $chittitagmapping->tagId = $request->isCultureNature;
+            $chittitagmapping->tagId = $request->tagId;
             $chittitagmapping->created_at = $currentDateTime;
             $chittitagmapping->created_by = Auth::guard('admin')->user()->userId;
             $chittitagmapping->save();
@@ -189,6 +192,9 @@ class MakerController extends Controller
     public function makerEdit($id)
     {
         $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->findOrFail($id);
+            if($chitti->checkerStatus=='maker_to_checker' || $chitti->checkerStatus=='sent_to_uploader'){
+                return redirect()->back()->with('error','not allow to edit');
+            }
         $image = $chitti->chittiimagemappings()->first();
         // $chittiTagMapping = Chittitagmapping::where('chittiId', $id)->first();
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
@@ -269,7 +275,7 @@ class MakerController extends Controller
             {
                 $chitti->update([
                     'makerStatus'   => 'sent_to_checker',
-                    // 'checkerStatus' => 'maker_to_checker',
+                    'checkerStatus' => 'maker_to_checker',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                     'return_chitti_post_from_checker_id' => 0,
@@ -366,7 +372,7 @@ class MakerController extends Controller
     {
         try {
             $chittis = Chitti::findOrFail($id);
-            $chittis->is_active = 0;
+            $chittis->finalStatus ='deleted';
             $chittis->save();
     
             return redirect()->route('admin.maker-listing')->with('success', 'Listing soft deleted successfully.');

@@ -79,7 +79,12 @@
                                             @endif
                                         </td>
                                     @endforeach
-                                    <td>{{ $chitti->uploaderStatus }}</td>
+                                    @if ($chitti->finalStatus == 'approved')
+                                        <td>{{ $chitti->finalStatus }}</td>
+                                    @elseif ($chitti->finalStatus == 'sent_to_uploader')
+                                        <td>{{ $chitti->uploaderStatus }}</td>
+                                    @endif
+
 
                                     <td class="">
                                         <a href="{{ route('admin.uploader-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>

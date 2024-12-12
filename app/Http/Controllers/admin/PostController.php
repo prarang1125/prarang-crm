@@ -26,6 +26,7 @@ class PostController extends Controller
         ->whereNotNull('Title')
         ->where('Title', '!=', '')
         ->where('finalStatus', '!=', 'deleted')
+        ->orderByDesc('dateOfCreation')
         ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'makerStatus', 'checkerStatus')
         ->get();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
