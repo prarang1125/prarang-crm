@@ -1,22 +1,21 @@
 <div class="sidebar-header">
     <div>
-        {{-- <img src="{{ asset('assets/images/logo-icon.png') }}" class="logo-icon" alt="logo icon"> --}}
         <img src="{{ asset('assets/images/logo.png') }}" class="logo-icon" alt="logo icon">
     </div>
     <div>
         <h4 class="logo-text">PRARANG</h4>
     </div>
     <div class="toggle-icon ms-auto">
-        {{-- <i class='bx bx-arrow-to-left'></i> --}}
+        {{-- Optional toggle icon --}}
     </div>
 </div>
 <!--navigation-->
 <ul class="metismenu" id="menu">
     @if (Auth::guard('admin')->check())
+        {{-- Admin Sidebar --}}
         <li>
             <a href="javascript:;" class="has-arrow">
-                <div class="parent-icon"><i class='bx bx-home-circle'></i>
-                </div>
+                <div class="parent-icon"><i class='bx bx-home-circle'></i></div>
                 <div class="menu-title">Dashboard</div>
             </a>
             <ul>
@@ -33,8 +32,6 @@
                 <li> <a href="{{ url('/admin/postanalyticschecker/post-analytics-checker-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>Post Analytics Checker</a>
                 </li>
                 <li> <a href="{{ url('/admin/postanalytics/post-analytics-listing') }}"><i class="bx bx-right-arrow-alt"></i>Post Analytics</a>
-                </li>
-                <li> <a href="{{ url('/admin/misreport/mis-report') }}"><i class="bx bx-right-arrow-alt"></i>MIS Report</a>
                 </li>
             </ul>
         </li>
@@ -97,13 +94,14 @@
             </ul>
         </li>
     @elseif (Auth::check())
+        {{-- Other Roles Sidebar --}}
         <li>
             <a href="javascript:;" class="has-arrow">
-                <div class="parent-icon"><i class='bx bx-home-circle'></i>
-                </div>
+                <div class="parent-icon"><i class='bx bx-home-circle'></i></div>
                 <div class="menu-title">Dashboard</div>
             </a>
             <ul>
+
                 @php
                     $user = Auth::user();
                 @endphp

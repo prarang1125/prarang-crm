@@ -90,14 +90,11 @@
                                 @endforeach
                                 <td>{{ $chitti->makerStatus }}</td>
 
+
                                 <td class="">
                                     @if ($chitti->checkerStatus!='maker_to_checker' && $chitti->checkerStatus!='sent_to_uploader')
                                     <a href="{{ route('admin.maker-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
-
-                                    <form action="{{ route('admin.live-city-delete', '$mcity->cityId') }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-danger delete-user">Delete</button>
-                                    </form>
+                                        <a href="{{ route('admin.maker-delete', $chitti->chittiId) }}" class="btn btn-sm btn-danger delete-user">Delete</a>
                                      @else
                                                 <a href="">Edit Title</a>
                                     @endif
