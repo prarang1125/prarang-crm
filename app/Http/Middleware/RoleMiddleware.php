@@ -22,6 +22,7 @@ class RoleMiddleware
             return $next($request);
         }
         Auth::logout();
-        return redirect()->route('accounts.login')->with('error', 'Unauthorized access');
+        // return redirect()->route('accounts.login')->with('error', 'Unauthorized access');
+        return redirect()->route('loginOption')->with('error', 'Unauthorized access');
     }
 }

@@ -33,9 +33,12 @@ use App\Http\Controllers\accounts\AccChekerController;
 use App\Http\Controllers\accounts\AccUploaderController;
 
 
-Route::get('/', function () {
-    return "<a href='/admin/login'>Admin Login</a><br><a href='/accounts/login'>Other Login</a><br>" ;
-});
+
+// Route::get('/', function () {
+//     return "<a href='/admin/login'>Admin Login</a><br><a href='/accounts/login'>Other Login</a><br>". Hash::make('password') ;
+// });
+
+Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
 
 Route::group(['prefix' => 'accounts'], function(){
     Route::group(['middleware' => 'guest'], function(){
@@ -235,6 +238,7 @@ Route::group(['prefix' => 'admin'], function(){
             Route::post('/maker/maker-store', [MakerController::class, 'makerStore'])->name('admin.maker-store');
             Route::get('/maker/maker-edit/{id}', [MakerController::class, 'makerEdit'])->name('admin.maker-edit');
             Route::put('/maker/maker-update/{id}', [MakerController::class, 'makerUpdate'])->name('admin.maker-update');
+            Route::get('/maker/maker-delete/{id}', [MakerController::class, 'makerdelete'])->name('admin.maker-delete');
         #this route is use for admin maker end
 
         #this route is use for admin checker start
@@ -255,7 +259,7 @@ Route::group(['prefix' => 'admin'], function(){
             Route::get('/post/post-listing', [PostController::class, 'index'])->name('admin.post-listing');
             Route::get('/post/post-edit/{id}', [PostController::class, 'postEdit'])->name('admin.post-edit');
             Route::put('/post/post-update/{id}', [PostController::class, 'postUpdate'])->name('admin.post-update');
-            Route::post('/post/post-delete/{id}', [PostController::class, 'postDelete'])->name('admin.post-delete');
+            Route::post('/post/post-delete/{id}', [PostController::class, 'postDelete'])->name('admin.post-delete')->middleware('admin.auth');
             Route::post('/admin/send-to-checker/{id}', [PostController::class, 'sendToChecker'])->name('admin.send-to-checker');
         #this route is use for admin post end
 
@@ -316,7 +320,7 @@ Route::group(['prefix' => 'admin'], function(){
 
         // Portal ->Vivek
         Route::resource('portal', PortalController::class);
-
+        
     });
 });
 

@@ -25,6 +25,7 @@ class Chitti extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'is_active',
         'languageId',
         'chittiname',
         'chittiUrl',

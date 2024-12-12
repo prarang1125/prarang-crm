@@ -56,6 +56,7 @@
                 </div>
             </div>
             </a>
+            
         </div>
         <div class="col">
             <a href="{{ url('/admin/user-listing?role=Uploader') }}">

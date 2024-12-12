@@ -48,13 +48,6 @@
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-md-6">
-                            <label for="inputEmail" class="form-label">Email ID/ User Name</label>
-                            <input type="email" class="form-control @error('emailId') is-invalid @enderror" id="inputEmail" name="emailId" value="{{ old('emailId', $user->emailId) }}">
-                            @error('emailId')
-                                <p class="invalid-feedback">{{ $message }}</p>
-                            @enderror
-                        </div>
 
                         <div class="col-md-6">
                             <label for="inputPassword" class="form-label">Password</label>

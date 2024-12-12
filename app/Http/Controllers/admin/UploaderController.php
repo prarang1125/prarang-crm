@@ -28,6 +28,7 @@ class UploaderController extends Controller
         ->where('Title', '!=', '')
         ->where('uploaderStatus', '!=', '')
         ->where('uploaderStatus', '=', 'sent_to_uploader')
+        ->orderByDesc('dateOfCreation')
         // ->where('finalStatus', '=', 'sent_to_uploader')
         ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
         ->get();
