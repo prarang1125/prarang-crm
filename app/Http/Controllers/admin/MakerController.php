@@ -90,7 +90,6 @@ class MakerController extends Controller
     #this method is use for store maker data
     public function makerStore(Request $request)
     {
-        // dd($request);
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
             'makerImage' => 'required|image|max:2048',
@@ -101,7 +100,9 @@ class MakerController extends Controller
             'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'forTheCity' => 'required|boolean',
             'isCultureNature' => 'required|boolean',
-
+            'tagId' => 'required',
+          
+           
         ]);
         if ($validator->passes()) {
             $currentDateTime = getUserCurrentTime();
@@ -266,6 +267,7 @@ class MakerController extends Controller
             // 'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
             'isCultureNature' => 'required|boolean',
+            'tagId' => 'required',
         ]);
 
         if ($validator->passes()) {
@@ -364,7 +366,7 @@ class MakerController extends Controller
 
                 // Update Tag Mapping
                 Chittitagmapping::where('chittiId', $id)->update([
-                    'tagId'         => $request->isCultureNature,
+                    'tagId'         => $request->tagId,
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);

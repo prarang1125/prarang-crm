@@ -253,10 +253,12 @@
                                     @foreach ($timelines as $timeline)
                                     <div class="col-md-4">
                                         <div class="card">
-                                            <div class="d-flex align-items-center">
-                                                <input type="radio" name="tagId" value="{{ $timeline->tagId }}" id="timeline{{ $timeline->id }}" class="me-2">
-                                                <label for="timeline{{ $timeline->id }}" class="mb-0">{{ $timeline->tagInEnglish }}</label>
-                                                <i class="lni lni-close ms-auto"></i>
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #ff0006; color: white;">
+                                                <div class="d-flex align-items-center">
+                                                    <input type="radio" name="tagId" value="{{ $timeline->tagId }}" id="timeline{{ $timeline->id }}" class="me-2">
+                                                    <label for="timeline{{ $timeline->id }}" class="mb-0">{{ $timeline->tagInEnglish }}</label>
+                                                    <i class="lni lni-close ms-auto"></i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -270,9 +272,12 @@
                                     @foreach ($manSenses as $sense)
                                     <div class="col-md-4">
                                         <div class="card">
-                                            <div class="card-body cardbodselect mt-3" style="background-color: #ffff18;color: #282828;">
-                                                <i class="lni lni-close"></i>
-                                                {{ $sense->tagInEnglish }}
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #ffff18; color: #282828;">
+                                                <div class="d-flex align-items-center">
+                                                    <input type="radio" name="tagId" value="{{ $sense->id }}" id="sense{{ $sense->id }}" class="me-2">
+                                                    <label for="sense{{ $sense->id }}" class="mb-0">{{ $sense->tagInEnglish }}</label>  
+                                                    <i class="lni lni-close ms-auto"></i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -286,9 +291,12 @@
                                     @foreach ($manInventions as $invention)
                                     <div class="col-md-4">
                                         <div class="card">
-                                            <div class="card-body cardbodselect mt-3" style="background-color: #1919d9;color: white;">
-                                                <i class="lni lni-close"></i>
-                                                {{ $invention->tagInEnglish }}
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #1919d9; color: white;">
+                                                <div class="d-flex align-items-center">
+                                                    <input type="radio" name="tagId" value="{{ $invention->id }}" id="invention{{ $invention->id }}" class="me-2">
+                                                    <label for="invention{{ $invention->id }}" class="mb-0">{{ $invention->tagInEnglish }}</label>
+                                                    <i class="lni lni-close ms-auto"></i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -302,9 +310,13 @@
                                     @foreach ($geographys as $geography)
                                     <div class="col-md-4">
                                         <div class="card">
-                                            <div class="card-body cardbodselect mt-3" style="background-color: #faff98;color: #282828;">
-                                                <i class="lni lni-close"></i>
-                                                {{ $geography->tagInEnglish }}
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #faff98; color: #282828;">
+                                                <div class="d-flex align-items-center">
+                                                    <!-- Radio Input -->
+                                                    <input type="radio" name="tagId" value="{{ $geography->id }}" id="geography{{ $geography->id }}" class="me-2">
+                                                    <label for="geography{{ $geography->id }}" class="mb-0">{{ $geography->tagInEnglish }}</label>
+                                                    <i class="lni lni-close ms-auto"></i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -317,9 +329,13 @@
                                     @foreach ($faunas as $fauna)
                                     <div class="col-md-4">
                                         <div class="card">
-                                            <div class="card-body cardbodselect mt-3" style="background-color: #c8ff00;color: #282828;">
-                                                <i class="lni lni-close"></i>
-                                                {{ $fauna->tagInEnglish }}
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #c8ff00; color: #282828;">
+                                                <div class="d-flex align-items-center">
+                                                    <!-- Radio Input -->
+                                                    <input type="radio" name="tagId" value="{{ $fauna->id }}" id="fauna{{ $fauna->id }}" class="me-2">
+                                                    <label for="fauna{{ $fauna->id }}" class="mb-0">{{ $fauna->tagInEnglish }}</label>
+                                                    <i class="lni lni-close ms-auto"></i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -331,10 +347,11 @@
                                 <div class="row">
                                     @foreach ($floras as $flora)
                                     <div class="col-md-4">
-                                        <div class="card">
-                                            <div class="card-body cardbodselect mt-3" style=" background-color: #339933;color: #fff;">
-                                                <i class="lni lni-close"></i>
-                                                {{ $flora->tagInEnglish }}
+                                        <div class="card-body cardbodselect mt-3" style="background-color: #339933; color: #fff;">
+                                            <div class="d-flex align-items-center">
+                                                <input type="radio" name="tagId" value="{{ $flora->id }}" id="flora{{ $flora->id }}" class="me-2">\
+                                                <label for="flora{{ $flora->id }}" class="mb-0">{{ $flora->tagInEnglish }}</label>
+                                                <i class="lni lni-close ms-auto"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -360,10 +377,6 @@
         </div>
     </div>
 </div>
-<!--end page wrapper -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Include PerfectScrollbar JS -->
-<script src="path/to/perfect-scrollbar.js"></script>
 <script>
     const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
     const csrfToken = "{{ csrf_token() }}";
@@ -529,7 +542,6 @@
             levelSelect.innerHTML += options.join('');
         }
     });
-});
 
 $(document).ready(function () {
         // Check if element exists before applying PerfectScrollbar
