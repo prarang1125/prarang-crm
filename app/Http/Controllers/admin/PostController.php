@@ -20,18 +20,41 @@ use App\Models\Chittitagmapping;
 class PostController extends Controller
 {
     #this method is use for show the listing of maker
-    public function index()
+    // public function index()
+    // {
+    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+    //     ->whereNotNull('Title')
+    //     ->where('Title', '!=', '')
+    //     ->where('finalStatus', '!=', 'deleted')
+    //     ->orderByDesc('dateOfCreation')
+    //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'makerStatus', 'checkerStatus')
+    //     ->get();
+    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+    //     return view('admin.post.post-listing', compact('chittis', 'geographyOptions'));
+    // }
+
+    public function index(Request $request)
     {
+        $search = $request->input('search');
+
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        ->whereNotNull('Title')
-        ->where('Title', '!=', '')
-        ->where('finalStatus', '!=', 'deleted')
-        ->orderByDesc('dateOfCreation')
-        ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'makerStatus', 'checkerStatus')
-        ->get();
+            ->when($search, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('Title', 'LIKE', "%{$search}%")
+                        ->orWhere('description', 'LIKE', "%{$search}%"); // Add other fields if needed
+                });
+            })
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->where('finalStatus', '!=', 'deleted')
+            ->orderByDesc('dateOfCreation')
+            ->paginate(5); // Adjust per page count as needed
+
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+
         return view('admin.post.post-listing', compact('chittis', 'geographyOptions'));
     }
+
 
     public function postEdit($id)
     {

@@ -207,14 +207,12 @@
                                                     <label for="timeline{{ $timeline->id }}" class="mb-0">{{ $timeline->tagInEnglish }}</label>
                                                     <i class="lni lni-close ms-auto"></i>
                                                 </div>
-                                            </div>
-                                            
+                                            </div>                                            
                                          </div>
                                      </div>
                                    @endforeach
                                 </div>
                             </div>
-
                             <!-- Content for Man And His Senses -->
                             <div class="tab-pane fade" id="cultureTab2" role="tabpanel">
                                 <div class="row">

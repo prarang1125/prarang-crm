@@ -29,6 +29,7 @@ class ChekerController extends Controller
         ->whereIn('checkerStatus',['maker_to_checker'])
         ->where('makerStatus', 'sent_to_checker')
         ->orderByDesc('dateOfCreation')
+        ->whereNotIn('finalStatus',['approved','deleted'])
         ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
         ->get();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
@@ -154,8 +155,10 @@ class ChekerController extends Controller
 
     public function checkerEdit($id)
     {
-        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->whereNot('checkerStatus','sent_to_uploader')->findOrFail($id);
-        
+        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')
+        ->whereNotIn('finalStatus',['approved','deleted'])
+        ->whereNot('checkerStatus','sent_to_uploader')->findOrFail($id);
+
         $image = $chitti->chittiimagemappings()->first();
         // $chittiTagMapping = Chittitagmapping::where('chittiId', $id)->first();
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();

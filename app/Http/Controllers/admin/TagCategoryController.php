@@ -11,9 +11,22 @@ use Illuminate\Support\Facades\Log;
 class TagCategoryController extends Controller
 {
     #this method is use for show the listing of tag category
-    public function index()
+    public function index(Request $request)
     {
-        $mtagcategorys = Mtagcategory::where('isActive', 1)->get();
+        $query = Mtagcategory::where('isActive', 1);
+
+        if ($request->has('search') && $request->input('search') != '') {
+            $keywords = explode(' ', $request->input('search'));
+            $query->where(function ($q) use ($keywords) {
+                foreach ($keywords as $keyword) {
+                    $q->orWhere('tagCategoryInEnglish', 'LIKE', "%{$keyword}%")
+                    ->orWhere('tagCategoryInUnicode', 'LIKE', "%{$keyword}%");
+                }
+            });
+        }
+
+        $mtagcategorys = $query->paginate(5);
+
         return view('admin.tagcategory.tag-category-listing', compact('mtagcategorys'));
     }
 
