@@ -10,7 +10,7 @@
                         <a class="nav-link" href="#">	<i class='bx bx-search'></i>
                         </a>
                     </li>
-                    <li class="nav-item dropdown dropdown-large">
+                    {{-- <li class="nav-item dropdown dropdown-large">
                         <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">	<i class='bx bx-category'></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">
@@ -194,7 +194,7 @@
                                 <div class="text-center msg-footer">View All Messages</div>
                             </a>
                         </div>
-                    </li>
+                    </li> --}}
                 </ul>
             </div>
             <div class="user-box dropdown">

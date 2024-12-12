@@ -284,6 +284,9 @@
                                  </div>
                              </div>
                         </div>
+                        {{-- @error('selected_tab')
+                        <p class="invalid-feedback">{{ $message }}</p>
+                    @enderror --}}
                     </div>
                     <div class="modal-footer mt-3">
                         <button type="submit" class="btn btn-primary">Create</button>

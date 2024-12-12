@@ -17,6 +17,11 @@ class LoginController extends Controller
         return view('accounts.login');
     }
 
+    public function loginOption()
+    {
+        return view('accounts.loginOption');
+    }
+
     // This method will authenticate admin
     public function authenticate(Request $request)
     {
@@ -28,7 +33,6 @@ class LoginController extends Controller
         ]);
 
         // $user = Muser::find(2);
-
         // echo "<pre>";
         // print_r($user);
         // echo "<pre>";
@@ -75,6 +79,6 @@ class LoginController extends Controller
 
     public function logout() {
         Auth::logout();
-        return redirect()->route('accounts.login');
+        return redirect()->route('loginOption');
     }
 }

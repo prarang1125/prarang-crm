@@ -58,8 +58,6 @@ class AdminController extends Controller
             'totalCountries', 'totalRegions', 'totalMcitys', 'totalLanguagescripts','totalChitti', 'totalMakers', 'totalChecker', 'totalUploader', 'growthCountries','growthRegions', 'growthMcitys', 'growthLanguagescripts', 'growthChitti','growthMakers', 'growthChecker', 'growthUploader'
         ));
     }
-
-    #this method is use for show admin user profile data
     public function userProfile(){
 
         $user     = Auth::guard('admin')->user();

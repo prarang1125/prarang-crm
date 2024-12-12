@@ -51,7 +51,7 @@ class AdminLoginController extends Controller
                
                 return redirect()->route('admin.dashboard');
             }else{
-                dd('not Auth');
+                // dd('not Auth');
                 return redirect()->route('admin.login')->with('error', 'Either mail or password is incorrect');
             }
         }else{
@@ -63,7 +63,8 @@ class AdminLoginController extends Controller
 
     public function logout() {
         Auth::guard('admin')->logout();
-        return redirect()->route('admin.login');
+      //  return redirect()->route('admin.login');
+        return redirect()->route('loginOption');
     }
-
+    
 }
