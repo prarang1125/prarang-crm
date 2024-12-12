@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
@@ -24,15 +25,15 @@ class MakerController extends Controller
     public function index()
     {
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        ->whereNotNull('Title')
-        ->where('Title', '!=', '')
-        ->where('makerStatus', '=', 'sent_to_checker')
-        ->where('is_active', 1)
-        // ->where('checkerStatus', '=','maker_to_checker')
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->where('makerStatus', '=', 'sent_to_checker')
+            ->where('is_active', 1)
+            // ->where('checkerStatus', '=','maker_to_checker')
 
-        ->select('*')
-        ->orderByDesc('dateOfCreation')
-        ->get();
+            ->select('*')
+            ->orderByDesc('dateOfCreation')
+            ->get();
 
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
@@ -73,8 +74,7 @@ class MakerController extends Controller
             'isCultureNature' => 'required|boolean',
             'selected_tab' => 'required',
         ]);
-        if($validator->passes())
-        {
+        if ($validator->passes()) {
             $currentDateTime = getUserCurrentTime();
 
             $content = $request->content;
@@ -107,12 +107,12 @@ class MakerController extends Controller
             $chitti = new Chitti();
             $area_id = $request->c2rselect;
             $areaIdCode = '';
-            if($request->geography == 6){//6 is use for city
-                $areaIdCode = 'c'.$area_id;
-            }elseif($request->geography == 5){//5 is use for region
-                $areaIdCode = 'r'.$area_id;
-            }elseif($request->geography == 7){// 7 is use for country
-                $areaIdCode = 'con'.$area_id;
+            if ($request->geography == 6) { //6 is use for city
+                $areaIdCode = 'c' . $area_id;
+            } elseif ($request->geography == 5) { //5 is use for region
+                $areaIdCode = 'r' . $area_id;
+            } elseif ($request->geography == 7) { // 7 is use for country
+                $areaIdCode = 'con' . $area_id;
             }
 
             $chitti->languageId = 1;
@@ -141,11 +141,11 @@ class MakerController extends Controller
             $facity->created_by = Auth::guard('admin')->user()->userId;
             $facity->save();
 
-            if($request->hasFile('makerImage')){
+            if ($request->hasFile('makerImage')) {
                 $makerImage = $request->file('makerImage');
                 $makerImageName = time() . '_' . $makerImage->getClientOriginalName();
                 $makerImage->move(public_path('uploads/maker_image/'), $makerImageName);
-                $url = public_path('uploads/maker_image/')."".$makerImageName;
+                $url = public_path('uploads/maker_image/') . "" . $makerImageName;
                 // $serviceAccessUrl = "admin.prarang.in".$url;
                 $serviceAccessUrl = $url;
             }
@@ -181,7 +181,7 @@ class MakerController extends Controller
             $chittitagmapping->created_by = Auth::guard('admin')->user()->userId;
             $chittitagmapping->save();
             return redirect()->route('admin.maker-listing')->with('success', 'Post created successfully.');
-        }else{
+        } else {
             return redirect()->route('admin.maker-register')
                 ->withErrors($validator)
                 ->withInput();
@@ -191,9 +191,9 @@ class MakerController extends Controller
     public function makerEdit($id)
     {
         $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->findOrFail($id);
-            if($chitti->checkerStatus=='maker_to_checker' || $chitti->checkerStatus=='sent_to_uploader'){
-                return redirect()->back()->with('error','not allow to edit');
-            }
+        if ($chitti->checkerStatus == 'maker_to_checker' || $chitti->checkerStatus == 'sent_to_uploader') {
+            return redirect()->back()->with('error', 'not allow to edit');
+        }
         $image = $chitti->chittiimagemappings()->first();
         // $chittiTagMapping = Chittitagmapping::where('chittiId', $id)->first();
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
@@ -270,8 +270,7 @@ class MakerController extends Controller
             // Update Chitti record
             $chitti = Chitti::findOrFail($id);
 
-            if ($request->action === 'send_to_checker')
-            {
+            if ($request->action === 'send_to_checker') {
                 $chitti->update([
                     'makerStatus'   => 'sent_to_checker',
                     'checkerStatus' => 'maker_to_checker',
@@ -286,9 +285,7 @@ class MakerController extends Controller
                 // Redirect to the checker listing
                 return redirect()->route('admin.maker-listing', $chitti->chittiId)
                     ->with('success', 'Sent to Checker successfully.');
-            }
-            else
-            {
+            } else {
                 $chitti->update([
                     'description'   => $request->content,
                     'Title'         => $request->title,
@@ -357,11 +354,11 @@ class MakerController extends Controller
     {
         // $chittis = Chitti::where('makerStatus', 'return_chitti_post_from_checker')->get();
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        ->whereNotNull('Title')
-        ->where('Title', '!=', '')
-        ->where('return_chitti_post_from_checker_id',  1)
-        ->select('*')
-        ->get();
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->where('return_chitti_post_from_checker_id',  1)
+            ->select('*')
+            ->get();
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         return view('admin.maker.chitti-rejected-from-checker-listing', compact('geographyOptions', 'notification', 'chittis'));
@@ -373,12 +370,34 @@ class MakerController extends Controller
             $chittis = Chitti::findOrFail($id);
             $chittis->is_active = 0;
             $chittis->save();
-    
+
             return redirect()->route('admin.maker-listing')->with('success', 'Listing soft deleted successfully.');
         } catch (\Exception $e) {
             return redirect()->route('admin.maker-listing')->withErrors(['error' => 'An error occurred while trying to soft delete the listing.']);
         }
     }
-    
 
+    public function updateTitle(Request $request) #Code: Vivek Yadav
+    {
+
+        $validatedData = $request->validate([
+            'Title' => 'required|string|max:255',
+            'subTitle' => [
+                'required',
+                'regex:/^[a-zA-Z0-9 -]+$/',
+            ],
+            'chittiId' => 'required|integer|exists:chitti,chittiId',
+        ], [
+            'Title.required' => 'The title field is required.',
+            'subTitle.required' => 'The subtitle field is required.',
+            'subTitle.regex' => 'The subtitle must contain only letters and numbers.',
+            'chittiId.required' => 'Chitti ID is required.',
+            'chittiId.exists' => 'The provided Chitti ID does not exist.',
+        ]);
+        $chitti = Chitti::where('chittiId',$validatedData['chittiId'])->firstOrFail();
+        $chitti->Title = $validatedData['Title'];
+        $chitti->subTitle = $validatedData['subTitle'];
+        $chitti->save();
+        return redirect()->route('admin.maker-listing')->with('success', 'Post Title Updated Successfully.');
+    }
 }

@@ -239,6 +239,7 @@ Route::group(['prefix' => 'admin'], function(){
             Route::get('/maker/maker-edit/{id}', [MakerController::class, 'makerEdit'])->name('admin.maker-edit');
             Route::put('/maker/maker-update/{id}', [MakerController::class, 'makerUpdate'])->name('admin.maker-update');
             Route::get('/maker/maker-delete/{id}', [MakerController::class, 'makerdelete'])->name('admin.maker-delete');
+            Route::post('/maker/maker-update-title',[MakerController::class,'updateTitle'])->name('update.title');
         #this route is use for admin maker end
 
         #this route is use for admin checker start
