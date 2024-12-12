@@ -196,10 +196,14 @@
                                    @foreach ($timelines as $timeline)
                                      <div class="col-md-4">
                                          <div class="card">
-                                             <div class="card-body cardbodselect mt-3" style="background-color: #ff0006;color: white;">
-                                                <i class="lni lni-close"></i>
-                                                {{ $timeline->tagInEnglish }}
-                                             </div>
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #ff0006; color: white;">
+                                                <div class="d-flex align-items-center">
+                                                    <input type="radio" name="tagId" value="{{ $timeline->tagId }}" id="timeline{{ $timeline->id }}" class="me-2">
+                                                    <label for="timeline{{ $timeline->id }}" class="mb-0">{{ $timeline->tagInEnglish }}</label>
+                                                    <i class="lni lni-close ms-auto"></i>
+                                                </div>
+                                            </div>
+                                            
                                          </div>
                                      </div>
                                    @endforeach

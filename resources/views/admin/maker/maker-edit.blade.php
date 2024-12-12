@@ -151,6 +151,14 @@
                             @enderror
                         </div> --}}
 
+                        {{-- <div class="col-md-6">
+                            <label for="subtitle" class="form-label">Sub Title</label>
+                            <input type="text" class="form-control  @error('subtitle') is-invalid @enderror" id="subtitle" name="subtitle" value="{{ old('subtitle', $chitti->SubTitle) }}">
+                            @error('subtitle')
+                            <p class="invalid-feedback">{{ $message }}</p>
+                            @enderror
+                        </div> --}}
+
                         <div class="col-md-6">
                             <label for="subtitle" class="form-label">Sub Title</label>
                             <input type="text" class="form-control @error('subtitle') is-invalid @enderror" id="subtitle" name="subtitle" value="{{ old('subtitle', $chitti->SubTitle) }}">
@@ -245,9 +253,10 @@
                                     @foreach ($timelines as $timeline)
                                     <div class="col-md-4">
                                         <div class="card">
-                                            <div class="card-body cardbodselect mt-3" style="background-color: #ff0006;color: white;">
-                                                <i class="lni lni-close"></i>
-                                                {{ $timeline->tagInEnglish }}
+                                            <div class="d-flex align-items-center">
+                                                <input type="radio" name="tagId" value="{{ $timeline->tagId }}" id="timeline{{ $timeline->id }}" class="me-2">
+                                                <label for="timeline{{ $timeline->id }}" class="mb-0">{{ $timeline->tagInEnglish }}</label>
+                                                <i class="lni lni-close ms-auto"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -359,6 +368,9 @@
     const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
     const csrfToken = "{{ csrf_token() }}";
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Include PerfectScrollbar JS -->
+<script src="path/to/perfect-scrollbar.js"></script>
 <script>
     function previewImage() {
         const input = document.getElementById('makerImage');
