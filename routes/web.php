@@ -28,6 +28,10 @@ use App\Http\Controllers\admin\PostAnalyticsController;
 use App\Http\Controllers\admin\MisReportController;
 use App\Http\Controllers\admin\CKEditorController;
 use App\Http\Controllers\accounts\AccMakerController;
+use App\Http\Controllers\accounts\AccCKEditorController;
+use App\Http\Controllers\accounts\AccChekerController;
+use App\Http\Controllers\accounts\AccUploaderController;
+
 
 
 // Route::get('/', function () {
@@ -35,7 +39,6 @@ use App\Http\Controllers\accounts\AccMakerController;
 // });
 
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
-
 
 Route::group(['prefix' => 'accounts'], function(){
     Route::group(['middleware' => 'guest'], function(){
@@ -48,14 +51,16 @@ Route::group(['prefix' => 'accounts'], function(){
         Route::get('dashboard', [AccountsController::class, 'index'])->name('accounts.dashboard');
 
         #this method is use for account maker listing start
-        Route::get('/maker-dashboard', [AccMakerController::class, 'index'])->name('accounts.maker-dashboard');
+            Route::get('/maker-dashboard', [AccMakerController::class, 'index'])->name('accounts.maker-dashboard');
 
-        Route::get('/maker/acc-maker-register', [AccMakerController::class, 'accMakerRegister'])->name('accounts.acc-maker-register');
+            Route::get('/maker/acc-maker-register', [AccMakerController::class, 'accMakerRegister'])->name('accounts.acc-maker-register');
+
+            Route::post('/maker/acc-maker-store', [AccMakerController::class, 'accMakerStore'])->name('accounts.acc-maker-store');
+
+            Route::get('/maker/acc-maker-edit/{id}', [AccMakerController::class, 'accMakerEdit'])->name('accounts.acc-maker-edit');
+
+            Route::put('/maker/acc-maker-update/{id}', [AccMakerController::class, 'accMakerUpdate'])->name('accounts.acc-maker-update');
         #this method is use for account maker listing end
-
-        #show the listing of rejected maker start
-        Route::get('/maker/acc-chitti-rejected-from-checker-listing', [AccMakerController::class, 'accChittiListReturnFromCheckerL'])->name('accounts.acc-post-return-from-checker-listing');
-        #show the listing of rejected maker end
 
         // Routes for Makers
         // Route::middleware('role:maker')->group(function () {
@@ -64,17 +69,51 @@ Route::group(['prefix' => 'accounts'], function(){
         //     // Route::get('/maker/profile', [MakerController::class, 'profile'])->name('maker.profile');
         // });
 
+        #upload image using accounts ck-editor start
+            Route::post('/accounts/acc-ckeditor-upload', [AccCKEditorController::class, 'accUpload'])->name('accounts.acc-ckeditor-upload');
+        #upload image using accounts ck-editor end
+
+        #show the listing of rejected maker start
+            Route::get('/maker/acc-chitti-rejected-from-checker-listing', [AccMakerController::class, 'accChittiListReturnFromCheckerL'])->name('accounts.acc-post-return-from-checker-listing');
+        #show the listing of rejected maker end
+
+
+        #this method is use for account checker listing start
+            Route::get('/checker/dashboard', [AccChekerController::class, 'accIndexMain'])->name('accounts.checker-dashboard');
+
+            Route::get('/checker/checker-listing/{id}', [AccChekerController::class, 'accIndex'])->name('accounts.acc-checker-listing');
+
+            Route::get('/checker/acc-checker-edit/{id}', [AccChekerController::class, 'accCheckerEdit'])->name('accounts.acc-checker-edit');
+
+            Route::put('/checker/acc-checker-update/{id}', [AccChekerController::class, 'accCheckerUpdate'])->name('accounts.acc-checker-update');
+        #this method is use for account checker listing end
+
+        #accounts checker chitti-post return to maker with region start
+            Route::get('/checker/acc-checker-chitti-return-to-maker-region/{id}', [AccChekerController::class, 'accCheckerChittiReturnMakerRegion'])->name('accounts.acc-checker-chitti-return-to-maker-region');
+            Route::put('/checker/acc-chitti-checker-sendtomaker/sendtomaker/{id}', [AccChekerController::class, 'accCheckerChittiSendToMaker'])->name('accounts.acc-chitti-checker-sendtomaker');
+        #accounts checker chitti-post return to maker with region end
+
         // Routes for Checkers
-        Route::middleware('role:checker')->group(function () {
-            Route::get('/checker/dashboard', [ChekerController::class, 'index'])->name('checker.dashboard');
-            // Route::get('/checker/profile', [ChekerController::class, 'profile'])->name('checker.profile');
-        });
+        // Route::middleware('role:checker')->group(function () {
+        //     Route::get('/checker/dashboard', [ChekerController::class, 'index'])->name('checker.dashboard');
+        //     // Route::get('/checker/profile', [ChekerController::class, 'profile'])->name('checker.profile');
+        // });
+
+        #this method is use for account uploader listing start
+            Route::get('/uploader/dashboard', [AccUploaderController::class, 'accIndexMain'])->name('accounts.uploader-dashboard');
+
+            Route::get('/uploader/uploader-listing/{id}', [AccUploaderController::class, 'accIndex'])->name('accounts.acc-uploader-listing');
+
+            Route::get('/uploader/acc-uploader-edit/{id}', [AccUploaderController::class, 'accUploaderEdit'])->name('accounts.acc-uploader-edit');
+
+            Route::put('/uploader/aac-uploader-update/{id}', [AccUploaderController::class, 'accUploaderUpdate'])->name('accounts.acc-uploader-update');
+        #this method is use for account uploader listing end
 
         // Routes for Uploaders
-        Route::middleware('role:uploader')->group(function () {
-            Route::get('/uploader/dashboard', [UploaderController::class, 'index'])->name('uploader.dashboard');
+        // Route::middleware('role:uploader')->group(function () {
+        //     Route::get('/uploader/dashboard', [UploaderController::class, 'index'])->name('uploader.dashboard');
             // Route::get('/uploader/profile', [UploaderController::class, 'profile'])->name('uploader.profile');
-        });
+        // });
     });
 });
 
@@ -97,6 +136,8 @@ Route::group(['prefix' => 'admin'], function(){
             Route::post('users-delete/{id}', [AdminController::class, 'userDelete'])->name('admin.users-delete');
             Route::get('user-edit/{id}', [AdminController::class, 'userEdit'])->name('admin.user-edit');
             Route::put('user-update/{id}', [AdminController::class, 'userUpdate'])->name('admin.user-update');
+
+            Route::put('update-user-profile/{id}', [AdminController::class, 'userProfileUpdate'])->name('admin.user-profile-update');
         #this route is use for admin users end
 
         #this route is use for Role
@@ -216,7 +257,7 @@ Route::group(['prefix' => 'admin'], function(){
             Route::get('/post/post-listing', [PostController::class, 'index'])->name('admin.post-listing');
             Route::get('/post/post-edit/{id}', [PostController::class, 'postEdit'])->name('admin.post-edit');
             Route::put('/post/post-update/{id}', [PostController::class, 'postUpdate'])->name('admin.post-update');
-            Route::post('/post/post-delete/{id}', [PostController::class, 'postDelete'])->name('admin.post-delete');
+            Route::post('/post/post-delete/{id}', [PostController::class, 'postDelete'])->name('admin.post-delete')->middleware('admin.auth');
             Route::post('/admin/send-to-checker/{id}', [PostController::class, 'sendToChecker'])->name('admin.send-to-checker');
         #this route is use for admin post end
 
@@ -277,7 +318,7 @@ Route::group(['prefix' => 'admin'], function(){
 
         // Portal ->Vivek
         Route::resource('portal', PortalController::class);
-
+        
     });
 });
 

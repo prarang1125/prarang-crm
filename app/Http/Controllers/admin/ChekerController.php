@@ -25,8 +25,10 @@ class ChekerController extends Controller
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
         ->whereNotNull('Title')
         ->where('Title', '!=', '')
-        ->where('checkerStatus', '!=', '')
+        ->where('checkerStatus', '!=', '')        
+        ->whereIn('checkerStatus',['maker_to_checker'])
         ->where('makerStatus', 'sent_to_checker')
+        ->orderByDesc('dateOfCreation')
         ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
         ->get();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
@@ -152,7 +154,8 @@ class ChekerController extends Controller
 
     public function checkerEdit($id)
     {
-        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->findOrFail($id);
+        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->whereNot('checkerStatus','sent_to_uploader')->findOrFail($id);
+        
         $image = $chitti->chittiimagemappings()->first();
         // $chittiTagMapping = Chittitagmapping::where('chittiId', $id)->first();
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
@@ -359,6 +362,6 @@ class ChekerController extends Controller
             'uploaderStatus'        => 'Null',
             'finalStatus'           => 'Null',
         ]);
-        return back()->with('success', 'Chitti Post have been return to maker from checker successfully');
+        return redirect('admin/checker/checker-listing')->with('success', 'Chitti Post have been return to maker from checker successfully');
     }
 }
