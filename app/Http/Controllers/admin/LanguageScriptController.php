@@ -11,11 +11,26 @@ use Illuminate\Support\Facades\Auth;
 class LanguageScriptController extends Controller
 {
     #this method is for show the listing of language script data
-    public function index()
+    public function index(Request $request)
     {
-        $languagescripts = Mlanguagescript::where('isActive', 1)->get();
+        $query = Mlanguagescript::where('isActive', 1);
+
+        if ($request->has('search') && $request->input('search') != '') {
+            $keywords = explode(' ', $request->input('search'));
+            $query->where(function ($q) use ($keywords) {
+                foreach ($keywords as $keyword) {
+                    $q->orWhere('language', 'LIKE', "%{$keyword}%")
+                    ->orWhere('languageInUnicode', 'LIKE', "%{$keyword}%")
+                    ->orWhere('languageUnicode', 'LIKE', "%{$keyword}%");
+                }
+            });
+        }
+
+        $languagescripts = $query->paginate(3);
+
         return view('admin.languagescript.languagescript-listing', compact('languagescripts'));
     }
+
 
     #this method is use for show add new language regist
     public function languagescriptRegister()

@@ -1,4 +1,4 @@
-@extends('layout.admin.admin')
+@extends('layouts.admin.admin')
 @section('title', 'User Profile')
 @section('content')
 <!--start page wrapper -->

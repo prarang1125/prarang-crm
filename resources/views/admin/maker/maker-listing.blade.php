@@ -41,6 +41,16 @@
             <hr />
             <div class="card">
                 <div class="card-body d-flex justify-content-end align-items-end">
+                    <!-- Search Form -->
+                    <form action="{{ url('admin/maker/maker-listing') }}" method="GET" class="d-flex me-3">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search by Title or Subtitle" value="{{ request()->input('search') }}">
+                        <button type="submit" class="btn btn-secondary">Search</button>
+                    </form>
+                    @if(request()->has('search'))
+                        <a class="btn btn-primary me-1" href="{{ url()->current() }}">
+                            <i class="bx bx-refresh"></i>
+                        </a>
+                    @endif
                     <a href="{{ url('/admin/maker/maker-register') }}" class="btn btn-primary">Add New Maker</a>
                 </div>
                 <div class="card-body">
@@ -57,7 +67,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $index = 1; @endphp
+                            @php
+                                $index = ($chittis->currentPage() - 1) * $chittis->perPage() + 1;
+                            @endphp
                             @foreach ($chittis as $chitti)
                             <tr>
                                 <th scope="row" class="" data-id="{{ $chitti->chittiId }}">{{ $index }}</th>
@@ -106,6 +118,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end mt-4">
+                        {{ $chittis->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>

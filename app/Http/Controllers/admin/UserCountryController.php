@@ -10,11 +10,23 @@ use Illuminate\Support\Facades\Validator;
 class UserCountryController extends Controller
 {
     #this method is use for show the listing of user country
-    public function index()
+    public function index(Request $request)
     {
-        $userCountrys = UserCountry::where('isActive', 1)->get();
+        $query = UserCountry::where('isActive', 1);
+
+        if ($request->has('search') && $request->input('search') != '') {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('countryNameInEnglish', 'LIKE', "%{$search}%")
+                ->orWhere('countryNameInHindi', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $userCountrys = $query->paginate(2);
+
         return view('admin.usercountry.user-country-listing', compact('userCountrys'));
     }
+
 
     #this method is use for show register for of user country
     public function userCountryRegister()

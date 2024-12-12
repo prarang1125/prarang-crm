@@ -21,23 +21,49 @@ use App\Models\Chittitagmapping;
 class MakerController extends Controller
 {
     #this method is use for show the listing of maker
-    public function index()
-    {
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        ->whereNotNull('Title')
-        ->where('Title', '!=', '')
-        ->where('makerStatus', '=', 'sent_to_checker')
-        ->where('is_active', 1)
-        // ->where('checkerStatus', '=','maker_to_checker')
+    // public function index()
+    // {
+    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+    //     ->whereNotNull('Title')
+    //     ->where('Title', '!=', '')
+    //     ->where('makerStatus', '=', 'sent_to_checker')
+    //     // ->where('is_active', 1)
+    //     // ->where('checkerStatus', '=','maker_to_checker')
+    //     ->select('*')
+    //     ->orderByDesc('dateOfCreation')
+    //     ->get();
 
-        ->select('*')
-        ->orderByDesc('dateOfCreation')
-        ->get();
+    //     $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
+    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+    //     return view('admin.maker.maker-listing', compact('chittis', 'geographyOptions', 'notification'));
+    // }
+
+    public function index(Request $request)
+    {
+        $search = $request->input('search'); // Get the search query from the request
+
+        // Fetch Chitti data with pagination and optional search filtering
+        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('Title', 'LIKE', '%' . $search . '%')
+                    ->orWhere('SubTitle', 'LIKE', '%' . $search . '%')
+                    ->orWhere('createDate', 'LIKE', '%' . $search . '%');
+                });
+            })
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->where('makerStatus', '=', 'sent_to_checker')
+            ->select('*')
+            ->orderByDesc('dateOfCreation')
+            ->paginate(3); // Change '10' to the number of items per page
 
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+
         return view('admin.maker.maker-listing', compact('chittis', 'geographyOptions', 'notification'));
     }
+
 
     #this method is use for maker make new post
     public function makerRegister()
@@ -353,19 +379,45 @@ class MakerController extends Controller
     }
 
     #this method is use for show the listing of return post via checker
-    public function chittiListReturnFromCheckerL()
+    // public function chittiListReturnFromCheckerL()
+    // {
+    //     // $chittis = Chitti::where('makerStatus', 'return_chitti_post_from_checker')->get();
+    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+    //     ->whereNotNull('Title')
+    //     ->where('Title', '!=', '')
+    //     ->where('return_chitti_post_from_checker_id',  1)
+    //     ->select('*')
+    //     ->get();
+    //     $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
+    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+    //     return view('admin.maker.chitti-rejected-from-checker-listing', compact('geographyOptions', 'notification', 'chittis'));
+    // }
+
+    public function chittiListReturnFromCheckerL(Request $request)
     {
-        // $chittis = Chitti::where('makerStatus', 'return_chitti_post_from_checker')->get();
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        ->whereNotNull('Title')
-        ->where('Title', '!=', '')
-        ->where('return_chitti_post_from_checker_id',  1)
-        ->select('*')
-        ->get();
+        $query = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->where('return_chitti_post_from_checker_id', 1);
+
+        // Handle search
+        if ($request->has('search') && $request->input('search') != '') {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('Title', 'LIKE', "%$search%")
+                ->orWhere('description', 'LIKE', "%$search%");
+            });
+        }
+
+        // Paginate results
+        $chittis = $query->paginate(2); // Adjust the number of items per page as needed
+
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+
         return view('admin.maker.chitti-rejected-from-checker-listing', compact('geographyOptions', 'notification', 'chittis'));
     }
+
 
     public function makerDelete($id)
     {
@@ -373,12 +425,12 @@ class MakerController extends Controller
             $chittis = Chitti::findOrFail($id);
             $chittis->is_active = 0;
             $chittis->save();
-    
+
             return redirect()->route('admin.maker-listing')->with('success', 'Listing soft deleted successfully.');
         } catch (\Exception $e) {
             return redirect()->route('admin.maker-listing')->withErrors(['error' => 'An error occurred while trying to soft delete the listing.']);
         }
     }
-    
+
 
 }
