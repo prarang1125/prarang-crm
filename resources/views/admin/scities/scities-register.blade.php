@@ -1,5 +1,5 @@
 @extends('layouts.admin.admin')
-@section('title', 'New S_City Register')
+@section('title', 'New City Register')
 
 @section('content')
 <!--start page wrapper -->
@@ -12,7 +12,7 @@
                 <ol class="breadcrumb mb-0 p-0">
                     <li class="breadcrumb-item"><a href="{{ url('admin/livecity/live-city-listing')}}"><i class="bx bx-user"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">S_City Register</li>
+                    <li class="breadcrumb-item active" aria-current="page">City Register</li>
                 </ol>
             </nav>
         </div>

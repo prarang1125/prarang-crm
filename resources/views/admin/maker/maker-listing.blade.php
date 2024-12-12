@@ -90,6 +90,7 @@
                                 @endforeach
                                 <td>{{ $chitti->makerStatus }}</td>
 
+
                                 <td class="">
                                     @if ($chitti->checkerStatus!='maker_to_checker' && $chitti->checkerStatus!='sent_to_uploader')
                                     <a href="{{ route('admin.maker-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>

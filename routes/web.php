@@ -33,13 +33,20 @@ use App\Http\Controllers\accounts\AccChekerController;
 use App\Http\Controllers\accounts\AccUploaderController;
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8bc41fdf191e51a3972a5d45bef1decf4a0a782f
 // Route::get('/', function () {
 //     return "<a href='/admin/login'>Admin Login</a><br><a href='/accounts/login'>Other Login</a><br>". Hash::make('password') ;
 // });
 
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8bc41fdf191e51a3972a5d45bef1decf4a0a782f
 Route::group(['prefix' => 'accounts'], function(){
     Route::group(['middleware' => 'guest'], function(){
         Route::get('login', [LoginController::class, 'index'])->name('accounts.login');
@@ -138,6 +145,8 @@ Route::group(['prefix' => 'admin'], function(){
             Route::put('user-update/{id}', [AdminController::class, 'userUpdate'])->name('admin.user-update');
 
             Route::put('update-user-profile/{id}', [AdminController::class, 'userProfileUpdate'])->name('admin.user-profile-update');
+
+            Route::get('update-user-profile/{id}', [AdminController::class, 'userProfileUpdate'])->name('admin.user-profile-update');
         #this route is use for admin users end
 
         #this route is use for Role

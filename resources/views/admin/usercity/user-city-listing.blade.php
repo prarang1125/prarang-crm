@@ -36,6 +36,12 @@
             <hr/>
             <div class="card">
                 <div class="card-body d-flex justify-content-end align-items-end">
+                    <!-- Search Form -->
+                    <form action="{{ url('admin/usercity/user-city-listing') }}" method="GET" class="d-flex me-3">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search by City Name" value="{{ request()->input('search') }}">
+                        <button type="submit" class="btn btn-secondary">Search</button>
+                    </form>
+
                     <a href="{{ url('/admin/usercity/user-city-register') }}" class="btn btn-primary">Add New User City</a>
                 </div>
                 <div class="card-body">
@@ -49,7 +55,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $index = 1; @endphp
+                            @php
+                                $index = ($usercitys->currentPage() - 1) * $usercitys->perPage() + 1;
+                            @endphp
                             @foreach($usercitys as $usercity)
                                 <tr>
                                     <th scope="row">{{ $index }}</th>
@@ -68,6 +76,14 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{--<nav aria-label="Page navigation example">
+                        <ul class="pagination round-pagination justify-content-end mt-2">
+                            {{ $usercitys->links('pagination::bootstrap-5') }} <!-- This will generate the pagination links -->
+                        </ul>
+                    </nav> --}}
+                    <div class="d-flex justify-content-end mt-4">
+                        {{ $usercitys->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>

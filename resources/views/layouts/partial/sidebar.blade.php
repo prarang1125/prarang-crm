@@ -101,6 +101,7 @@
                 <div class="menu-title">Dashboard</div>
             </a>
             <ul>
+
                 @php
                     $user = Auth::user();
                 @endphp

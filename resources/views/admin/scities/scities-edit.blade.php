@@ -1,5 +1,5 @@
 @extends('layouts.admin.admin')
-@section('title', 'S_City Edit')
+@section('title', 'City Edit')
 
 @section('content')
 <!--start page wrapper -->
@@ -12,7 +12,7 @@
                 <ol class="breadcrumb mb-0 p-0">
                     <li class="breadcrumb-item"><a href="{{ url('admin/scities/scities-listing')}}"><i class="bx bx-user"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">S_City Edit</li>
+                    <li class="breadcrumb-item active" aria-current="page">City Edit</li>
                 </ol>
             </nav>
         </div>
@@ -27,7 +27,7 @@
                         {{ session('success') }}
                     </div>
                 @endif
-                <h6 class="mb-0 text-uppercase text-primary">Edit S_City</h6>
+                <h6 class="mb-0 text-uppercase text-primary">Edit City</h6>
                 <hr/>
                 <form  action="{{ route('admin.scities-update' , $s_city->cityId) }}" method="POST" enctype="multipart/form-data">
                     @csrf

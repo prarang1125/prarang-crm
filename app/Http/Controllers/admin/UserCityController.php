@@ -12,9 +12,20 @@ use Illuminate\Support\Facades\Validator;
 class UserCityController extends Controller
 {
     #this method is use for show the listing of user city
-    public function index()
+    public function index(Request $request)
     {
-        $usercitys = UserCity::where('isActive', 1)->get();
+        $search = $request->input('search');
+        if ($search) {
+            $usercitys = UserCity::where('isActive', 1)
+                ->where(function ($query) use ($search) {
+                    $query->where('cityNameInEnglish', 'like', "%$search%")
+                    ->orWhere('cityNameInHindi', 'like', "%$search%");
+                })
+                ->paginate(5);
+        } else {
+            // If no search term, just get active cities
+            $usercitys = UserCity::where('isActive', 1)->paginate(5);
+        }
         return view('admin.usercity.user-city-listing', compact('usercitys'));
     }
 
