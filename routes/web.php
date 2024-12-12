@@ -33,20 +33,8 @@ use App\Http\Controllers\accounts\AccChekerController;
 use App\Http\Controllers\accounts\AccUploaderController;
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 8bc41fdf191e51a3972a5d45bef1decf4a0a782f
-// Route::get('/', function () {
-//     return "<a href='/admin/login'>Admin Login</a><br><a href='/accounts/login'>Other Login</a><br>". Hash::make('password') ;
-// });
-
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 8bc41fdf191e51a3972a5d45bef1decf4a0a782f
 Route::group(['prefix' => 'accounts'], function(){
     Route::group(['middleware' => 'guest'], function(){
         Route::get('login', [LoginController::class, 'index'])->name('accounts.login');
@@ -246,6 +234,7 @@ Route::group(['prefix' => 'admin'], function(){
             Route::get('/maker/maker-edit/{id}', [MakerController::class, 'makerEdit'])->name('admin.maker-edit');
             Route::put('/maker/maker-update/{id}', [MakerController::class, 'makerUpdate'])->name('admin.maker-update');
             Route::get('/maker/maker-delete/{id}', [MakerController::class, 'makerdelete'])->name('admin.maker-delete');
+            Route::post('/maker/maker-update-title',[MakerController::class,'updateTitle'])->name('update.title');
         #this route is use for admin maker end
 
         #this route is use for admin checker start
