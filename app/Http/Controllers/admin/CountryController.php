@@ -11,9 +11,19 @@ use Illuminate\Support\Facades\Log;
 class CountryController extends Controller
 {
     #this method is use for show country listing
-    public function index()
+    public function index(Request $request)
     {
-        $mcountrys = Mcountry::where('isActive', 1)->paginate(5);
+        $search = $request->input('search');
+
+        $mcountrys = Mcountry::where('isActive', 1)
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('countryNameInEnglish', 'like', '%' . $search . '%')
+                    ->orWhere('countryNameInUnicode', 'like', '%' . $search . '%');
+                });
+            })
+            ->paginate(10);
+
         return view('admin.country.country-listing', compact('mcountrys'));
     }
 

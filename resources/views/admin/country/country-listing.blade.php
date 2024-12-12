@@ -30,6 +30,12 @@
             <hr/>
             <div class="card">
                 <div class="card-body d-flex justify-content-end align-items-end">
+                    <!-- Search Form -->
+                    <form action="{{ url('admin/country/country-listing') }}" method="GET" class="d-flex me-3">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search by Live Country Name" value="{{ request()->input('search') }}">
+                        <button type="submit" class="btn btn-secondary">Search</button>
+                    </form>
+
                     <a href="{{ url('admin/country/country-register') }}" class="btn btn-primary">Add New Country</a>
                 </div>
                 <div class="card-body">

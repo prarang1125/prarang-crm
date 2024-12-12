@@ -89,17 +89,53 @@ class AdminController extends Controller
     // }
 
     #this method is use for show user listing data
-    public function userListing(Request $request) {
+    // public function userListing(Request $request) {
+    //     $role = $request->query('role');
+    //     if ($role) {
+    //         $users = Muser::whereHas('role', function($query) use ($role) {
+    //             $query->where('roleName', $role);
+    //         })->get();
+    //     } else {
+    //         $users = Muser::with('role')->get();
+    //     }
+    //     return view('admin.user-listing', compact('users'));
+    // }
+
+    public function userListing(Request $request)
+    {
+        $search = $request->query('search');
         $role = $request->query('role');
+        $language = $request->query('language');
+
+        $query = Muser::with('role');
+
+        // Filter by role if provided
         if ($role) {
-            $users = Muser::whereHas('role', function($query) use ($role) {
-                $query->where('roleName', $role);
-            })->get();
-        } else {
-            $users = Muser::with('role')->get();
+            $query->whereHas('role', function ($q) use ($role) {
+                $q->where('roleName', $role);
+            });
         }
+
+        // Search by user name or email
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('firstName', 'like', "%$search%")
+                ->orWhere('lastName', 'like', "%$search%")
+                ->orWhere('emailId', 'like', "%$search%");
+            });
+        }
+
+        // Filter by language (1 for English, 0 for Hindi, based on your current logic)
+        if ($language) {
+            $query->where('languageId', $language === 'English' ? 1 : 0);
+        }
+
+        // Paginate results
+        $users = $query->paginate(5);
+
         return view('admin.user-listing', compact('users'));
     }
+
 
     #this method is use for create/register new user form page
     public function useruRegister(){
