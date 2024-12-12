@@ -32,7 +32,6 @@ use App\Http\Controllers\accounts\AccCKEditorController;
 use App\Http\Controllers\accounts\AccChekerController;
 use App\Http\Controllers\accounts\AccUploaderController;
 
-
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
 
 Route::group(['prefix' => 'accounts'], function(){
