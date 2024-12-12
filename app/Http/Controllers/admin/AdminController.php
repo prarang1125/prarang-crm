@@ -61,9 +61,15 @@ class AdminController extends Controller
     public function userProfile(){
 
         $user     = Auth::guard('admin')->user();
-        $roleName = $user->role ? $user->role->roleName : 'No Role Assigned';
-        $language = $user->languageScript ? $user->languageScript->language : 'No Language Assigned';
-        return view('admin.user-profile', compact('user', 'roleName', 'language'));
+
+
+        $roleName   = $user->role ? $user->role->roleName : 'No Role Assigned';
+        $roleId     = $user->role ? $user->role->roleID : null;
+
+        $language   = $user->languageScript ? $user->languageScript->language : 'No Language Assigned';
+        $languageId = $user->languageScript ? $user->languageScript->id : null;
+
+        return view('admin.user-profile', compact('user', 'roleName', 'language', 'roleId', 'languageId'));
     }
 
     #this method is use for update admin user profile
@@ -81,17 +87,53 @@ class AdminController extends Controller
     // }
 
     #this method is use for show user listing data
-    public function userListing(Request $request) {
+    // public function userListing(Request $request) {
+    //     $role = $request->query('role');
+    //     if ($role) {
+    //         $users = Muser::whereHas('role', function($query) use ($role) {
+    //             $query->where('roleName', $role);
+    //         })->get();
+    //     } else {
+    //         $users = Muser::with('role')->get();
+    //     }
+    //     return view('admin.user-listing', compact('users'));
+    // }
+
+    public function userListing(Request $request)
+    {
+        $search = $request->query('search');
         $role = $request->query('role');
+        $language = $request->query('language');
+
+        $query = Muser::with('role');
+
+        // Filter by role if provided
         if ($role) {
-            $users = Muser::whereHas('role', function($query) use ($role) {
-                $query->where('roleName', $role);
-            })->get();
-        } else {
-            $users = Muser::with('role')->get();
+            $query->whereHas('role', function ($q) use ($role) {
+                $q->where('roleName', $role);
+            });
         }
+
+        // Search by user name or email
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('firstName', 'like', "%$search%")
+                ->orWhere('lastName', 'like', "%$search%")
+                ->orWhere('emailId', 'like', "%$search%");
+            });
+        }
+
+        // Filter by language (1 for English, 0 for Hindi, based on your current logic)
+        if ($language) {
+            $query->where('languageId', $language === 'English' ? 1 : 0);
+        }
+
+        // Paginate results
+        $users = $query->paginate(5);
+
         return view('admin.user-listing', compact('users'));
     }
+
 
     #this method is use for create/register new user form page
     public function useruRegister(){
@@ -247,16 +289,44 @@ class AdminController extends Controller
     #this method is use for update user profile or password reset
     public function userProfileUpdate(Request $request, $id)
     {
-        dd($request->all());
-        $validator = Validator::make($request->all(), [
-            'first_last_name' => 'required|string|max:255',
-            'email_id'       => 'required|email',
-            'role_name'      => 'required|exists:mrole,roleID',
-            'languageId'     => 'required|boolean',
-            'empPassword'    => 'required|string|min:5',
-            'reset_password' => 'nullable',
 
-            'isActive' => 'required|boolean',
+        $validator = Validator::make($request->all(), [
+            'first_last_name' => 'required',
+            'email_id'       => 'required',
+            'role_name'      => 'required',
+            'role_id'        => 'nullable',
+            'language'       => 'required',
+            'language_id'    => 'nullable',
+            'password'       => 'nullable',
+            'reset_password' => 'required'
         ]);
+
+        $fullName = $request->first_last_name;
+        $names = explode(' ', $fullName);
+
+        $first_name = $names[0] ?? '';
+        $last_name = $names[1] ?? '';
+
+        if ($validator->passes()) {
+            $user = Muser::findOrFail($id);
+            $currentDateTime = getUserCurrentTime();
+            // Update the user with additional fields
+            $user->update([
+                'firstName' => $first_name,
+                'lastName'  => $last_name,
+                'emailId'   => $request->email_id,
+                'empPassword' => bcrypt($request->reset_password),
+                'roleId'      => $request->role_id,
+                'languageId' => $request->language_id,
+                'updated_at' => $currentDateTime,
+                'updated_by' => Auth::guard('admin')->user()->userId,
+            ]);
+
+            return redirect()->back()->with('success', 'your password has been reset successfully.');
+        } else {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors($validator);
+        }
     }
 }

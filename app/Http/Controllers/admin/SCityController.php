@@ -12,11 +12,25 @@ use Illuminate\Support\Facades\Log;
 class SCityController extends Controller
 {
     #this method is use for show the listing of s cities
-    public function index()
+    public function index(Request $request)
     {
-        $scities = S_Cities::where('isActive', 1)->get();
+        $query = S_Cities::query();
+
+        // Apply search filter if provided
+        if ($request->has('search') && !empty($request->input('search'))) {
+            $searchTerm = $request->input('search');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('citynameInEnglish', 'like', '%' . $searchTerm . '%')
+                ->orWhere('citynameInUnicode', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        // Fetch active cities with pagination
+        $scities = $query->where('isActive', 1)->paginate(10);
+
         return view('admin.scities.scities-listing', compact('scities'));
     }
+
 
     #this method is use for show the register page of scities
     public function SCityRegister()

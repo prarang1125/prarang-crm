@@ -11,9 +11,18 @@ use Illuminate\Support\Facades\Log;
 class RegionController extends Controller
 {
     #this method is use for region listing
-    public function index()
+    public function index(Request $request)
     {
-        $regions = Mregion::where('isActive', 1)->get();
+        $search = $request->input('search');
+        $regions = Mregion::where('isActive', 1)
+                    ->when($search, function ($query, $search) {
+                        $query->where(function ($q) use ($search) {
+                            $q->where('regionnameInEnglish', 'like', "%{$search}%")
+                            ->orWhere('regionnameInUnicode', 'like', "%{$search}%");
+                        });
+                    })
+                    ->paginate(5);
+
         return view("admin.region.region-listing", compact('regions'));
     }
 

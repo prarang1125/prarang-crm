@@ -11,9 +11,19 @@ use Illuminate\Support\Facades\Validator;
 class TagController extends Controller
 {
     #this method is use for show the listing of tag
-    public function index()
+    public function index(Request $request)
     {
-        $mtags = Mtag::with('tagcategory')->where('isActive', 1)->get();
+        $query = Mtag::with('tagcategory')->where('isActive', 1);
+
+        if ($request->has('search') && !empty($request->input('search'))) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('tagInEnglish', 'LIKE', "%{$search}%")
+                ->orWhere('tagInUnicode', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $mtags = $query->paginate(5);
         return view('admin.tag.tag-listing', compact('mtags'));
     }
 

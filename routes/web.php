@@ -138,6 +138,8 @@ Route::group(['prefix' => 'admin'], function(){
             Route::put('user-update/{id}', [AdminController::class, 'userUpdate'])->name('admin.user-update');
 
             Route::put('update-user-profile/{id}', [AdminController::class, 'userProfileUpdate'])->name('admin.user-profile-update');
+
+            Route::get('update-user-profile/{id}', [AdminController::class, 'userProfileUpdate'])->name('admin.user-profile-update');
         #this route is use for admin users end
 
         #this route is use for Role

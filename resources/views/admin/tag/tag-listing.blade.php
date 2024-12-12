@@ -36,6 +36,12 @@
             <hr/>
             <div class="card">
                 <div class="card-body d-flex justify-content-end align-items-end">
+                    <!-- Search Form -->
+                    <form action="{{ url('admin/tag/tag-listing') }}" method="GET" class="d-flex me-3">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search by Tag Name" value="{{ request()->input('search') }}">
+                        <button type="submit" class="btn btn-secondary">Search</button>
+                    </form>
+
                     <a href="{{ url('/admin/tag/tag-register') }}" class="btn btn-primary">Add New Tag</a>
                 </div>
                 <div class="card-body">
@@ -50,7 +56,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $index = 1; @endphp
+                            @php
+                                $index = ($mtags->currentPage() - 1) * $mtags->perPage() + 1;
+                            @endphp
                             @foreach($mtags as $mtag)
                                 <tr>
                                     <th scope="row">{{ $index }}</th>
@@ -70,6 +78,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end mt-4">
+                        {{ $mtags->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>
