@@ -164,6 +164,8 @@
                         </div>
                     </div>
 
+
+                  
                     <!-- Tab structure to display based on radio button selection -->
                     <div id="cultureNatureTabs" style="display: none;">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -189,6 +191,9 @@
                                 <a class="nav-link" id="nature-tab3" data-bs-toggle="tab" href="#natureTab3" role="tab" style="display:none; background-color: #339933;color: #fff;">Flora</a>
                             </li>
                         </ul>
+                        @error('tagId')
+                        <p class="invalid-feedback" style="color: red; font-size: 0.875em;">{{ $message }}</p>
+                        @enderror
                         <div class="tab-content">
                             <!-- Content for Culture Tab 1 (Timelines) -->
                             <div class="tab-pane fade show active" id="cultureTab1" role="tabpanel">
@@ -216,10 +221,14 @@
                                     @foreach ($manSenses as $sense)
                                       <div class="col-md-4">
                                          <div class="card">
-                                             <div class="card-body cardbodselect mt-3" style="background-color: #ffff18;color: #282828;">
-                                                <i class="lni lni-close"></i>
-                                                {{ $sense->tagInEnglish }}
-                                             </div>
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #ffff18; color: #282828;">
+                                                <div class="d-flex align-items-center">
+                                                    <input type="radio" name="tagId" value="{{ $sense->id }}" id="sense{{ $sense->id }}" class="me-2">
+                                                    <label for="sense{{ $sense->id }}" class="mb-0">{{ $sense->tagInEnglish }}</label>  
+                                                    <i class="lni lni-close ms-auto"></i>
+                                                </div>
+                                            </div>
+                                            
                                          </div>
                                       </div>
                                     @endforeach
@@ -232,10 +241,14 @@
                                    @foreach ($manInventions as $invention)
                                      <div class="col-md-4">
                                          <div class="card">
-                                             <div class="card-body cardbodselect mt-3" style="background-color: #1919d9;color: white;">
-                                                <i class="lni lni-close"></i>
-                                                {{ $invention->tagInEnglish }}
-                                             </div>
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #1919d9; color: white;">
+                                                <div class="d-flex align-items-center">
+                                                    <input type="radio" name="tagId" value="{{ $invention->id }}" id="invention{{ $invention->id }}" class="me-2">
+                                                    <label for="invention{{ $invention->id }}" class="mb-0">{{ $invention->tagInEnglish }}</label>
+                                                    <i class="lni lni-close ms-auto"></i>
+                                                </div>
+                                            </div>
+                                            
                                          </div>
                                      </div>
                                    @endforeach
@@ -248,10 +261,15 @@
                                      @foreach ($geographys as $geography)
                                          <div class="col-md-4">
                                              <div class="card">
-                                                 <div class="card-body cardbodselect mt-3" style="background-color: #faff98;color: #282828;">
-                                                    <i class="lni lni-close"></i>
-                                                    {{ $geography->tagInEnglish }}
-                                                 </div>
+                                                <div class="card-body cardbodselect mt-3" style="background-color: #faff98; color: #282828;">
+                                                    <div class="d-flex align-items-center">
+                                                        <!-- Radio Input -->
+                                                        <input type="radio" name="tagId" value="{{ $geography->id }}" id="geography{{ $geography->id }}" class="me-2">
+                                                        <label for="geography{{ $geography->id }}" class="mb-0">{{ $geography->tagInEnglish }}</label>
+                                                        <i class="lni lni-close ms-auto"></i>
+                                                    </div>
+                                                </div>
+                                                
                                              </div>
                                          </div>
                                      @endforeach
@@ -263,10 +281,14 @@
                                      @foreach ($faunas as $fauna)
                                          <div class="col-md-4">
                                              <div class="card">
-                                                 <div class="card-body cardbodselect mt-3" style="background-color: #c8ff00;color: #282828;">
-                                                    <i class="lni lni-close"></i>
-                                                    {{ $fauna->tagInEnglish }}
-                                                 </div>
+                                                <div class="card-body cardbodselect mt-3" style="background-color: #c8ff00; color: #282828;">
+                                                    <div class="d-flex align-items-center">
+                                                        <!-- Radio Input -->
+                                                        <input type="radio" name="tagId" value="{{ $fauna->id }}" id="fauna{{ $fauna->id }}" class="me-2">
+                                                        <label for="fauna{{ $fauna->id }}" class="mb-0">{{ $fauna->tagInEnglish }}</label>
+                                                        <i class="lni lni-close ms-auto"></i>
+                                                    </div>
+                                                </div>
                                              </div>
                                          </div>
                                      @endforeach
@@ -278,19 +300,22 @@
                                      @foreach ($floras as $flora)
                                          <div class="col-md-4">
                                              <div class="card">
-                                                 <div class="card-body cardbodselect mt-3" style=" background-color: #339933;color: #fff;">
-                                                    <i class="lni lni-close"></i>
-                                                    {{ $flora->tagInEnglish }}
-                                                 </div>
+                                                <div class="card-body cardbodselect mt-3" style="background-color: #339933; color: #fff;">
+                                                    <div class="d-flex align-items-center">
+
+                                                        <input type="radio" name="tagId" value="{{ $flora->id }}" id="flora{{ $flora->id }}" class="me-2">\
+                                                        <label for="flora{{ $flora->id }}" class="mb-0">{{ $flora->tagInEnglish }}</label>
+                                                        <i class="lni lni-close ms-auto"></i>
+                                                    </div>
+                                                </div>
+                                                
                                              </div>
                                          </div>
                                      @endforeach
                                  </div>
+                                 
                              </div>
                         </div>
-                        {{-- @error('selected_tab')
-                        <p class="invalid-feedback">{{ $message }}</p>
-                    @enderror --}}
                     </div>
                     <div class="modal-footer mt-3">
                         <button type="submit" class="btn btn-primary">Create</button>
