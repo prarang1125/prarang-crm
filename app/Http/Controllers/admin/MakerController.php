@@ -69,8 +69,8 @@ class MakerController extends Controller
             'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'forTheCity' => 'required|boolean',
             'isCultureNature' => 'required|boolean',
+            'selected_tab' => 'required',
         ]);
-
         if($validator->passes())
         {
             $currentDateTime = getUserCurrentTime();
