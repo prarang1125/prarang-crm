@@ -313,7 +313,7 @@ class MakerController extends Controller
             // Update Chitti record
             $chitti = Chitti::findOrFail($id);
 
-            if ($request->action === 'send_to_checker') {
+            if ($request->action == 'send_to_checker') {
                 // dd($request);
                 $chitti->update([
                     'makerStatus'   => 'sent_to_checker',
@@ -323,20 +323,21 @@ class MakerController extends Controller
                     'return_chitti_post_from_checker_id' => 0,
                     'returnDateToChecker' => $currentDateTime,
                     'makerId'       => Auth::guard('admin')->user()->userId,
-                    'finalStatus'   => 'Null',
+                    // 'finalStatus'   => 'Null',
                 ]);
-
-                // Redirect to the checker listing
-                return redirect()->route('admin.maker-listing', $chitti->chittiId)
+                DB::commit();
+                // // Redirect to the checker listing
+                return redirect()->route('admin.maker-listing')
                     ->with('success', 'Sent to Checker successfully.');
             } else {
                 $chitti->update([
                     'description'   => $request->content,
                     'Title'         => $request->title,
                     'SubTitle'      => $request->subtitle,
+                    'checkerStatus' => 'maker_to_checker',
                     'makerStatus'   => 'sent_to_checker',
                     'makerId'       => Auth::guard('admin')->user()->userId,
-                    'finalStatus'   => 'Null',
+                    // 'finalStatus'   => 'Null',
                     // 'checkerStatus' => 'Null',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
