@@ -9,7 +9,8 @@
   <style>
     body {
       /* Horizontal gradient with specified colors */
-      background: linear-gradient(90deg, #1055CD, #FFFF00, #FF0000, #FFFF99, #BBFF33, #009933);
+      /* background: linear-gradient(730deg,  #FFFFf1, #fffff2,#ffffaf); */
+      background: #DAE5F5;
       color: white;
       font-family: 'Arial', sans-serif;
       height: 100vh;
@@ -59,13 +60,13 @@
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <img src="{{ asset('assets/images/logo.png') }}" alt="Login Options Image" class="login-image">
-    <div class="d-grid gap-3">
+  <div class="login-container bg-white">
+    <img src="{{ asset('assets/images/logo.png') }}" alt="Login Options Image" class="w-75 img-fluid m-0">
+    <div class="d-grid gap-2 m-1">
       <!-- Admin Button -->
-      <a href="{{ route('admin.login') }}" class="btn btn-custom btn-admin">Login as Admin</a>
+      <a href="{{ route('admin.login') }}" class="btn btn-primary rounded-0 rounded-1">Admin Login</a>
       <!-- Other Button -->
-      <a href="{{ route('accounts.login') }}" class="btn btn-custom btn-other">Login as Other</a>
+      <a href="{{ route('accounts.login') }}" class="btn btn-outline-primary rounded-0 rounded-1">Other's Login</a>
     </div>
   </div>
 
