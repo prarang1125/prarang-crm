@@ -203,7 +203,7 @@
                     <div class="row mt-3">
                         <div class="col-sm-2">
                             <div class="form-check">
-                                <input class="form-check-input @error('isCultureNature')  @if(in_array($subTag, config('tagidmap.2'))) checked='checked' @endif> is-invalid @enderror"
+                                <input class="form-check-input @error('isCultureNature')  is-invalid @enderror"  @if(in_array($subTag, config('tagidmap.1'))) checked @endif
                                     type="radio" name="isCultureNature" id="cultureNatureYes" value="1"
                                     {{ old('isCultureNature', $chittiTagMapping->tagId) == 1 ? 'checked' : '' }}> <!-- Default checked -->
                                 <label class="form-check-label" for="cultureNatureYes">Culture</label>
@@ -211,7 +211,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-check">
-                                <input class="form-check-input @error('isCultureNature') is-invalid @enderror"  @if(in_array($subTag, config('tagidmap.2'))) checked='checked' @endif
+                                <input class="form-check-input @error('isCultureNature') is-invalid @enderror" @if(in_array($subTag, config('tagidmap.2'))) checked @endif
                                     type="radio" name="isCultureNature" id="cultureNatureNo"  value="0"
                                     {{ old('isCultureNature', $chittiTagMapping->tagId) == 0 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="cultureNatureNo">Nature</label>

@@ -160,6 +160,7 @@ class UploaderController extends Controller
         $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->findOrFail($id);
         $image = $chitti->chittiimagemappings()->first();
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
+        $subTag=$chittiTagMapping->tag->tagCategoryId;
         $timelines = Mtag::where('tagCategoryId', 1)->get();
         $manSenses = Mtag::where('tagCategoryId', 2)->get();
         $manInventions = Mtag::where('tagCategoryId', 3)->get();
@@ -176,7 +177,7 @@ class UploaderController extends Controller
 
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
 
-        return view('admin.uploader.uploader-edit', compact('chitti', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
+        return view('admin.uploader.uploader-edit', compact('chitti','subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
     }
 
     public function uploaderUpdate(Request $request, $id)
