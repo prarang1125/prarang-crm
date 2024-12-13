@@ -277,7 +277,7 @@ class MakerController extends Controller
             'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             // 'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
-            'isCultureNature' => 'required|boolean',
+            // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
         ]);
 
@@ -311,17 +311,17 @@ class MakerController extends Controller
             $chitti = Chitti::findOrFail($id);
             if ($request->action === 'send_to_checker') {
                  $chitti->update([
-                    // 'makerStatus'   => 'sent_to_checker',
-                    'makerStatus' => 'maker_to_checker',
+                    'makerStatus'   => 'sent_to_checker',
+                    'checkerStatus' => 'maker_to_checker',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                     'return_chitti_post_from_checker_id' => 0,
                     'returnDateToChecker' => $currentDateTime,
                     'makerId'       => Auth::guard('admin')->user()->userId,
                 ]);
-                dd($chitti);
-                // return redirect()->route('admin.maker-listing')
-                //     ->with('success', 'Sent to Checker successfully.');
+                // dd($chitti);
+                return redirect()->route('admin.maker-listing')
+                    ->with('success', 'Sent to Checker successfully.');
             
             
             } else {
