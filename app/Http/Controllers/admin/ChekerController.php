@@ -273,8 +273,8 @@ class ChekerController extends Controller
                     'Title'         => $request->title,
                     'SubTitle'      => $request->subtitle,
                     'checkerStatus'   => 'sent_to_uploader',
-                    'uploaderStatus'        => 'Null',
-                    'finalStatus'           => 'Null',
+                    'uploaderStatus'        => '',
+                    'finalStatus'           => '',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);

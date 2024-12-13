@@ -35,7 +35,6 @@ class MakerController extends Controller
     //     ->select('*')
     //     ->orderByDesc('dateOfCreation')
     //     ->get();
-
     //     $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
     //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
     //     return view('admin.maker.maker-listing', compact('chittis', 'geographyOptions', 'notification'));
@@ -43,8 +42,7 @@ class MakerController extends Controller
 
     public function index(Request $request)
     {
-        $search = $request->input('search'); // Get the search query from the request
-
+        $search = $request->input('search');
         // Fetch Chitti data with pagination and optional search filtering
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
             ->when($search, function ($query, $search) {
@@ -277,7 +275,7 @@ class MakerController extends Controller
             'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             // 'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
-            // 'isCultureNature' => 'required|boolean',
+            'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
         ]);
 
@@ -294,7 +292,6 @@ class MakerController extends Controller
 
             foreach ($images as $img) {
                 $src = $img->getAttribute('src');
-
                 if (Str::startsWith($src, 'data:image')) {
                     preg_match('/data:image\/(?<mime>.*?)\;base64,(?<data>.*)/', $src, $matches);
                     $imageData = base64_decode($matches['data']);
@@ -302,8 +299,6 @@ class MakerController extends Controller
                     $imageName = time() . '_' . uniqid() . '.' . $imageMime;
                     $path = public_path('uploads/content_images/') . $imageName;
                     file_put_contents($path, $imageData);
-
-                    // Replace base64 with file URL
                     $img->setAttribute('src', asset('uploads/content_images/' . $imageName));
                 }
             }
@@ -312,23 +307,21 @@ class MakerController extends Controller
 
             // Update Chitti record
             $chitti = Chitti::findOrFail($id);
-
             if ($request->action === 'send_to_checker') {
-                // dd($request);
-                $chitti->update([
-                    'makerStatus'   => 'sent_to_checker',
-                    'checkerStatus' => 'maker_to_checker',
+                 $chitti->update([
+                    // 'makerStatus'   => 'sent_to_checker',
+                    'makerStatus' => 'maker_to_checker',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                     'return_chitti_post_from_checker_id' => 0,
                     'returnDateToChecker' => $currentDateTime,
                     'makerId'       => Auth::guard('admin')->user()->userId,
-                    'finalStatus'   => 'Null',
                 ]);
-
-                // Redirect to the checker listing
-                return redirect()->route('admin.maker-listing', $chitti->chittiId)
-                    ->with('success', 'Sent to Checker successfully.');
+                dd($chitti);
+                // return redirect()->route('admin.maker-listing')
+                //     ->with('success', 'Sent to Checker successfully.');
+            
+            
             } else {
                 $chitti->update([
                     'description'   => $request->content,
@@ -336,7 +329,7 @@ class MakerController extends Controller
                     'SubTitle'      => $request->subtitle,
                     'makerStatus'   => 'sent_to_checker',
                     'makerId'       => Auth::guard('admin')->user()->userId,
-                    'finalStatus'   => 'Null',
+                    'finalStatus'   => '',
                     // 'checkerStatus' => 'Null',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
