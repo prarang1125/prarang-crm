@@ -101,8 +101,8 @@ class MakerController extends Controller
             'forTheCity' => 'required|boolean',
             'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
-          
-           
+
+
         ]);
         if ($validator->passes()) {
             $currentDateTime = getUserCurrentTime();
@@ -158,7 +158,7 @@ class MakerController extends Controller
             $chitti->areaId = $areaIdCode;
             $chitti->geographyId = $request->geography;
             $chitti->created_at = $currentDateTime;
-            $chitti->is_active = 1;
+            // $chitti->is_active = 1;
             $chitti->created_by = Auth::guard('admin')->user()->userId;
             $chitti->save();
             // get last inserted id
