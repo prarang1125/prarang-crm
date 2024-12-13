@@ -23,22 +23,7 @@ use App\Models\Chittitagmapping;
 
 class MakerController extends Controller
 {
-    #this method is use for show the listing of maker
-    // public function index()
-    // {
-    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-    //     ->whereNotNull('Title')
-    //     ->where('Title', '!=', '')
-    //     ->where('makerStatus', '=', 'sent_to_checker')
-    //     // ->where('is_active', 1)
-    //     // ->where('checkerStatus', '=','maker_to_checker')
-    //     ->select('*')
-    //     ->orderByDesc('dateOfCreation')
-    //     ->get();
-    //     $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
-    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-    //     return view('admin.maker.maker-listing', compact('chittis', 'geographyOptions', 'notification'));
-    // }
+   
 
     public function index(Request $request)
     {
