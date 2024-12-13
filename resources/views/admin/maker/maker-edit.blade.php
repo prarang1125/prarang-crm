@@ -249,6 +249,63 @@
                         </ul>
                     
                         <div class="tab-content">
+                            <div class="tab-pane fade show {{$subTag==1 ? "active": ""}}" id="cultureTab1" role="tabpanel">
+                                <div class="row">
+                                    @foreach ($timelines as $timeline)
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #ff0006; color: white;">
+                                                <div class="d-flex align-items-center">
+                                                    <input type="radio" name="tagId" value="{{ $timeline->tagId }}" id="timeline{{ $timeline->id }}" {{ $timeline->tagId == $chittiTagMapping->tagId ? 'checked' : '' }} class="me-2">
+                                                    <label for="timeline{{ $timeline->id }}" class="mb-0">{{ $timeline->tagInEnglish }}</label>
+                                                    <i class="lni lni-close ms-auto"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Content for Man And His Senses -->
+                            <div class="tab-pane fade {{$subTag==2 ? "active": ""}}" id="cultureTab2" role="tabpanel">
+                                <div class="row">
+                                    @foreach ($manSenses as $sense)
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                           
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #ffff18; color: #282828;">
+                                                <div class="d-flex align-items-center">
+                                                    <input type="radio" name="tagId" value="{{ $sense->tagId }}"  {{ $sense->tagId == $chittiTagMapping->tagId ? 'checked' : '' }} id="sense{{ $sense->id }}" class="me-2">
+                                                    <label for="sense{{ $sense->id }}" class="mb-0">{{ $sense->tagInEnglish }}</label>  
+                                                    <i class="lni lni-close ms-auto"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Content for Man And His Inventions -->
+                            <div class="tab-pane fade {{$subTag==3 ? "active": ""}}" id="cultureTab3" role="tabpanel">
+                                <div class="row">
+                                    @foreach ($manInventions as $invention)
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #1919d9; color: white;">
+                                                <div class="d-flex align-items-center">
+                                                    <input type="radio" name="tagId" value="{{ $invention->tagId }}" id="invention{{ $invention->id }}" {{ $invention->tagId == $chittiTagMapping->tagId ? 'checked' : '' }} class="me-2">
+                                                    <label for="invention{{ $invention->id }}" class="mb-0">{{ $invention->tagInEnglish }}</label>
+                                                    <i class="lni lni-close ms-auto"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
                             <!-- Content for Geography -->
                             <div class="tab-pane fade {{$subTag == 4 ? 'show active' : ''}}" id="natureTab1" role="tabpanel">
                                 <div class="row">
@@ -364,7 +421,7 @@
                 document.querySelector('#nature-tab3').style.display = 'none';
 
                 // Make the first culture tab active
-                document.querySelector('#culture-tab1').click();
+               // document.querySelector('#culture-tab1').click();
             } else if (natureRadio.checked) {
                 // Show nature tabs and hide culture tabs
                 document.querySelector('#nature-tab1').style.display = 'block';
@@ -376,7 +433,7 @@
                 document.querySelector('#culture-tab3').style.display = 'none';
 
                 // Make the first nature tab active
-                document.querySelector('#nature-tab1').click();
+                //document.querySelector('#nature-tab1').click();
             }
         }
 

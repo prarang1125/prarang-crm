@@ -160,7 +160,8 @@ class MakerController extends Controller
             $chitti->SubTitle = $request->subtitle;
             $chitti->makerId = Auth::guard('admin')->user()->userId;
             $chitti->makerStatus = 'sent_to_checker';
-            $chitti->finalStatus = '';
+            $chitti->finalStatus = '';            
+            $chitti->checkerStatus = 'maker_to_checker';
             $chitti->cityId = $area_id;
             $chitti->areaId = $areaIdCode;
             $chitti->geographyId = $request->geography;
