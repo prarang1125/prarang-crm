@@ -10,8 +10,6 @@ class CKEditorController extends Controller
     public function upload(Request $request)
     {
 
-        // print_r($request->upload);
-        // die();
         if ($request->hasFile('upload'))
         {
            $originName = $request->file('upload')->getClientOriginalName();

@@ -92,6 +92,7 @@ class MakerController extends Controller
     #this method is use for store maker data
     public function makerStore(Request $request)
     {
+       
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
             'makerImage' => 'required|image|max:2048',
@@ -101,9 +102,10 @@ class MakerController extends Controller
             // 'subtitle' => 'required|string|max:255',
             'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'forTheCity' => 'required|boolean',
-            'isCultureNature' => 'required|boolean',
+            // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
         ]);
+        
         if ($validator->passes()) {
 
             DB::beginTransaction();  // Use DB facade
@@ -230,7 +232,7 @@ class MakerController extends Controller
     public function makerEdit($id)
     {
         $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->findOrFail($id);
-        if ($chitti->checkerStatus == 'maker_to_checker'  || $chitti->checkerStatus == 'sent_to_uploader' && $chitti->makerStatus != 'return_chitti_post_from_checker' ) {
+        if ($chitti->checkerStatus == 'maker_to_checker' || $chitti->checkerStatus == 'sent_to_uploader') {
             return redirect()->back()->with('error', 'not allow to edit');
         }
         $image = $chitti->chittiimagemappings()->first();

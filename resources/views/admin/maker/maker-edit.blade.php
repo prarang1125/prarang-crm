@@ -240,6 +240,7 @@
                             @enderror
                         </div>
                     </div>
+                
                     <!-- Tab structure to display based on radio button selection -->
                     <div id="cultureNatureTabs" style="display: none;">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -393,8 +394,8 @@
                 document.querySelector('#culture-tab2').style.display = 'none';
                 document.querySelector('#culture-tab3').style.display = 'none';
 
-                // // Make the first nature tab active
-                 document.querySelector('#nature-tab1').click();
+                // Make the first nature tab active
+                document.querySelector('#nature-tab1').click();
             }
         }
 
