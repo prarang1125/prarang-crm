@@ -325,7 +325,7 @@ class MakerController extends Controller
                     'makerId'       => Auth::guard('admin')->user()->userId,
                     // 'finalStatus'   => 'Null',
                 ]);
-                DB::commit();
+                    DB::commit();
                 // // Redirect to the checker listing
                 return redirect()->route('admin.maker-listing')
                     ->with('success', 'Sent to Checker successfully.');
