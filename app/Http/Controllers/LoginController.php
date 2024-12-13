@@ -14,6 +14,7 @@ class LoginController extends Controller
     // This method will show login page
     public function index()
     {
+        
         return view('accounts.login');
     }
 

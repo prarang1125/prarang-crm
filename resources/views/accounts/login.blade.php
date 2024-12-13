@@ -1,6 +1,6 @@
 @include('layouts.partial.head')
 @section('title', 'Login')
-<div class="d-flex align-items-center min-vh-100 login_background">
+<div class="d-flex align-items-center min-vh-100 bg-light-primary">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-6 col-md-8 col-sm-10">

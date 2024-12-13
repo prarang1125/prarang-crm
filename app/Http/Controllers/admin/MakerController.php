@@ -277,7 +277,7 @@ class MakerController extends Controller
             'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             // 'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
-            'isCultureNature' => 'required|boolean',
+            // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
         ]);
 
@@ -314,6 +314,7 @@ class MakerController extends Controller
             $chitti = Chitti::findOrFail($id);
 
             if ($request->action === 'send_to_checker') {
+                // dd($request);
                 $chitti->update([
                     'makerStatus'   => 'sent_to_checker',
                     'checkerStatus' => 'maker_to_checker',
