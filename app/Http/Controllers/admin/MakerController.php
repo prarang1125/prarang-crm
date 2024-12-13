@@ -5,6 +5,8 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Mtag;
@@ -80,16 +82,19 @@ class MakerController extends Controller
         $floras = Mtag::where('tagCategoryId', 6)->get();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         // Fetch all regions, cities, and countries
-        $regions = Mregion::all();
-        $cities = Mcity::all();
-        $countries = Mcountry::all();
+        $regions = Mregion::where('isActive', 1)->get();
+        $cities = Mcity::where('isActive', 1)->get();
+        $countries = Mcountry::where('isActive', 1)->get();
+
 
         return view('admin.maker.maker-register', compact('timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras', 'geographyOptions', 'regions', 'cities', 'countries'));
+
     }
 
     #this method is use for store maker data
     public function makerStore(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
             'makerImage' => 'required|image|max:2048',
@@ -99,12 +104,16 @@ class MakerController extends Controller
             // 'subtitle' => 'required|string|max:255',
             'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'forTheCity' => 'required|boolean',
-            'isCultureNature' => 'required|boolean',
+            // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
 
 
         ]);
+
         if ($validator->passes()) {
+
+            DB::beginTransaction();  // Use DB facade
+            try {
             $currentDateTime = getUserCurrentTime();
 
             $content = $request->content;
@@ -210,7 +219,13 @@ class MakerController extends Controller
             $chittitagmapping->created_at = $currentDateTime;
             $chittitagmapping->created_by = Auth::guard('admin')->user()->userId;
             $chittitagmapping->save();
+
+            DB::commit();  // Commit transaction
             return redirect()->route('admin.maker-listing')->with('success', 'Post created successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();  // Rollback transaction
+            return redirect()->route('admin.maker-register')->with('error', 'An error occurred, please try again.');
+        }
         } else {
             return redirect()->route('admin.maker-register')
                 ->withErrors($validator)
@@ -227,22 +242,22 @@ class MakerController extends Controller
         $image = $chitti->chittiimagemappings()->first();
         // $chittiTagMapping = Chittitagmapping::where('chittiId', $id)->first();
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
-        // dd($chittiTagMapping);
+        $subTag=$chittiTagMapping->tag->tagCategoryId;
         $timelines = Mtag::where('tagCategoryId', 1)->get();
         $manSenses = Mtag::where('tagCategoryId', 2)->get();
-        $manInventions = Mtag::where('tagCategoryId', 3)->get();
+        $manInventions = Mtag::where( 'tagCategoryId', 3)->get();
         $geographys = Mtag::where('tagCategoryId', 4)->get();
         $faunas = Mtag::where('tagCategoryId', 5)->get();
         $floras = Mtag::where('tagCategoryId', 6)->get();
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-        $regions = Mregion::all();
-        $cities = Mcity::all();
-        $countries = Mcountry::all();
+        $regions = Mregion::where('isActive', 1)->get();
+        $cities = Mcity::where('isActive', 1)->get();
+        $countries = Mcountry::where('isActive', 1)->get();
         $geographyMapping = $chitti->geographyMappings->first();
         $facityValue = $chitti->facity ? $chitti->facity->value : null;
 
-        $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
+         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
 
         // Check if chittiTagMapping, tag, and tagcategory are set before accessing tagCategoryInUnicode
         // $tagCategoryInUnicode = $chittiTagMapping && $chittiTagMapping->tag && $chittiTagMapping->tag->tagcategory
@@ -252,7 +267,7 @@ class MakerController extends Controller
         // dd($tagCategoryInUnicode);
         // return view('admin.maker.maker-edit', compact('chitti', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping'));
 
-        return view('admin.maker.maker-edit', compact('chitti', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
+        return view('admin.maker.maker-edit', compact('chitti','subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
     }
 
     public function makerUpdate(Request $request, $id)
@@ -271,7 +286,8 @@ class MakerController extends Controller
         ]);
 
         if ($validator->passes()) {
-
+            DB::beginTransaction();
+            try {
             $currentDateTime = getUserCurrentTime();
 
             // Handle content images (base64 to file conversion and updating the content HTML)
@@ -371,9 +387,14 @@ class MakerController extends Controller
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);
-
+                DB::commit();
                 return redirect()->route('admin.maker-listing')->with('success', 'Maker updated successfully.');
             }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Maker Update Error: ' . $e->getMessage(), ['exception' => $e]);
+            return redirect()->back()->with('error', 'An error occurred while updating the maker.')->withInput();
+        }
         } else {
             return redirect()->back()
                 ->withInput()
@@ -401,6 +422,7 @@ class MakerController extends Controller
         $query = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
             ->whereNotNull('Title')
             ->where('Title', '!=', '')
+            ->where('finalStatus', '!=', 'deleted')
             ->where('return_chitti_post_from_checker_id', 1);
 
         // Handle search
@@ -427,6 +449,8 @@ class MakerController extends Controller
         try {
             $chittis = Chitti::findOrFail($id);
             $chittis->finalStatus ='deleted';
+            $chittis->makerStatus="sent_to_checker";
+            $chittis->return_chitti_post_from_checker_id=0;
             $chittis->save();
 
             return redirect()->route('admin.maker-listing')->with('success', 'Listing soft deleted successfully.');

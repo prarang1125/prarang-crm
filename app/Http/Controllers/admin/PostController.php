@@ -215,6 +215,7 @@ class PostController extends Controller
             // Perform the soft delete
             $chitti->finalStatus = 'deleted';
             $chitti->updated_at = $currentDateTime;
+            $chitti->makerStatus='sent_to_checker';
             $chitti->updated_by = Auth::guard('admin')->user()->userId;
             $chitti->save();
 
