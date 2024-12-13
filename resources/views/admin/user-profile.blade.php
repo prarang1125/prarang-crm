@@ -98,7 +98,7 @@
                                             <h6 class="mb-0">Password</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            <input type="password" name="password" class="form-control" value="{{ Auth::guard('admin')->user()->empPassword }}" />
+                                            <input type="password" name="password" class="form-control" value="" />
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -106,7 +106,7 @@
                                             <h6 class="mb-0">Reset Password</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            <input type="password" name="reset_password" class="form-control" value="" />
+                                            <input type="password" name="password_confirmation" class="form-control" value="" />
                                         </div>
                                     </div>
                                     <div class="row">
