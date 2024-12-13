@@ -232,7 +232,7 @@ class MakerController extends Controller
     public function makerEdit($id)
     {
         $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->findOrFail($id);
-        if ($chitti->checkerStatus == 'maker_to_checker' || $chitti->checkerStatus == 'sent_to_uploader') {
+        if ($chitti->checkerStatus == 'maker_to_checker'  || $chitti->checkerStatus == 'sent_to_uploader' && $chitti->makerStatus != 'return_chitti_post_from_checker' ) {
             return redirect()->back()->with('error', 'not allow to edit');
         }
         $image = $chitti->chittiimagemappings()->first();
