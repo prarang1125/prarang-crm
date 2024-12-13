@@ -401,6 +401,7 @@ class MakerController extends Controller
         $query = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
             ->whereNotNull('Title')
             ->where('Title', '!=', '')
+            ->where('finalStatus', '!=', 'deleted')
             ->where('return_chitti_post_from_checker_id', 1);
 
         // Handle search
@@ -427,6 +428,8 @@ class MakerController extends Controller
         try {
             $chittis = Chitti::findOrFail($id);
             $chittis->finalStatus ='deleted';
+            $chittis->makerStatus="sent_to_checker";
+            $chittis->return_chitti_post_from_checker_id=0;
             $chittis->save();
 
             return redirect()->route('admin.maker-listing')->with('success', 'Listing soft deleted successfully.');

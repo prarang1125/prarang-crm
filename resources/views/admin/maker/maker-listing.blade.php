@@ -2,6 +2,39 @@
 @section('title', 'Maker Listing')
 
 @section('content')
+<style>
+    /* Italic Tag */
+.mx-auto .d-flex i{
+ font-weight:700;
+ font-size:20px;
+}
+/* Button */
+.mx-auto > .d-flex a{
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ padding: 5px;
+}
+/* Button */
+.mx-auto > .d-flex a{
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ padding-bottom:11px !important;
+ padding-left:8px !important;
+}
+
+/* Button */
+.wrapper .page-wrapper .page-content .row .mx-auto > .d-flex a{
+ padding-top:14px !important;
+}
+
+
+
+
+
+
+</style>
 <!--start page wrapper -->
 <div class="page-content">
     <!--breadcrumb-->
@@ -29,7 +62,7 @@
             {{-- <h6 class="mb-0 text-uppercase">Maker Listing</h6> --}}
             <div class="d-flex justify-content-between align-items-center">
                 <h6 class="mb-0 text-uppercase">Maker Listing</h6>
-                <a class="nav-link dropdown-toggle-nocaret position-relative"
+                <a class="nav-link dropdown-toggle-nocaret position-relative btn btn-outline-primary p-1"
                     href="{{ route('admin.post-return-from-checker-listing') }}"
                     role="button">
                     @if($notification > 0)

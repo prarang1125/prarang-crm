@@ -29,14 +29,14 @@
             {{-- <h6 class="mb-0 text-uppercase">Maker Listing</h6> --}}
             <div class="d-flex justify-content-between align-items-center">
                 <h6 class="mb-0 text-uppercase">Return Maker Listing</h6>
-                <a class="nav-link dropdown-toggle-nocaret position-relative"
+                <!-- <a class="nav-link dropdown-toggle-nocaret position-relative"
                 href="{{ route('admin.post-return-from-checker-listing') }}"
                 role="button">
                     @if($notification > 0)
                         <span class="alert-count">{{ $notification }}</span>
                     @endif
                     <i class="bx bx-bell"></i>
-                </a>
+                </a> -->
             </div>
             <hr/>
             <div class="card">
@@ -103,9 +103,9 @@
                                     <td class="">
                                         <a href="{{ route('admin.maker-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
 
-                                        <form action="{{ route('admin.live-city-delete', '$mcity->cityId') }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm btn-danger delete-user">Delete</button>
+                                        <form action="{{ route('admin.maker-delete', ['id'=>$chitti->chittiId]) }}" method="GET" style="display:inline;">
+                
+                                            <button type="submit"  onclick="return confirm('Are you want to delete this post.')" class="btn btn-sm btn-danger delete-user">Delete</button>
                                         </form>
                                         {{-- <a href="{{ route('admin.maker-update', $chitti->chittiId) }}" class="btn btn-sm btn-primary update-user mt-3">Send to checker</a> --}}
                                     </td>
