@@ -161,7 +161,7 @@ class MakerController extends Controller
             $chitti->makerId = Auth::guard('admin')->user()->userId;
             $chitti->makerStatus = 'sent_to_checker';
             $chitti->finalStatus = '';            
-            $chitti->checkerStatus = 'maker_to_checker';
+            // $chitti->checkerStatus = 'maker_to_checker';
             $chitti->cityId = $area_id;
             $chitti->areaId = $areaIdCode;
             $chitti->geographyId = $request->geography;
@@ -315,7 +315,7 @@ class MakerController extends Controller
 
             // Update Chitti record
             $chitti = Chitti::findOrFail($id);
-
+// dd($request->action);
             if ($request->action === 'send_to_checker') {
                 // dd($request);
                 $chitti->update([
@@ -328,7 +328,7 @@ class MakerController extends Controller
                     'makerId'       => Auth::guard('admin')->user()->userId,
                     'finalStatus'   => 'Null',
                 ]);
-
+                DB::commit();
                 // Redirect to the checker listing
                 return redirect()->route('admin.maker-listing', $chitti->chittiId)
                     ->with('success', 'Sent to Checker successfully.');
@@ -346,7 +346,7 @@ class MakerController extends Controller
                     'return_chitti_post_from_checker_id' => 0,
                     'returnDateToChecker' => $currentDateTime,
                 ]);
-
+              
                 // Update Facity record
                 Facity::where('from_chittiId', $id)->update([
                     'value'         => $request->forTheCity,
@@ -390,6 +390,7 @@ class MakerController extends Controller
                 return redirect()->route('admin.maker-listing')->with('success', 'Maker updated successfully.');
             }
         } catch (\Exception $e) {
+           
             DB::rollBack();
             Log::error('Maker Update Error: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()->with('error', 'An error occurred while updating the maker.')->withInput();
