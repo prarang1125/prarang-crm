@@ -15,9 +15,19 @@ use Illuminate\Support\Facades\Log;
 class PostAnalyticsCheckerController extends Controller
 {
     #this method is use for show the listing of live city checker
-    public function index()
+    public function index(Request $request)
     {
-        $mcitys = Mcity::where('isActive', 1)->get();
+        $query = Mcity::where('isActive', 1);
+
+        if ($request->has('search') && $request->input('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('cityNameInEnglish', 'LIKE', "%$search%")
+                ->orWhere('cityNameInUnicode', 'LIKE', "%$search%");
+            });
+        }
+
+        $mcitys = $query->paginate(7); // Paginate with 10 items per page
         return view('admin.postanalyticschecker.post-analytics-checker-city-listing', compact('mcitys'));
     }
 

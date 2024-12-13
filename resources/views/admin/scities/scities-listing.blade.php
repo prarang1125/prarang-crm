@@ -35,6 +35,11 @@
                         <input type="text" name="search" class="form-control me-2" placeholder="Search by City Name" value="{{ request()->input('search') }}">
                         <button type="submit" class="btn btn-secondary">Search</button>
                     </form>
+                    @if(request()->has('search'))
+                        <a class="btn btn-primary me-1" href="{{ url()->current() }}">
+                            <i class="bx bx-refresh"></i>
+                        </a>
+                    @endif
                     <a href="{{ url('/admin/scities/scities-register') }}" class="btn btn-primary">Add City</a>
                 </div>
                 <div class="card-body">

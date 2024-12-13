@@ -35,7 +35,11 @@
                         <input type="text" name="search" class="form-control me-2" placeholder="Search by Live Country Name" value="{{ request()->input('search') }}">
                         <button type="submit" class="btn btn-secondary">Search</button>
                     </form>
-
+                    @if(request()->has('search'))
+                        <a class="btn btn-primary me-1" href="{{ url()->current() }}">
+                            <i class="bx bx-refresh"></i>
+                        </a>
+                    @endif
                     <a href="{{ url('admin/country/country-register') }}" class="btn btn-primary">Add New Country</a>
                 </div>
                 <div class="card-body">

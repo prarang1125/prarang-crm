@@ -42,6 +42,11 @@
                         <button type="submit" class="btn btn-secondary">Search</button>
                     </form>
 
+                    @if(request()->has('search'))
+                        <a class="btn btn-primary me-1" href="{{ url()->current() }}">
+                            <i class="bx bx-refresh"></i>
+                        </a>
+                    @endif
 
                     <a href="{{ url('/admin/usercountry/user-country-register') }}" class="btn btn-primary">Add New User Country</a>
                 </div>
