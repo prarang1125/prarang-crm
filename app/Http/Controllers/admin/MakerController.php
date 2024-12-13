@@ -94,6 +94,7 @@ class MakerController extends Controller
     #this method is use for store maker data
     public function makerStore(Request $request)
     {
+       
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
             'makerImage' => 'required|image|max:2048',
@@ -103,9 +104,10 @@ class MakerController extends Controller
             // 'subtitle' => 'required|string|max:255',
             'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'forTheCity' => 'required|boolean',
-            'isCultureNature' => 'required|boolean',
+            // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
         ]);
+        
         if ($validator->passes()) {
 
             DB::beginTransaction();  // Use DB facade
@@ -158,7 +160,8 @@ class MakerController extends Controller
             $chitti->SubTitle = $request->subtitle;
             $chitti->makerId = Auth::guard('admin')->user()->userId;
             $chitti->makerStatus = 'sent_to_checker';
-            $chitti->finalStatus = '';
+            $chitti->finalStatus = '';            
+            // $chitti->checkerStatus = 'maker_to_checker';
             $chitti->cityId = $area_id;
             $chitti->areaId = $areaIdCode;
             $chitti->geographyId = $request->geography;
@@ -232,7 +235,7 @@ class MakerController extends Controller
     public function makerEdit($id)
     {
         $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->findOrFail($id);
-        if ($chitti->checkerStatus == 'maker_to_checker'  || $chitti->checkerStatus == 'sent_to_uploader' && $chitti->makerStatus != 'return_chitti_post_from_checker' ) {
+        if ($chitti->checkerStatus == 'maker_to_checker' || $chitti->checkerStatus == 'sent_to_uploader') {
             return redirect()->back()->with('error', 'not allow to edit');
         }
         $image = $chitti->chittiimagemappings()->first();
@@ -312,8 +315,8 @@ class MakerController extends Controller
 
             // Update Chitti record
             $chitti = Chitti::findOrFail($id);
-
-            if ($request->action == 'send_to_checker') {
+// dd($request->action);
+            if ($request->action === 'send_to_checker') {
                 // dd($request);
                 $chitti->update([
                     'makerStatus'   => 'sent_to_checker',
@@ -325,9 +328,9 @@ class MakerController extends Controller
                     'makerId'       => Auth::guard('admin')->user()->userId,
                     // 'finalStatus'   => 'Null',
                 ]);
-                    DB::commit();
-                // // Redirect to the checker listing
-                return redirect()->route('admin.maker-listing')
+                DB::commit();
+                // Redirect to the checker listing
+                return redirect()->route('admin.maker-listing', $chitti->chittiId)
                     ->with('success', 'Sent to Checker successfully.');
             } else {
                 $chitti->update([
@@ -344,7 +347,7 @@ class MakerController extends Controller
                     'return_chitti_post_from_checker_id' => 0,
                     'returnDateToChecker' => $currentDateTime,
                 ]);
-
+              
                 // Update Facity record
                 Facity::where('from_chittiId', $id)->update([
                     'value'         => $request->forTheCity,
@@ -388,6 +391,7 @@ class MakerController extends Controller
                 return redirect()->route('admin.maker-listing')->with('success', 'Maker updated successfully.');
             }
         } catch (\Exception $e) {
+           
             DB::rollBack();
             Log::error('Maker Update Error: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()->with('error', 'An error occurred while updating the maker.')->withInput();
