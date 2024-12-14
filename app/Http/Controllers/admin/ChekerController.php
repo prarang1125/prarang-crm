@@ -47,9 +47,7 @@ class ChekerController extends Controller
             ->where('Title', '!=', '')
             ->whereIn('checkerStatus', ['maker_to_checker'])
             ->where('makerStatus', 'sent_to_checker')
-            //  ->whereNotIn('finalStatus', ['approved', 'deleted'])
-            // ->where('finalStatus', '!=',  'deleted')
-            // ->where('finalStatus', '!=',  'approved')
+             ->whereNotIn('finalStatus', ['approved', 'deleted'])
             ->when($search, function ($query) use ($search) {
                 $query->where('Title', 'LIKE', "%{$search}%") // Search in English
                     ->orWhere('createDate', 'LIKE', "%".mb_strtolower($search, 'UTF-8')."%"); // Handle Unicode (Hindi, etc.)
@@ -207,9 +205,9 @@ class ChekerController extends Controller
 
     public function checkerEdit($id)
     {
-       
-       
-   $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')
+
+
+        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')
         ->whereNotIn('finalStatus',['approved','deleted'])
         ->whereNot('checkerStatus','sent_to_uploader')->findOrFail($id);
 
@@ -247,7 +245,8 @@ class ChekerController extends Controller
             'title'     => 'required|string|max:255',
             'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
-            'isCultureNature' => 'required|boolean',
+            // 'isCultureNature' => 'required|boolean',
+            'tagId'     => 'required'
         ]);
 
         if ($validator->passes()) {
@@ -282,11 +281,11 @@ class ChekerController extends Controller
             // dd($content);
 
             // Update Chitti record
+
             $chitti = Chitti::findOrFail($id);
 
             if ($request->action === 'send_to_uploader')
             {
-                dd('jfh');
                 $chitti->update([
                     'uploaderStatus'   => 'sent_to_uploader',
                     'updated_at'    => $currentDateTime,
@@ -298,7 +297,7 @@ class ChekerController extends Controller
                     ->with('success', 'Sent to Uploader successfully.');
             }
 
-            //comment code 
+            //comment code
             // elseif($request->action === 'update_checker')
             // {
             //     $currentDate = date("d-M-y H:i:s");
@@ -324,7 +323,7 @@ class ChekerController extends Controller
                 $chitti->update([
                     'dateOfReturnToMaker'       => $currentDate,
                     'returnDateMaker'           => $currentDate ,
-                    'makerStatus'               => 'send_to_checker',
+                    'makerStatus'               => 'sent_to_checker',
                     'checkerId'                 => Auth::guard('admin')->user()->userId,
                     'description'   => $request->content,
                     'Title'         => $request->title,
@@ -371,7 +370,7 @@ class ChekerController extends Controller
 
                 // Update Tag Mapping
                 Chittitagmapping::where('chittiId', $id)->update([
-                    'tagId'         => $request->isCultureNature,
+                    'tagId'         => $request->tagId,
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);
@@ -387,7 +386,7 @@ class ChekerController extends Controller
     #this method is use for return from checker to maker with region
     public function checkerChittiReturnMakerRegion(Request $request, $id)
     {
-        dd('yourdata');
+
         $cityCode   = $request->query('City');
         $checkerId  = $request->query('checkerId');
 
@@ -400,7 +399,7 @@ class ChekerController extends Controller
     #this method is use for update eturn from checker to maker with region
     public function checkerChittiSendToMaker(Request $request, $id)
     {
-        dd('data');
+
         $checkerId   = $request->query('checkerId');
         $City        = $request->query('City');
         $currentDate = date("d-M-y H:i:s");

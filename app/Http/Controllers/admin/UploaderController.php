@@ -332,7 +332,7 @@ class UploaderController extends Controller
 
                 // Update Tag Mapping
                 Chittitagmapping::where('chittiId', $id)->update([
-                    'tagId'         => $request->isCultureNature,
+                    'tagId'         => $request->tagId,
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);
