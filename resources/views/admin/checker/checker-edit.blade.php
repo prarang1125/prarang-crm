@@ -230,7 +230,7 @@
                         </ul>
                     
                         <div class="tab-content">
-                            <div class="tab-pane fade show {{$subTag==1 ? "active": ""}}" id="cultureTab1" role="tabpanel">
+                            <div class="tab-pane fade show {{$subTag==1 ? "active show": ""}}" id="cultureTab1" role="tabpanel">
                                 <div class="row">
                                     @foreach ($timelines as $timeline)
                                     <div class="col-md-4">
@@ -249,7 +249,7 @@
                             </div>
 
                             <!-- Content for Man And His Senses -->
-                            <div class="tab-pane fade {{$subTag==2 ? "active": ""}}" id="cultureTab2" role="tabpanel">
+                            <div class="tab-pane fade {{$subTag==2 ? "active show": ""}}" id="cultureTab2" role="tabpanel">
                                 <div class="row">
                                     @foreach ($manSenses as $sense)
                                     <div class="col-md-4">
@@ -269,7 +269,7 @@
                             </div>
 
                             <!-- Content for Man And His Inventions -->
-                            <div class="tab-pane fade {{$subTag==3 ? "active": ""}}" id="cultureTab3" role="tabpanel">
+                            <div class="tab-pane fade {{$subTag==3 ? "active show": ""}}" id="cultureTab3" role="tabpanel">
                                 <div class="row">
                                     @foreach ($manInventions as $invention)
                                     <div class="col-md-4">
@@ -352,7 +352,7 @@
 
                         <a href="{{ route('admin.checker-chitti-return-to-maker-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}" class="btn btn-primary">Send to maker</a>
 
-                        <button type="submit" class="btn btn-primary" name="action" value="send_to_uploader">Send to Uploader</button>
+                        <button type="submit" onclick="return confirm('Do You want to send to Uploader?');" class="btn btn-primary" name="action" value="send_to_uploader">Send to Uploader</button>
                     </div>
                 </form>
             </div>

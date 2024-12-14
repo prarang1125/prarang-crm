@@ -50,6 +50,7 @@ class UploaderController extends Controller
                         ->orWhere('SubTitle', 'like', "%{$search}%");
                 });
             })
+            ->whereNotIn('finalStatus',['deleted'])
             ->orderByDesc('dateOfCreation')
             ->select('chittiId', 'Title', 'SubTitle', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
             ->paginate(10); // Adjust the number per page
@@ -230,7 +231,7 @@ class UploaderController extends Controller
     public function uploaderUpdate(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'content'   => 'required|string|max:2000',
+            'content'   => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
             'c2rselect' => 'required',
@@ -332,7 +333,7 @@ class UploaderController extends Controller
 
                 // Update Tag Mapping
                 Chittitagmapping::where('chittiId', $id)->update([
-                    'tagId'         => $request->isCultureNature,
+                    'tagId'         => $request->tagId,
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);
