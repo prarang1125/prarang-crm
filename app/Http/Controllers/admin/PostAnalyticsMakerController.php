@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Models\Mcity;
 use App\Models\Chitti;
 use App\Models\Chittigeographymapping;
@@ -14,14 +15,34 @@ use Illuminate\Support\Facades\Log;
 class PostAnalyticsMakerController extends Controller
 {
     #this method is use for show the listing of live city maker
-    public function index()
-    {
-        $mcitys  = Mcity::where('isActive', 1)->get();
-        $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
-        $chittis = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->get();
+    // public function index()
+        // {
+        //     $mcitys  = Mcity::where('isActive', 1)->get();
+        //     $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
+        //     $chittis = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->get();
 
-        return view('admin.postanalyticsmaker.post-analytics-maker-city-listing', compact('mcitys', 'notification', 'chittis'));
+        //     return view('admin.postanalyticsmaker.post-analytics-maker-city-listing', compact('mcitys', 'notification', 'chittis'));
+    // }
+
+    public function index(Request $request)
+    {
+        $query = Mcity::where('isActive', 1);
+
+        // Search functionality
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('cityNameInEnglish', 'LIKE', "%{$search}%")
+                ->orWhere('cityNameInUnicode', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Paginate results
+        $mcitys = $query->paginate(5);
+        $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
+
+        return view('admin.postanalyticsmaker.post-analytics-maker-city-listing', compact('mcitys', 'notification'));
     }
+
 
 
     #this method is use for show the listing post analytics maker according to city
@@ -32,17 +53,19 @@ class PostAnalyticsMakerController extends Controller
         // $numericPart = preg_replace('/[^0-9]/', '', $cityCode);
         // $areaId = (int) $numericPart;
         // $chittis = Chitti::with('city')->where('cityId', $areaId)->get();
-        $chittis = Chitti::where('areaId', $cityCode)->get();
+        $chittis = Chitti::where('areaId', $cityCode)->paginate(2);
         // $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
         return view('admin.postanalyticsmaker.post-analytics-maker-listing', compact('chittis'));
     }
+
+
 
     #this method is use for  show the post analytics maker edit data and page
     public function postAnalyticsMakerEdit(Request $request)
     {
         $cid = $request->query('id');
         $cityCode = $request->query('city');
-        $chitti  = Chitti::where('chittiId', $cid)->where('areaId', $cityCode)->first();
+         $chitti  = Chitti::where('chittiId', $cid)->first();
         return view('admin.postanalyticsmaker.post-analytics-maker-create', compact('chitti'));
     }
 
@@ -95,11 +118,33 @@ class PostAnalyticsMakerController extends Controller
     }
 
     #this method is use for show the listing of rejected post ananlytics via checker
-    public function postAnalyticsListReturnFromCheckerL()
+    // public function postAnalyticsListReturnFromCheckerL()
+    // {
+    //     $chittis = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->get();
+    //     return view('admin.postanalyticsmaker.post-analytics-rejected-from-checker-listing', compact('chittis'));
+    // }
+
+    public function postAnalyticsListReturnFromCheckerL(Request $request)
     {
-        $chittis = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->get();
-        return view('admin.postanalyticsmaker.post-analytics-rejected-from-checker-listing', compact('chittis'));
+        $search = $request->input('search');
+
+        // Query to fetch data with search functionality
+        $query = Chitti::query();
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('Title', 'LIKE', "%{$search}%")
+                ->orWhere('SubTitle', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Paginate the results
+        $chittis = $query->where('post_anlytics_rtrn_to_mkr_id', 0)
+                        ->paginate(10); // Adjust the number per page as needed
+
+        return view('admin.postanalyticsmaker.post-analytics-rejected-from-checker-listing', compact('chittis', 'search'));
     }
+
 }
 
 ?>

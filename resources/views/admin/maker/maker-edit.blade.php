@@ -1,6 +1,25 @@
 @extends('layouts.admin.admin')
 @section('title', 'Maker Edit')
+<style>
+  
+    #editor-container {
+        border: 1px solid #ddd;
+        padding: 10px;
+        background: #fff;
+    }
 
+    #editor-container.fullscreen {
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    #editor-container.fullscreen .ck-editor__editable_inline {
+        height: calc(100vh - 50px); /* Adjust for toolbar height */
+    }
+
+
+</style>
 @section('content')
 <!--start page wrapper -->
 <div class="page-content">

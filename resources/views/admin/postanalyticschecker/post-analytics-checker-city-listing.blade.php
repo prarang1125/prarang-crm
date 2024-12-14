@@ -29,6 +29,18 @@
             <h6 class="mb-0 text-uppercase">Live Checker City Listing</h6>
             <hr/>
             <div class="card">
+                <div class="card-body d-flex justify-content-end align-items-end">
+                    <!-- Search Form -->
+                    <form action="{{ url('admin/postanalyticschecker/post-analytics-checker-city-listing') }}" method="GET" class="d-flex me-3">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search by Post Name" value="{{ request()->input('search') }}">
+                        <button type="submit" class="btn btn-secondary">Search</button>
+                    </form>
+                    @if(request()->has('search'))
+                        <a class="btn btn-primary me-1" href="{{ url()->current() }}">
+                            <i class="bx bx-refresh"></i>
+                        </a>
+                    @endif
+                </div>
                 <div class="card-body">
                     <table class="table mb-0 table-hover">
                         <thead class="thead-light">
@@ -39,7 +51,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $index = 1;  @endphp
+                            @php
+                                $index = ($mcitys->currentPage() - 1) * $mcitys->perPage() + 1;
+                            @endphp
                             @foreach ($mcitys as $mcity)
                                 <tr>
                                     <th scope="row" class="text-center">{{ $index }}</th>
@@ -58,6 +72,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end mt-4">
+                        {{ $mcitys->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>
