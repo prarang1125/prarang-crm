@@ -129,9 +129,9 @@ class AccChekerController extends Controller
     public function accCheckerEdit($id)
     {
 
-        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')
-        ->where('finalStatus', '!=', 'deleted')
-        ->whereNot('checkerStatus','sent_to_uploader')->findOrFail($id);
+        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->findOrFail($id);
+        // ->where('finalStatus', '!=', 'deleted')
+        // ->whereNot('checkerStatus','sent_to_uploader')->findOrFail($id);
 
         $image = $chitti->chittiimagemappings()->first();
         // $chittiTagMapping = Chittitagmapping::where('chittiId', $id)->first();
