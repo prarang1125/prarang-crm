@@ -13,14 +13,19 @@ class UserRegisteredMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
     public $firstName;
     public $email;
     public $password;
     public $loginUrl;
 
+    /**
+     * Create a new message instance.
+     *
+     * @param string $firstName
+     * @param string $email
+     * @param string $password
+     * @param string $loginUrl
+     */
     public function __construct($firstName, $email, $password, $loginUrl)
     {
         $this->firstName = $firstName;
@@ -35,7 +40,7 @@ class UserRegisteredMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'User Registeration Mail',
+            subject: 'User Registration Mail'
         );
     }
 
@@ -45,7 +50,7 @@ class UserRegisteredMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'admin.mail.mail',
+            view: 'admin.mail.mail'
         );
     }
 

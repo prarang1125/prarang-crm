@@ -1,10 +1,13 @@
-<h1>Welcome, {{ $firstName }}!</h1>
-<p>Thank you for registering.</p>
-<p>Here are your credentials:</p>
-<ul>
-    <li><strong>Email:</strong> {{ $email }}</li>
-    <li><strong>Password:</strong> {{ $password }}</li>
-</ul>
-<p>You can log in using the following link:</p>
-<p><a href="{{ $loginUrl }}">{{ $loginUrl }}</a></p>
-<p>Please change your password after logging in for the first time.</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Registration</title>
+</head>
+<body>
+    <h1>Welcome, {{ $firstName }}!</h1>
+    <p>You have been registered successfully. You can log in using the following credentials:</p>
+    <p><strong>Email:</strong> {{ $email }}</p>
+    <p><strong>Password:</strong> {{ $password }}</p>
+    <p>Login here: <a href="{{ $loginUrl }}">Login</a></p>
+</body>
+</html>
