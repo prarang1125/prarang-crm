@@ -320,7 +320,7 @@ class MakerController extends Controller
                     'description'   => $request->content,
                     'Title'         => $request->title,
                     'SubTitle'      => $request->subtitle,
-                    'checkerStatus' => 'maker_to_checker',
+                    // 'checkerStatus' => 'maker_to_checker',
                     'makerStatus'   => 'sent_to_checker',
                     'makerId'       => Auth::guard('admin')->user()->userId,
                     // 'finalStatus'   => 'Null',
