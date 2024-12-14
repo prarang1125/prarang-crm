@@ -79,7 +79,7 @@
                             <i class="bx bx-refresh"></i>
                         </a>
                     @endif
-                    <a href="{{ url('/maker/acc-maker-register') }}" class="btn btn-primary">Add New Maker</a>
+                    <a href="{{ url('/accounts/maker/acc-maker-register') }}" class="btn btn-primary">Add New Maker</a>
                 </div>
                 <div class="card-body">
                 @if($errors->any())

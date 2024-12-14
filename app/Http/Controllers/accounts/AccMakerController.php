@@ -73,6 +73,7 @@ class AccMakerController extends Controller
     #this method is use for accounts maker store
     public function accMakerStore(Request $request)
     {
+      
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
             'makerImage' => 'required|image|max:2048',
@@ -117,8 +118,6 @@ class AccMakerController extends Controller
 
             // Save the updated content with proper image URLs
             $content = $dom->saveHTML();
-            // dd($content);
-
             $chitti = new Chitti();
             $area_id = $request->c2rselect;
             $areaIdCode = '';
@@ -136,7 +135,7 @@ class AccMakerController extends Controller
             $chitti->createDate =  $currentDateTime;
             $chitti->Title = $request->title;
             $chitti->SubTitle = $request->subtitle;
-            $chitti->makerId = Auth::guard('admin')->user()->userId;
+            $chitti->makerId = Auth::user()->userId;
             $chitti->makerStatus = 'sent_to_checker';
             $chitti->finalStatus = '';            
             // $chitti->checkerStatus = 'maker_to_checker';
@@ -145,7 +144,7 @@ class AccMakerController extends Controller
             $chitti->geographyId = $request->geography;
             $chitti->created_at = $currentDateTime;
             $chitti->is_active = 1;
-            $chitti->created_by = Auth::guard('admin')->user()->userId;
+            $chitti->created_by = Auth::user()->userId;
             $chitti->save();
             // get last inserted id
             $lastId = $chitti->chittiId;
@@ -154,7 +153,7 @@ class AccMakerController extends Controller
             $facity->value = $request->forTheCity;
             $facity->from_chittiId = $lastId;
             $facity->created_at = $currentDateTime;
-            $facity->created_by = Auth::guard('admin')->user()->userId;
+            $facity->created_by = Auth::user()->userId;
             $facity->save();
 
             if ($request->hasFile('makerImage')) {
@@ -166,10 +165,6 @@ class AccMakerController extends Controller
                 $serviceAccessUrl = $url;
             }
 
-            // echo "url";
-            // dd($url);
-            // echo "service Access";
-            // dd($serviceAccessUrl);
             $chittiimagemapping = new Chittiimagemapping();
             $chittiimagemapping->imageName = $makerImageName;
             $chittiimagemapping->imageUrl = $serviceAccessUrl;
@@ -179,7 +174,7 @@ class AccMakerController extends Controller
             $chittiimagemapping->isDefult = 'true';
             $chittiimagemapping->imageTag = $makerImageName;
             $chittiimagemapping->created_at = $currentDateTime;
-            $chittiimagemapping->created_by = Auth::guard('admin')->user()->userId;
+            $chittiimagemapping->created_by = Auth::user()->userId;
             $chittiimagemapping->save();
 
             $chittigeographymapping = new Chittigeographymapping();
@@ -187,17 +182,17 @@ class AccMakerController extends Controller
             $chittigeographymapping->geographyId = $request->geography;
             $chittigeographymapping->chittiId = $lastId;
             $chittigeographymapping->created_at = $currentDateTime;
-            $chittigeographymapping->created_by = Auth::guard('admin')->user()->userId;
+            $chittigeographymapping->created_by = Auth::user()->userId;
             $chittigeographymapping->save();
 
             $chittitagmapping = new Chittitagmapping();
             $chittitagmapping->chittiId = $lastId;
             $chittitagmapping->tagId = $request->tagId;
             $chittitagmapping->created_at = $currentDateTime;
-            $chittitagmapping->created_by = Auth::guard('admin')->user()->userId;
+            $chittitagmapping->created_by =Auth::user()->userId;
             $chittitagmapping->save();
 
-            DB::commit();  // Commit transaction
+           DB::commit();  // Commit transaction
             return redirect()->route('accounts.maker-dashboard')->with('success', 'Post created successfully.');
 
         } catch (\Exception $e) {
@@ -251,6 +246,7 @@ class AccMakerController extends Controller
 
     public function accMakerUpdate(Request $request, $id)
     {
+       // dd($request);
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
@@ -263,10 +259,11 @@ class AccMakerController extends Controller
             // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
         ]);
-
+       
         if ($validator->passes()) {
-            DB::beginTransaction();
-            try {
+            
+            // DB::beginTransaction();
+            // try {
             $currentDateTime = getUserCurrentTime();
 
             // Handle content images (base64 to file conversion and updating the content HTML)
@@ -295,20 +292,22 @@ class AccMakerController extends Controller
 
             // Update Chitti record
             $chitti = Chitti::findOrFail($id);
-// dd($request->action);
+          
+
+
             if ($request->action === 'send_to_checker') {
                 // dd($request);
                 $chitti->update([
                     'makerStatus'   => 'sent_to_checker',
                     'checkerStatus' => 'maker_to_checker',
                     'updated_at'    => $currentDateTime,
-                    'updated_by'    => Auth::guard('admin')->user()->userId,
+                    'updated_by'    => Auth::user()->userId,
                     'return_chitti_post_from_checker_id' => 0,
                     'returnDateToChecker' => $currentDateTime,
-                    'makerId'       => Auth::guard('admin')->user()->userId,
+                    'makerId'       => Auth::user()->userId,
                     'finalStatus'   => 'Null',
                 ]);
-                DB::commit();
+                // DB::commit();
                 // Redirect to the checker listing
                 return redirect()->route('admin.maker-listing', $chitti->chittiId)
                     ->with('success', 'Sent to Checker successfully.');
@@ -318,11 +317,11 @@ class AccMakerController extends Controller
                     'Title'         => $request->title,
                     'SubTitle'      => $request->subtitle,
                     'makerStatus'   => 'sent_to_checker',
-                    'makerId'       => Auth::guard('admin')->user()->userId,
+                    'makerId'       => Auth::user()->userId,
                     'finalStatus'   => 'Null',
                     // 'checkerStatus' => 'Null',
                     'updated_at'    => $currentDateTime,
-                    'updated_by'    => Auth::guard('admin')->user()->userId,
+                    'updated_by'    => Auth::user()->userId,
                     'return_chitti_post_from_checker_id' => 0,
                     'returnDateToChecker' => $currentDateTime,
                 ]);
@@ -331,7 +330,7 @@ class AccMakerController extends Controller
                 Facity::where('from_chittiId', $id)->update([
                     'value'         => $request->forTheCity,
                     'updated_at'    => $currentDateTime,
-                    'updated_by'    => Auth::guard('admin')->user()->userId,
+                    'updated_by'    => Auth::user()->userId,
                 ]);
 
                 // Update image if provided
@@ -348,7 +347,7 @@ class AccMakerController extends Controller
                         'imageUrl'      => $serviceAccessUrl,
                         'accessUrl'     => $url,
                         'updated_at'    => $currentDateTime,
-                        'updated_by'    => Auth::guard('admin')->user()->userId,
+                        'updated_by'    => Auth::user()->userId,
                     ]);
                 }
 
@@ -357,24 +356,24 @@ class AccMakerController extends Controller
                     'areaId'        => $request->c2rselect,
                     'geographyId'   => $request->geography,
                     'updated_at'    => $currentDateTime,
-                    'updated_by'    => Auth::guard('admin')->user()->userId,
+                    'updated_by'    => Auth::user()->userId,
                 ]);
 
                 // Update Tag Mapping
                 Chittitagmapping::where('chittiId', $id)->update([
                     'tagId'         => $request->tagId,
                     'updated_at'    => $currentDateTime,
-                    'updated_by'    => Auth::guard('admin')->user()->userId,
+                    'updated_by'    => Auth::user()->userId,
                 ]);
-                DB::commit();
+                // DB::commit();
                 return redirect()->route('accounts.maker-dashboard')->with('success', 'Maker updated successfully.');
             }
-        } catch (\Exception $e) {
+        // } catch (\Exception $e) {
            
-            DB::rollBack();
-            Log::error('Maker Update Error: ' . $e->getMessage(), ['exception' => $e]);
-            return redirect()->back()->with('error', 'An error occurred while updating the maker.')->withInput();
-        }
+        //     DB::rollBack();
+        //     Log::error('Maker Update Error: ' . $e->getMessage(), ['exception' => $e]);
+        //     return redirect()->back()->with('error', 'An error occurred while updating the maker.')->withInput();
+        // }
         } else {
             return redirect()->back()
                 ->withInput()
@@ -407,7 +406,7 @@ class AccMakerController extends Controller
     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         return view('accounts.maker.acc-chitti-rejected-from-checker-listing', compact('geographyOptions', 'notification', 'chittis'));
     }
-    public function makerDelete($id)
+    public function accMakerDelete($id)
     {
         try {
             $chittis = Chitti::findOrFail($id);
@@ -416,9 +415,9 @@ class AccMakerController extends Controller
             $chittis->return_chitti_post_from_checker_id=0;
             $chittis->save();
 
-            return redirect()->route('accounts.maker.acc-maker-listing')->with('success', 'Listing soft deleted successfully.');
+            return redirect()->route('accounts.maker-dashboard')->with('success', 'Listing soft deleted successfully.');
         } catch (\Exception $e) {
-            return redirect()->route('accounts.maker.acc-maker-listing')->withErrors(['error' => 'An error occurred while trying to soft delete the listing.']);
+            return redirect()->route('accounts.maker-dashboard')->withErrors(['error' => 'An error occurred while trying to soft delete the listing.']);
         }
     }
 }
