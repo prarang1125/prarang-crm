@@ -286,7 +286,7 @@ class ChekerController extends Controller
             $chitti = Chitti::findOrFail($id);
             if ($request->action === 'send_to_uploader')
             {
-                dd('jfh');
+                
                 $chitti->update([
                     'uploaderStatus'   => 'sent_to_uploader',
                     'checkerStatus'=>'sent_to_uploader',

@@ -50,6 +50,7 @@ class UploaderController extends Controller
                         ->orWhere('SubTitle', 'like', "%{$search}%");
                 });
             })
+            ->whereNotIn('finalStatus',['deleted'])
             ->orderByDesc('dateOfCreation')
             ->select('chittiId', 'Title', 'SubTitle', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
             ->paginate(10); // Adjust the number per page
