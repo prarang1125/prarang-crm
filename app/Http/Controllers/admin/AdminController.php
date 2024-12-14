@@ -6,20 +6,17 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Validate;
 use App\Models\Mrole;
 use App\Models\Mlanguagescript;
 use App\Models\Muser;
 use Illuminate\Validation\Rule;
-use App\Mail\UserRegisteredMail;
 use Illuminate\Support\Facades\Mail;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+use App\Mail\NewRegistrationMail;
 use App\Models\Mcountry;
 use App\Models\Mregion;
 use App\Models\Mcity;
 use App\Models\Chitti;
-
+use Exception;
 
 class AdminController extends Controller
 {
@@ -33,13 +30,13 @@ class AdminController extends Controller
         $totalMcitys    = Mcity::where('isActive', 1)->count();
         $totalLanguagescripts = Mlanguagescript::where('isActive', 1)->count();
         $totalChitti = Chitti::where('finalStatus', '!=', 'deleted')->count();
-        $totalMakers = Muser::whereHas('role', function($query) {
+        $totalMakers = Muser::whereHas('role', function ($query) {
             $query->where('roleName', 'Maker');
         })->where('isActive', 1)->count();
-        $totalChecker = Muser::whereHas('role', function($query) {
+        $totalChecker = Muser::whereHas('role', function ($query) {
             $query->where('roleName', 'Checker');
         })->where('isActive', 1)->count();
-        $totalUploader = Muser::whereHas('role', function($query) {
+        $totalUploader = Muser::whereHas('role', function ($query) {
             $query->where('roleName', 'Uploader');
         })->where('isActive', 1)->count();
 
@@ -55,10 +52,26 @@ class AdminController extends Controller
 
         // Pass these values to the view
         return view('admin.dashboard', compact(
-            'totalCountries', 'totalRegions', 'totalMcitys', 'totalLanguagescripts','totalChitti', 'totalMakers', 'totalChecker', 'totalUploader', 'growthCountries','growthRegions', 'growthMcitys', 'growthLanguagescripts', 'growthChitti','growthMakers', 'growthChecker', 'growthUploader'
+            'totalCountries',
+            'totalRegions',
+            'totalMcitys',
+            'totalLanguagescripts',
+            'totalChitti',
+            'totalMakers',
+            'totalChecker',
+            'totalUploader',
+            'growthCountries',
+            'growthRegions',
+            'growthMcitys',
+            'growthLanguagescripts',
+            'growthChitti',
+            'growthMakers',
+            'growthChecker',
+            'growthUploader'
         ));
     }
-    public function userProfile(){
+    public function userProfile()
+    {
 
         $user     = Auth::guard('admin')->user();
 
@@ -74,16 +87,16 @@ class AdminController extends Controller
 
     #this method is use for update admin user profile
     // public function updateProfile(Request $request)
-        // {
-        //     $user = Auth::guard('admin')->user();
+    // {
+    //     $user = Auth::guard('admin')->user();
 
-        //     $user->firstName = explode(' ', $request->input('fullName'))[0];
-        //     $user->lastName = explode(' ', $request->input('fullName'))[1];
-        //     $user->emailId = $request->input('emailId');
-        //     $user->languageId = $request->input('languageId');
-        //     $user->save();
+    //     $user->firstName = explode(' ', $request->input('fullName'))[0];
+    //     $user->lastName = explode(' ', $request->input('fullName'))[1];
+    //     $user->emailId = $request->input('emailId');
+    //     $user->languageId = $request->input('languageId');
+    //     $user->save();
 
-        //     return response()->json(['success' => true]);
+    //     return response()->json(['success' => true]);
     // }
 
     #this method is use for show user listing data
@@ -118,8 +131,8 @@ class AdminController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('firstName', 'like', "%$search%")
-                ->orWhere('lastName', 'like', "%$search%")
-                ->orWhere('emailId', 'like', "%$search%");
+                    ->orWhere('lastName', 'like', "%$search%")
+                    ->orWhere('emailId', 'like', "%$search%");
             });
         }
 
@@ -136,16 +149,17 @@ class AdminController extends Controller
 
 
     #this method is use for create/register new user form page
-    public function useruRegister(){
-        $roles = Mrole::where('status',1)->get();
-        $languagescripts = Mlanguagescript::where('isActive',1)->get();
+    public function useruRegister()
+    {
+        $roles = Mrole::where('status', 1)->get();
+        $languagescripts = Mlanguagescript::where('isActive', 1)->get();
         return view('admin.user-register', compact('roles', 'languagescripts'));
     }
 
     #this method is use for store/save data in db
     public function userStore(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'firstName' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
             'emailId' => 'required|email|unique:muser,emailId',
@@ -154,7 +168,7 @@ class AdminController extends Controller
             'languageScriptId' => 'required|exists:mlanguagescript,id',
         ]);
 
-        if($validator->passes()){
+        if ($validator->passes()) {
             $currentDateTime = getUserCurrentTime();
             Muser::create([
                 'firstName' => $request->firstName,
@@ -168,36 +182,14 @@ class AdminController extends Controller
                 'isActive' => 1
             ]);
 
-            // Determine login link based on roleId
-            $loginUrl = $request->roleId == 1 ? url('/admin/login') : url('/accounts/login');
-            // dd($request->roleId);
-            // dd($loginUrl);
-            // Mail::to('rohit.kprarang@gmail.com')->send(new UserRegisteredMail(
-            //     $request->firstName,
-            //     $request->emailId,
-            //     $request->empPassword,
-            //     $loginUrl
-            // ));
-
-            // $mail = new PHPMailer(true);
+           
             try {
-            //Server settings
-            // Send the email using the UserRegisteredMail class.
-            Mail::to($request->emailId)->send(new UserRegisteredMail(
-                $request->firstName,
-                $request->emailId,
-                $request->empPassword,
-                $loginUrl
-            ));
+                Mail::to($request->emailId)->send(new NewRegistrationMail($request));
                 return redirect()->route('admin.user-listing');
-
             } catch (Exception $e) {
-                return back()->with('error', "Message could not be sent. Mailer Error:");
+                return redirect()->route('admin.user-listing')->with('error', "Message could not be sent. Mailer Error:");
             }
-
-            return redirect()->route('admin.user-listing');
-
-        }else{
+        } else {
             return redirect()->route('admin.user-register')
                 ->withInput()
                 ->withErrors($validator);
@@ -222,11 +214,12 @@ class AdminController extends Controller
     }
 
     #this method is use for show the existing data in field and also we change it.
-    public function userEdit($id){
+    public function userEdit($id)
+    {
         #Vivek Yadav
         $user = Muser::findOrFail($id);
-        $languagescripts = Mlanguagescript::where('isActive',1)->get();
-        $roles = Mrole::where('status',1)->get();
+        $languagescripts = Mlanguagescript::where('isActive', 1)->get();
+        $roles = Mrole::where('status', 1)->get();
 
         return view('admin.user-edit', compact('user', 'roles', 'languagescripts'));
     }

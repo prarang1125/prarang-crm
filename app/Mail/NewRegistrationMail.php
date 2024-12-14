@@ -11,15 +11,13 @@ use Illuminate\Queue\SerializesModels;
 class NewRegistrationMail extends Mailable
 {
     use Queueable, SerializesModels;
-
+    public $request;
     public $user; // Add this property
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct()
-    {
-        // $this->user = $user;
+  
+    public function __construct($request)
+    {       
+        $this->request=$request;
     }
 
     /**
@@ -28,7 +26,7 @@ class NewRegistrationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Prarang CRM Id/Password',
+            subject: 'New Prarang CRM Id and password',
         );
     }
 
