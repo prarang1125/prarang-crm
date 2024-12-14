@@ -464,6 +464,6 @@ class MakerController extends Controller
         $chitti->Title = $validatedData['Title'];
         $chitti->subTitle = $validatedData['subTitle'];
         $chitti->save();
-        return redirect()->route('admin.maker-listing')->with('success', 'Post Title Updated Successfully.');
+        return redirect()->back()->with('success', 'Post Title Updated Successfully.');
     }
 }
