@@ -30,7 +30,7 @@
                 <h6 class="mb-0 text-uppercase text-primary">Send to Maker</h6>
                 <hr/>
 
-                <form  action="{{ route('admin.chitti-checker-sendtomaker', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&sendtomaker=sendtomaker" method="POST" enctype="multipart/form-data">
+                <form  action="{{ route('accounts.acc-chitti-checker-sendtomaker', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&sendtomaker=sendtomaker" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 

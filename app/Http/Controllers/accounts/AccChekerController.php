@@ -46,7 +46,7 @@ class AccChekerController extends Controller
             ->where('checkerStatus', '!=', '')
             ->whereIn('checkerStatus', ['maker_to_checker'])
             ->where('makerStatus', 'sent_to_checker')
-            // ->whereNotIn('finalStatus', ['approved', 'deleted'])
+            ->whereNotIn('finalStatus', ['approved', 'deleted'])
             ->when($search, function ($query) use ($search) {
                 $query->where('Title', 'LIKE', "%{$search}%") // Search in English
                     ->orWhere('createDate', 'LIKE', "%".mb_strtolower($search, 'UTF-8')."%"); // Handle Unicode (Hindi, etc.)
@@ -129,9 +129,9 @@ class AccChekerController extends Controller
     public function accCheckerEdit($id)
     {
 
-        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->findOrFail($id);
-        // ->where('finalStatus', '!=', 'deleted')
-        // ->whereNot('checkerStatus','sent_to_uploader')->findOrFail($id);
+        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')
+        ->where('finalStatus', '!=', 'deleted')
+        ->whereNot('checkerStatus','sent_to_uploader')->findOrFail($id);
 
         $image = $chitti->chittiimagemappings()->first();
         // $chittiTagMapping = Chittitagmapping::where('chittiId', $id)->first();
@@ -210,7 +210,7 @@ class AccChekerController extends Controller
                 $chitti->update([
                     'uploaderStatus'   => 'sent_to_uploader',
                     'updated_at'    => $currentDateTime,
-                    'updated_by'    => Auth::guard('admin')->user()->userId,
+                    'updated_by'    => Auth::user()->userId,
                 ]);
 
                 // Redirect to the checker listing
@@ -242,16 +242,14 @@ class AccChekerController extends Controller
                 $chitti->update([
                     'dateOfReturnToMaker'       => $currentDate,
                     'returnDateMaker'           => $currentDate ,
-                    'makerStatus'               => 'return_chitti_post_from_checker',
+                    'makerStatus'               => 'sent_to_checker',
                     'checkerId'                 => Auth::user()->userId,
-                    'postStatusMakerChecker'    => 'return_chitti_post_from_checker',
-                    'return_chitti_post_from_checker_id' => 1,
                     'description'   => $request->content,
                     'Title'         => $request->title,
                     'SubTitle'      => $request->subtitle,
                     'checkerStatus'   => 'maker_to_checker',
-                    'uploaderStatus'        => 'Null',
-                    'finalStatus'           => 'Null',
+                    'uploaderStatus'        => '',
+                    'finalStatus'           => '',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
                 ]);
@@ -291,7 +289,7 @@ class AccChekerController extends Controller
 
                 // Update Tag Mapping
                 Chittitagmapping::where('chittiId', $id)->update([
-                    'tagId'         => $request->isCultureNature,
+                    'tagId'         => $request->tagId,
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
                 ]);
@@ -338,9 +336,9 @@ class AccChekerController extends Controller
             'return_chitti_post_from_checker'    => $request->returnChittiToMakerWithRegion,
             'postStatusMakerChecker'             => 'return_chitti_post_from_checker',
             'return_chitti_post_from_checker_id' => 1,
-            'checkerStatus'         => 'Null',
-            'uploaderStatus'        => 'Null',
-            'finalStatus'           => 'Null',
+            'checkerStatus'         => '',
+            'uploaderStatus'        => '',
+            'finalStatus'           => '',
         ]);
         return back()->with('success', 'Chitti Post have been return to maker from checker successfully');
     }
