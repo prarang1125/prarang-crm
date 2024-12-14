@@ -32,7 +32,7 @@ use App\Http\Controllers\accounts\AccMakerController;
 use App\Http\Controllers\accounts\AccCKEditorController;
 use App\Http\Controllers\accounts\AccChekerController;
 use App\Http\Controllers\accounts\AccUploaderController;
-
+use Illuminate\Support\Facades\Mail;
 
 
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
@@ -78,9 +78,9 @@ Route::group(['prefix' => 'accounts'], function(){
         #this method is use for account checker listing start
             Route::get('/checker/dashboard', [AccChekerController::class, 'accIndexMain'])->name('accounts.checker-dashboard');
 
-            Route::get('/checker/checker-listing/{id}', [AccChekerController::class, 'accIndex'])->name('accounts.acc-checker-listing');
+            // Route::get('/checker/checker-listing/{id}', [AccChekerController::class, 'accIndex'])->name('accounts.acc-checker-listing');
 
-            Route::get('/checker/acc-checker-edit/{id}', [AccChekerController::class, 'accCheckerEdit'])->name('accounts.acc-checker-edit');
+            Route::get('/checker/acc-checker-edit/{id}', [AccChekerController::class, 'checkerEdit'])->name('accounts.acc-checker-edit');
 
             Route::put('/checker/acc-checker-update/{id}', [AccChekerController::class, 'accCheckerUpdate'])->name('accounts.acc-checker-update');
         #this method is use for account checker listing end

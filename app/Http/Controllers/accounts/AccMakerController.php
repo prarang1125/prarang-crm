@@ -309,7 +309,7 @@ class AccMakerController extends Controller
                 ]);
                 // DB::commit();
                 // Redirect to the checker listing
-                return redirect()->route('admin.maker-listing', $chitti->chittiId)
+                return redirect()->route('accounts.maker-dashboard')
                     ->with('success', 'Sent to Checker successfully.');
             } else {
                 $chitti->update([

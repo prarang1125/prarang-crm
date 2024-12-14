@@ -62,7 +62,7 @@ class AccUploaderController extends Controller
         $geographys = Mtag::where('tagCategoryId', 4)->get();
         $faunas = Mtag::where('tagCategoryId', 5)->get();
         $floras = Mtag::where('tagCategoryId', 6)->get();
-
+        
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         $regions = Mregion::all();
         $cities = Mcity::all();
