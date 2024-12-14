@@ -29,7 +29,7 @@
                 @endif
                 <h6 class="mb-0 text-uppercase text-primary">Checker Edit</h6>
                 <hr/>
-                <form  action="{{ route('admin.checker-update' , $chitti->chittiId) }}" method="POST" enctype="multipart/form-data">
+                <form  action="{{ route('accounts.acc-checker-update' , $chitti->chittiId) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     {{-- image preview and image thumbnail and content section --}}
@@ -350,7 +350,7 @@
 
                         {{-- <button type="submit" class="btn btn-primary" name="action" value="send_to_maker">Send to maker</button> --}}
 
-                        <a href="{{ route('admin.checker-chitti-return-to-maker-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}" class="btn btn-primary">Send to maker</a>
+                        <a href="{{ route('accounts.acc-checker-chitti-return-to-maker-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}" class="btn btn-primary">Send to maker</a>
 
                         <button type="submit" class="btn btn-primary" name="action" value="send_to_uploader">Send to Uploader</button>
                     </div>

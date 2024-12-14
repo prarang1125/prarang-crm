@@ -32,7 +32,7 @@ use App\Http\Controllers\accounts\AccMakerController;
 use App\Http\Controllers\accounts\AccCKEditorController;
 use App\Http\Controllers\accounts\AccChekerController;
 use App\Http\Controllers\accounts\AccUploaderController;
-
+use Illuminate\Support\Facades\Mail;
 
 
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
@@ -78,9 +78,9 @@ Route::group(['prefix' => 'accounts'], function(){
         #this method is use for account checker listing start
             Route::get('/checker/dashboard', [AccChekerController::class, 'accIndexMain'])->name('accounts.checker-dashboard');
 
-            Route::get('/checker/checker-listing/{id}', [AccChekerController::class, 'accIndex'])->name('accounts.acc-checker-listing');
+            // Route::get('/checker/checker-listing/{id}', [AccChekerController::class, 'accIndex'])->name('accounts.acc-checker-listing');
 
-            Route::get('/checker/acc-checker-edit/{id}', [AccChekerController::class, 'accCheckerEdit'])->name('accounts.acc-checker-edit');
+            Route::get('/checker/acc-checker-edit/{id}', [AccChekerController::class, 'checkerEdit'])->name('accounts.acc-checker-edit');
 
             Route::put('/checker/acc-checker-update/{id}', [AccChekerController::class, 'accCheckerUpdate'])->name('accounts.acc-checker-update');
         #this method is use for account checker listing end
@@ -108,16 +108,8 @@ Route::group(['prefix' => 'accounts'], function(){
 
             Route::put('/uploader/aac-uploader-update/{id}', [AccUploaderController::class, 'accUploaderUpdate'])->name('accounts.acc-uploader-update');
         #this method is use for account uploader listing end
-
-        // Routes for Uploaders
-        // Route::middleware('role:uploader')->group(function () {
-        //     Route::get('/uploader/dashboard', [UploaderController::class, 'index'])->name('uploader.dashboard');
-            // Route::get('/uploader/profile', [UploaderController::class, 'profile'])->name('uploader.profile');
-        // });
     });
 });
-
-
 
 Route::group(['prefix' => 'admin'], function(){
     Route::group(['middleware' => 'admin.guest'], function(){
@@ -125,7 +117,6 @@ Route::group(['prefix' => 'admin'], function(){
         Route::post('authenticate', [AdminLoginController::class, 'authenticate'])->name('admin.authenticate');
         // Route::post('users-store', [AdminController::class, 'userStore'])->name('admin.users-store');
     });
-
     Route::group(['middleware' => 'admin.auth'], function(){
         Route::get('dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
         Route::get('logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
