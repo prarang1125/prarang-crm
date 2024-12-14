@@ -108,16 +108,8 @@ Route::group(['prefix' => 'accounts'], function(){
 
             Route::put('/uploader/aac-uploader-update/{id}', [AccUploaderController::class, 'accUploaderUpdate'])->name('accounts.acc-uploader-update');
         #this method is use for account uploader listing end
-
-        // Routes for Uploaders
-        // Route::middleware('role:uploader')->group(function () {
-        //     Route::get('/uploader/dashboard', [UploaderController::class, 'index'])->name('uploader.dashboard');
-            // Route::get('/uploader/profile', [UploaderController::class, 'profile'])->name('uploader.profile');
-        // });
     });
 });
-
-
 
 Route::group(['prefix' => 'admin'], function(){
     Route::group(['middleware' => 'admin.guest'], function(){
@@ -125,7 +117,6 @@ Route::group(['prefix' => 'admin'], function(){
         Route::post('authenticate', [AdminLoginController::class, 'authenticate'])->name('admin.authenticate');
         // Route::post('users-store', [AdminController::class, 'userStore'])->name('admin.users-store');
     });
-
     Route::group(['middleware' => 'admin.auth'], function(){
         Route::get('dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
         Route::get('logout', [AdminLoginController::class, 'logout'])->name('admin.logout');

@@ -283,6 +283,7 @@ class UploaderController extends Controller
                     'finalStatus'   => 'approved',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
+                    'dateOfApprove'=>$currentDateTime
                 ]);
 
                 return redirect()->route('admin.uploader-listing', ['id' => $chitti->chittiId])->with('success', 'Uploader updated successfully.');
@@ -292,10 +293,9 @@ class UploaderController extends Controller
                     'description'   => $request->content,
                     'Title'         => $request->title,
                     'SubTitle'      => $request->subtitle,
-                    'checkerStatus'   => 'sent_to_uploader',
-                    'finalStatus'   => 'sent_to_uploader',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
+                    'date'
                 ]);
 
                 // Update Facity record

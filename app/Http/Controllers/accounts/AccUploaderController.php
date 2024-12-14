@@ -257,17 +257,16 @@ class AccUploaderController extends Controller
                     'finalStatus'   => 'approved',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
+                    'dateOfApprove'=>$currentDateTime
                 ]);
 
-                return redirect()->route('admin.uploader-listing', ['id' => $chitti->chittiId])->with('success', 'Uploader updated successfully.');
+                return redirect()->route('accounts.uploader-dashboard')->with('success', 'Uploader updated successfully.');
             }else{
                 // Update Chitti record
                 $chitti->update([
                     'description'   => $request->content,
                     'Title'         => $request->title,
                     'SubTitle'      => $request->subtitle,
-                    'checkerStatus'   => 'sent_to_uploader',
-                    'finalStatus'   => 'sent_to_uploader',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
                 ]);

@@ -319,7 +319,7 @@ class AccChekerController extends Controller
             'uploaderStatus'        => 'Null',
             'finalStatus'           => 'Null',
         ]);
-        return back()->with('success', 'Chitti Post have been return to maker from checker successfully');
+        return redirect()->route('accounts.checker-dashboard')->with('success', 'Chitti Post have been return to maker from checker successfully');
     }
 
 }
