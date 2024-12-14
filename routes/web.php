@@ -243,7 +243,7 @@ Route::group(['prefix' => 'admin'], function(){
 
         #this route is use for admin checker start
             Route::get('/checker/checker-listing', [ChekerController::class, 'indexMain'])->name('admin.checker-listing');
-            Route::get('/checker/checker-listing/{id}', [ChekerController::class, 'index'])->name('admin.checker-listing');
+            // Route::get('/checker/checker-listing/{id}', [ChekerController::class, 'index'])->name('admin.checker-listing');
             Route::get('/checker/checker-edit/{id}', [ChekerController::class, 'checkerEdit'])->name('admin.checker-edit');
             Route::put('/checker/checker-update/{id}', [ChekerController::class, 'checkerUpdate'])->name('admin.checker-update');
         #this route is use for admin checker end
