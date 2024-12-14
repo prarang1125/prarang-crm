@@ -345,8 +345,16 @@
                         </div>
                     </div>
                     <div class="modal-footer mt-3">
+                    @if($chitti->finalStatus ==='approved')
+                    <p>Published at {{$chitti->dateOfApprove  }}</p>
+                    @endif
                         <button type="submit" name="action" value="update_uploader" class="btn btn-primary">Update</button>
+                        
+                        @if($chitti->finalStatus !=='approved')
                         <button type="submit" name="action" value="approvd" class="btn btn-primary" onclick="return confirm('Are you sure you want to publish this to the post?')">Publish Post</button>
+                   
+
+                        @endif
                         {{-- <a href="{{ route('admin.uploader-listing-detail', $chitti->chittiId) }}" class="btn btn-primary">Send to Uploader</a> --}}
                     </div>
                 </form>

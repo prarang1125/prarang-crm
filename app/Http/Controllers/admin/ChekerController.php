@@ -48,6 +48,7 @@ class ChekerController extends Controller
             ->whereIn('checkerStatus', ['maker_to_checker'])
             ->where('makerStatus', 'sent_to_checker')
              ->whereNotIn('finalStatus', ['approved', 'deleted'])
+             ->whereNot('uploaderStatus','sent_to_uploader')
             ->when($search, function ($query) use ($search) {
                 $query->where('Title', 'LIKE', "%{$search}%") // Search in English
                     ->orWhere('createDate', 'LIKE', "%".mb_strtolower($search, 'UTF-8')."%"); // Handle Unicode (Hindi, etc.)
@@ -283,11 +284,11 @@ class ChekerController extends Controller
             // Update Chitti record
 
             $chitti = Chitti::findOrFail($id);
-            dd($chitti);
             if ($request->action === 'send_to_uploader')
             {
                 $chitti->update([
                     'uploaderStatus'   => 'sent_to_uploader',
+                    'checkerStatus'=>'sent_to_uploader',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);
