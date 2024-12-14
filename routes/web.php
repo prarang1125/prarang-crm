@@ -265,6 +265,7 @@ Route::group(['prefix' => 'admin'], function(){
 
         #this route is use for admin deleted post listing start
             Route::get('/deleted-post/deleted-post-listing', [DeletedPostController::class, 'index'])->name('admin.deleted-post-listing');
+            Route::get('/deleted-post-to-checker/{chittiId}',[DeletedPostController::class, 'deletedPostToChecker'])->name('admin.deletepost-to-checker');
         #this route is use for admin deleted post listing end
 
         #this route is use for admin post analytics maker start

@@ -15,7 +15,7 @@ class SCityController extends Controller
     public function index(Request $request)
     {
         $query = S_Cities::query();
-
+        // TODO::Sort: new Record should be on top.
         // Apply search filter if provided
         if ($request->has('search') && !empty($request->input('search'))) {
             $searchTerm = $request->input('search');

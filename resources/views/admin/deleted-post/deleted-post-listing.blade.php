@@ -52,6 +52,7 @@
                                 <th scope="col" class="">Geography</th>
                                 <th scope="col" class="">Area</th>
                                 <th scope="col" class="">Status</th>
+                                <th scope="col" class="">Action</th>
                                 {{-- <th scope="col" class="">Action</th> --}}
                             </tr>
                         </thead>
@@ -91,16 +92,10 @@
                                         </td>
                                     @endforeach
                                     <td>{{ $chitti->finalStatus }}</td>
-
-                                    {{-- <td class="">
-                                        <a href="{{ route('admin.checker-listing', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Sent_to_checker</a>
-
-                                        <form action="{{ route('admin.post-delete', $chitti->chittiId) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm btn-danger delete-user">Delete</button>
-                                        </form> --}}
-                                        {{-- <a href="{{ route('admin.maker-update', $chitti->chittiId) }}" class="btn btn-sm btn-primary update-user mt-3">Send to checker</a> --}}
-                                    {{-- </td> --}}
+                                    <td>
+                                    <a class="btn btn-warning btn-sm" onclick="return Confirm('Do you want to Recover this post.')" href="{{route('admin.deletepost-to-checker',['chittiId'=>$chitti->chittiId])}}">Return to Checker</a>
+                                    </td>
+                                       
                                 </tr>
                                 @php $index++;  @endphp
                             @endforeach

@@ -48,7 +48,7 @@ class PostController extends Controller
             ->where('Title', '!=', '')
             ->where('finalStatus', '!=', 'deleted')
             ->orderByDesc('dateOfCreation')
-            ->paginate(5); // Adjust per page count as needed
+            ->paginate(30); // Adjust per page count as needed
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
