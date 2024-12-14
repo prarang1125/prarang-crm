@@ -68,16 +68,16 @@ class MakerController extends Controller
         $regions = Mregion::where('isActive', 1)->get();
         $cities = Mcity::where('isActive', 1)->get();
         $countries = Mcountry::where('isActive', 1)->get();
-        
+
 
         return view('admin.maker.maker-register', compact('timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras', 'geographyOptions', 'regions', 'cities', 'countries'));
- 
+
     }
 
     #this method is use for store maker data
     public function makerStore(Request $request)
     {
-       
+
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
             'makerImage' => 'required|image|max:2048',
@@ -89,8 +89,10 @@ class MakerController extends Controller
             'forTheCity' => 'required|boolean',
             // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
+
+
         ]);
-        
+
         if ($validator->passes()) {
 
             DB::beginTransaction();  // Use DB facade
@@ -149,7 +151,7 @@ class MakerController extends Controller
             $chitti->areaId = $areaIdCode;
             $chitti->geographyId = $request->geography;
             $chitti->created_at = $currentDateTime;
-            $chitti->is_active = 1;
+            // $chitti->is_active = 1;
             $chitti->created_by = Auth::guard('admin')->user()->userId;
             $chitti->save();
             // get last inserted id
@@ -235,7 +237,7 @@ class MakerController extends Controller
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         $regions = Mregion::where('isActive', 1)->get();
         $cities = Mcity::where('isActive', 1)->get();
-        $countries = Mcountry::where('isActive', 1)->get();        
+        $countries = Mcountry::where('isActive', 1)->get();
         $geographyMapping = $chitti->geographyMappings->first();
         $facityValue = $chitti->facity ? $chitti->facity->value : null;
 

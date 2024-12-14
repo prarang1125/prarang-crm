@@ -42,6 +42,12 @@
                         <button type="submit" class="btn btn-secondary">Search</button>
                     </form>
 
+                    @if(request()->has('search'))
+                        <a class="btn btn-primary me-1" href="{{ url()->current() }}">
+                            <i class="bx bx-refresh"></i>
+                        </a>
+                    @endif
+
                     <a href="{{ url('/admin/user-register') }}" class="btn btn-primary">Add New User</a>
                 </div>
                 <div class="card-body">

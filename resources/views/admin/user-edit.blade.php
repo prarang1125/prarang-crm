@@ -28,6 +28,16 @@
                     @endif
                 <h6 class="mb-0 text-uppercase">User Edit</h6>
                 <hr/>
+                @if($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
                 <form  action="{{ route('admin.user-update', $user->userId) }}" method="POST">
                     @csrf
                     @method('PUT')
@@ -47,18 +57,12 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="row mt-3">
-
-                        <div class="col-md-6">
-                            <label for="inputPassword" class="form-label">Password</label>
-                            @php
-                            $userPassword =  $user->empPassword
-                            @endphp
-                            <input type="password" class="form-control @error('empPassword') is-invalid @enderror" id="inputPassword" name="empPassword" value="{{ old('empPassword', $user->empPassword) }}">
-                            @error('empPassword')
-                                <p class="invalid-feedback">{{ $message }}</p>
-                            @enderror
-                        </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">EmailID</label>
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $user->emailId) }}" >
+                        @error('email')
+                            <p class="invalid-feedback">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-6">
@@ -98,6 +102,24 @@
                             @error('isActive')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Password</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="password" name="password" class="form-control" value="" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Reset Password</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="password" name="password_confirmation" class="form-control" value="" />
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer mt-3">

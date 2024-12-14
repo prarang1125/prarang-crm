@@ -248,15 +248,16 @@ class AdminController extends Controller
     #this method is use for update the user data
     public function userUpdate(Request $request, $id)
     {
+        // dd($request);
         $validator = Validator::make($request->all(), [
             'firstName' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
-            'emailId' => [
+            'email' => [
                 'required',
                 'email',
                 Rule::unique('muser', 'emailId')->ignore($id, 'userId'),
             ],
-            'empPassword' => 'required|string|min:5',
+            'password' => 'sometimes|confirmed',
             'roleId' => 'required|exists:mrole,roleID',
             'languageId' => 'required|boolean',
             'isActive' => 'required|boolean',
@@ -265,12 +266,13 @@ class AdminController extends Controller
         if ($validator->passes()) {
             $user = Muser::findOrFail($id);
             $currentDateTime = getUserCurrentTime();
+            // dd('hi');
             // Update the user with additional fields
             $user->update([
                 'firstName' => $request->firstName,
                 'lastName' => $request->lastName,
-                'emailId' => $request->emailId,
-                'empPassword' => $request->empPassword,
+                'emailId' => $request->email,
+                'empPassword' => bcrypt($request->password),
                 'roleId' => $request->roleId,
                 'languageId' => $request->languageId,
                 'isActive' => $request->isActive,
@@ -291,38 +293,38 @@ class AdminController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'first_last_name' => 'required',
-            'email_id'       => 'required',
-            'role_name'      => 'required',
-            'role_id'        => 'nullable',
-            'language'       => 'required',
-            'language_id'    => 'nullable',
-            'password'       => 'nullable',
-            'reset_password' => 'required'
+            // 'first_last_name' => 'required',
+            // 'email_id'       => 'required',
+            // 'role_name'      => 'required',
+            // 'role_id'        => 'nullable',
+            // 'language'       => 'required',
+            // 'language_id'    => 'nullable',
+            'password'       => 'required|confirmed',
+            // 'reset_password' => 'required'
         ]);
 
-        $fullName = $request->first_last_name;
-        $names = explode(' ', $fullName);
+        // $fullName = $request->first_last_name;
+        // $names = explode(' ', $fullName);
 
-        $first_name = $names[0] ?? '';
-        $last_name = $names[1] ?? '';
+        // $first_name = $names[0] ?? '';
+        // $last_name = $names[1] ?? '';
 
         if ($validator->passes()) {
             $user = Muser::findOrFail($id);
             $currentDateTime = getUserCurrentTime();
             // Update the user with additional fields
             $user->update([
-                'firstName' => $first_name,
-                'lastName'  => $last_name,
-                'emailId'   => $request->email_id,
-                'empPassword' => bcrypt($request->reset_password),
-                'roleId'      => $request->role_id,
-                'languageId' => $request->language_id,
+                // 'firstName' => $first_name,
+                // 'lastName'  => $last_name,
+                // 'emailId'   => $request->email_id,
+                'empPassword' => bcrypt($request->password),
+                // 'roleId'      => $request->role_id,
+                // 'languageId' => $request->language_id,
                 'updated_at' => $currentDateTime,
                 'updated_by' => Auth::guard('admin')->user()->userId,
             ]);
 
-            return redirect()->back()->with('success', 'your password has been reset successfully.');
+            return redirect()->back()->with('success', 'Profile Updated Successfully.');
         } else {
             return redirect()->back()
                 ->withInput()

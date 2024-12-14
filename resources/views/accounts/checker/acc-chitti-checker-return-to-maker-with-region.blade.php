@@ -1,18 +1,18 @@
 @extends('layouts.admin.admin')
-@section('title', 'Accounts Send to Maker')
+@section('title', 'Send to Maker')
 
 @section('content')
 <!--start page wrapper -->
 <div class="page-content">
     <!--breadcrumb-->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div class="breadcrumb-title pe-3">Accounts</div>
+        <div class="breadcrumb-title pe-3">Admin</div>
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
                     {{-- <li class="breadcrumb-item"><a href="{{ url('admin/postanalyticsmaker/post-analytics-maker-listing')}}"><i class="bx bx-user"></i></a>
                     </li> --}}
-                    <li class="breadcrumb-item active" aria-current="page">Accounts Send to Maker</li>
+                    <li class="breadcrumb-item active" aria-current="page">Send to Maker</li>
                 </ol>
             </nav>
         </div>
@@ -27,10 +27,10 @@
                         {{ session('success') }}
                     </div>
                 @endif
-                <h6 class="mb-0 text-uppercase text-primary">Accounts Send to Maker</h6>
+                <h6 class="mb-0 text-uppercase text-primary">Send to Maker</h6>
                 <hr/>
 
-                <form  action="{{ route('accounts.acc-chitti-checker-sendtomaker', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&sendtomaker=sendtomaker" method="POST" enctype="multipart/form-data">
+                <form  action="{{ route('admin.chitti-checker-sendtomaker', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&sendtomaker=sendtomaker" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 

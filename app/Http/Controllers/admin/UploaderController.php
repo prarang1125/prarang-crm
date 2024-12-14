@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use App\Models\Mtag;
 use App\Models\Mregion;
 use App\Models\Mcity;
@@ -20,36 +21,82 @@ use App\Models\Chittitagmapping;
 
 class UploaderController extends Controller
 {
-    public function indexMain()
+    // public function indexMain()
+    // {
+        //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        //     ->whereNotNull('Title')
+        //     ->where('Title', '!=', '')
+        //     ->where('uploaderStatus', '!=', '')
+        //     ->where('uploaderStatus', '=', 'sent_to_uploader')
+        //     ->orderByDesc('dateOfCreation')
+        //     // ->where('finalStatus', '=', 'sent_to_uploader')
+        //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
+        //     ->get();
+        //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        //     return view('admin.uploader.uploader-listing', compact('chittis', 'geographyOptions'));
+    // }
+
+    public function indexMain(Request $request)
     {
-        // dd('indexMain');
+        $search = $request->input('search');
+
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        ->whereNotNull('Title')
-        ->where('Title', '!=', '')
-        ->where('uploaderStatus', '!=', '')
-        ->where('uploaderStatus', '=', 'sent_to_uploader')
-        ->orderByDesc('dateOfCreation')
-        // ->where('finalStatus', '=', 'sent_to_uploader')
-        ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
-        ->get();
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->where('uploaderStatus', '=', 'sent_to_uploader')
+            ->when($search, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('Title', 'like', "%{$search}%")
+                        ->orWhere('SubTitle', 'like', "%{$search}%");
+                });
+            })
+            ->orderByDesc('dateOfCreation')
+            ->select('chittiId', 'Title', 'SubTitle', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
+            ->paginate(10); // Adjust the number per page
+
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-        return view('admin.uploader.uploader-listing', compact('chittis', 'geographyOptions'));
+
+        return view('admin.uploader.uploader-listing', compact('chittis', 'geographyOptions', 'search'));
     }
 
+
     #this method is use for show the listing of maker
-    public function index($id)
+    // public function index($id)
+    // {
+        //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        //     ->where('chittiId', $id)
+        //     ->whereNotNull('Title')
+        //     ->where('Title', '!=', '')
+        //     ->where('uploaderStatus', '!=', '')
+        //     ->where('uploaderStatus', '=', 'sent_to_uploader')
+        //     // ->where('finalStatus', '=', 'approved')
+        //     // ->where('finalStatus', '=', 'sent_to_uploader')
+        //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus','uploaderStatus')
+        //     ->get();
+        //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        //     return view('admin.uploader.uploader-listing', compact('chittis', 'geographyOptions'));
+    // }
+
+    public function index(Request $request)
     {
+        $search = $request->input('search');
+
+        // Fetch Chitti records with relationships and pagination
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        ->where('chittiId', $id)
-        ->whereNotNull('Title')
-        ->where('Title', '!=', '')
-        ->where('uploaderStatus', '!=', '')
-        ->where('uploaderStatus', '=', 'sent_to_uploader')
-        // ->where('finalStatus', '=', 'approved')
-        // ->where('finalStatus', '=', 'sent_to_uploader')
-        ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus','uploaderStatus')
-        ->get();
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($subQuery) use ($search) {
+                    $subQuery->where('Title', 'LIKE', "%$search%")
+                            ->orWhere('SubTitle', 'LIKE', "%$search%")
+                            ->orWhere('metaTag', 'LIKE', "%$search%");
+                });
+            })
+            ->where('uploaderStatus', '=', 'sent_to_uploader')
+            ->paginate(10); // Adjust the number of items per page
+
+        // Fetch geography options
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+
+        // Return view with data
         return view('admin.uploader.uploader-listing', compact('chittis', 'geographyOptions'));
     }
 

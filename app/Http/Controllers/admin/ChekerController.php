@@ -20,36 +20,87 @@ use App\Models\Chittitagmapping;
 
 class ChekerController extends Controller
 {
-    public function indexMain()
+    // public function indexMain()
+        // {
+        //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        //     ->whereNotNull('Title')
+        //     ->where('Title', '!=', '')
+        //     ->where('checkerStatus', '!=', '')
+        //     ->whereIn('checkerStatus',['maker_to_checker'])
+        //     ->where('makerStatus', 'sent_to_checker')
+        //     ->orderByDesc('dateOfCreation')
+        //     ->whereNotIn('finalStatus',['approved','deleted'])
+        //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
+        //     ->get();
+        //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        //     return view('admin.checker.checker-listing', compact('chittis', 'geographyOptions'));
+    // }
+
+    public function indexMain(Request $request)
     {
+        // Search query from request
+        $search = $request->input('search');
+
+        // Query builder with search and filter conditions
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        ->whereNotNull('Title')
-        ->where('Title', '!=', '')
-        ->where('checkerStatus', '!=', '')        
-        ->whereIn('checkerStatus',['maker_to_checker'])
-        ->where('makerStatus', 'sent_to_checker')
-        ->orderByDesc('dateOfCreation')
-        ->whereNotIn('finalStatus',['approved','deleted'])
-        ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
-        ->get();
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->where('checkerStatus', '!=', '')
+            ->whereIn('checkerStatus', ['maker_to_checker'])
+            ->where('makerStatus', 'sent_to_checker')
+            ->whereNotIn('finalStatus', ['approved', 'deleted'])
+            ->when($search, function ($query) use ($search) {
+                $query->where('Title', 'LIKE', "%{$search}%") // Search in English
+                    ->orWhere('createDate', 'LIKE', "%".mb_strtolower($search, 'UTF-8')."%"); // Handle Unicode (Hindi, etc.)
+            })
+            ->orderByDesc('dateOfCreation')
+            ->paginate(10); // Adjust the number of items per page
+
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+
         return view('admin.checker.checker-listing', compact('chittis', 'geographyOptions'));
     }
 
+
     #this method is use for show the listing of maker
-    public function index($id)
+    // public function index($id)
+        // {
+        //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        //     ->where('chittiId', $id)
+        //     ->whereNotNull('Title')
+        //     ->where('Title', '!=', '')
+        //     ->where('checkerStatus', '!=', '')
+        //     ->where('makerStatus', 'sent_to_checker')
+        //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
+        //     ->get();
+        //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        //     return view('admin.checker.checker-listing', compact('chittis', 'geographyOptions'));
+    // }
+
+    public function index(Request $request , $id)
     {
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        ->where('chittiId', $id)
-        ->whereNotNull('Title')
-        ->where('Title', '!=', '')
-        ->where('checkerStatus', '!=', '')
-        ->where('makerStatus', 'sent_to_checker')
-        ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
-        ->get();
+        $search = $request->input('search');
+
+        // Fetch geography options
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+
+        // Query the Chitti model
+        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+            ->when($search, function ($query, $search) {
+                // Search in both English and Hindi titles
+                $query->where('Title', 'LIKE', "%{$search}%")
+                    ->orWhere('createDate', 'LIKE', "%{$search}%");
+            })
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->where('checkerStatus', '!=', '')
+            ->where('makerStatus', 'sent_to_checker')
+            ->select('chittiId', 'Title', 'TitleHindi', 'dateOfCreation', 'finalStatus', 'checkerStatus')
+            ->paginate(10); // Pagination with 10 items per page
+
         return view('admin.checker.checker-listing', compact('chittis', 'geographyOptions'));
     }
+
 
     #this method is use for maker make new post
     /**public function makerRegister()

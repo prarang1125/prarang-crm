@@ -34,6 +34,11 @@
                         <input type="text" name="search" class="form-control me-2" placeholder="Search by Region Name" value="{{ request()->input('search') }}">
                         <button type="submit" class="btn btn-secondary">Search</button>
                     </form>
+                    @if(request()->has('search'))
+                        <a class="btn btn-primary me-1" href="{{ url()->current() }}">
+                            <i class="bx bx-refresh"></i>
+                        </a>
+                    @endif
 
                     <a href="{{ url('/admin/region/region-register') }}" class="btn btn-primary">Add New Region</a>
                 </div>

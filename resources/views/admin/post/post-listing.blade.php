@@ -35,6 +35,11 @@
                         <input type="text" name="search" class="form-control me-2" placeholder="Search by Post Name" value="{{ request()->input('search') }}">
                         <button type="submit" class="btn btn-secondary">Search</button>
                     </form>
+                    @if(request()->has('search'))
+                        <a class="btn btn-primary me-1" href="{{ url()->current() }}">
+                            <i class="bx bx-refresh"></i>
+                        </a>
+                    @endif
                     {{--<a href="{{ url('/admin/maker/maker-register') }}" class="btn btn-primary">Add New Maker</a>--}}
                 </div>
                 <div class="card-body">

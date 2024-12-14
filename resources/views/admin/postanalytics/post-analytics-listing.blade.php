@@ -78,8 +78,18 @@
                         </div>
                         <div class="col-md-6"></div>
                         <div class="col-md-4">
-                            <label for="search" class="form-label">serach: </label>
-                            <input type="search" class="" placeholder="" aria-controls="datatable-default">
+                            <div class="card-body d-flex justify-content-end align-items-end">
+                                <!-- Search Form -->
+                                <form action="{{ url('admin/post-analytics-listing') }}" method="GET" class="d-flex me-3">
+                                    <input type="text" name="search" class="form-control me-2" placeholder="Search by Post Name" value="{{ request()->input('search') }}">
+                                    <button type="submit" class="btn btn-secondary">Search</button>
+                                </form>
+                                @if(request()->has('search'))
+                                    <a class="btn btn-primary me-1" href="{{ url()->current() }}">
+                                        <i class="bx bx-refresh"></i>
+                                    </a>
+                                @endif
+                            </div>
                         </div>
                     </div>
 
@@ -101,7 +111,9 @@
                         </thead>
                         <tbody>
                             {{-- @foreach ($dates as $date) --}}
-                            @php $index = 1;  @endphp
+                            @php
+                                $index = ($chittis->currentPage() - 1) * $chittis->perPage() + 1;
+                            @endphp
                             @foreach ($chittis as $chitti)
                                 <tr>
                                     {{-- <td class="">{{ $date }}</td> --}}
@@ -142,20 +154,9 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination round-pagination justify-content-end mt-2">
-                            <li class="page-item"><a class="page-link" href="javascript:;">Previous</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="javascript:;javascript:;">1</a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="javascript:;">2</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="javascript:;">3</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="javascript:;">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <div class="d-flex justify-content-end mt-4">
+                        {{ $chittis->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>

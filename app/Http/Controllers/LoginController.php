@@ -14,7 +14,7 @@ class LoginController extends Controller
     // This method will show login page
     public function index()
     {
-        
+
         return view('accounts.login');
     }
 
@@ -47,13 +47,17 @@ class LoginController extends Controller
 
             $credentials = [
                 'emailId' => $request->email,
-                'password' => $request->password, 
+                'password' => $request->password,
             ];
-
+            $validateUser = Muser::where('emailId', $request->email)
+                                ->where('isActive' , 1)->exists();
             // dd(Auth::attempt($credentials));
             // if(Auth::attempt($credentials)){
             //     return redirect()->route('accounts.dashboard');
             #strat new code for specific page access maker checker and uploader
+            if(!$validateUser){
+                return redirect()->route('accounts.login')->with('error', 'Unauthorized access');
+            }
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
                 switch ($user->roleId) {
