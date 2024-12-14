@@ -171,6 +171,9 @@
                         </div>
                     </div>
 
+                    @if ($chitti->postStatusMakerChecker=='approved')
+                        <div class="modal-footer mt-3"></div>
+                    @else
                     <div class="modal-footer mt-3">
                         <div class="col-md-6"></div>
                         <div class="col-md-1">
@@ -183,13 +186,14 @@
                                 <a href="{{ route('admin.post-analytics-checker-return-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}" class="btn btn-primary">Send to maker</a>
                             </div>
                         </div>
-                        {{-- @dd($chitti->chittiId) --}}
+
                         <div class="col-md-1">
                             <div class="form-group">
                                 <a href="{{ route('admin.post-analytics-checker-approve', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&approve={{ 'approve' }}" class="btn btn-primary">Approve</a>
                             </div>
                         </div>
                     </div>
+                    @endif
                 </form>
             </div>
         </div>

@@ -35,7 +35,6 @@ class PostAnalyticsMakerController extends Controller
                 ->orWhere('cityNameInUnicode', 'LIKE', "%{$search}%");
             });
         }
-
         // Paginate results
         $mcitys = $query->paginate(5);
         $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
@@ -52,8 +51,11 @@ class PostAnalyticsMakerController extends Controller
         $cityCode = $request->query('cityCode');
         // $numericPart = preg_replace('/[^0-9]/', '', $cityCode);
         // $areaId = (int) $numericPart;
+        // dd($cityCode);
         // $chittis = Chitti::with('city')->where('cityId', $areaId)->get();
-        $chittis = Chitti::where('areaId', $cityCode)->paginate(2);
+        $chittis = Chitti::where('areaId', $cityCode)
+                ->whereNotIn('postStatusMakerChecker', ['send_to_post_checker', 'approved'])->paginate(2);
+        // dd($chittis);
         // $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
         return view('admin.postanalyticsmaker.post-analytics-maker-listing', compact('chittis'));
     }
