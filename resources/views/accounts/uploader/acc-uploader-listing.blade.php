@@ -1,18 +1,18 @@
 @extends('layouts.admin.admin')
-@section('title', 'Accounts Uploader Listing')
+@section('title', 'Uploader Listing')
 
 @section('content')
 <!--start page wrapper -->
 <div class="page-content">
     <!--breadcrumb-->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div class="breadcrumb-title pe-3">Accounts</div>
+        <div class="breadcrumb-title pe-3">Admin</div>
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
                     <li class="breadcrumb-item"><a href="{{ url('accounts/uploader/dashboard')}}"><i class="bx bx-user"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Accounts Uploader Listing</li>
+                    <li class="breadcrumb-item active" aria-current="page">Uploader Listing</li>
                 </ol>
             </nav>
         </div>
@@ -26,19 +26,29 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <h6 class="mb-0 text-uppercase">Accounts Uploader Listing</h6>
+            <h6 class="mb-0 text-uppercase">Uploader Listing</h6>
             <hr/>
             <div class="card">
-                {{-- <div class="card-body d-flex justify-content-end align-items-end">
-                    <a href="{{ url('/admin/checker/checker-register') }}" class="btn btn-primary">Add New Maker</a>
-                </div> --}}
+                <div class="card-body d-flex justify-content-end align-items-end">
+                    <!-- Search Form -->
+                    <form action="{{ url('accounts/uploader/dashboard') }}" method="GET" class="d-flex me-3">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search by Post Name" value="{{ request()->input('search') }}">
+                        <button type="submit" class="btn btn-secondary">Search</button>
+                    </form>
+                    @if(request()->has('search'))
+                        <a class="btn btn-primary me-1" href="{{ url()->current() }}">
+                            <i class="bx bx-refresh"></i>
+                        </a>
+                    @endif
+                    {{-- <a href="{{ url('/admin/checker/checker-register') }}" class="btn btn-primary">Add New Maker</a> --}}
+                </div>
                 <div class="card-body">
                     <table class="table mb-0 table-hover">
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col" class="">Chitti No.</th>
                                 <th scope="col" class="">Title</th>
-                                <th scope="col" class="">Sent Time </th>
+                                <th scope="col" class="">Sent Time</th>
                                 <th scope="col" class="">Geography</th>
                                 <th scope="col" class="">Area</th>
                                 <th scope="col" class="">Status</th>
@@ -46,7 +56,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $index = 1;  @endphp
+                            @php
+                                $index = ($chittis->currentPage() - 1) * $chittis->perPage() + 1;
+                            @endphp
                             @foreach ($chittis as $chitti)
                                 <tr>
                                     <th scope="row" class="" data-id="{{ $chitti->chittiId }}">{{ $index }}</th>
@@ -83,10 +95,6 @@
                                         <td>{{ $chitti->finalStatus }}</td>
                                     @elseif ($chitti->finalStatus == 'sent_to_uploader')
                                         <td>{{ $chitti->uploaderStatus }}</td>
-                                    @elseif ($chitti->uploaderStatus == 'checker_to_uploader')
-                                        <td>{{ $chitti->uploaderStatus }}</td>
-                                    @else
-                                        <td> {{ 'N/A' }} </td>
                                     @endif
 
 
@@ -104,6 +112,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end mt-4">
+                        {{ $chittis->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>

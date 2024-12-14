@@ -270,7 +270,6 @@ class AdminController extends Controller
     #this method is use for update user profile or password reset
     public function userProfileUpdate(Request $request, $id)
     {
-
         $validator = Validator::make($request->all(), [
             'password'       => 'required|confirmed',
         ]);
