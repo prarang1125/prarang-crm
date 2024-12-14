@@ -179,35 +179,20 @@ class AdminController extends Controller
             //     $loginUrl
             // ));
 
-            $mail = new PHPMailer(true);
+            // $mail = new PHPMailer(true);
             try {
-                //Server settings
-                $mail->isSMTP();
-                $mail->Host       = 'smtp.gmail.com';
-                $mail->SMTPAuth   = true;
-                $mail->Username   = 'rohit.kprarang@gmail.com';
-                $mail->Password   = 'mdtgebvpenwxccor';
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                $mail->Port       = 587;
-
-                //Recipients
-                $mail->setFrom('rohit.kprarang@gmail.com', 'Admin');
-                $mail->addAddress($request->emailId);
-
-                //Content
-                $mail->isHTML(true);
-                $mail->Subject = 'User Registration';
-                $mail->Body    = "<h1>Welcome {$request->firstName}</h1>
-                                  <p>You have been registered successfully. You can log in using the following credentials:</p>
-                                  <p><b>Email:</b> {$request->emailId}</p>
-                                  <p><b>Password:</b> {$request->empPassword}</p>
-                                  <p>Login here: <a href='{$loginUrl}'>Login</a></p>";
-
-                $mail->send();
+            //Server settings
+            // Send the email using the UserRegisteredMail class.
+            Mail::to($request->emailId)->send(new UserRegisteredMail(
+                $request->firstName,
+                $request->emailId,
+                $request->empPassword,
+                $loginUrl
+            ));
                 return redirect()->route('admin.user-listing');
 
             } catch (Exception $e) {
-                return back()->with('error', "Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+                return back()->with('error', "Message could not be sent. Mailer Error:");
             }
 
             return redirect()->route('admin.user-listing');
@@ -241,7 +226,7 @@ class AdminController extends Controller
         #Vivek Yadav
         $user = Muser::findOrFail($id);
         $languagescripts = Mlanguagescript::where('isActive',1)->get();
-        $roles = Mrole::where('status',1)->get(); 
+        $roles = Mrole::where('status',1)->get();
 
         return view('admin.user-edit', compact('user', 'roles', 'languagescripts'));
     }
