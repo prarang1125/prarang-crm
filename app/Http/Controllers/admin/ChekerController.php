@@ -42,7 +42,7 @@ class ChekerController extends Controller
         $search = $request->input('search');
 
         // Query builder with search and filter conditions
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
             ->whereNotNull('Title')
             ->where('Title', '!=', '')
             ->whereIn('checkerStatus', ['maker_to_checker'])
@@ -209,7 +209,7 @@ class ChekerController extends Controller
     {
        
        
-   $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')
+    $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')
         ->whereNotIn('finalStatus',['approved','deleted'])
         ->whereNot('checkerStatus','sent_to_uploader')->findOrFail($id);
 
@@ -283,7 +283,7 @@ class ChekerController extends Controller
 
             // Update Chitti record
             $chitti = Chitti::findOrFail($id);
-
+            dd($chitti);
             if ($request->action === 'send_to_uploader')
             {
                 dd('jfh');
@@ -330,8 +330,8 @@ class ChekerController extends Controller
                     'Title'         => $request->title,
                     'SubTitle'      => $request->subtitle,
                     'checkerStatus'   => 'maker_to_checker',
-                    'uploaderStatus'        => '',
-                    'finalStatus'           => '',
+                    // 'uploaderStatus'        => '',
+                    // 'finalStatus'           => '',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);
