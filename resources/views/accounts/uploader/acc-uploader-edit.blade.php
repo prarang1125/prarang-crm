@@ -1,18 +1,18 @@
 @extends('layouts.admin.admin')
-@section('title', 'Accounts Uploader Edit')
+@section('title', 'Uploader Edit')
 
 @section('content')
 <!--start page wrapper -->
 <div class="page-content">
     <!--breadcrumb-->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div class="breadcrumb-title pe-3">Accounts</div>
+        <div class="breadcrumb-title pe-3">Admin</div>
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
                     <li class="breadcrumb-item"><a href="{{ url('accounts/uploader/dashboard')}}"><i class="bx bx-user"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Accounts Uploader Edit</li>
+                    <li class="breadcrumb-item active" aria-current="page">Uploader Edit</li>
                 </ol>
             </nav>
         </div>
@@ -27,7 +27,7 @@
                         {{ session('success') }}
                     </div>
                 @endif
-                <h6 class="mb-0 text-uppercase text-primary">Accounts Uploader Edit</h6>
+                <h6 class="mb-0 text-uppercase text-primary">Uploader Edit</h6>
                 <hr/>
                 <form  action="{{ route('accounts.acc-uploader-update' , $chitti->chittiId) }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -179,13 +179,11 @@
                             </div>
                         </div>
                     </div>
-                    {{-- above city or about city code end--}}
-
                     {{-- nature and culture code start--}}
                     <div class="row mt-3">
                         <div class="col-sm-2">
-                            <div class="form-check">
-                                <input class="form-check-input @error('isCultureNature') is-invalid @enderror"
+                            <div class="form-check">              
+                                <input class="form-check-input @error('isCultureNature') is-invalid @enderror" @if(in_array($subTag, config('tagidmap.1'))) checked @endif
                                     type="radio" name="isCultureNature" id="cultureNatureYes" value="1"
                                     {{ old('isCultureNature', $chittiTagMapping->tagId) == 1 ? 'checked' : '' }}> <!-- Default checked -->
                                 <label class="form-check-label" for="cultureNatureYes">Culture</label>
@@ -193,7 +191,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-check">
-                                <input class="form-check-input @error('isCultureNature') is-invalid @enderror"
+                                <input class="form-check-input @error('isCultureNature') is-invalid @enderror" @if(in_array($subTag, config('tagidmap.2'))) checked @endif
                                     type="radio" name="isCultureNature" id="cultureNatureNo" value="0"
                                     {{ old('isCultureNature', $chittiTagMapping->tagId) == 0 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="cultureNatureNo">Nature</label>
@@ -203,131 +201,160 @@
                             @enderror
                         </div>
                     </div>
-
+                   
                     <!-- Tab structure to display based on radio button selection -->
                     <div id="cultureNatureTabs" style="display: none;">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <!-- Culture tabs -->
                             <li class="nav-item">
-                                <a class="nav-link active" id="culture-tab1" data-bs-toggle="tab" href="#cultureTab1" role="tab" style="background-color: #ff0006;color: white;">Timelines</a>
+                                <a class="nav-link {{ $subTag == 1 ? 'active ' : '' }}" id="culture-tab1" data-bs-toggle="tab" href="#cultureTab1" role="tab" style="background-color: #ff0006;color: white;">Timelines</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="culture-tab2" data-bs-toggle="tab" href="#cultureTab2" role="tab" style="background-color: #ffff18;color: #282828;">Man And his Senses</a>
+                                <a class="nav-link {{$subTag == 2 ? 'active' : ''}}" id="culture-tab2" data-bs-toggle="tab" href="#cultureTab2" role="tab" style="background-color: #ffff18;color: #282828;">Man And his Senses</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="culture-tab3" data-bs-toggle="tab" href="#cultureTab3" role="tab" style="background-color: #1919d9;color: white;">Man and his Inventions</a>
+                                <a class="nav-link {{$subTag == 3 ? 'active' : ''}}" id="culture-tab3" data-bs-toggle="tab" href="#cultureTab3" role="tab" style="background-color: #1919d9;color: white;">Man and his Inventions</a>
                             </li>
-
+                    
                             <!-- Nature tabs -->
                             <li class="nav-item">
-                                <a class="nav-link" id="nature-tab1" data-bs-toggle="tab" href="#natureTab1" role="tab" style="display:none; background-color: #faff98;color: #282828;">Geography</a>
+                                <a class="nav-link {{$subTag == 4 ? 'active' : ''}}" id="nature-tab1" data-bs-toggle="tab" href="#natureTab1" role="tab" style="background-color: #faff98;color: #282828;">Geography</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="nature-tab2" data-bs-toggle="tab" href="#natureTab2" role="tab" style="display:none; background-color: #c8ff00;color: #282828;">Fauna</a>
+                                <a class="nav-link {{$subTag == 5 ? 'active' : ''}}" id="nature-tab2" data-bs-toggle="tab" href="#natureTab2" role="tab" style="background-color: #c8ff00;color: #282828;">Fauna</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="nature-tab3" data-bs-toggle="tab" href="#natureTab3" role="tab" style="display:none; background-color: #339933;color: #fff;">Flora</a>
+                                <a class="nav-link {{$subTag == 6 ? 'active' : ''}}" id="nature-tab3" data-bs-toggle="tab" href="#natureTab3" role="tab" style="background-color: #339933;color: #fff;">Flora</a>
                             </li>
                         </ul>
+                      
+                    
                         <div class="tab-content">
-                            <!-- Content for Culture Tab 1 (Timelines) -->
-                            <div class="tab-pane fade show active" id="cultureTab1" role="tabpanel">
+                            <div class="tab-pane fade  {{$subTag==1 ? "active show": ""}}" id="cultureTab1" role="tabpanel">
                                 <div class="row">
-                                   @foreach ($timelines as $timeline)
-                                        <div class="col-md-4">
-                                            <div class="card">
-                                                <div class="card-body cardbodselect mt-3" style="background-color: #ff0006;color: white;">
-                                                    <i class="lni lni-close"></i>
-                                                    {{ $timeline->tagInEnglish }}
+                                    @foreach ($timelines as $timeline)
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #ff0006; color: white;">
+                                                <div class="d-flex align-items-center">
+                                                    <input type="radio" name="tagId" value="{{ $timeline->tagId }}" id="timeline{{ $timeline->id }}" {{ $timeline->tagId == $chittiTagMapping->tagId ? 'checked' : '' }} class="me-2">
+                                                    <label for="timeline{{ $timeline->id }}" class="mb-0">{{ $timeline->tagInEnglish }}</label>
+                                                    <i class="lni lni-close ms-auto"></i>
                                                 </div>
                                             </div>
                                         </div>
-                                   @endforeach
+                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
 
                             <!-- Content for Man And His Senses -->
-                            <div class="tab-pane fade" id="cultureTab2" role="tabpanel">
+                            <div class="tab-pane fade {{$subTag==2 ? "active show": ""}}" id="cultureTab2" role="tabpanel">
                                 <div class="row">
                                     @foreach ($manSenses as $sense)
-                                        <div class="col-md-4">
-                                            <div class="card">
-                                                <div class="card-body cardbodselect mt-3" style="background-color: #ffff18;color: #282828;">
-                                                    <i class="lni lni-close"></i>
-                                                    {{ $sense->tagInEnglish }}
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                           
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #ffff18; color: #282828;">
+                                                <div class="d-flex align-items-center">
+                                                    <input type="radio" name="tagId" value="{{ $sense->tagId }}"  {{ $sense->tagId == $chittiTagMapping->tagId ? 'checked' : '' }} id="sense{{ $sense->id }}" class="me-2">
+                                                    <label for="sense{{ $sense->id }}" class="mb-0">{{ $sense->tagInEnglish }}</label>  
+                                                    <i class="lni lni-close ms-auto"></i>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
                                     @endforeach
                                 </div>
                             </div>
 
                             <!-- Content for Man And His Inventions -->
-                            <div class="tab-pane fade" id="cultureTab3" role="tabpanel">
+                            <div class="tab-pane fade {{$subTag==3 ? "active show": ""}}" id="cultureTab3" role="tabpanel">
                                 <div class="row">
-                                   @foreach ($manInventions as $invention)
-                                        <div class="col-md-4">
-                                            <div class="card">
-                                                <div class="card-body cardbodselect mt-3" style="background-color: #1919d9;color: white;">
-                                                    <i class="lni lni-close"></i>
-                                                    {{ $invention->tagInEnglish }}
+                                    @foreach ($manInventions as $invention)
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #1919d9; color: white;">
+                                                <div class="d-flex align-items-center">
+                                                    <input type="radio" name="tagId" value="{{ $invention->tagId }}" id="invention{{ $invention->id }}" {{ $invention->tagId == $chittiTagMapping->tagId ? 'checked' : '' }} class="me-2">
+                                                    <label for="invention{{ $invention->id }}" class="mb-0">{{ $invention->tagInEnglish }}</label>
+                                                    <i class="lni lni-close ms-auto"></i>
                                                 </div>
                                             </div>
                                         </div>
-                                   @endforeach
+                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
 
-                            <!-- Content for Nature (Geography, Flora, etc.) -->
-                            <div class="tab-pane fade" id="natureTab1" role="tabpanel">
+                            <!-- Content for Geography -->
+                            <div class="tab-pane fade {{$subTag == 4 ? 'show active' : ''}}" id="natureTab1" role="tabpanel">
                                 <div class="row">
                                     @foreach ($geographys as $geography)
                                         <div class="col-md-4">
                                             <div class="card">
-                                                <div class="card-body cardbodselect mt-3" style="background-color: #faff98;color: #282828;">
-                                                    <i class="lni lni-close"></i>
-                                                    {{ $geography->tagInEnglish }}
+                                                <div class="card-body cardbodselect mt-3" style="background-color: #faff98; color: #282828;">
+                                                    <div class="d-flex align-items-center">
+                                                        <input type="radio" name="tagId" value="{{ $geography->tagId }}" id="geography{{ $geography->id }}" {{ $geography->tagId == $chittiTagMapping->tagId ? 'checked' : '' }} class="me-2">
+                                                        <label for="geography{{ $geography->id }}" class="mb-0">{{ $geography->tagInEnglish }}</label>
+                                                        <i class="lni lni-close ms-auto"></i>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     @endforeach
                                 </div>
                             </div>
-
-                            <div class="tab-pane fade" id="natureTab2" role="tabpanel">
+                    
+                            <!-- Content for Fauna -->
+                            <div class="tab-pane fade {{$subTag == 5 ? 'show active' : ''}}" id="natureTab2" role="tabpanel">
                                 <div class="row">
                                     @foreach ($faunas as $fauna)
                                         <div class="col-md-4">
                                             <div class="card">
-                                                <div class="card-body cardbodselect mt-3" style="background-color: #c8ff00;color: #282828;">
-                                                    <i class="lni lni-close"></i>
-                                                    {{ $fauna->tagInEnglish }}
+                                                <div class="card-body cardbodselect mt-3" style="background-color: #c8ff00; color: #282828;">
+                                                    <div class="d-flex align-items-center">
+                                                        <input type="radio" name="tagId" value="{{ $fauna->tagId }}" id="fauna{{ $fauna->id }}" {{ $fauna->tagId == $chittiTagMapping->tagId ? 'checked' : '' }} class="me-2">
+                                                        <label for="fauna{{ $fauna->id }}" class="mb-0">{{ $fauna->tagInEnglish }}</label>
+                                                        <i class="lni lni-close ms-auto"></i>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     @endforeach
                                 </div>
                             </div>
-
-                            <div class="tab-pane fade" id="natureTab3" role="tabpanel">
+                    
+                            <!-- Content for Flora -->
+                            <div class="tab-pane fade {{$subTag == 6 ? 'show active' : ''}}" id="natureTab3" role="tabpanel">
                                 <div class="row">
                                     @foreach ($floras as $flora)
-                                         <div class="col-md-4">
-                                            <div class="card">
-                                                <div class="card-body cardbodselect mt-3" style=" background-color: #339933;color: #fff;">
-                                                    <i class="lni lni-close"></i>
-                                                    {{ $flora->tagInEnglish }}
+                                        <div class="col-md-4">
+                                            <div class="card-body cardbodselect mt-3" style="background-color: #339933; color: #fff;">
+                                                <div class="d-flex align-items-center">
+                                                    <input type="radio" name="tagId" value="{{ $flora->tagId }}" id="flora{{ $flora->id }}" {{ $flora->tagId == $chittiTagMapping->tagId ? 'checked' : '' }} class="me-2">
+                                                    <label for="flora{{ $flora->id }}" class="mb-0">{{ $flora->tagInEnglish }}</label>
+                                                    <i class="lni lni-close ms-auto"></i>
                                                 </div>
                                             </div>
-                                         </div>
+                                        </div>
                                     @endforeach
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer mt-3">
-                        <button type="submit" name="action" value="update_uploader" class="btn btn-primary">Update Uploader</button>
-                        <button type="submit" name="action" value="approved" class="btn btn-primary">Send to Uploader</button>
+                    @if($chitti->finalStatus ==='approved')
+                    <p>Published at {{$chitti->dateOfApprove  }}</p>
+                    @endif
+                        <button type="submit" name="action" value="update_uploader" class="btn btn-primary">Update</button>
+                        
+                        @if($chitti->finalStatus !=='approved')
+                        <button type="submit" name="action" value="approvd" class="btn btn-primary" onclick="return confirm('Are you sure you want to publish this to the post?')">Publish Post</button>
+                   
+
+                        @endif
+                        {{-- <a href="{{ route('admin.uploader-listing-detail', $chitti->chittiId) }}" class="btn btn-primary">Send to Uploader</a> --}}
                     </div>
                 </form>
             </div>
@@ -379,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelector('#nature-tab3').style.display = 'none';
 
             // Make the first culture tab active
-            document.querySelector('#culture-tab1').click();
+         //   document.querySelector('#culture-tab1').click();
         } else if (natureRadio.checked) {
             // Show nature tabs and hide culture tabs
             document.querySelector('#nature-tab1').style.display = 'block';
@@ -391,7 +418,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelector('#culture-tab3').style.display = 'none';
 
             // Make the first nature tab active
-            document.querySelector('#nature-tab1').click();
+         //document.querySelector('#nature-tab1').click();
         }
     }
 
