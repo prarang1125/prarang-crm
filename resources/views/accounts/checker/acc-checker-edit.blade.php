@@ -1,18 +1,18 @@
 @extends('layouts.admin.admin')
-@section('title', 'Checker Edit')
+@section('title', 'Account Checker Edit')
 
 @section('content')
 <!--start page wrapper -->
 <div class="page-content">
     <!--breadcrumb-->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div class="breadcrumb-title pe-3">Admin</div>
+        <div class="breadcrumb-title pe-3">Accounts</div>
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
-                    <li class="breadcrumb-item"><a href="{{ url('admin/checker/checker-listing')}}"><i class="bx bx-user"></i></a>
+                    <li class="breadcrumb-item"><a href="{{ url('accounts/checker/dashboard')}}"><i class="bx bx-user"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Checker Edit</li>
+                    <li class="breadcrumb-item active" aria-current="page">Accounts     Checker Edit</li>
                 </ol>
             </nav>
         </div>
@@ -27,9 +27,9 @@
                         {{ session('success') }}
                     </div>
                 @endif
-                <h6 class="mb-0 text-uppercase text-primary">Checker Edit</h6>
+                <h6 class="mb-0 text-uppercase text-primary">Accounts Checker Edit</h6>
                 <hr/>
-                <form  action="{{ route('admin.checker-update' , $chitti->chittiId) }}" method="POST" enctype="multipart/form-data">
+                <form  action="{{ route('accounts.acc-checker-update' , $chitti->chittiId) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     {{-- image preview and image thumbnail and content section --}}
@@ -350,7 +350,7 @@
 
                         {{-- <button type="submit" class="btn btn-primary" name="action" value="send_to_maker">Send to maker</button> --}}
 
-                        <a href="{{ route('admin.checker-chitti-return-to-maker-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}" class="btn btn-primary">Send to maker</a>
+                        <a href="{{ route('accounts.acc-checker-chitti-return-to-maker-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}" class="btn btn-primary">Send to maker</a>
 
                         <button type="submit" class="btn btn-primary" name="action" value="send_to_uploader">Send to Uploader</button>
                     </div>
@@ -361,7 +361,7 @@
 </div>
 <!--end page wrapper -->
 <script>
-    const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
+    const uploadUrl = "{{ route('accounts.acc-ckeditor-upload') }}";
     const csrfToken = "{{ csrf_token() }}";
 </script>
 <script>
