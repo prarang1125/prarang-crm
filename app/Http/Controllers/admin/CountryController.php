@@ -14,7 +14,7 @@ class CountryController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-
+        // TODO::Sort it to Display letest record on Top
         $mcountrys = Mcountry::where('isActive', 1)
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
@@ -50,7 +50,7 @@ class CountryController extends Controller
             $countryImage = $request->file('countryImage');
             $countryImageName = time() . '_' . $countryImage->getClientOriginalName();
             $countryImage->move(public_path('uploads/country_images'), $countryImageName);
-
+            // TODO::Update The Code TO Store in Storage.
             $countryMap = $request->file('countryMap');
             $countryMapName = time() . '_' . $countryMap->getClientOriginalName();
             $countryMap->move(public_path('uploads/country_maps'), $countryMapName);
