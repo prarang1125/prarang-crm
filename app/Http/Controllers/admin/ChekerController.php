@@ -286,6 +286,7 @@ class ChekerController extends Controller
 
             if ($request->action === 'send_to_uploader')
             {
+                dd('jfh');
                 $chitti->update([
                     'uploaderStatus'   => 'sent_to_uploader',
                     'updated_at'    => $currentDateTime,
@@ -297,7 +298,6 @@ class ChekerController extends Controller
                     ->with('success', 'Sent to Uploader successfully.');
             }
 
-            //comment code
             // elseif($request->action === 'update_checker')
             // {
             //     $currentDate = date("d-M-y H:i:s");
@@ -323,6 +323,7 @@ class ChekerController extends Controller
                 $chitti->update([
                     'dateOfReturnToMaker'       => $currentDate,
                     'returnDateMaker'           => $currentDate ,
+
                     'makerStatus'               => 'sent_to_checker',
                     'checkerId'                 => Auth::guard('admin')->user()->userId,
                     'description'   => $request->content,
@@ -386,7 +387,6 @@ class ChekerController extends Controller
     #this method is use for return from checker to maker with region
     public function checkerChittiReturnMakerRegion(Request $request, $id)
     {
-
         $cityCode   = $request->query('City');
         $checkerId  = $request->query('checkerId');
 
@@ -399,7 +399,6 @@ class ChekerController extends Controller
     #this method is use for update eturn from checker to maker with region
     public function checkerChittiSendToMaker(Request $request, $id)
     {
-
         $checkerId   = $request->query('checkerId');
         $City        = $request->query('City');
         $currentDate = date("d-M-y H:i:s");
