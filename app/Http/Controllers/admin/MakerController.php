@@ -23,28 +23,11 @@ use App\Models\Chittitagmapping;
 
 class MakerController extends Controller
 {
-    #this method is use for show the listing of maker
-    // public function index()
-    // {
-    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-    //     ->whereNotNull('Title')
-    //     ->where('Title', '!=', '')
-    //     ->where('makerStatus', '=', 'sent_to_checker')
-    //     // ->where('is_active', 1)
-    //     // ->where('checkerStatus', '=','maker_to_checker')
-    //     ->select('*')
-    //     ->orderByDesc('dateOfCreation')
-    //     ->get();
-
-    //     $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
-    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-    //     return view('admin.maker.maker-listing', compact('chittis', 'geographyOptions', 'notification'));
-    // }
+   
 
     public function index(Request $request)
     {
-        $search = $request->input('search'); // Get the search query from the request
-
+        $search = $request->input('search');
         // Fetch Chitti data with pagination and optional search filtering
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
             ->when($search, function ($query, $search) {
@@ -299,7 +282,6 @@ class MakerController extends Controller
 
             foreach ($images as $img) {
                 $src = $img->getAttribute('src');
-
                 if (Str::startsWith($src, 'data:image')) {
                     preg_match('/data:image\/(?<mime>.*?)\;base64,(?<data>.*)/', $src, $matches);
                     $imageData = base64_decode($matches['data']);
@@ -307,8 +289,6 @@ class MakerController extends Controller
                     $imageName = time() . '_' . uniqid() . '.' . $imageMime;
                     $path = public_path('uploads/content_images/') . $imageName;
                     file_put_contents($path, $imageData);
-
-                    // Replace base64 with file URL
                     $img->setAttribute('src', asset('uploads/content_images/' . $imageName));
                 }
             }
@@ -319,8 +299,7 @@ class MakerController extends Controller
             $chitti = Chitti::findOrFail($id);
 // dd($request->action);
             if ($request->action === 'send_to_checker') {
-                // dd($request);
-                $chitti->update([
+                 $chitti->update([
                     'makerStatus'   => 'sent_to_checker',
                     'checkerStatus' => 'maker_to_checker',
                     'updated_at'    => $currentDateTime,
@@ -328,20 +307,23 @@ class MakerController extends Controller
                     'return_chitti_post_from_checker_id' => 0,
                     'returnDateToChecker' => $currentDateTime,
                     'makerId'       => Auth::guard('admin')->user()->userId,
-                    'finalStatus'   => 'Null',
+                    // 'finalStatus'   => 'Null',
                 ]);
                 DB::commit();
                 // Redirect to the checker listing
                 return redirect()->route('admin.maker-listing', $chitti->chittiId)
                     ->with('success', 'Sent to Checker successfully.');
+            
+            
             } else {
                 $chitti->update([
                     'description'   => $request->content,
                     'Title'         => $request->title,
                     'SubTitle'      => $request->subtitle,
+                    'checkerStatus' => 'maker_to_checker',
                     'makerStatus'   => 'sent_to_checker',
                     'makerId'       => Auth::guard('admin')->user()->userId,
-                    'finalStatus'   => 'Null',
+                    // 'finalStatus'   => 'Null',
                     // 'checkerStatus' => 'Null',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
@@ -482,6 +464,6 @@ class MakerController extends Controller
         $chitti->Title = $validatedData['Title'];
         $chitti->subTitle = $validatedData['subTitle'];
         $chitti->save();
-        return redirect()->route('admin.maker-listing')->with('success', 'Post Title Updated Successfully.');
+        return redirect()->back()->with('success', 'Post Title Updated Successfully.');
     }
 }

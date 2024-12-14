@@ -58,7 +58,7 @@ class PostAnalyticsCheckerController extends Controller
     {
         $cid = $request->query('id');
         $cityCode = $request->query('city');
-        $chitti  = Chitti::where('chittiId', $cid)->where('areaId', $cityCode)->first();
+        $chitti  = Chitti::where('chittiId', $cid)->first();
         return view('admin.postanalyticschecker.post-analytics-checker-edit', compact('chitti'));
     }
 
