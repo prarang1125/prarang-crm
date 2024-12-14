@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\NewRegistrationMail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Auth\Events\Login;
 use App\Http\Controllers\AccountsController;
@@ -31,8 +32,24 @@ use App\Http\Controllers\accounts\AccMakerController;
 use App\Http\Controllers\accounts\AccCKEditorController;
 use App\Http\Controllers\accounts\AccChekerController;
 use App\Http\Controllers\accounts\AccUploaderController;
+use Illuminate\Support\Facades\Mail;
 
-Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
+// Route::get('/',function(){
+//     Mail::to('vivek.k@prarang.in')->send(new NewRegistrationMail());
+// });
+Route::get('/test-mail', function () {
+    try {
+        Mail::raw('This is a test email from Zoho SMTP.', function ($message) {
+            $message->to('recipient@example.com') // Replace with a valid email
+                    ->subject('Test Email');
+        });
+        return 'Email sent successfully!';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+});
+
+// Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
 
 Route::group(['prefix' => 'accounts'], function(){
     Route::group(['middleware' => 'guest'], function(){
