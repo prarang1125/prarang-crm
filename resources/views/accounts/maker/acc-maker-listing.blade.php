@@ -58,7 +58,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h6 class="mb-0 text-uppercase">Maker Listing</h6>
                 <a class="nav-link dropdown-toggle-nocaret position-relative btn btn-outline-primary p-1"
-                    href="{{ route('admin.post-return-from-checker-listing') }}"
+                    href="{{ route('accounts.acc-post-return-from-checker-listing') }}"
                     role="button">
                     @if($notification > 0)
                     <span class="alert-count">{{ $notification }}</span>
