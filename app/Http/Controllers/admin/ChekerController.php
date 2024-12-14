@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
@@ -21,19 +22,19 @@ use App\Models\Chittitagmapping;
 class ChekerController extends Controller
 {
     // public function indexMain()
-        // {
-        //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        //     ->whereNotNull('Title')
-        //     ->where('Title', '!=', '')
-        //     ->where('checkerStatus', '!=', '')
-        //     ->whereIn('checkerStatus',['maker_to_checker'])
-        //     ->where('makerStatus', 'sent_to_checker')
-        //     ->orderByDesc('dateOfCreation')
-        //     ->whereNotIn('finalStatus',['approved','deleted'])
-        //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
-        //     ->get();
-        //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-        //     return view('admin.checker.checker-listing', compact('chittis', 'geographyOptions'));
+    // {
+    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+    //     ->whereNotNull('Title')
+    //     ->where('Title', '!=', '')
+    //     ->where('checkerStatus', '!=', '')
+    //     ->whereIn('checkerStatus',['maker_to_checker'])
+    //     ->where('makerStatus', 'sent_to_checker')
+    //     ->orderByDesc('dateOfCreation')
+    //     ->whereNotIn('finalStatus',['approved','deleted'])
+    //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
+    //     ->get();
+    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+    //     return view('admin.checker.checker-listing', compact('chittis', 'geographyOptions'));
     // }
 
     public function indexMain(Request $request)
@@ -42,19 +43,20 @@ class ChekerController extends Controller
         $search = $request->input('search');
 
         // Query builder with search and filter conditions
-         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
             ->whereNotNull('Title')
             ->where('Title', '!=', '')
-            ->whereIn('checkerStatus', ['maker_to_checker'])
             ->where('makerStatus', 'sent_to_checker')
-             ->whereNotIn('finalStatus', ['approved', 'deleted'])
-             ->whereNot('uploaderStatus','sent_to_uploader')
+            ->whereIn('checkerStatus', ['maker_to_checker'])
+            ->whereNotIn('finalStatus', ['approved', 'deleted'])
+            // ->where('uploaderStatus', '!=', 'sent_to_uploader')
             ->when($search, function ($query) use ($search) {
-                $query->where('Title', 'LIKE', "%{$search}%") // Search in English
-                    ->orWhere('createDate', 'LIKE', "%".mb_strtolower($search, 'UTF-8')."%"); // Handle Unicode (Hindi, etc.)
+                $query->where('Title', 'LIKE', "%{$search}%") // Search by Title
+                    ->orWhereRaw('LOWER(createDate) LIKE ?', ['%' . mb_strtolower($search, 'UTF-8') . '%']); // Case-insensitive search
             })
             ->orderByDesc('dateOfCreation')
-            ->paginate(10); // Adjust the number of items per page
+            ->paginate(10);
+        // Adjust the number of items per page
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
@@ -64,17 +66,17 @@ class ChekerController extends Controller
 
     #this method is use for show the listing of maker
     // public function index($id)
-        // {
-        //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        //     ->where('chittiId', $id)
-        //     ->whereNotNull('Title')
-        //     ->where('Title', '!=', '')
-        //     ->where('checkerStatus', '!=', '')
-        //     ->where('makerStatus', 'sent_to_checker')
-        //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
-        //     ->get();
-        //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-        //     return view('admin.checker.checker-listing', compact('chittis', 'geographyOptions'));
+    // {
+    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+    //     ->where('chittiId', $id)
+    //     ->whereNotNull('Title')
+    //     ->where('Title', '!=', '')
+    //     ->where('checkerStatus', '!=', '')
+    //     ->where('makerStatus', 'sent_to_checker')
+    //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus')
+    //     ->get();
+    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+    //     return view('admin.checker.checker-listing', compact('chittis', 'geographyOptions'));
     // }
 
     // public function index(Request $request , $id)
@@ -209,14 +211,14 @@ class ChekerController extends Controller
 
 
         $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')
-        ->whereNotIn('finalStatus',['approved','deleted'])
-        ->whereNot('checkerStatus','sent_to_uploader')->findOrFail($id);
+            ->whereNotIn('finalStatus', ['approved', 'deleted'])
+            ->whereNot('checkerStatus', 'sent_to_uploader')->findOrFail($id);
 
 
         $image = $chitti->chittiimagemappings()->first();
         // $chittiTagMapping = Chittitagmapping::where('chittiId', $id)->first();
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
-        $subTag=$chittiTagMapping->tag->tagCategoryId;
+        $subTag = $chittiTagMapping->tag->tagCategoryId;
         $timelines = Mtag::where('tagCategoryId', 1)->get();
         $manSenses = Mtag::where('tagCategoryId', 2)->get();
         $manInventions = Mtag::where('tagCategoryId', 3)->get();
@@ -233,7 +235,7 @@ class ChekerController extends Controller
 
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
 
-        return view('admin.checker.checker-edit', compact('chitti', 'image','subTag','geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
+        return view('admin.checker.checker-edit', compact('chitti', 'image', 'subTag', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
     }
 
     public function checkerUpdate(Request $request, $id)
@@ -284,12 +286,11 @@ class ChekerController extends Controller
             // Update Chitti record
 
             $chitti = Chitti::findOrFail($id);
-            if ($request->action === 'send_to_uploader')
-            {
-                
+            if ($request->action === 'send_to_uploader') {
+
                 $chitti->update([
                     'uploaderStatus'   => 'sent_to_uploader',
-                    'checkerStatus'=>'sent_to_uploader',
+                    'checkerStatus' => 'sent_to_uploader',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);
@@ -317,13 +318,12 @@ class ChekerController extends Controller
             //     ]);
             //     return redirect()->route('admin.checker-listing', ['id' => $chitti->chittiId])->with('success', 'Checker updated successfully.');
             // }
-            else
-            {
+            else {
                 // dd('your data is here');
                 $currentDate = date("d-M-y H:i:s");
                 $chitti->update([
                     'dateOfReturnToMaker'       => $currentDate,
-                    'returnDateMaker'           => $currentDate ,
+                    'returnDateMaker'           => $currentDate,
 
                     'makerStatus'               => 'sent_to_checker',
                     'checkerId'                 => Auth::guard('admin')->user()->userId,
@@ -411,7 +411,7 @@ class ChekerController extends Controller
         $chitti = Chitti::findOrFail($id);
         $chitti->update([
             'dateOfReturnToMaker'       => $currentDate,
-            'returnDateMaker'           => $currentDate ,
+            'returnDateMaker'           => $currentDate,
             'makerStatus'               => 'return_chitti_post_from_checker',
             'checkerId'                 => $checkerId,
             'checkerReason'             => $request->returnChittiToMakerWithRegion,
