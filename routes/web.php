@@ -52,6 +52,7 @@ Route::group(['prefix' => 'accounts'], function(){
             Route::post('/maker/acc-maker-store', [AccMakerController::class, 'accMakerStore'])->name('accounts.acc-maker-store');
 
             Route::get('/maker/acc-maker-edit/{id}', [AccMakerController::class, 'accMakerEdit'])->name('accounts.acc-maker-edit');
+            Route::get('/maker/acc-maker-delete/{id}', [AccMakerController::class, 'accMakerDelete'])->name('accounts.acc-maker-delete');
 
             Route::put('/maker/acc-maker-update/{id}', [AccMakerController::class, 'accMakerUpdate'])->name('accounts.acc-maker-update');
         #this method is use for account maker listing end
@@ -93,6 +94,9 @@ Route::group(['prefix' => 'accounts'], function(){
         //     // Route::get('/checker/profile', [ChekerController::class, 'profile'])->name('checker.profile');
         // });
 
+
+        Route::post('/maker/maker-update-title',[MakerController::class,'updateTitle'])->name('update.title');
+
         #this method is use for account uploader listing start
             Route::get('/uploader/dashboard', [AccUploaderController::class, 'accIndexMain'])->name('accounts.uploader-dashboard');
 
@@ -110,6 +114,8 @@ Route::group(['prefix' => 'accounts'], function(){
         // });
     });
 });
+
+
 
 Route::group(['prefix' => 'admin'], function(){
     Route::group(['middleware' => 'admin.guest'], function(){
@@ -233,7 +239,6 @@ Route::group(['prefix' => 'admin'], function(){
             Route::get('/maker/maker-edit/{id}', [MakerController::class, 'makerEdit'])->name('admin.maker-edit');
             Route::put('/maker/maker-update/{id}', [MakerController::class, 'makerUpdate'])->name('admin.maker-update');
             Route::get('/maker/maker-delete/{id}', [MakerController::class, 'makerdelete'])->name('admin.maker-delete');
-            Route::post('/maker/maker-update-title',[MakerController::class,'updateTitle'])->name('update.title');
         #this route is use for admin maker end
 
         #this route is use for admin checker start

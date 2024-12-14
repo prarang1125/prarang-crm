@@ -5,6 +5,8 @@ namespace  App\Http\Controllers\accounts;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Chitti;
@@ -22,15 +24,27 @@ use App\Models\Chittitagmapping;
 class AccMakerController extends Controller
 {
     #this method is use for show the listing of maker
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->input('search'); // Get the search query from the request
+
+        // Fetch Chitti data with pagination and optional search filtering
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        ->whereNotNull('Title')
-        ->where('Title', '!=', '')
-        ->where('makerStatus', '=', 'sent_to_checker')
-        // ->where('checkerStatus', '=','maker_to_checker')
-        ->select('*')
-        ->get();
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('Title', 'LIKE', '%' . $search . '%')
+                    ->orWhere('SubTitle', 'LIKE', '%' . $search . '%')
+                    ->orWhere('createDate', 'LIKE', '%' . $search . '%');
+                });
+            })
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->where('makerStatus', '=', 'sent_to_checker')
+            ->where('finalStatus', '!=', 'deleted')
+            ->select('*')
+            ->orderByDesc('dateOfCreation')
+            ->paginate(3); // Change '10' to the number of items per page
+
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         return view('accounts.maker.acc-maker-listing', compact('chittis', 'geographyOptions', 'notification'));
@@ -41,6 +55,7 @@ class AccMakerController extends Controller
     {
         // Fetch data from the Mtag table based on tagCategoryId
         $timelines = Mtag::where('tagCategoryId', 1)->get();
+        // dd($timelines);
         $manSenses = Mtag::where('tagCategoryId', 2)->get();
         $manInventions = Mtag::where('tagCategoryId', 3)->get();
         $geographys = Mtag::where('tagCategoryId', 4)->get();
@@ -48,9 +63,9 @@ class AccMakerController extends Controller
         $floras = Mtag::where('tagCategoryId', 6)->get();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         // Fetch all regions, cities, and countries
-        $regions = Mregion::all();
-        $cities = Mcity::all();
-        $countries = Mcountry::all();
+        $regions = Mregion::where('isActive', 1)->get();
+        $cities = Mcity::where('isActive', 1)->get();
+        $countries = Mcountry::where('isActive', 1)->get();
 
         return view('accounts.maker.acc-maker-register', compact('timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras', 'geographyOptions', 'regions', 'cities', 'countries'));
     }
@@ -58,19 +73,24 @@ class AccMakerController extends Controller
     #this method is use for accounts maker store
     public function accMakerStore(Request $request)
     {
+      
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
             'makerImage' => 'required|image|max:2048',
             'geography' => 'required',
             'c2rselect' => 'required',
             'title'     => 'required|string|max:255',
-            'subtitle' => 'required|string|max:255',
+            // 'subtitle' => 'required|string|max:255',
+            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'forTheCity' => 'required|boolean',
-            'isCultureNature' => 'required|boolean',
+            // 'isCultureNature' => 'required|boolean',
+            'tagId' => 'required',
         ]);
+        
+        if ($validator->passes()) {
 
-        if($validator->passes())
-        {
+            DB::beginTransaction();  // Use DB facade
+            try {
             $currentDateTime = getUserCurrentTime();
 
             $content = $request->content;
@@ -98,16 +118,15 @@ class AccMakerController extends Controller
 
             // Save the updated content with proper image URLs
             $content = $dom->saveHTML();
-
             $chitti = new Chitti();
             $area_id = $request->c2rselect;
             $areaIdCode = '';
-            if($request->geography == 6){//6 is use for city
-                $areaIdCode = 'c'.$area_id;
-            }elseif($request->geography == 5){//5 is use for region
-                $areaIdCode = 'r'.$area_id;
-            }elseif($request->geography == 7){// 7 is use for country
-                $areaIdCode = 'con'.$area_id;
+            if ($request->geography == 6) { //6 is use for city
+                $areaIdCode = 'c' . $area_id;
+            } elseif ($request->geography == 5) { //5 is use for region
+                $areaIdCode = 'r' . $area_id;
+            } elseif ($request->geography == 7) { // 7 is use for country
+                $areaIdCode = 'con' . $area_id;
             }
 
             $chitti->languageId = 1;
@@ -118,11 +137,13 @@ class AccMakerController extends Controller
             $chitti->SubTitle = $request->subtitle;
             $chitti->makerId = Auth::user()->userId;
             $chitti->makerStatus = 'sent_to_checker';
-            $chitti->finalStatus = '';
+            $chitti->finalStatus = '';            
+            // $chitti->checkerStatus = 'maker_to_checker';
             $chitti->cityId = $area_id;
             $chitti->areaId = $areaIdCode;
             $chitti->geographyId = $request->geography;
             $chitti->created_at = $currentDateTime;
+            $chitti->is_active = 1;
             $chitti->created_by = Auth::user()->userId;
             $chitti->save();
             // get last inserted id
@@ -135,11 +156,11 @@ class AccMakerController extends Controller
             $facity->created_by = Auth::user()->userId;
             $facity->save();
 
-            if($request->hasFile('makerImage')){
+            if ($request->hasFile('makerImage')) {
                 $makerImage = $request->file('makerImage');
                 $makerImageName = time() . '_' . $makerImage->getClientOriginalName();
                 $makerImage->move(public_path('uploads/maker_image/'), $makerImageName);
-                $url = public_path('uploads/maker_image/')."".$makerImageName;
+                $url = public_path('uploads/maker_image/') . "" . $makerImageName;
                 // $serviceAccessUrl = "admin.prarang.in".$url;
                 $serviceAccessUrl = $url;
             }
@@ -166,11 +187,18 @@ class AccMakerController extends Controller
 
             $chittitagmapping = new Chittitagmapping();
             $chittitagmapping->chittiId = $lastId;
-            $chittitagmapping->tagId = $request->isCultureNature;
+            $chittitagmapping->tagId = $request->tagId;
             $chittitagmapping->created_at = $currentDateTime;
-            $chittitagmapping->created_by = Auth::user()->userId;
+            $chittitagmapping->created_by =Auth::user()->userId;
             $chittitagmapping->save();
+
+           DB::commit();  // Commit transaction
             return redirect()->route('accounts.maker-dashboard')->with('success', 'Post created successfully.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();  // Rollback transaction
+            return redirect()->route('accounts.acc-maker-register')->with('error', 'An error occurred, please try again.');
+        }
         }else{
             return redirect()->route('accounts.acc-maker-register')
                 ->withErrors($validator)
@@ -182,24 +210,28 @@ class AccMakerController extends Controller
     public function accMakerEdit($id)
     {
         $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->findOrFail($id);
+        if ($chitti->checkerStatus == 'maker_to_checker' || $chitti->checkerStatus == 'sent_to_uploader') {
+            return redirect()->back()->with('error', 'not allow to edit');
+        }
         $image = $chitti->chittiimagemappings()->first();
         // $chittiTagMapping = Chittitagmapping::where('chittiId', $id)->first();
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
+        $subTag=$chittiTagMapping->tag->tagCategoryId;
         $timelines = Mtag::where('tagCategoryId', 1)->get();
         $manSenses = Mtag::where('tagCategoryId', 2)->get();
-        $manInventions = Mtag::where('tagCategoryId', 3)->get();
+        $manInventions = Mtag::where( 'tagCategoryId', 3)->get();
         $geographys = Mtag::where('tagCategoryId', 4)->get();
         $faunas = Mtag::where('tagCategoryId', 5)->get();
         $floras = Mtag::where('tagCategoryId', 6)->get();
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-        $regions = Mregion::all();
-        $cities = Mcity::all();
-        $countries = Mcountry::all();
+        $regions = Mregion::where('isActive', 1)->get();
+        $cities = Mcity::where('isActive', 1)->get();
+        $countries = Mcountry::where('isActive', 1)->get();        
         $geographyMapping = $chitti->geographyMappings->first();
         $facityValue = $chitti->facity ? $chitti->facity->value : null;
 
-        $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
+         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
 
         // Check if chittiTagMapping, tag, and tagcategory are set before accessing tagCategoryInUnicode
         // $tagCategoryInUnicode = $chittiTagMapping && $chittiTagMapping->tag && $chittiTagMapping->tag->tagcategory
@@ -209,24 +241,29 @@ class AccMakerController extends Controller
         // dd($tagCategoryInUnicode);
         // return view('admin.maker.maker-edit', compact('chitti', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping'));
 
-        return view('accounts.maker.acc-maker-edit', compact('chitti', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
+        return view('accounts.maker.acc-maker-edit', compact('chitti','subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
     }
 
     public function accMakerUpdate(Request $request, $id)
     {
+       // dd($request);
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
             'c2rselect' => 'required',
             'title'     => 'required|string|max:255',
-            'subtitle' => 'required|string|max:255',
+            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            // 'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
-            'isCultureNature' => 'required|boolean',
+            // 'isCultureNature' => 'required|boolean',
+            'tagId' => 'required',
         ]);
-
+       
         if ($validator->passes()) {
-
+            
+            // DB::beginTransaction();
+            // try {
             $currentDateTime = getUserCurrentTime();
 
             // Handle content images (base64 to file conversion and updating the content HTML)
@@ -255,12 +292,14 @@ class AccMakerController extends Controller
 
             // Update Chitti record
             $chitti = Chitti::findOrFail($id);
+          
 
-            if ($request->action === 'send_to_checker')
-            {
+
+            if ($request->action === 'send_to_checker') {
+                // dd($request);
                 $chitti->update([
                     'makerStatus'   => 'sent_to_checker',
-                    // 'checkerStatus' => 'maker_to_checker',
+                    'checkerStatus' => 'maker_to_checker',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
                     'return_chitti_post_from_checker_id' => 0,
@@ -268,13 +307,11 @@ class AccMakerController extends Controller
                     'makerId'       => Auth::user()->userId,
                     'finalStatus'   => 'Null',
                 ]);
-
+                // DB::commit();
                 // Redirect to the checker listing
-                return redirect()->route('accounts.maker-dashboard', $chitti->chittiId)
+                return redirect()->route('admin.maker-listing', $chitti->chittiId)
                     ->with('success', 'Sent to Checker successfully.');
-            }
-            else
-            {
+            } else {
                 $chitti->update([
                     'description'   => $request->content,
                     'Title'         => $request->title,
@@ -288,7 +325,7 @@ class AccMakerController extends Controller
                     'return_chitti_post_from_checker_id' => 0,
                     'returnDateToChecker' => $currentDateTime,
                 ]);
-
+              
                 // Update Facity record
                 Facity::where('from_chittiId', $id)->update([
                     'value'         => $request->forTheCity,
@@ -324,13 +361,19 @@ class AccMakerController extends Controller
 
                 // Update Tag Mapping
                 Chittitagmapping::where('chittiId', $id)->update([
-                    'tagId'         => $request->isCultureNature,
+                    'tagId'         => $request->tagId,
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
                 ]);
-
+                // DB::commit();
                 return redirect()->route('accounts.maker-dashboard')->with('success', 'Maker updated successfully.');
             }
+        // } catch (\Exception $e) {
+           
+        //     DB::rollBack();
+        //     Log::error('Maker Update Error: ' . $e->getMessage(), ['exception' => $e]);
+        //     return redirect()->back()->with('error', 'An error occurred while updating the maker.')->withInput();
+        // }
         } else {
             return redirect()->back()
                 ->withInput()
@@ -339,17 +382,42 @@ class AccMakerController extends Controller
     }
 
     #this method is use for account chitti return from checker
-    public function accChittiListReturnFromCheckerL()
+    public function accChittiListReturnFromCheckerL(Request $request)
     {
-        // $chittis = Chitti::where('makerStatus', 'return_chitti_post_from_checker')->get();
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        $query = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
         ->whereNotNull('Title')
         ->where('Title', '!=', '')
-        ->where('return_chitti_post_from_checker_id',  1)
-        ->select('*')
-        ->get();
-        $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
-        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        ->where('finalStatus', '!=', 'deleted')
+        ->where('return_chitti_post_from_checker_id', 1);
+
+    // Handle search
+    if ($request->has('search') && $request->input('search') != '') {
+        $search = $request->input('search');
+        $query->where(function ($q) use ($search) {
+            $q->where('Title', 'LIKE', "%$search%")
+            ->orWhere('description', 'LIKE', "%$search%");
+        });
+    }
+
+    // Paginate results
+    $chittis = $query->paginate(2); // Adjust the number of items per page as needed
+
+    $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
+    $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         return view('accounts.maker.acc-chitti-rejected-from-checker-listing', compact('geographyOptions', 'notification', 'chittis'));
+    }
+    public function accMakerDelete($id)
+    {
+        try {
+            $chittis = Chitti::findOrFail($id);
+            $chittis->finalStatus ='deleted';
+            $chittis->makerStatus="sent_to_checker";
+            $chittis->return_chitti_post_from_checker_id=0;
+            $chittis->save();
+
+            return redirect()->route('accounts.maker-dashboard')->with('success', 'Listing soft deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('accounts.maker-dashboard')->withErrors(['error' => 'An error occurred while trying to soft delete the listing.']);
+        }
     }
 }
