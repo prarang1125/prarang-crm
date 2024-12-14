@@ -243,7 +243,7 @@ Route::group(['prefix' => 'admin'], function(){
 
         #this route is use for admin checker start
             Route::get('/checker/checker-listing', [ChekerController::class, 'indexMain'])->name('admin.checker-listing');
-            Route::get('/checker/checker-listing/{id}', [ChekerController::class, 'index'])->name('admin.checker-listing');
+            // Route::get('/checker/checker-listing/{id}', [ChekerController::class, 'index'])->name('admin.checker-listing');
             Route::get('/checker/checker-edit/{id}', [ChekerController::class, 'checkerEdit'])->name('admin.checker-edit');
             Route::put('/checker/checker-update/{id}', [ChekerController::class, 'checkerUpdate'])->name('admin.checker-update');
         #this route is use for admin checker end
@@ -265,6 +265,7 @@ Route::group(['prefix' => 'admin'], function(){
 
         #this route is use for admin deleted post listing start
             Route::get('/deleted-post/deleted-post-listing', [DeletedPostController::class, 'index'])->name('admin.deleted-post-listing');
+            Route::get('/deleted-post-to-checker/{chittiId}',[DeletedPostController::class, 'deletedPostToChecker'])->name('admin.deletepost-to-checker');
         #this route is use for admin deleted post listing end
 
         #this route is use for admin post analytics maker start

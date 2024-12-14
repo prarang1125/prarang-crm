@@ -129,7 +129,7 @@ class AdminController extends Controller
         }
 
         // Paginate results
-        $users = $query->paginate(5);
+        $users = $query->paginate(20);
 
         return view('admin.user-listing', compact('users'));
     }
@@ -137,8 +137,8 @@ class AdminController extends Controller
 
     #this method is use for create/register new user form page
     public function useruRegister(){
-        $roles = Mrole::all();
-        $languagescripts = Mlanguagescript::all();
+        $roles = Mrole::where('status',1)->get();
+        $languagescripts = Mlanguagescript::where('isActive',1)->get();
         return view('admin.user-register', compact('roles', 'languagescripts'));
     }
 
@@ -238,9 +238,10 @@ class AdminController extends Controller
 
     #this method is use for show the existing data in field and also we change it.
     public function userEdit($id){
+        #Vivek Yadav
         $user = Muser::findOrFail($id);
-        $languagescripts = Mlanguagescript::all();
-        $roles = Mrole::all();
+        $languagescripts = Mlanguagescript::where('isActive',1)->get();
+        $roles = Mrole::where('status',1)->get(); 
 
         return view('admin.user-edit', compact('user', 'roles', 'languagescripts'));
     }
@@ -293,21 +294,8 @@ class AdminController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            // 'first_last_name' => 'required',
-            // 'email_id'       => 'required',
-            // 'role_name'      => 'required',
-            // 'role_id'        => 'nullable',
-            // 'language'       => 'required',
-            // 'language_id'    => 'nullable',
             'password'       => 'required|confirmed',
-            // 'reset_password' => 'required'
         ]);
-
-        // $fullName = $request->first_last_name;
-        // $names = explode(' ', $fullName);
-
-        // $first_name = $names[0] ?? '';
-        // $last_name = $names[1] ?? '';
 
         if ($validator->passes()) {
             $user = Muser::findOrFail($id);

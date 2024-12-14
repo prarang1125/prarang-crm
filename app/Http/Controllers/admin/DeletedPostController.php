@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
@@ -6,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Makerlebal;
 use App\Models\Chitti;
+use Illuminate\Support\Facades\Auth;
 
 class DeletedPostController extends Controller
 {
@@ -31,15 +33,33 @@ class DeletedPostController extends Controller
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('Title', 'LIKE', "%{$search}%")
-                    ->orWhere('SubTitle', 'LIKE', "%{$search}%"); // Assuming SubTitle might store another language
+                        ->orWhere('SubTitle', 'LIKE', "%{$search}%"); // Assuming SubTitle might store another language
                 });
             })
+            ->orderByDesc('dateOfCreation')
             ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus')
-            ->paginate(10); // Adjust the number of items per page as needed
+            ->paginate(30); // Adjust the number of items per page as needed
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
         return view('admin.deleted-post.deleted-post-listing', compact('chittis', 'geographyOptions'));
     }
 
+    function deletedPostToChecker($chittiId)
+    {
+        $currentDateTime = getUserCurrentTime();
+        $chitti = Chitti::findOrFail($chittiId);
+
+        $chitti->update([
+            'makerStatus'   => 'sent_to_checker',
+            'checkerStatus' => 'maker_to_checker',
+            'updated_at'    => $currentDateTime,
+            'updated_by'    => Auth::guard('admin')->user()->userId,
+            'return_chitti_post_from_checker_id' => 0,
+            'returnDateToChecker' => $currentDateTime,
+            'makerId'       => Auth::guard('admin')->user()->userId,
+            'finalStatus'   => '',
+        ]);
+        return redirect()->route('admin.deleted-post-listing')->with('success','Post sent to checker.');
+    }
 }
