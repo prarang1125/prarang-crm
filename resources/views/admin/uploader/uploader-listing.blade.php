@@ -93,7 +93,7 @@
                                     @endforeach
                                     @if ($chitti->finalStatus == 'approved')
                                         <td>{{ $chitti->finalStatus }}</td>
-                                    @elseif ($chitti->finalStatus == 'sent_to_uploader')
+                                   @else
                                         <td>{{ $chitti->uploaderStatus }}</td>
                                     @endif
 

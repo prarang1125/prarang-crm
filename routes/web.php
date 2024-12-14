@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\NewRegistrationMail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Auth\Events\Login;
 use App\Http\Controllers\AccountsController;
@@ -32,8 +33,9 @@ use App\Http\Controllers\accounts\AccCKEditorController;
 use App\Http\Controllers\accounts\AccChekerController;
 use App\Http\Controllers\accounts\AccUploaderController;
 
-Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
 
+
+Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
 Route::group(['prefix' => 'accounts'], function(){
     Route::group(['middleware' => 'guest'], function(){
         Route::get('login', [LoginController::class, 'index'])->name('accounts.login');

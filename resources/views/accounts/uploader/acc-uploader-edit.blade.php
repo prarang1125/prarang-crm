@@ -406,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelector('#nature-tab3').style.display = 'none';
 
             // Make the first culture tab active
-         //   document.querySelector('#culture-tab1').click();
+          document.querySelector('#culture-tab1').click();
         } else if (natureRadio.checked) {
             // Show nature tabs and hide culture tabs
             document.querySelector('#nature-tab1').style.display = 'block';
@@ -418,7 +418,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelector('#culture-tab3').style.display = 'none';
 
             // Make the first nature tab active
-         //document.querySelector('#nature-tab1').click();
+         document.querySelector('#nature-tab1').click();
         }
     }
 
