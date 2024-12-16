@@ -21,22 +21,6 @@ use App\Models\Chittitagmapping;
 
 class ChekerController extends Controller
 {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
     public function indexMain(Request $request)
     {
         
@@ -66,11 +50,9 @@ class ChekerController extends Controller
     public function checkerEdit($id)
     {
 
-
         $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')
             ->whereNotIn('finalStatus', ['approved', 'deleted'])
             ->whereNot('checkerStatus', 'sent_to_uploader')->findOrFail($id);
-
 
         $image = $chitti->chittiimagemappings()->first();
         
