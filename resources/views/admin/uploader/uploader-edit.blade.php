@@ -179,12 +179,10 @@
                             </div>
                         </div>
                     </div>
-                    {{-- above city or about city code end--}}
-
                     {{-- nature and culture code start--}}
                     <div class="row mt-3">
                         <div class="col-sm-2">
-                            <div class="form-check">
+                            <div class="form-check">              
                                 <input class="form-check-input @error('isCultureNature') is-invalid @enderror" @if(in_array($subTag, config('tagidmap.1'))) checked @endif
                                     type="radio" name="isCultureNature" id="cultureNatureYes" value="1"
                                     {{ old('isCultureNature', $chittiTagMapping->tagId) == 1 ? 'checked' : '' }}> <!-- Default checked -->
@@ -193,7 +191,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-check">
-                                <input class="form-check-input @error('isCultureNature') is-invalid @enderror"  @if(in_array($subTag, config('tagidmap.2'))) checked @endif
+                                <input class="form-check-input @error('isCultureNature') is-invalid @enderror" @if(in_array($subTag, config('tagidmap.2'))) checked @endif
                                     type="radio" name="isCultureNature" id="cultureNatureNo" value="0"
                                     {{ old('isCultureNature', $chittiTagMapping->tagId) == 0 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="cultureNatureNo">Nature</label>
@@ -203,13 +201,13 @@
                             @enderror
                         </div>
                     </div>
-
+                   
                     <!-- Tab structure to display based on radio button selection -->
                     <div id="cultureNatureTabs" style="display: none;">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <!-- Culture tabs -->
                             <li class="nav-item">
-                                <a class="nav-link {{$subTag == 1 ? 'active' : ''}}" id="culture-tab1" data-bs-toggle="tab" href="#cultureTab1" role="tab" style="background-color: #ff0006;color: white;">Timelines</a>
+                                <a class="nav-link {{ $subTag == 1 ? 'active' : '' }}" id="culture-tab1" data-bs-toggle="tab" href="#cultureTab1" role="tab" style="background-color: #ff0006;color: white;">Timelines</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link {{$subTag == 2 ? 'active' : ''}}" id="culture-tab2" data-bs-toggle="tab" href="#cultureTab2" role="tab" style="background-color: #ffff18;color: #282828;">Man And his Senses</a>
@@ -231,7 +229,7 @@
                         </ul>
                     
                         <div class="tab-content">
-                            <div class="tab-pane fade show {{$subTag==1 ? "active": ""}}" id="cultureTab1" role="tabpanel">
+                            <div class="tab-pane fade  {{$subTag==1 ? "active show": ""}}" id="cultureTab1" role="tabpanel">
                                 <div class="row">
                                     @foreach ($timelines as $timeline)
                                     <div class="col-md-4">
@@ -250,12 +248,11 @@
                             </div>
 
                             <!-- Content for Man And His Senses -->
-                            <div class="tab-pane fade {{$subTag==2 ? "active": ""}}" id="cultureTab2" role="tabpanel">
+                            <div class="tab-pane fade {{$subTag==2 ? "active show": ""}}" id="cultureTab2" role="tabpanel">
                                 <div class="row">
                                     @foreach ($manSenses as $sense)
                                     <div class="col-md-4">
-                                        <div class="card">
-                                           
+                                        <div class="card">                                   
                                             <div class="card-body cardbodselect mt-3" style="background-color: #ffff18; color: #282828;">
                                                 <div class="d-flex align-items-center">
                                                     <input type="radio" name="tagId" value="{{ $sense->tagId }}"  {{ $sense->tagId == $chittiTagMapping->tagId ? 'checked' : '' }} id="sense{{ $sense->id }}" class="me-2">
@@ -270,7 +267,7 @@
                             </div>
 
                             <!-- Content for Man And His Inventions -->
-                            <div class="tab-pane fade {{$subTag==3 ? "active": ""}}" id="cultureTab3" role="tabpanel">
+                            <div class="tab-pane fade {{$subTag==3 ? "active show": ""}}" id="cultureTab3" role="tabpanel">
                                 <div class="row">
                                     @foreach ($manInventions as $invention)
                                     <div class="col-md-4">
@@ -345,8 +342,16 @@
                         </div>
                     </div>
                     <div class="modal-footer mt-3">
+                    @if($chitti->finalStatus ==='approved')
+                    <p>Published at {{$chitti->dateOfApprove  }}</p>
+                    @endif
                         <button type="submit" name="action" value="update_uploader" class="btn btn-primary">Update</button>
+                        
+                        @if($chitti->finalStatus !=='approved')
                         <button type="submit" name="action" value="approvd" class="btn btn-primary" onclick="return confirm('Are you sure you want to publish this to the post?')">Publish Post</button>
+                   
+
+                        @endif
                         {{-- <a href="{{ route('admin.uploader-listing-detail', $chitti->chittiId) }}" class="btn btn-primary">Send to Uploader</a> --}}
                     </div>
                 </form>
@@ -387,19 +392,22 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabsContainer = document.getElementById('cultureNatureTabs');
 
     function toggleTabs() {
+      
         tabsContainer.style.display = 'block'; // Show the tab section
+
         if (cultureRadio.checked) {
             // Show culture tabs and hide nature tabs
             document.querySelector('#culture-tab1').style.display = 'block';
             document.querySelector('#culture-tab2').style.display = 'block';
             document.querySelector('#culture-tab3').style.display = 'block';
+            
 
             document.querySelector('#nature-tab1').style.display = 'none';
             document.querySelector('#nature-tab2').style.display = 'none';
             document.querySelector('#nature-tab3').style.display = 'none';
 
             // Make the first culture tab active
-            //document.querySelector('#culture-tab1').click();
+          document.querySelector('#culture-tab1').click();
         } else if (natureRadio.checked) {
             // Show nature tabs and hide culture tabs
             document.querySelector('#nature-tab1').style.display = 'block';
@@ -411,8 +419,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelector('#culture-tab3').style.display = 'none';
 
             // Make the first nature tab active
-        //    document.querySelector('#nature-tab1').click();
-        }
+        document.querySelector('#nature-tab1').click();
+        }        
     }
 
     // Event listeners for radio buttons

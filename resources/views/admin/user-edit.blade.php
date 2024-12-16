@@ -80,17 +80,22 @@
                             @enderror
                         </div>
                         <!-- TODO::need TO Improve this code  -->
-                        <div class="col-md-6">
+                        <div class="col-md-6"> 
                             <label for="languageId" class="form-label">Language Script</label>
-                            <select id="languageId" class="form-select @error('languageId') is-invalid @enderror" name="languageId" >
+                            <select id="languageId" class="form-select @error('languageId') is-invalid @enderror" name="languageId">
                                 <option selected disabled>Choose...</option>
-                                <option value="1" {{ old('languageId', $user->languageId) == '1' ? 'selected' : '' }}>English</option>
-                                <option value="0" {{ old('languageId', $user->languageId) == '2' ? 'selected' : '' }}>हिंदी</option>
+                                @foreach ($languagescripts as $languagescript)
+                                    <option value="{{ $languagescript->id }}" 
+                                        {{ old('languageId', $user->languageId) == $languagescript->id ? 'selected' : '' }}>
+                                        {{ $languagescript->language }}
+                                    </option>
+                                @endforeach
                             </select>
                             @error('languageId')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
+                        
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-6">

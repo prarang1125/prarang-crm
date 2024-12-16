@@ -166,7 +166,6 @@ class AccChekerController extends Controller
             'title'     => 'required|string|max:255',
             'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
-            // 'isCultureNature' => 'required|boolean',
             'tagId'     => 'required'
         ]);
 
@@ -202,52 +201,38 @@ class AccChekerController extends Controller
             // dd($content);
 
             // Update Chitti record
-            $chitti = Chitti::findOrFail($id);
 
-            if ($request->action === 'send_to_uploader')
-            {
-                // dd('ddd');
+            $chitti = Chitti::findOrFail($id);
+            if ($request->action === 'send_to_uploader') {
+
                 $chitti->update([
                     'uploaderStatus'   => 'sent_to_uploader',
+                    'checkerStatus' => 'sent_to_uploader',
+
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
                 ]);
 
                 // Redirect to the checker listing
-                return redirect()->route('accounts.checker-dashboard', $chitti->chittiId)
+                return redirect()->route('accounts.checker-dashboard')
                     ->with('success', 'Sent to Uploader successfully.');
             }
-            // elseif($request->action === 'send_to_maker')
-            // {
-            //     $currentDate = date("d-M-y H:i:s");
-            //     $chitti->update([
-            //         'dateOfReturnToMaker'       => $currentDate,
-            //         'returnDateMaker'           => $currentDate ,
-            //         'makerStatus'               => 'return_chitti_post_from_checker',
-            //         'checkerId'                 => Auth::guard('admin')->user()->userId,
-            //         'checkerReason'             => $request->returnChittiToMakerWithRegion,
-            //         'return_chitti_post_from_checker'    => $request->returnChittiToMakerWithRegion,
-            //         'postStatusMakerChecker'             => 'return_chitti_post_from_checker',
-            //         'return_chitti_post_from_checker_id' => 1,
-            //         'checkerStatus'         => 'Null',
-            //         'uploaderStatus'        => 'Null',
-            //         'finalStatus'           => 'Null',
-            //     ]);
-            //     return redirect()->route('admin.checker-listing', ['id' => $chitti->chittiId])->with('success', 'Checker updated successfully.');
-            // }
-            else
-            {
-                // dd('hhh2');
+
+            else {
+                // dd('your data is here');
                 $currentDate = date("d-M-y H:i:s");
                 $chitti->update([
                     'dateOfReturnToMaker'       => $currentDate,
-                    'returnDateMaker'           => $currentDate ,
+                    'returnDateMaker'           => $currentDate,
+
+
                     'makerStatus'               => 'sent_to_checker',
                     'checkerId'                 => Auth::user()->userId,
                     'description'   => $request->content,
                     'Title'         => $request->title,
                     'SubTitle'      => $request->subtitle,
                     'checkerStatus'   => 'maker_to_checker',
+
                     'uploaderStatus'        => '',
                     'finalStatus'           => '',
                     'updated_at'    => $currentDateTime,
@@ -293,8 +278,7 @@ class AccChekerController extends Controller
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
                 ]);
-
-                return redirect()->route('accounts.checker-dashboard', ['id' => $chitti->chittiId])->with('success', 'Chitti Post have been return to maker from checker successfully.');
+                return redirect()->route('accounts.checker-dashboard')->with('success', 'Chitti Post have been updated successfully.');
             }
         } else {
             return redirect()->back()
@@ -340,7 +324,7 @@ class AccChekerController extends Controller
             'uploaderStatus'        => '',
             'finalStatus'           => '',
         ]);
-        return back()->with('success', 'Chitti Post have been return to maker from checker successfully');
+        return redirect()->route('accounts.checker-dashboard')->with('success', 'Chitti Post have been return to maker from checker successfully');
     }
 
 }

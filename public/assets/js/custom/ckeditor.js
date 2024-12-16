@@ -77,7 +77,7 @@ ClassicEditor
     });
 
 function calculateTotal() {
-    const fields = ['citySubscribers', 'prarangApplication', 'facebookLinkClick', 'websiteGd', 'email', 'instagram'];
+    const fields = ['citySubscribers', 'prarangApplication', 'websiteGd', 'email', 'instagram'];
     let total = 0;
 
     fields.forEach(field => {

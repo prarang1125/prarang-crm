@@ -75,8 +75,8 @@
                                     <td class="">{{ (int) \Carbon\Carbon::parse($chitti->created_at)->diffInDays(now()) }}</td>
                                     <td class="">{{ $chitti->city->cityNameInEnglish ?? 'N/A' }} </td>
                                     <td class="">{{ 'Ad' }}</td>
-                                    <td class="">{{ 'Total Viewership' }}</td>
-                                    <td class="">{{ $chitti->makerStatus }}</td>
+                                    <td class="">{{ $chitti->totalViewerCount }}</td>
+                                    <td class="">{{ $chitti->postStatusMakerChecker}}</td>
                                     <td class="">{{ $chitti->updated_at ?? '' }}</td>
                                 </tr>
                                 @php $index++;  @endphp
