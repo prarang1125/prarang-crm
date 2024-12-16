@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Mtag;
@@ -23,29 +26,29 @@ class ChekerController extends Controller
 {
     public function indexMain(Request $request)
     {
-        
+
         $search = $request->input('search');
 
-        
+
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
             ->whereNotNull('Title')
             ->where('Title', '!=', '')
             ->where('makerStatus', 'sent_to_checker')
             ->whereIn('checkerStatus', ['maker_to_checker'])
             ->whereNotIn('finalStatus', ['approved', 'deleted'])
-            
+
             ->when($search, function ($query) use ($search) {
-                $query->where('Title', 'LIKE', "%{$search}%") 
-                    ->orWhereRaw('LOWER(createDate) LIKE ?', ['%' . mb_strtolower($search, 'UTF-8') . '%']); 
+                $query->where('Title', 'LIKE', "%{$search}%")
+                    ->orWhereRaw('LOWER(createDate) LIKE ?', ['%' . mb_strtolower($search, 'UTF-8') . '%']);
             })
             ->orderByDesc('dateOfCreation')
             ->paginate(10);
-        
+
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
         return view('admin.checker.checker-listing', compact('chittis', 'geographyOptions'));
-    }   
+    }
 
     public function checkerEdit($id)
     {
@@ -55,7 +58,7 @@ class ChekerController extends Controller
             ->whereNot('checkerStatus', 'sent_to_uploader')->findOrFail($id);
 
         $image = $chitti->chittiimagemappings()->first();
-        
+
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
         $subTag = $chittiTagMapping->tag->tagCategoryId;
         $timelines = Mtag::where('tagCategoryId', 1)->get();
@@ -77,7 +80,7 @@ class ChekerController extends Controller
         return view('admin.checker.checker-edit', compact('chitti', 'image', 'subTag', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
     }
 
-    public function checkerUpdate(Request $request, $id)
+    public function checkerUpdate(Request $request, $id, ImageUploadService $imageUploadService)
     {
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
@@ -87,42 +90,13 @@ class ChekerController extends Controller
             'title'     => 'required|string|max:255',
             'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
-            
+
             'tagId'     => 'required'
         ]);
 
         if ($validator->passes()) {
 
             $currentDateTime = getUserCurrentTime();
-
-            $content = $request->content;
-            $dom = new \DomDocument();
-            @$dom->loadHtml($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-            $images = $dom->getElementsByTagName('img');
-
-            foreach ($images as $img) {
-                $src = $img->getAttribute('src');
-
-                
-                if (Str::startsWith($src, 'data:image')) {
-                    
-                    preg_match('/data:image\/(?<mime>.*?)\;base64,(?<data>.*)/', $src, $matches);
-                    $imageData = base64_decode($matches['data']);
-                    $imageMime = $matches['mime'];
-                    $imageName = time() . '_' . uniqid() . '.' . $imageMime;
-                    $path = public_path('uploads/content_images/') . $imageName;
-                    file_put_contents($path, $imageData);
-
-                    
-                    $img->setAttribute('src', asset('uploads/content_images/' . $imageName));
-                }
-            }
-
-            
-            $content = $dom->saveHTML();
-            
-
-            
 
             $chitti = Chitti::findOrFail($id);
             if ($request->action === 'send_to_uploader') {
@@ -134,74 +108,48 @@ class ChekerController extends Controller
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);
 
-                
                 return redirect()->route('admin.checker-listing')
                     ->with('success', 'Sent to Uploader successfully.');
             }
 
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             else {
-                
+
                 $currentDate = date("d-M-y H:i:s");
                 $chitti->update([
                     'dateOfReturnToMaker'       => $currentDate,
                     'returnDateMaker'           => $currentDate,
-
                     'makerStatus'               => 'sent_to_checker',
                     'checkerId'                 => Auth::guard('admin')->user()->userId,
                     'description'   => $request->content,
                     'Title'         => $request->title,
                     'SubTitle'      => $request->subtitle,
                     'checkerStatus'   => 'maker_to_checker',
-                    
-                    
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);
 
-                
+
                 Facity::where('from_chittiId', $id)->update([
                     'value'         => $request->forTheCity,
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);
 
-                
-                if ($request->hasFile('makerImage')) {
-                    $makerImage = $request->file('makerImage');
-                    $makerImageName = time() . '_' . $makerImage->getClientOriginalName();
-                    $makerImage->move(public_path('uploads/maker_image/'), $makerImageName);
-                    $url = public_path('uploads/maker_image/') . $makerImageName;
-                    $serviceAccessUrl = "admin.prarang.in/" . $url;
-
-                    
-                    Chittiimagemapping::where('chittiId', $id)->update([
-                        'imageName'     => $makerImageName,
-                        'imageUrl'      => $serviceAccessUrl,
-                        'accessUrl'     => $url,
-                        'updated_at'    => $currentDateTime,
-                        'updated_by'    => Auth::guard('admin')->user()->userId,
-                    ]);
+                $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
+                if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
+                    DB::rollBack();
+                    return redirect()->back()->with('error', 'Error while image uploading, please try again.');
                 }
 
-                
+                Chittiimagemapping::where('chittiId', $id)->update([
+                    'imageName'     => $uploadImage['path'],
+                    'imageUrl'      => $uploadImage['full_url'],
+                    'accessUrl'     => $uploadImage['path'],
+                    'updated_at'    => $currentDateTime,
+                    'updated_by'    => Auth::guard('admin')->user()->userId,
+                ]);
+
+
                 Chittigeographymapping::where('chittiId', $id)->update([
                     'areaId'        => $request->c2rselect,
                     'geographyId'   => $request->geography,
@@ -209,7 +157,7 @@ class ChekerController extends Controller
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);
 
-                
+
                 Chittitagmapping::where('chittiId', $id)->update([
                     'tagId'         => $request->tagId,
                     'updated_at'    => $currentDateTime,

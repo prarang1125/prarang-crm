@@ -138,7 +138,7 @@ class MakerController extends Controller
                 $chittiimagemapping = new Chittiimagemapping();
                 $chittiimagemapping->imageName = $uploadImage['path'];
                 $chittiimagemapping->imageUrl = $uploadImage['full_url'];
-                $chittiimagemapping->accessUrl = $uploadImage['full_url'];
+                $chittiimagemapping->accessUrl = $uploadImage['path'];
                 $chittiimagemapping->isActive = '1';
                 $chittiimagemapping->chittiId = $lastId;
                 $chittiimagemapping->isDefult = 'true';
@@ -281,11 +281,11 @@ class MakerController extends Controller
                         Chittiimagemapping::where('chittiId', $id)->update([
                             'imageName'     => $uploadImage['path'],
                             'imageUrl'      => $uploadImage['full_url'],
-                            'accessUrl'     => $uploadImage['full_url'],
+                            'accessUrl'     => $uploadImage['path'],
                             'updated_at'    => $currentDateTime,
                             'updated_by'    => Auth::guard('admin')->user()->userId,
                         ]);
-                    
+
 
                     // Update Geography Mapping
                     Chittigeographymapping::where('chittiId', $id)->update([
