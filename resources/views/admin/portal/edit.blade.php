@@ -150,7 +150,7 @@
                 @enderror
                 <div class="mt-2">
                     @if($portal->header_image)
-                        <img id="header_preview" src="{{ asset('storage/' . $portal->header_image) }}" alt="Header Image Preview" style="max-height: 100px;">
+                        <img id="header_preview" src="{{ Storage::url($portal->header_image) }}" alt="Header Image Preview" style="max-height: 100px;">
                     @else
                         <img id="header_preview" src="#" alt="Header Image Preview" style="display: none; max-height: 100px;">
                     @endif
@@ -165,7 +165,7 @@
                 @enderror
                 <div class="mt-2">
                     @if($portal->footer_image)
-                        <img id="footer_preview" src="{{ asset('storage/' . $portal->footer_image) }}" alt="Footer Image Preview" style="max-height: 100px;">
+                        <img id="footer_preview" src="{{ Storage::url($portal->footer_image) }}" alt="Footer Image Preview" style="max-height: 100px;">
                     @else
                         <img id="footer_preview" src="#" alt="Footer Image Preview" style="display: none; max-height: 100px;">
                     @endif
@@ -181,7 +181,7 @@
                 <div class="mt-2">
                    
                     @if($portal->local_info_image)
-                        <img id="local_info_preview" src="{{ asset('storage/' . $portal->local_info_image) }}" alt="Local Info Image Preview" style="max-height: 100px;">
+                        <img id="local_info_preview" src="{{ Storage::url($portal->local_info_image) }}" alt="Image" alt="Local Info Image Preview" style="max-height: 100px;">
                     @else
                         <img id="local_info_preview" src="#" alt="Local Info Image Preview" style="display: none; max-height: 100px;">
                     @endif

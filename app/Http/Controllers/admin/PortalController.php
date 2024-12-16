@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Portal;
+use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -29,7 +30,7 @@ class PortalController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request,ImageUploadService $imageUploadService)
     {
         $validated = $request->validate([
             'city_id' => 'required|integer|unique:portals',
@@ -54,9 +55,10 @@ class PortalController extends Controller
         // Loop through file fields and handle uploads
         foreach ($fileFields as $field) {
             if ($request->hasFile($field)) {
-                $validated[$field] = $request->file($field)->store('uploads/portals', 'public');
+                $validated[$field] = $imageUploadService->uploadImage( $request->file($field),'portal','portal')['path'];
             }
         }
+
 
 
         Portal::create($validated);
@@ -82,7 +84,7 @@ class PortalController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Portal $portal)
+    public function update(Request $request, Portal $portal,ImageUploadService $imageUploadService)
     {
         $validated = $request->validate([
             'city_id' => 'required|integer|unique:portals,city_id,' . $portal->id,  
@@ -104,15 +106,15 @@ class PortalController extends Controller
     
         // Handle file uploads (if any)
         if ($request->hasFile('header_image')) {
-            $validated['header_image'] = $request->file('header_image')->store('uploads/portals', 'public');
+            $validated['header_image'] = $imageUploadService->uploadImage($request->file('header_image'),'portal','portal')['path'];
         }
     
         if ($request->hasFile('footer_image')) {
-            $validated['footer_image'] = $request->file('footer_image')->store('uploads/portals', 'public');
+            $validated['footer_image'] = $imageUploadService->uploadImage($request->file('footer_image'),'portal','portal')['path'];
         }
     
         if ($request->hasFile('local_info_image')) {
-            $validated['local_info_image'] = $request->file('local_info_image')->store('uploads/portals', 'public');
+            $validated['local_info_image'] = $imageUploadService->uploadImage($request->file('local_info_image'),'portal','portal')['path'];
         }
     
         // Update the portal

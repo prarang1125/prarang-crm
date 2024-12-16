@@ -24,7 +24,7 @@ use App\Models\Chittitagmapping;
 
 class MakerController extends Controller
 {
-        public function index(Request $request)
+    public function index(Request $request)
     {
         $search = $request->input('search');
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
@@ -53,9 +53,11 @@ class MakerController extends Controller
     #this method is use for maker make new post
     public function makerRegister()
     {
+
         // Fetch data from the Mtag table based on tagCategoryId
         $timelines = Mtag::where('tagCategoryId', 1)->get();
         // dd($timelines);
+
         $manSenses = Mtag::where('tagCategoryId', 2)->get();
         $manInventions = Mtag::where('tagCategoryId', 3)->get();
         $geographys = Mtag::where('tagCategoryId', 4)->get();
@@ -212,7 +214,7 @@ class MakerController extends Controller
         return view('admin.maker.maker-edit', compact('chitti', 'subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
     }
 
-    public function makerUpdate(Request $request, $id,ImageUploadService $imageUploadService)
+    public function makerUpdate(Request $request, $id, ImageUploadService $imageUploadService)
     {
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
@@ -249,7 +251,7 @@ class MakerController extends Controller
                     // Redirect to the checker listing
                     return redirect()->route('admin.maker-listing', $chitti->chittiId)
                         ->with('success', 'Sent to Checker successfully.');
-                    } else {
+                } else {
                     $chitti->update([
                         'description'   => $request->content,
                         'Title'         => $request->title,
@@ -273,19 +275,21 @@ class MakerController extends Controller
                     ]);
 
                     // Update image if provided
-                    $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
-                    if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
-                        DB::rollBack();
-                        return redirect()->back()->with('error', 'Error while image uploading, please try again.');
+                    if ($request->hasFile('makerImage')) {
+                        $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
+                        if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
+                            DB::rollBack();
+                            return redirect()->back()->with('error', 'Error while image uploading, please try again.');
+                        }
                     }
-                        Chittiimagemapping::where('chittiId', $id)->update([
-                            'imageName'     => $uploadImage['path'],
-                            'imageUrl'      => $uploadImage['full_url'],
-                            'accessUrl'     => $uploadImage['full_url'],
-                            'updated_at'    => $currentDateTime,
-                            'updated_by'    => Auth::guard('admin')->user()->userId,
-                        ]);
-                    
+                    Chittiimagemapping::where('chittiId', $id)->update([
+                        'imageName'     => $uploadImage['path'],
+                        'imageUrl'      => $uploadImage['full_url'],
+                        'accessUrl'     => $uploadImage['full_url'],
+                        'updated_at'    => $currentDateTime,
+                        'updated_by'    => Auth::guard('admin')->user()->userId,
+                    ]);
+
 
                     // Update Geography Mapping
                     Chittigeographymapping::where('chittiId', $id)->update([
@@ -316,7 +320,6 @@ class MakerController extends Controller
                 ->withErrors($validator);
         }
     }
-
     public function chittiListReturnFromCheckerL(Request $request)
     {
         $query = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
@@ -333,6 +336,7 @@ class MakerController extends Controller
                     ->orWhere('description', 'LIKE', "%$search%");
             });
         }
+
 
         // Paginate results
         $chittis = $query->paginate(30); // Adjust the number of items per page as needed
