@@ -33,6 +33,7 @@ use App\Http\Controllers\accounts\AccCKEditorController;
 use App\Http\Controllers\accounts\AccChekerController;
 use App\Http\Controllers\accounts\AccUploaderController;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
@@ -41,7 +42,6 @@ Route::group(['prefix' => 'accounts'], function(){
         Route::get('login', [LoginController::class, 'index'])->name('accounts.login');
         Route::post('authenticate', [LoginController::class, 'authenticate'])->name('accounts.authenticate');
     });
-
     Route::group(['middleware' => 'auth'], function(){
         Route::get('logout', [LoginController::class, 'logout'])->name('accounts.logout');
         Route::get('dashboard', [AccountsController::class, 'index'])->name('accounts.dashboard');
