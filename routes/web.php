@@ -307,7 +307,7 @@ Route::group(['prefix' => 'admin'], function(){
             Route::get('/checker/checker-chitti-return-to-maker-region/{id}', [ChekerController::class, 'checkerChittiReturnMakerRegion'])->name('admin.checker-chitti-return-to-maker-region');
             Route::put('/checker/chitti-checker-sendtomaker/sendtomaker/{id}', [ChekerController::class, 'checkerChittiSendToMaker'])->name('admin.chitti-checker-sendtomaker');
         #checker chitti-post return to maker with region end
-        
+
         #show the listing of rejected maker start
             Route::get('/maker/chitti-rejected-from-checker-listing', [MakerController::class, 'chittiListReturnFromCheckerL'])->name('admin.post-return-from-checker-listing');
         #show the listing of rejected maker end

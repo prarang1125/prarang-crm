@@ -59,11 +59,21 @@
                                     <td class="">{{ $chitti->city->cityNameInEnglish ?? 'N/A' }} </td>
                                     <td class="">{{ 'N/A' }} </td>
                                     <td class="">{{ $chitti->totalViewerCount }}</td>
+
+                                    @if ($chitti->postStatusMakerChecker == 'approved')
+                                        <td class="">
+                                            <a href="{{ route('admin.post-analytics-checker-edit', ['id' => $chitti->chittiId, 'city' => $chitti->city->cityCode ?? 'N/A']) }}" class="text-primary">
+                                                {{ 'Approved' }}
+                                            </a>
+                                            {{-- <span class="custom-approved">{{ 'Approved' }}</span> --}}
+                                        </td>
+                                    @else
                                     <td class="">
                                         <a href="{{ route('admin.post-analytics-checker-edit', ['id' => $chitti->chittiId, 'city' => $chitti->city->cityCode ?? 'N/A']) }}" class="text-primary">
                                             {{ 'Review' }}
                                         </a>
                                     </td>
+                                    @endif
                                 </tr>
                             @php $index++;  @endphp
                             @endforeach
