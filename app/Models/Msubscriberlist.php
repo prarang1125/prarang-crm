@@ -10,11 +10,10 @@ class Msubscriberlist extends Model
     use HasFactory;
 
     protected $table = 'msubscriberlist';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'subscriberId';
     public $timestamps = false;
 
     protected $fillable = [
-        'subscriberId',
         'name',
         'mobileNo',
         'profilePicUrl',
