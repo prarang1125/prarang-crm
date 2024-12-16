@@ -91,7 +91,16 @@
                                             @endif
                                         </td>
                                     @endforeach
-                                    <td>{{ $chitti->checkerStatus }}</td>
+
+                                    @if ($chitti->uploaderStatus == 'sent_to_uploader')
+                                        <td>{{ $chitti->uploaderStatus }}</td>
+                                    @elseif ($chitti->uploaderStatus == 'sent_to_uploader')
+                                        <td>{{ $chitti->uploaderStatus }}</td>
+                                    @else
+                                        <td>{{ $chitti->checkerStatus }}</td>
+                                    @endif
+
+
 
                                     <td class="">
                                         <a href="{{ route('accounts.acc-checker-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
