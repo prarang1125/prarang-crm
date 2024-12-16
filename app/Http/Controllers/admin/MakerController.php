@@ -23,7 +23,7 @@ use App\Models\Chittitagmapping;
 
 class MakerController extends Controller
 {
-   
+
 
     public function index(Request $request)
     {
@@ -99,33 +99,6 @@ class MakerController extends Controller
             try {
             $currentDateTime = getUserCurrentTime();
 
-            $content = $request->content;
-            $dom = new \DomDocument();
-            @$dom->loadHtml($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-            $images = $dom->getElementsByTagName('img');
-
-            foreach ($images as $img) {
-                $src = $img->getAttribute('src');
-
-                // Check if the image source is base64 (embedded image)
-                if (Str::startsWith($src, 'data:image')) {
-                    // Extract the base64 image data and save it as a file
-                    preg_match('/data:image\/(?<mime>.*?)\;base64,(?<data>.*)/', $src, $matches);
-                    $imageData = base64_decode($matches['data']);
-                    $imageMime = $matches['mime'];
-                    $imageName = time() . '_' . uniqid() . '.' . $imageMime;
-                    $path = public_path('uploads/content_images/') . $imageName;
-                    file_put_contents($path, $imageData);
-
-                    // Replace the base64 image source with the URL of the saved image
-                    $img->setAttribute('src', asset('uploads/content_images/' . $imageName));
-                }
-            }
-
-            // Save the updated content with proper image URLs
-            $content = $dom->saveHTML();
-            // dd($content);
-
             $chitti = new Chitti();
             $area_id = $request->c2rselect;
             $areaIdCode = '';
@@ -145,7 +118,7 @@ class MakerController extends Controller
             $chitti->SubTitle = $request->subtitle;
             $chitti->makerId = Auth::guard('admin')->user()->userId;
             $chitti->makerStatus = 'sent_to_checker';
-            $chitti->finalStatus = '';            
+            $chitti->finalStatus = '';
             // $chitti->checkerStatus = 'maker_to_checker';
             $chitti->cityId = $area_id;
             $chitti->areaId = $areaIdCode;
@@ -313,8 +286,8 @@ class MakerController extends Controller
                 // Redirect to the checker listing
                 return redirect()->route('admin.maker-listing', $chitti->chittiId)
                     ->with('success', 'Sent to Checker successfully.');
-            
-            
+
+
             } else {
                 $chitti->update([
                     'description'   => $request->content,
@@ -330,7 +303,7 @@ class MakerController extends Controller
                     'return_chitti_post_from_checker_id' => 0,
                     'returnDateToChecker' => $currentDateTime,
                 ]);
-              
+
                 // Update Facity record
                 Facity::where('from_chittiId', $id)->update([
                     'value'         => $request->forTheCity,
@@ -374,7 +347,7 @@ class MakerController extends Controller
                 return redirect()->route('admin.maker-listing')->with('success', 'Maker updated successfully.');
             }
         } catch (\Exception $e) {
-           
+
             DB::rollBack();
             Log::error('Maker Update Error: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()->with('error', 'An error occurred while updating the maker.')->withInput();
