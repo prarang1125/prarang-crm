@@ -200,16 +200,10 @@ class MakerController extends Controller
         $countries = Mcountry::where('isActive', 1)->get();
         $geographyMapping = $chitti->geographyMappings->first();
         $facityValue = $chitti->facity ? $chitti->facity->value : null;
+        // dd($geographyMapping);
+        // dd($facityValue);
 
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
-
-        // Check if chittiTagMapping, tag, and tagcategory are set before accessing tagCategoryInUnicode
-        // $tagCategoryInUnicode = $chittiTagMapping && $chittiTagMapping->tag && $chittiTagMapping->tag->tagcategory
-        //     ? $chittiTagMapping->tag->tagcategory->tagCategoryInUnicode
-        //     : null;
-
-        // dd($tagCategoryInUnicode);
-        // return view('admin.maker.maker-edit', compact('chitti', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping'));
 
         return view('admin.maker.maker-edit', compact('chitti', 'subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
     }
