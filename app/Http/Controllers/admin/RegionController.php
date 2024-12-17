@@ -2,6 +2,8 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use App\Services\ImageUploadService;
 use App\Models\Mregion;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -33,7 +35,7 @@ class RegionController extends Controller
     }
 
     #this method is use for store new region data
-    public function regionStore(Request $request)
+    public function regionStore(Request $request, ImageUploadService $imageUploadService)
     {
         $validator = Validator::make($request->all(), [
             'regionnameInEnglish' => 'required|string|max:255',
@@ -41,41 +43,59 @@ class RegionController extends Controller
             'regionImage' => 'required|image|max:2048',
             'regionMap' => 'required|image|max:2048',
             'isCultureNature' => 'required|boolean',
-            'content' => 'required|string',
+            'content' => 'nullable|string', // Content is optional
         ]);
-        if($validator->passes()){
-            $currentDateTime = getUserCurrentTime();
-            if($request->hasFile('regionImage')){
-                $regionImage = $request->file('regionImage');
-                $regionImageName = time() . '_' . $regionImage->getClientOriginalName();
-                $regionImage->move(public_path('uploads/region_images'), $regionImageName);
+
+        if ($validator->passes()) {
+            DB::beginTransaction();
+
+            try {
+                // Generate a new region ID
+                $lastId = Mregion::max('regionId');
+                $newId = $lastId ? $lastId + 1 : 1;
+
+                // Upload Region Image
+                $uploadRegionImage = $imageUploadService->uploadImage($request->file('regionImage'), $newId, 'region_images');
+                if (isset($uploadRegionImage['error']) && $uploadRegionImage['error'] === true) {
+                    throw new \Exception('Error while uploading region image.');
+                }
+
+                // Upload Region Map
+                $uploadRegionMap = $imageUploadService->uploadImage($request->file('regionMap'), $newId, 'region_maps');
+                if (isset($uploadRegionMap['error']) && $uploadRegionMap['error'] === true) {
+                    throw new \Exception('Error while uploading region map.');
+                }
+
+                // Create new Region record
+                $currentDateTime = getUserCurrentTime();
+
+                $mregion = new Mregion();
+                $mregion->regionCode = 'r' . $newId;
+                $mregion->regionnameInUnicode = $request->regionnameInUnicode;
+                $mregion->regionnameInEnglish = $request->regionnameInEnglish;
+                $mregion->isActive = 1;
+                $mregion->image = $uploadRegionImage['path'];
+                $mregion->map = $uploadRegionMap['path'];
+                $mregion->Image_Name = $uploadRegionImage['full_url'];
+                $mregion->Map_Name = $uploadRegionMap['full_url'];
+                $mregion->Culture_Nature = $request->isCultureNature;
+
+                // Only update content if provided
+                if ($request->filled('content')) {
+                    $mregion->text = $request->content;
+                }
+
+                $mregion->created_at = $currentDateTime;
+                $mregion->created_by = Auth::guard('admin')->user()->userId;
+                $mregion->save();
+
+                DB::commit();
+                return redirect()->route('admin.region-listing')->with('success', 'Region created successfully.');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return redirect()->back()->with('error', $e->getMessage());
             }
-
-            if($request->hasFile('regionMap')){
-                $regionMap = $request->file('regionMap');
-                $regionMapName = time() . '_' . $regionMap->getClientOriginalName();
-                $regionMap->move(public_path('uploads/region_maps'), $regionMapName);
-            }
-
-            $lastId = Mregion::max('regionId');
-            $newId = $lastId ? $lastId + 1 : 1;
-
-            $mregion = new Mregion();
-            $mregion->regionCode = 'r' . $newId;
-            $mregion->regionnameInUnicode = $request->regionnameInUnicode;
-            $mregion->regionnameInEnglish = $request->regionnameInEnglish;
-            $mregion->isActive = 1;
-            $mregion->image = $regionImageName;
-            $mregion->map = $regionMapName;
-            $mregion->Image_Name   = $regionImageName;
-            $mregion->Map_Name     = $regionMapName;
-            $mregion->text = $request->content;
-            $mregion->Culture_Nature = $request->isCultureNature;
-            $mregion->created_at = $currentDateTime;
-            $mregion->created_by = Auth::guard('admin')->user()->userId;
-            $mregion->save();
-            return redirect()->route('admin.region-listing')->with('success', 'Region created successfully.');
-        }else{
+        } else {
             return redirect()->route('admin.region-register')
                 ->withErrors($validator)
                 ->withInput();
@@ -106,69 +126,70 @@ class RegionController extends Controller
         return view('admin.region.region-edit' , compact('region'));
     }
 
-    #this method is use for region data update
-    public function regionUpdate(Request $request, $id)
+    public function regionUpdate(Request $request, $id, ImageUploadService $imageUploadService)
     {
         $validator = Validator::make($request->all(), [
-            'regionnameInEnglish' => 'required|string|max:255',
             'regionnameInUnicode' => 'required|string|max:255',
+            'regionnameInEnglish' => 'required|string|max:255',
             'regionImage' => 'nullable|image|max:2048',
             'regionMap' => 'nullable|image|max:2048',
             'isCultureNature' => 'required|boolean',
-            'content' => 'required|string',
+            'content' => 'nullable|string',
         ]);
 
         if ($validator->passes()) {
             $mregion = Mregion::find($id);
 
             if ($mregion) {
-                $currentDateTime = getUserCurrentTime();
+                DB::beginTransaction();
 
-                // Handle cityImage upload if present
-                if ($request->hasFile('regionImage')) {
-                    $regionImage = $request->file('regionImage');
-                    $regionImageName = time() . '_' . $regionImage->getClientOriginalName();
-                    $regionImage->move(public_path('uploads/region_images'), $regionImageName);
-                    // Debugging: Log the filename
-                    Log::info("Generated image name: " . $regionImageName);
-                    // Update the image field in the model
-                    $mregion->image = $regionImageName;
-                    $mregion->Image_Name = $regionImageName;
+                try {
+                    $currentDateTime = getUserCurrentTime();
+
+                    // Handle regionImage upload if present
+                    if ($request->hasFile('regionImage')) {
+                        $uploadRegionImage = $imageUploadService->uploadImage($request->file('regionImage'), $id, 'region_images');
+                        if (isset($uploadRegionImage['error']) && $uploadRegionImage['error'] === true) {
+                            throw new \Exception('Error while uploading region image.');
+                        }
+
+                        $mregion->image = $uploadRegionImage['path'];
+                        $mregion->Image_Name = $uploadRegionImage['full_url'];
+                    }
+
+                    // Handle regionMap upload if present
+                    if ($request->hasFile('regionMap')) {
+                        $uploadRegionMap = $imageUploadService->uploadImage($request->file('regionMap'), $id, 'region_maps');
+                        if (isset($uploadRegionMap['error']) && $uploadRegionMap['error'] === true) {
+                            throw new \Exception('Error while uploading region map.');
+                        }
+
+                        $mregion->map = $uploadRegionMap['path'];
+                        $mregion->Map_Name = $uploadRegionMap['full_url'];
+                    }
+
+                    // Update other fields only if necessary
+                    $mregion->regionnameInUnicode = $request->regionnameInUnicode;
+                    $mregion->regionnameInEnglish = $request->regionnameInEnglish;
+                    $mregion->Culture_Nature = $request->isCultureNature;
+
+                    // Preserve content unless provided
+                    if ($request->filled('content')) {
+                        $mregion->text = $request->content;
+                    }
+
+                    $mregion->updated_at = $currentDateTime;
+                    $mregion->updated_by = Auth::guard('admin')->user()->userId;
+
+                    $mregion->save();
+
+                    DB::commit();
+
+                    return redirect()->route('admin.region-listing')->with('success', 'Region updated successfully.');
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    return redirect()->back()->with('error', $e->getMessage());
                 }
-
-                // Handle cityMap upload if present
-                if ($request->hasFile('regionMap')) {
-                    $regionMap = $request->file('regionMap');
-                    $regionMapName = time() . '_' . $regionMap->getClientOriginalName();
-                    $regionMap->move(public_path('uploads/region_maps'), $regionMapName);
-                    // Debugging: Log the filename
-                    Log::info("Generated map name: " . $regionMapName);
-                    // Update the map field in the model
-                    $mregion->map = $regionMapName;
-                    $mregion->Map_Name = $regionMapName;
-                }
-
-                if (empty($request->file('cityImage')) || empty($request->file('cityMap'))) {
-                    $regionImageName = $mregion->image;
-                    $regionMapName = $mregion->map;
-                }
-
-                // Update other fields
-                $mregion->update([
-                    'regionnameInUnicode' => $request->regionnameInUnicode,
-                    'regionnameInEnglish' => $request->regionnameInEnglish,
-                    'isActive' => $request->isCultureNature,
-                    'image' => $regionImageName,
-                    'map' => $regionMapName,
-                    'Image_Name' => $regionImageName,
-                    'Map_Name' => $regionMapName,
-                    'text' => $request->content,
-                    'Culture_Nature' => $request->isCultureNature,
-                    'updated_at' => $currentDateTime,
-                    'updated_by' => Auth::guard('admin')->user()->userId,
-                ]);
-
-                return redirect()->route('admin.region-listing')->with('success', 'Region updated successfully.');
             } else {
                 return redirect()->back()->with('error', 'Region not found.');
             }
