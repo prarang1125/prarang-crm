@@ -80,8 +80,8 @@
                             <div class="select-wrapper">
                                 <select class="form-control @error('advertisementInPost') is-invalid @enderror" id="advertisementInPost" name="advertisementInPost">
                                     <option value="" selected disabled>Select</option>
-                                    <option value="Yes" {{ old('advertisementInPost') == 'Yes' ? 'selected' : '' }}>Yes</option>
-                                    <option value="No" {{ old('advertisementInPost') == 'No' ? 'selected' : '' }}>No</option>
+                                    <option value="Yes" {{ old('advertisementInPost', $chitti->advertisementPost) == 'Yes' ? 'selected' : '' }}>Yes</option>
+                                    <option value="No" {{ old('advertisementInPost', $chitti->advertisementPost) == 'No' ? 'selected' : '' }}>No</option>
                                 </select>
                                 <span class="select-arrow">&#9662;</span> <!-- Unicode arrow symbol -->
                             </div>
