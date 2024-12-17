@@ -281,7 +281,6 @@ class MakerController extends Controller
                             DB::rollBack();
                             return redirect()->back()->with('error', 'Error while image uploading, please try again.');
                         }
-                    
                         Chittiimagemapping::where('chittiId', $id)->update([
                             'imageName'     => $uploadImage['path'],
                             'imageUrl'      => $uploadImage['full_url'],
