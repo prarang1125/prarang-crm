@@ -45,13 +45,13 @@
                         <div class="col-md-4">
                             <label>Image Preview</label>
                             <div class="image-preview-mt" id="image-preview" style="max-width: 300px; max-height: 300px; overflow: hidden; border: 1px solid #ccc; padding: 5px;">
-                                <img id="preview-img" src="{{ $image ? asset('uploads/maker_image/' . $image->imageName) : '/img/blankImage2.png' }}" alt="Image Preview" style="width: 288px; height: 250px; background-size: cover;" />
+                                <img id="preview-img" src="{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}" alt="Image Preview" style="width: 288px; height: 250px; background-size: cover;" />
                             </div>
                         </div>
                         <div class="col-md-2">
                             <label>Thumbnail</label>
                             <div id="thumbnail" class="d-flex flex-wrap" style="gap: 10px; border: 1px solid #ccc; padding: 5px; min-height: 80px; background-color: #28252517;">
-                                <div class="thumbnail-slot" style="background-image: url('{{ $image ? asset('uploads/maker_image/' . $image->imageName) : '/img/blankImage2.png' }}'); background-size: cover; width:100%; height:100px;position:relative;">
+                                <div class="thumbnail-slot" style="background-image: url('{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}'); background-size: cover; width:100%; height:100px;position:relative;">
                                 </div>
                             </div>
                         </div>

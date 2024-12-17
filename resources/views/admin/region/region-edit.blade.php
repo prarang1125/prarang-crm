@@ -59,9 +59,9 @@
                                 <div class="mt-2">
                                     <p>Current Image:</p>
                                     <!-- Display the image -->
-                                    <img src="{{ asset('uploads/region_images/' . $region->image) }}" alt="Region Image" width="100">
+                                    <img src="{{  Storage::url($region->image) }}" alt="Region Image" width="100">
                                     <!-- Display the image name -->
-                                    <p>Image Name: {{ $region->Image_Name }}</p>
+                                    {{-- <p>Image Name: {{  Storage::url($region->Image_Name) }}</p> --}}
                                 </div>
                             @endif
                         </div>
@@ -75,9 +75,9 @@
                                 <div class="mt-2">
                                     <p>Current Map:</p>
                                     <!-- Display the map -->
-                                    <img src="{{ asset('uploads/region_maps/' . $region->map) }}" alt="Region Map" width="100">
+                                    <img src="{{  Storage::url($region->map) }}" alt="Region Map" width="100">
                                     <!-- Display the map name -->
-                                    <p>Map Name: {{ $region->Map_Name }}</p>
+                                    {{-- <p>Map Name: {{  Storage::url($region->Map_Name) }}</p> --}}
                                 </div>
                             @endif
                         </div>
