@@ -21,6 +21,9 @@ class MyUploadAdapter {
         const xhr = this.xhr = new XMLHttpRequest();
         xhr.open('POST', uploadUrl, true);
         xhr.setRequestHeader('x-csrf-token', csrfToken);
+        if (typeof postId !== 'undefined' && postId !== null && postId !== '') {
+            xhr.setRequestHeader('ids', postId);
+        }
         xhr.responseType = 'json';
     }
 

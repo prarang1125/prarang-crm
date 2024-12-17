@@ -360,6 +360,7 @@
 <script>
     const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
     const csrfToken = "{{ csrf_token() }}";
+    const postId="{{$chitti->chittiId}}";
 </script>
 <script>
 function previewImage() {
