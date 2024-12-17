@@ -59,9 +59,9 @@
                                 <div class="mt-2">
                                     <p>Current Image:</p>
                                     <!-- Display the image -->
-                                    <img src="{{ asset('uploads/s_city_images/' . $s_city->image) }}" alt="City Image" width="100">
+                                    <img src="{{ Storage::url($s_city->image) }}" alt="City Image" width="100">
                                     <!-- Display the image name -->
-                                    <p>Image Name: {{ $s_city->Image_Name }}</p>
+                                    {{-- <p>Image Name: {{ Storage::url($s_city->Image_Name) }}</p> --}}
                                 </div>
                             @endif
                         </div>
