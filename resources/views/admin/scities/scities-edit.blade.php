@@ -1,5 +1,5 @@
 @extends('layouts.admin.admin')
-@section('title', 'S_City Edit')
+@section('title', 'City Edit')
 
 @section('content')
 <!--start page wrapper -->
@@ -12,7 +12,7 @@
                 <ol class="breadcrumb mb-0 p-0">
                     <li class="breadcrumb-item"><a href="{{ url('admin/scities/scities-listing')}}"><i class="bx bx-user"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">S_City Edit</li>
+                    <li class="breadcrumb-item active" aria-current="page">City Edit</li>
                 </ol>
             </nav>
         </div>
@@ -27,7 +27,7 @@
                         {{ session('success') }}
                     </div>
                 @endif
-                <h6 class="mb-0 text-uppercase text-primary">Edit S_City</h6>
+                <h6 class="mb-0 text-uppercase text-primary">Edit City</h6>
                 <hr/>
                 <form  action="{{ route('admin.scities-update' , $s_city->cityId) }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -59,9 +59,9 @@
                                 <div class="mt-2">
                                     <p>Current Image:</p>
                                     <!-- Display the image -->
-                                    <img src="{{ asset('uploads/s_city_images/' . $s_city->image) }}" alt="City Image" width="100">
+                                    <img src="{{ Storage::url($s_city->image) }}" alt="City Image" width="100">
                                     <!-- Display the image name -->
-                                    <p>Image Name: {{ $s_city->Image_Name }}</p>
+                                    {{-- <p>Image Name: {{ Storage::url($s_city->Image_Name) }}</p> --}}
                                 </div>
                             @endif
                         </div>
@@ -84,5 +84,9 @@
     </div>
 </div>
 <!--end page wrapper -->
+<script>
+    const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
+    const csrfToken = "{{ csrf_token() }}";
+</script>
 @endsection
 

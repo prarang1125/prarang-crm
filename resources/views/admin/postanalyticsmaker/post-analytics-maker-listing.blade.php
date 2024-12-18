@@ -29,11 +29,24 @@
             <h6 class="mb-0 text-uppercase">Post Analytics Maker Listing</h6>
             <hr/>
             <div class="card">
+                <div class="card-body d-flex justify-content-end align-items-end">
+                    <!-- Search Form -->
+                    {{-- <form action="{{ url('admin/postanalyticsmaker/post-analytics-maker-listing') }}" method="GET" class="d-flex me-3">
+                        <input type="hidden" name="cityCode" value="{{ request()->query('cityCode') }}">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search by Title" value="{{ request()->query('search') }}">
+                        <button type="submit" class="btn btn-secondary">Search</button>
+                    </form>
+                    @if(request()->has('search'))
+                        <a class="btn btn-primary me-1" href="{{ url()->current() }}">
+                            <i class="bx bx-refresh"></i>
+                        </a>
+                    @endif --}}
+                </div>
                 <div class="card-body">
                     <table class="table mb-0 table-hover">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col" class="">#</th>
+                                {{-- <th scope="col" class="">#</th> --}}
                                 <th scope="col" class="">Post Number</th>
                                 <th scope="col" class="">Title</th>
                                 <th scope="col" class="">Upload Date</th>
@@ -46,24 +59,33 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $index = 1;  @endphp
+                            @php
+                                $index = ($chittis->currentPage() - 1) * $chittis->perPage() + 1;
+                            @endphp
                             @foreach ($chittis as $chitti)
                                 <tr>
-                                    <th scope="row" class="text-center">{{ $index }}</th>
-                                    <td class="">{{ $chitti->chittiId }}</td>
-                                    <td class="">{{ $chitti->Title }}</td>
-                                    <td class="">{{ $chitti->updated_at }}</td>
-                                    <td class="">{{ 'No. of days from Upload' }}</td>
-                                    <td class="">{{ 'Area' }}</td>
+                                    {{-- <th scope="row" class="text-center">{{ $index }}</th> --}}
+                                    <td class="">{{ $index }}</td>
+                                    <td class="">
+                                        <a href="{{ route('admin.post-analytics-maker-create', ['id' => $chitti->chittiId, 'city' => $chitti->city->cityCode ?? 'N/A']) }}" class="text-primary">
+                                            {{ $chitti->Title }}
+                                        </a>
+                                    </td>
+                                    <td class="">{{ $chitti->created_at }}</td>
+                                    <td class="">{{ (int) \Carbon\Carbon::parse($chitti->created_at)->diffInDays(now()) }}</td>
+                                    <td class="">{{ $chitti->city->cityNameInEnglish ?? 'N/A' }} </td>
                                     <td class="">{{ 'Ad' }}</td>
-                                    <td class="">{{ 'Total Viewership' }}</td>
-                                    <td class="">{{ 'Status' }}</td>
-                                    <td class="">{{ 'Sent Time' }}</td>
+                                    <td class="">{{ $chitti->totalViewerCount }}</td>
+                                    <td class="">{{ $chitti->postStatusMakerChecker}}</td>
+                                    <td class="">{{ $chitti->updated_at ?? '' }}</td>
                                 </tr>
                                 @php $index++;  @endphp
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end mt-4">
+                        {{ $chittis->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>

@@ -2,6 +2,8 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\ImageUploadService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -20,17 +22,41 @@ use App\Models\Chittitagmapping;
 class PostController extends Controller
 {
     #this method is use for show the listing of maker
-    public function index()
+    // public function index()
+    // {
+    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+    //     ->whereNotNull('Title')
+    //     ->where('Title', '!=', '')
+    //     ->where('finalStatus', '!=', 'deleted')
+    //     ->orderByDesc('dateOfCreation')
+    //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'makerStatus', 'checkerStatus')
+    //     ->get();
+    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+    //     return view('admin.post.post-listing', compact('chittis', 'geographyOptions'));
+    // }
+
+    public function index(Request $request)
     {
+        $search = $request->input('search');
+
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        ->whereNotNull('Title')
-        ->where('Title', '!=', '')
-        ->where('finalStatus', '!=', 'deleted')
-        ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'makerStatus', 'checkerStatus')
-        ->get();
+            ->when($search, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('Title', 'LIKE', "%{$search}%")
+                        ->orWhere('description', 'LIKE', "%{$search}%"); // Add other fields if needed
+                });
+            })
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->where('finalStatus', '!=', 'deleted')
+            ->orderByDesc('dateOfCreation')
+            ->paginate(30); // Adjust per page count as needed
+
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+
         return view('admin.post.post-listing', compact('chittis', 'geographyOptions'));
     }
+
 
     public function postEdit($id)
     {
@@ -66,7 +92,7 @@ class PostController extends Controller
         return view('admin.post.post-edit', compact('chitti', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
     }
 
-    public function postUpdate(Request $request, $id)
+    public function postUpdate(Request $request, ImageUploadService $imageUploadService, $id)
     {
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
@@ -82,30 +108,6 @@ class PostController extends Controller
         if ($validator->passes()) {
 
             $currentDateTime = getUserCurrentTime();
-
-            // Handle content images (base64 to file conversion and updating the content HTML)
-            $content = $request->content;
-            $dom = new \DomDocument();
-            @$dom->loadHtml($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-            $images = $dom->getElementsByTagName('img');
-
-            foreach ($images as $img) {
-                $src = $img->getAttribute('src');
-
-                if (Str::startsWith($src, 'data:image')) {
-                    preg_match('/data:image\/(?<mime>.*?)\;base64,(?<data>.*)/', $src, $matches);
-                    $imageData = base64_decode($matches['data']);
-                    $imageMime = $matches['mime'];
-                    $imageName = time() . '_' . uniqid() . '.' . $imageMime;
-                    $path = public_path('uploads/content_images/') . $imageName;
-                    file_put_contents($path, $imageData);
-
-                    // Replace base64 with file URL
-                    $img->setAttribute('src', asset('uploads/content_images/' . $imageName));
-                }
-            }
-            // Save updated content with image URLs
-            $content = $dom->saveHTML();
 
             // Update Chitti record
             $chitti = Chitti::findOrFail($id);
@@ -141,17 +143,17 @@ class PostController extends Controller
 
                 // Update image if provided
                 if ($request->hasFile('makerImage')) {
-                    $makerImage = $request->file('makerImage');
-                    $makerImageName = time() . '_' . $makerImage->getClientOriginalName();
-                    $makerImage->move(public_path('uploads/maker_image/'), $makerImageName);
-                    $url = public_path('uploads/maker_image/') . $makerImageName;
-                    $serviceAccessUrl = "admin.prarang.in/" . $url;
+                    $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
+                        if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
+                            DB::rollBack();
+                            return redirect()->back()->with('error', 'Error while image uploading, please try again.');
+                        }
 
                     // Update Chitti Image Mapping
                     Chittiimagemapping::where('chittiId', $id)->update([
-                        'imageName'     => $makerImageName,
-                        'imageUrl'      => $serviceAccessUrl,
-                        'accessUrl'     => $url,
+                        'imageName'     => $uploadImage['path'],
+                        'imageUrl'      => $uploadImage['full_url'],
+                        'accessUrl'     => $uploadImage['path'],
                         'updated_at'    => $currentDateTime,
                         'updated_by'    => Auth::guard('admin')->user()->userId,
                     ]);
@@ -191,6 +193,7 @@ class PostController extends Controller
             // Perform the soft delete
             $chitti->finalStatus = 'deleted';
             $chitti->updated_at = $currentDateTime;
+            $chitti->makerStatus='sent_to_checker';
             $chitti->updated_by = Auth::guard('admin')->user()->userId;
             $chitti->save();
 

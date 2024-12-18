@@ -72,6 +72,13 @@ class Chitti extends Model
         'postStatusMakerChecker',
         'monthDay',
         'writercolor',
+        'cityId',
+        'areaId',
+        'geographyId',
+        'post_anlytics_rtrn_to_mkr',
+        'post_anlytics_rtrn_to_mkr_id',
+        'return_chitti_post_from_checker',
+        'return_chitti_post_from_checker_id',
         'created_at',
         'created_by',
         'updated_at',
@@ -117,7 +124,23 @@ class Chitti extends Model
 
     public function city()
     {
-        return $this->belongsTo(Mcity::class, 'cityId', 'cityId');
+        return $this->belongsTo(Mcity::class, 'cityId', 'cityId'); // adjust the foreign key if necessary
     }
+
+    public function analyticsMaker()
+    {
+        return $this->belongsTo(Muser::class, 'analyticsMaker', 'userId');
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Chittilike::class, 'chittiId', 'chittiId');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Chitticomment::class, 'chittiId', 'chittiId');
+    }
+
 }
 

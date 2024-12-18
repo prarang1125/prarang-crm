@@ -30,27 +30,41 @@
             <hr/>
             <div class="card">
                 <div class="card-body d-flex justify-content-end align-items-end">
+                    <!-- Search Form -->
+                    <form action="{{ url('admin/tagcategory/tag-category-listing') }}" method="GET" class="d-flex me-3">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search by Tag Name" value="{{ request()->input('search') }}">
+                        <button type="submit" class="btn btn-secondary">Search</button>
+                    </form>
+
+                    @if(request()->has('search'))
+                        <a class="btn btn-primary me-1" href="{{ url()->current() }}">
+                            <i class="bx bx-refresh"></i>
+                        </a>
+                    @endif
+
                     <a href="{{ url('/admin/tagcategory/tag-category-register') }}" class="btn btn-primary">Add New Tag Category</a>
                 </div>
                 <div class="card-body">
                     <table class="table mb-0 table-hover">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col" class="text-center">#</th>
-                                <th scope="col" class="text-center">City Name In English</th>
-                                <th scope="col" class="text-center">City Name In Hindi</th>
-                                <th scope="col" class="text-center">Action</th>
+                                <th scope="col" class="">#</th>
+                                <th scope="col" class="">City Name In English</th>
+                                <th scope="col" class="">City Name In Hindi</th>
+                                <th scope="col" class="">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @php $index = 1;  @endphp
+                            @php
+                                $index = ($mtagcategorys->currentPage() - 1) * $mtagcategorys->perPage() + 1;
+                            @endphp
                             @foreach ($mtagcategorys as $mtagcategory)
                                 <tr>
-                                    <th scope="row" class="text-center">{{ $index }}</th>
-                                    <td class="text-center">{{ $mtagcategory->tagCategoryInEnglish }}</td>
-                                    <td class="text-center">{{ $mtagcategory->tagCategoryInUnicode }}</td>
+                                    <th scope="row" class="">{{ $index }}</th>
+                                    <td class="">{{ $mtagcategory->tagCategoryInEnglish }}</td>
+                                    <td class="">{{ $mtagcategory->tagCategoryInUnicode }}</td>
 
-                                    <td class="text-center">
+                                    <td class="">
                                         <a href="{{ route('admin.tag-category-edit', $mtagcategory->tagCategoryId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
 
                                         <form action="{{ route('admin.tag-category-delete', $mtagcategory->tagCategoryId) }}" method="POST" style="display:inline;">
@@ -63,6 +77,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end mt-4">
+                        {{ $mtagcategorys->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>

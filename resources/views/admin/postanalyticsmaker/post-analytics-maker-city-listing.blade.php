@@ -26,9 +26,31 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <h6 class="mb-0 text-uppercase">Live Maker City Listing</h6>
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 text-uppercase">Live Maker City Listing</h6>
+                <a class="nav-link dropdown-toggle-nocaret position-relative"
+                href="{{ route('admin.post-analytics-from-checker-listing') }}"
+                role="button">
+                    @if($notification > 0)
+                        <span class="alert-count">{{ $notification }}</span>
+                    @endif
+                    <i class="bx bx-bell"></i>
+                </a>
+            </div>
             <hr/>
             <div class="card">
+                <div class="card-body d-flex justify-content-end align-items-end">
+                    <!-- Search Form -->
+                    <form action="{{ url('admin/postanalyticsmaker/post-analytics-maker-city-listing') }}" method="GET" class="d-flex me-3">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search by Live City Name" value="{{ request()->input('search') }}">
+                        <button type="submit" class="btn btn-secondary">Search</button>
+                    </form>
+                    @if(request()->has('search'))
+                        <a class="btn btn-primary me-1" href="{{ url()->current() }}">
+                            <i class="bx bx-refresh"></i>
+                        </a>
+                    @endif
+                </div>
                 <div class="card-body">
                     <table class="table mb-0 table-hover">
                         <thead class="thead-light">
@@ -39,7 +61,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $index = 1;  @endphp
+                            @php
+                                $index = ($mcitys->currentPage() - 1) * $mcitys->perPage() + 1;
+                            @endphp
                             @foreach ($mcitys as $mcity)
                                 <tr>
                                     <th scope="row" class="text-center">{{ $index }}</th>
@@ -58,6 +82,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end mt-4">
+                        {{ $mcitys->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>

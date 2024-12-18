@@ -1,3 +1,7 @@
+.ck-editor__editable_inline{
+    height: 450px;
+}
+
 
 .scities-ml-negative-7 {
     margin-left: -38px;
@@ -58,4 +62,35 @@
     background-color: #d1ffd1; /* Light green background for selected */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for the selected item */
 }
+
+/* this style is for post analytics maker edit  */
+.select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.select-wrapper select {
+    width: 100%;
+    padding-right: 30px; /* Space for the arrow */
+    appearance: none; /* Removes default arrow */
+    -webkit-appearance: none; /* Safari/Chrome */
+    -moz-appearance: none; /* Firefox */
+}
+
+.select-wrapper .select-arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none; /* So that it doesn’t block the dropdown click */
+    font-size: 16px; /* Adjust size as needed */
+    color: #6c757d; /* Adjust color as needed */
+}
+
+
+/* .custom-approved {
+    color:  #0d6efd ;
+}
+*/
 

@@ -2,18 +2,30 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Mcountry;
 use Illuminate\Http\Request;
+use App\Services\ImageUploadService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use App\Models\Mcountry;
 
 class CountryController extends Controller
 {
     #this method is use for show country listing
-    public function index()
+    public function index(Request $request)
     {
-        $mcountrys = Mcountry::where('isActive', 1)->get();
+        $search = $request->input('search');
+        // TODO::Sort it to Display letest record on Top
+        $mcountrys = Mcountry::where('isActive', 1)
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('countryNameInEnglish', 'like', '%' . $search . '%')
+                    ->orWhere('countryNameInUnicode', 'like', '%' . $search . '%');
+                });
+            })
+            ->paginate(30);
+
         return view('admin.country.country-listing', compact('mcountrys'));
     }
 
@@ -24,7 +36,7 @@ class CountryController extends Controller
     }
 
     #this method is use for store country data
-    public function countryStore(Request $request)
+    public function countryStore(Request $request, ImageUploadService $imageUploadService)
     {
         $validator = Validator::make($request->all(), [
             'countryNameInEnglish' => 'required|string|max:255',
@@ -35,40 +47,54 @@ class CountryController extends Controller
             'content' => 'required|string',
         ]);
 
-        if($validator->passes()){
-            $currentDateTime = getUserCurrentTime();
-            $countryImage = $request->file('countryImage');
-            $countryImageName = time() . '_' . $countryImage->getClientOriginalName();
-            $countryImage->move(public_path('uploads/country_images'), $countryImageName);
+        if ($validator->passes()) {
+            DB::beginTransaction();
+            try {
+                $lastId = Mcountry::max('countryId');
+                $newId = $lastId ? $lastId + 1 : 1;
 
-            $countryMap = $request->file('countryMap');
-            $countryMapName = time() . '_' . $countryMap->getClientOriginalName();
-            $countryMap->move(public_path('uploads/country_maps'), $countryMapName);
+                // Upload Country Image
+                $uploadCountryImage = $imageUploadService->uploadImage($request->file('countryImage'),  $newId, 'country');
+                if (isset($uploadCountryImage['error']) && $uploadCountryImage['error'] === true) {
+                    throw new \Exception('Error while uploading country image.');
+                }
 
-            $lastId = Mcountry::max('countryId');
-            $newId = $lastId ? $lastId + 1 : 1;
+                // Upload Country Map
+                $uploadCountryMap = $imageUploadService->uploadImage($request->file('countryMap'),  $newId, 'country_map');
+                if (isset($uploadCountryMap['error']) && $uploadCountryMap['error'] === true) {
+                    throw new \Exception('Error while uploading country map.');
+                }
 
-            $mcountry = new Mcountry();
-            $mcountry->countryCode = 'CON' . $newId;
-            $mcountry->countryNameInUnicode = $request->countryNameInUnicode;
-            $mcountry->countryNameInEnglish = $request->countryNameInEnglish;
-            $mcountry->Image = $countryImageName;
-            $mcountry->Map = $countryMapName;
-            $mcountry->Image_Name   = $countryImageName;
-            $mcountry->Map_Name     = $countryMapName;
-            $mcountry->Culture_Nature = $request->isCultureNature;
-            $mcountry->text = $request->content;
-            $mcountry->isActive = 1;
-            $mcountry->created_at = $currentDateTime;
-            $mcountry->created_by = Auth::guard('admin')->user()->userId;
-            $mcountry->save();
-            return redirect()->route('admin.country-listing')->with('success', 'Country created successfully.');
-        }else{
+                $currentDateTime = getUserCurrentTime();
+
+                $mcountry = new Mcountry();
+                $mcountry->countryCode = 'CON' . $newId;
+                $mcountry->countryNameInUnicode = $request->countryNameInUnicode;
+                $mcountry->countryNameInEnglish = $request->countryNameInEnglish;
+                $mcountry->Image = $uploadCountryImage['path'];
+                $mcountry->Map = $uploadCountryMap['path'];
+                $mcountry->Image_Name = $uploadCountryImage['full_url'];
+                $mcountry->Map_Name = $uploadCountryMap['full_url'];
+                $mcountry->Culture_Nature = $request->isCultureNature;
+                $mcountry->text = $request->content;
+                $mcountry->isActive = 1;
+                $mcountry->created_at = $currentDateTime;
+                $mcountry->created_by = Auth::guard('admin')->user()->userId;
+                $mcountry->save();
+
+                DB::commit();
+                return redirect()->route('admin.country-listing')->with('success', 'Country created successfully.');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+        } else {
             return redirect()->route('admin.country-register')
                 ->withErrors($validator)
                 ->withInput();
         }
     }
+
 
     #this method is use for delete specific data
     public function countrytDelete($id)
@@ -94,8 +120,7 @@ class CountryController extends Controller
         return view('admin.country.country-edit' , compact('mcountry'));
     }
 
-    #this method is use for update the country data
-    public function countryUpdate(Request $request, $id)
+    public function countryUpdate(Request $request, $id, ImageUploadService $imageUploadService)
     {
         $validator = Validator::make($request->all(), [
             'countryNameInUnicode' => 'required|string|max:255',
@@ -110,54 +135,50 @@ class CountryController extends Controller
             $mcountry = Mcountry::find($id);
 
             if ($mcountry) {
-                $currentDateTime = getUserCurrentTime();
+                DB::beginTransaction();
 
-                // Handle countryImage upload if present
-                if ($request->hasFile('countryImage')) {
-                    $countryImage = $request->file('countryImage');
-                    $countryImageName = time() . '_' . $countryImage->getClientOriginalName();
-                    $countryImage->move(public_path('uploads/country_images'), $countryImageName);
-                    // Debugging: Log the filename
-                    Log::info("Generated image name: " . $countryImageName);
-                    // Update the image field in the model
-                    $mcountry->Image = $countryImageName;
-                    $mcountry->Image_Name = $countryImageName;
+                try {
+                    $currentDateTime = getUserCurrentTime();
+
+                    // Handle countryImage upload if present
+                    if ($request->hasFile('countryImage')) {
+                        $uploadCountryImage = $imageUploadService->uploadImage($request->file('countryImage'), $id, 'country');
+                        if (isset($uploadCountryImage['error']) && $uploadCountryImage['error'] === true) {
+                            throw new \Exception('Error while uploading country image.');
+                        }
+
+                        $mcountry->Image = $uploadCountryImage['path'];
+                        $mcountry->Image_Name = $uploadCountryImage['full_url'];
+                    }
+
+                    // Handle countryMap upload if present
+                    if ($request->hasFile('countryMap')) {
+                        $uploadCountryMap = $imageUploadService->uploadImage($request->file('countryMap'), $id, 'country_map');
+                        if (isset($uploadCountryMap['error']) && $uploadCountryMap['error'] === true) {
+                            throw new \Exception('Error while uploading country map.');
+                        }
+
+                        $mcountry->Map = $uploadCountryMap['path'];
+                        $mcountry->Map_Name = $uploadCountryMap['full_url'];
+                    }
+
+                    // Update other fields only if images are provided or if required fields are updated
+                    $mcountry->countryNameInUnicode = $request->countryNameInUnicode;
+                    $mcountry->countryNameInEnglish = $request->countryNameInEnglish;
+                    $mcountry->Culture_Nature = $request->isCultureNature;
+                    $mcountry->text = $request->content;
+                    $mcountry->updated_at = $currentDateTime;
+                    $mcountry->updated_by = Auth::guard('admin')->user()->userId;
+
+                    $mcountry->save();
+
+                    DB::commit();
+
+                    return redirect()->route('admin.country-listing')->with('success', 'Country updated successfully.');
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    return redirect()->back()->with('error', $e->getMessage());
                 }
-
-                // Handle countryMap upload if present
-                if ($request->hasFile('countryMap')) {
-                    $countryMap = $request->file('countryMap');
-                    $countryMapName = time() . '_' . $countryMap->getClientOriginalName();
-                    $countryMap->move(public_path('uploads/country_maps'), $countryMapName);
-                    // Debugging: Log the filename
-                    Log::info("Generated map name: " . $countryMapName);
-                    // Update the map field in the model
-                    $mcountry->Map = $countryMapName;
-                    $mcountry->Map_Name = $countryMapName;
-                }
-
-
-                if (empty($request->file('countryImage')) || empty($request->file('countryMap'))) {
-                    $countryImageName = $mcountry->Image;
-                    $countryMapName = $mcountry->Map;
-                }
-
-                // Update other fields
-                $mcountry->update([
-                    'countryNameInUnicode' => $request->countryNameInUnicode,
-                    'countryNameInEnglish' => $request->countryNameInEnglish,
-                    'Image' => $countryImageName,
-                    'Map' => $countryMapName,
-                    'Image_Name' => $countryImageName,
-                    'Map_Name' => $countryMapName,
-                    'Culture_Nature' => $request->isCultureNature,
-                    'text' => $request->content,
-                    'isActive' => $request->isCultureNature,
-                    'updated_at' => $currentDateTime,
-                    'updated_by' => Auth::guard('admin')->user()->userId,
-                ]);
-
-                return redirect()->route('admin.country-listing')->with('success', 'Country updated successfully.');
             } else {
                 return redirect()->back()->with('error', 'Country not found.');
             }
@@ -167,6 +188,5 @@ class CountryController extends Controller
                 ->withErrors($validator);
         }
     }
-
 }
 ?>

@@ -55,13 +55,14 @@
                             @error('countryImage')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
+                            <!-- TODO::image Is not Display In While Editing -->
                             @if ($mcountry->Image)
                                 <div class="mt-2">
                                     <p>Current Image:</p>
                                     <!-- Display the image -->
-                                    <img src="{{ asset('uploads/country_images/' . $mcountry->Image) }}" alt="Country Image" width="100">
+                                    <img src="{{ Storage::url($mcountry->Image) }}" alt="Country Image" width="100">
                                     <!-- Display the image name -->
-                                    <p>Image Name: {{ $mcountry->Image_Name }}</p>
+                                    {{-- <p>Image Name: {{ Storage::url($mcountry->Image_Name) }}</p> --}}
                                 </div>
                             @endif
                         </div>
@@ -75,9 +76,9 @@
                                 <div class="mt-2">
                                     <p>Current Map:</p>
                                     <!-- Display the map -->
-                                    <img src="{{ asset('uploads/country_maps/' . $mcountry->Map) }}" alt="Country Map" width="100">
+                                    <img src="{{ Storage::url($mcountry->Map) }}" alt="Country Map" width="100">
                                     <!-- Display the map name -->
-                                    <p>Map Name: {{ $mcountry->Map_Name }}</p>
+                                    {{-- <p>Map Name: {{ Storage::url($mcountry->Map_Name)}}</p> --}}
                                 </div>
                             @endif
                         </div>
@@ -123,5 +124,9 @@
     </div>
 </div>
 <!--end page wrapper -->
+<script>
+    const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
+    const csrfToken = "{{ csrf_token() }}";
+</script>
 @endsection
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use App\Services\ImageUploadService;
 use App\Models\Mcity;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -12,11 +14,22 @@ use Illuminate\Support\Facades\Log;
 class LiveCityController extends Controller
 {
     #this method is use for show the listing of city
-    public function index()
+    public function index(Request $request)
     {
-        $mcitys = Mcity::where('isActive', 1)->get();
+        $search = $request->input('search');
+
+        $mcitys = Mcity::where('isActive', 1)
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('cityNameInEnglish', 'like', '%' . $search . '%')
+                    ->orWhere('cityNameInUnicode', 'like', '%' . $search . '%');
+                });
+            })
+            ->paginate(30);
+
         return view('admin.livecity.live-city-listing', compact('mcitys'));
     }
+
 
     #this method is use for regidter new city
     public function liveCityRegister()
@@ -24,8 +37,7 @@ class LiveCityController extends Controller
         return view('admin.livecity.live-city-register');
     }
 
-    #this method is use for store city
-    public function liveCityStore(Request $request)
+    public function liveCityStore(Request $request, ImageUploadService $imageUploadService)
     {
         $validator = Validator::make($request->all(), [
             'cityNameInEnglish' => 'required|string|max:255',
@@ -35,39 +47,50 @@ class LiveCityController extends Controller
             'isCultureNature' => 'required|boolean',
             'content' => 'required|string',
         ]);
-        if($validator->passes()){
-            $currentDateTime = getUserCurrentTime();
-            if($request->hasFile('cityImage')){
-                $cityImage = $request->file('cityImage');
-                $cityImageName = time() . '_' . $cityImage->getClientOriginalName();
-                $cityImage->move(public_path('uploads/city_images'), $cityImageName);
+
+        if ($validator->passes()) {
+            DB::beginTransaction();
+            try {
+                $lastId = Mcity::max('cityId');
+                $newId = $lastId ? $lastId + 1 : 1;
+
+                // Upload City Image
+                $uploadCityImage = $imageUploadService->uploadImage($request->file('cityImage'), $newId, 'city');
+                if (isset($uploadCityImage['error']) && $uploadCityImage['error'] === true) {
+                    throw new \Exception('Error while uploading city image.');
+                }
+
+                // Upload City Map
+                $uploadCityMap = $imageUploadService->uploadImage($request->file('cityMap'), $newId, 'city_map');
+                if (isset($uploadCityMap['error']) && $uploadCityMap['error'] === true) {
+                    throw new \Exception('Error while uploading city map.');
+                }
+
+                $currentDateTime = getUserCurrentTime();
+
+                $mcity = new Mcity();
+                $mcity->cityCode = 'c' . $newId;
+                $mcity->cityNameInUnicode = $request->cityNameInUnicode;
+                $mcity->cityNameInEnglish = $request->cityNameInEnglish;
+                $mcity->Image = $uploadCityImage['path'];
+                $mcity->Map = $uploadCityMap['path'];
+                $mcity->Image_Name = $uploadCityImage['full_url'];
+                $mcity->Map_Name = $uploadCityMap['full_url'];
+                $mcity->Culture_Nature = $request->isCultureNature;
+                $mcity->text = $request->content;
+                $mcity->isActive = 1;
+                $mcity->created_at = $currentDateTime;
+                $mcity->created_by = Auth::guard('admin')->user()->userId;
+                // dd($mcity);
+                $mcity->save();
+
+                DB::commit();
+                return redirect()->route('admin.live-city-listing')->with('success', 'City created successfully.');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return redirect()->back()->with('error', $e->getMessage());
             }
-
-            if($request->hasFile('cityMap')){
-                $cityMap = $request->file('cityMap');
-                $cityMapName = time() . '_' . $cityMap->getClientOriginalName();
-                $cityMap->move(public_path('uploads/city_maps'), $cityMapName);
-            }
-
-            $lastId = Mcity::max('cityId');
-            $newId = $lastId ? $lastId + 1 : 1;
-
-            $mcity = new Mcity();
-            $mcity->cityCode = 'c' . $newId;
-            $mcity->cityNameInUnicode = $request->cityNameInUnicode;
-            $mcity->cityNameInEnglish = $request->cityNameInEnglish;
-            $mcity->Image = $cityImageName;
-            $mcity->Map = $cityMapName;
-            $mcity->Image_Name   = $cityImageName;
-            $mcity->Map_Name     = $cityMapName;
-            $mcity->Culture_Nature = $request->isCultureNature;
-            $mcity->text = $request->content;
-            $mcity->isActive = 1;
-            $mcity->created_at = $currentDateTime;
-            $mcity->created_by = Auth::guard('admin')->user()->userId;
-            $mcity->save();
-            return redirect()->route('admin.live-city-listing')->with('success', 'City created successfully.');
-        }else{
+        } else {
             return redirect()->route('admin.live-city-register')
                 ->withErrors($validator)
                 ->withInput();
@@ -99,7 +122,8 @@ class LiveCityController extends Controller
         return view('admin.livecity.live-city-edit' , compact('mcity'));
     }
 
-    public function liveCityUpdate(Request $request, $id)
+    #this method is use for update live city data
+    public function liveCityUpdate(Request $request, $id, ImageUploadService $imageUploadService)
     {
         $validator = Validator::make($request->all(), [
             'cityNameInUnicode' => 'required|string|max:255',
@@ -107,60 +131,62 @@ class LiveCityController extends Controller
             'cityImage' => 'nullable|image|max:2048',
             'cityMap' => 'nullable|image|max:2048',
             'isCultureNature' => 'required|boolean',
-            'content' => 'required|string',
+            'content' => 'nullable|string',
         ]);
 
         if ($validator->passes()) {
             $mcity = Mcity::find($id);
 
             if ($mcity) {
-                $currentDateTime = getUserCurrentTime();
+                DB::beginTransaction();
 
-                // Handle cityImage upload if present
-                if ($request->hasFile('cityImage')) {
-                    $cityImage = $request->file('cityImage');
-                    $cityImageName = time() . '_' . $cityImage->getClientOriginalName();
-                    $cityImage->move(public_path('uploads/city_images'), $cityImageName);
-                    // Debugging: Log the filename
-                    Log::info("Generated image name: " . $cityImageName);
-                    // Update the image field in the model
-                    $mcity->image = $cityImageName;
-                    $mcity->Image_Name = $cityImageName;
+                try {
+                    $currentDateTime = getUserCurrentTime();
+
+                    // Handle cityImage upload if present
+                    if ($request->hasFile('cityImage')) {
+                        $uploadCityImage = $imageUploadService->uploadImage($request->file('cityImage'), $id, 'city');
+                        if (isset($uploadCityImage['error']) && $uploadCityImage['error'] === true) {
+                            throw new \Exception('Error while uploading city image.');
+                        }
+
+                        $mcity->Image = $uploadCityImage['path'];
+                        $mcity->Image_Name = $uploadCityImage['full_url'];
+                    }
+
+                    // Handle cityMap upload if present
+                    if ($request->hasFile('cityMap')) {
+                        $uploadCityMap = $imageUploadService->uploadImage($request->file('cityMap'), $id, 'city_map');
+                        if (isset($uploadCityMap['error']) && $uploadCityMap['error'] === true) {
+                            throw new \Exception('Error while uploading city map.');
+                        }
+
+                        $mcity->Map = $uploadCityMap['path'];
+                        $mcity->Map_Name = $uploadCityMap['full_url'];
+                    }
+
+                    // Update non-image fields if required
+                    $mcity->cityNameInUnicode = $request->cityNameInUnicode;
+                    $mcity->cityNameInEnglish = $request->cityNameInEnglish;
+                    $mcity->Culture_Nature = $request->isCultureNature;
+
+                    // Only update content if provided in the request
+                    if ($request->filled('content')) {
+                        $mcity->text = $request->content;
+                    }
+
+                    $mcity->updated_at = $currentDateTime;
+                    $mcity->updated_by = Auth::guard('admin')->user()->userId;
+
+                    $mcity->save();
+
+                    DB::commit();
+
+                    return redirect()->route('admin.live-city-listing')->with('success', 'City updated successfully.');
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    return redirect()->back()->with('error', $e->getMessage());
                 }
-
-                // Handle cityMap upload if present
-                if ($request->hasFile('cityMap')) {
-                    $cityMap = $request->file('cityMap');
-                    $cityMapName = time() . '_' . $cityMap->getClientOriginalName();
-                    $cityMap->move(public_path('uploads/city_maps'), $cityMapName);
-                    // Debugging: Log the filename
-                    Log::info("Generated map name: " . $cityMapName);
-                    // Update the map field in the model
-                    $mcity->map = $cityMapName;
-                    $mcity->Map_Name = $cityMapName;
-                }
-
-                if (empty($request->file('cityImage')) || empty($request->file('cityMap'))) {
-                    $cityImageName = $mcity->image;
-                    $cityMapName = $mcity->map;
-                }
-
-                // Update other fields
-                $mcity->update([
-                    'cityNameInUnicode' => $request->cityNameInUnicode,
-                    'cityNameInEnglish' => $request->cityNameInEnglish,
-                    'isActive' => $request->isCultureNature,
-                    'image' => $cityImageName,
-                    'map' => $cityMapName,
-                    'Image_Name' => $cityImageName,
-                    'Map_Name' => $cityMapName,
-                    'text' => $request->content,
-                    'Culture_Nature' => $request->isCultureNature,
-                    'updated_at' => $currentDateTime,
-                    'updated_by' => Auth::guard('admin')->user()->userId,
-                ]);
-
-                return redirect()->route('admin.live-city-listing')->with('success', 'City updated successfully.');
             } else {
                 return redirect()->back()->with('error', 'City not found.');
             }

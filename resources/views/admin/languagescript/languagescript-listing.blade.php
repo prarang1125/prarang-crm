@@ -30,6 +30,15 @@
             <hr/>
             <div class="card">
                 <div class="card-body d-flex justify-content-end align-items-end">
+                    <form action="{{ url('admin/languagescript/languagescript-listing') }}" method="GET" class="d-flex me-3">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search by Language Script Name" value="{{ request()->input('search') }}">
+                        <button type="submit" class="btn btn-secondary">Search</button>
+                    </form>
+                    @if(request()->has('search'))
+                        <a class="btn btn-primary me-1" href="{{ url()->current() }}">
+                            <i class="bx bx-refresh"></i>
+                        </a>
+                    @endif
                     <a href="{{ url('admin/languagescript/languagescript-register') }}" class="btn btn-primary">Add New Language Script</a>
                 </div>
                 <div class="card-body">
@@ -44,7 +53,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $index = 1;  @endphp
+                            @php
+                                $index = ($languagescripts->currentPage() - 1) * $languagescripts->perPage() + 1;
+                            @endphp
                             @foreach ($languagescripts as $languagescript)
                                 <tr>
                                     <th scope="row" class="text-center">{{ $index }}</th>
@@ -65,6 +76,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end mt-4">
+                        {{ $languagescripts->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>

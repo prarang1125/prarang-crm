@@ -1,6 +1,6 @@
 @include('layouts.partial.head')
 @section('title', 'Login')
-<div class="d-flex align-items-center min-vh-100 login_background">
+<div class="d-flex align-items-center min-vh-100 bg-light-primary">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-6 col-md-8 col-sm-10">
@@ -11,6 +11,24 @@
                             <h5 class="mb-5 mt-2 text-dark">User Login</h5>
                         </div>
                         <hr>
+                        {{-- @if($errors->any())
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        @endif --}}
+                        @if (session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+
+
                         <form class="row g-3" action="{{ route('accounts.authenticate') }}" method="POST">
                             @csrf
                             <div class="col-12">

@@ -59,9 +59,9 @@
                                 <div class="mt-2">
                                     <p>Current Image:</p>
                                     <!-- Display the image -->
-                                    <img src="{{ asset('uploads/city_images/' . $mcity->image) }}" alt="City Image" width="100">
+                                    <img src="{{ Storage::url($mcity->image) }}" alt="City Image" width="100">
                                     <!-- Display the image name -->
-                                    <p>Image Name: {{ $mcity->Image_Name }}</p>
+                                    {{-- <p>Image Name: {{ Storage::url($mcity->Image_Name) }}</p> --}}
                                 </div>
                             @endif
                         </div>
@@ -75,9 +75,9 @@
                                 <div class="mt-2">
                                     <p>Current Map:</p>
                                     <!-- Display the map -->
-                                    <img src="{{ asset('uploads/city_maps/' . $mcity->map) }}" alt="City Map" width="100">
+                                    <img src="{{ Storage::url($mcity->map) }}" alt="City Map" width="100">
                                     <!-- Display the map name -->
-                                    <p>Map Name: {{ $mcity->Map_Name }}</p>
+                                    {{-- <p>Map Name: {{ Storage::url($mcity->Map_Name) }}</p> --}}
                                 </div>
                             @endif
                         </div>
@@ -123,5 +123,9 @@
     </div>
 </div>
 <!--end page wrapper -->
+<script>
+    const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
+    const csrfToken = "{{ csrf_token() }}";
+</script>
 @endsection
 

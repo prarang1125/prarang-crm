@@ -10,11 +10,23 @@ use App\Models\Mrole;
 class RoleController extends Controller
 {
     #this method show the role listing data
-    public function index()
+    public function index(Request $request)
     {
-        $roles = Mrole::where('status', 1)->get();
+        $query = Mrole::where('status', 1);
+
+        // Apply search if input exists
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('roleName', 'LIKE', "%{$search}%")
+                ->orWhere('roleName', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $roles = $query->paginate(30);
         return view('admin.role.role-listing', compact('roles'));
     }
+
 
     #this method is use for show role register page
     public function roleRegister()
