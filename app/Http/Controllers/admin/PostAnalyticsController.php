@@ -84,7 +84,7 @@ class PostAnalyticsController extends Controller
         }
 
         # Paginate results
-        $chittis = $chittisQuery->paginate(5);
+        $chittis = $chittisQuery->paginate(20);
 
         # Get the current month dates for the date picker
         $startDate = Carbon::now()->startOfMonth();

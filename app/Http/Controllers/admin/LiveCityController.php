@@ -25,7 +25,7 @@ class LiveCityController extends Controller
                     ->orWhere('cityNameInUnicode', 'like', '%' . $search . '%');
                 });
             })
-            ->paginate(5);
+            ->paginate(30);
 
         return view('admin.livecity.live-city-listing', compact('mcitys'));
     }

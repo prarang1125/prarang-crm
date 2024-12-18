@@ -36,7 +36,7 @@ class PostAnalyticsMakerController extends Controller
             });
         }
         // Paginate results
-        $mcitys = $query->paginate(5);
+        $mcitys = $query->paginate(20);
         $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
 
         return view('admin.postanalyticsmaker.post-analytics-maker-city-listing', compact('mcitys', 'notification'));
@@ -54,7 +54,7 @@ class PostAnalyticsMakerController extends Controller
         // dd($cityCode);
         // $chittis = Chitti::with('city')->where('cityId', $areaId)->get();
         $chittis = Chitti::where('areaId', $cityCode)
-                ->whereNotIn('postStatusMakerChecker', ['send_to_post_checker', 'approved'])->paginate(2);
+                ->whereNotIn('postStatusMakerChecker', ['send_to_post_checker', 'approved'])->paginate(20);
         // dd($chittis);
         // $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
         return view('admin.postanalyticsmaker.post-analytics-maker-listing', compact('chittis'));
@@ -142,7 +142,7 @@ class PostAnalyticsMakerController extends Controller
 
         // Paginate the results
         $chittis = $query->where('post_anlytics_rtrn_to_mkr_id', 0)
-                        ->paginate(10); // Adjust the number per page as needed
+                        ->paginate(20); // Adjust the number per page as needed
 
         return view('admin.postanalyticsmaker.post-analytics-rejected-from-checker-listing', compact('chittis', 'search'));
     }

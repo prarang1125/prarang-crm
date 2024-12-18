@@ -36,7 +36,7 @@ class AccUploaderController extends Controller
             ->whereNotIn('finalStatus',['deleted'])
             ->orderByDesc('dateOfCreation')
             ->select('chittiId', 'Title', 'SubTitle', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
-            ->paginate(10); // Adjust the number per page
+            ->paginate(30); // Adjust the number per page
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         return view('accounts.uploader.acc-uploader-listing', compact('chittis', 'geographyOptions', 'search'));

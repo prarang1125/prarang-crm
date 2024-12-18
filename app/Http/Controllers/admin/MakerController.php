@@ -20,28 +20,36 @@ use App\Models\Chittigeographymapping;
 use App\Models\Chittiimagemapping;
 use App\Models\Facity;
 use App\Models\Chittitagmapping;
+use Illuminate\Support\Facades\Cache;
 
 
 class MakerController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->input('search');
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-            ->when($search, function ($query, $search) {
-                return $query->where(function ($q) use ($search) {
-                    $q->where('Title', 'LIKE', '%' . $search . '%')
-                        ->orWhere('SubTitle', 'LIKE', '%' . $search . '%')
-                        ->orWhere('createDate', 'LIKE', '%' . $search . '%');
-                });
-            })
-            ->whereNotNull('Title')
-            ->where('Title', '!=', '')
-            ->where('makerStatus', '=', 'sent_to_checker')
-            ->where('finalStatus', '!=', 'deleted')
-            ->select('*')
-            ->orderByDesc('dateOfCreation')
-            ->paginate(3); // Change '10' to the number of items per page
+        $search = $request->input('search');       
+
+        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
+        $cacheDuration = 180; // Cache duration in minutes
+
+    //    return $chittis = Cache::remember($cacheKey, $cacheDuration, function () use ($search) {
+        $chittis=Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        ->when($search, function ($query, $search) {
+            return $query->where(function ($q) use ($search) {
+                $q->where('Title', 'LIKE', '%' . $search . '%')
+                    ->orWhere('SubTitle', 'LIKE', '%' . $search . '%')
+                    ->orWhere('createDate', 'LIKE', '%' . $search . '%');
+            });
+        })
+        ->whereNotNull('Title')
+        ->where('Title', '!=', '')
+        ->where('makerStatus', '=', 'sent_to_checker')
+        ->where('finalStatus', '!=', 'deleted')
+        ->select('*')
+        // ->orderByRaw("STR_TO_DATE(dateOfCreation, '%Y-%m-%d') ASC")
+        ->orderByDesc('chittiId')
+        ->paginate(30); // Change '30' to the number of items per page
+        // });
 
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();

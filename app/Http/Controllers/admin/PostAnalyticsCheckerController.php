@@ -27,7 +27,7 @@ class PostAnalyticsCheckerController extends Controller
             });
         }
 
-        $mcitys = $query->paginate(7); // Paginate with 10 items per page
+        $mcitys = $query->paginate(20); // Paginate with 10 items per page
         return view('admin.postanalyticschecker.post-analytics-checker-city-listing', compact('mcitys'));
     }
 
