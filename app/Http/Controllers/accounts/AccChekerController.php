@@ -220,6 +220,15 @@ class AccChekerController extends Controller
 
             else {
                 // dd('your data is here');
+                $area_id = $request->c2rselect;
+                $areaIdCode = '';
+                if ($request->geography == 6) { //6 is use for city
+                    $areaIdCode = 'c'.$area_id;
+                } elseif ($request->geography == 5) { //5 is use for region
+                    $areaIdCode = 'r'.$area_id;
+                } elseif ($request->geography == 7) { // 7 is use for country
+                    $areaIdCode = 'con'.$area_id;
+                }
                 $currentDate = date("d-M-y H:i:s");
                 $chitti->update([
                     'dateOfReturnToMaker'       => $currentDate,
@@ -237,6 +246,10 @@ class AccChekerController extends Controller
                     'finalStatus'           => '',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
+
+                    'cityId' => $area_id,
+                    'areaId' => $areaIdCode,
+                    'geographyId' => $request->geography,
                 ]);
 
                 // Update Facity record
