@@ -87,32 +87,7 @@
                             </div>
                         </div>
 
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <label for="inputGeography" class="form-label">Geography</label>
-                                <select id="inputGeography" class="form-select @error('geography') is-invalid @enderror"
-                                    name="geography">
-                                    <option selected disabled>Choose...</option>
-                                    @foreach ($geographyOptions as $geographyOption)
-                                        <option value="{{ $geographyOption->id }}">{{ $geographyOption->labelInEnglish }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('geography')
-                                    <p class="invalid-feedback">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label id="inputLanguageLabel" for="inputLanguageScript" class="form-label">Select</label>
-                                <select id="inputLanguageScript"
-                                    class="form-select @error('c2rselect') is-invalid @enderror" name="c2rselect">
-                                    <option selected disabled>Choose...</option>
-                                </select>
-                                @error('c2rselect')
-                                    <p class="invalid-feedback">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
+                        @livewire('post.geography-selector')
 
                         <div class="row mt-3">
                             <div class="col-md-6">

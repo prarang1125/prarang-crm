@@ -16,32 +16,46 @@ class GeographySelector extends Component
 
     public $selectedGeography = null;
 
-    public function mount()
+    public $changeTitle = 'Select';
+
+    public $c2rselectId;
+
+    public function mount($geography = '-', $c2rselect = '-')
     {
-        // Preload the geography options (IDs 5, 6, 7)
+
         $this->geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+
+        if ($geography) {
+            $this->selectedGeography = $geography;
+            $this->c2rselectId = $c2rselect;
+            $this->changeGeography();
+        }
     }
 
-    public function updateFilteredOptions($value)
+    public function changeGeography()
     {
-        // Reset filtered options
         $this->filteredOptions = [];
 
-        // Load data based on selected geography
-        switch ($value) {
+        switch ($this->selectedGeography) {
             case 5: // Region
-                $this->filteredOptions = Mregion::where('isActive', 1)->get();
+                $this->filteredOptions = Mregion::where('isActive', 1)
+                    ->get(['regionId as id', 'regionnameInEnglish as name']);
+                $this->changeTitle = 'Region';
                 break;
             case 6: // City
-                $this->filteredOptions = Mcity::where('isActive', 1)->get();
+                $this->filteredOptions = Mcity::where('isActive', 1)
+                    ->get(['cityId as id', 'citynameInEnglish as name']);
+                $this->changeTitle = 'City';
                 break;
             case 7: // Country
-                $this->filteredOptions = Mcountry::where('isActive', 1)->get();
+                $this->filteredOptions = Mcountry::where('isActive', 1)
+                    ->get(['countryId as id', 'countryNameInEnglish as name']);
+                $this->changeTitle = 'Country';
+                break;
+            default:
+                $this->changeTitle = 'Select';
                 break;
         }
-
-        // Set selectedGeography to the chosen value
-        $this->selectedGeography = $value;
     }
 
     public function render()

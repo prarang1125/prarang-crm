@@ -10,7 +10,9 @@ class Makerlebal extends Model
     use HasFactory;
 
     protected $table = 'makerlebal';
+
     protected $primaryKey = 'id';
+
     public $timestamps = false;
 
     protected $fillable = [
