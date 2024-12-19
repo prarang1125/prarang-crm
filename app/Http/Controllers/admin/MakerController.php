@@ -191,7 +191,6 @@ class MakerController extends Controller
             return redirect()->back()->with('error', 'not allow to edit');
         }
         $image = $chitti->chittiimagemappings()->first();
-        // $chittiTagMapping = Chittitagmapping::where('chittiId', $id)->first();
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
         $subTag = $chittiTagMapping->tag->tagCategoryId;
         $timelines = Mtag::where('tagCategoryId', 1)->get();
@@ -207,11 +206,8 @@ class MakerController extends Controller
         $countries = Mcountry::where('isActive', 1)->get();
         $geographyMapping = $chitti->geographyMappings->first();
         $facityValue = $chitti->facity ? $chitti->facity->value : null;
-        // dd($geographyMapping);
-        // dd($facityValue);
 
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
-
         return view('admin.maker.maker-edit', compact('chitti', 'subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
     }
 
