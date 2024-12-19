@@ -575,39 +575,6 @@
                 });
             });
             // Get all card-body cardbodselect elements end
-
-            //choose city country or region according to its geography start
-            const geographySelect = document.getElementById('inputGeography');
-            const levelSelect = document.getElementById('inputLanguageScript');
-            const labelSelect = document.getElementById('inputLanguageLabel');
-
-            const regions = @json($regions);
-            const cities = @json($cities);
-            const countries = @json($countries);
-
-            geographySelect.addEventListener('change', function() {
-                const selectedValue = this.value;
-                let options = [];
-
-                // Clear the existing options
-                levelSelect.innerHTML = '<option selected disabled>Choose...</option>';
-                if (selectedValue == 5) { // Region selected
-                    options = regions.map(region =>
-                        `<option value="${region.regionId}">${region.regionnameInEnglish}</option>`);
-                    labelSelect.textContent = 'Select Region'; // Update label text
-                } else if (selectedValue == 6) { // City selected
-                    options = cities.map(city =>
-                        `<option value="${city.cityId}">${city.citynameInEnglish}</option>`);
-                    labelSelect.textContent = 'Select City'; // Update label text
-                } else if (selectedValue == 7) { // Country selected
-                    options = countries.map(country =>
-                        `<option value="${country.countryId}">${country.countryNameInEnglish}</option>`);
-                    labelSelect.textContent = 'Select Country'; // Update label text
-                }
-                // Append new options to the select dropdown
-                levelSelect.innerHTML += options.join('');
-            });
-            //choose city country or region according to its geography end
-        });
+        })
     </script>
 @endsection
