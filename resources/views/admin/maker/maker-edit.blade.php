@@ -84,11 +84,6 @@
                         @livewire('post.geography-selector', ['geography' => $chitti->geographyId, 'c2rselect' => $chitti->cityId])
 
 
-                        {{-- geography and area code start --}}
-
-                        {{-- geography and area code end --}}
-
-                        {{-- title and subtitle code start --}}
                         <div class="row mt-3">
                             <div class="col-md-6">
                                 <label for="title" class="form-label">Title</label>

@@ -165,7 +165,7 @@
                     </div>
 
 
-                  
+
                     <!-- Tab structure to display based on radio button selection -->
                     <div id="cultureNatureTabs" style="display: none;">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -207,7 +207,7 @@
                                                     <label for="timeline{{ $timeline->id }}" class="mb-0">{{ $timeline->tagInEnglish }}</label>
                                                     <i class="lni lni-close ms-auto"></i>
                                                 </div>
-                                            </div>                                            
+                                            </div>
                                          </div>
                                      </div>
                                    @endforeach
@@ -222,11 +222,11 @@
                                             <div class="card-body cardbodselect mt-3" style="background-color: #ffff18; color: #282828;">
                                                 <div class="d-flex align-items-center">
                                                     <input type="radio" name="tagId" value="{{ $sense->tagId }}" id="sense{{ $sense->id }}" class="me-2">
-                                                    <label for="sense{{ $sense->id }}" class="mb-0">{{ $sense->tagInEnglish }}</label>  
+                                                    <label for="sense{{ $sense->id }}" class="mb-0">{{ $sense->tagInEnglish }}</label>
                                                     <i class="lni lni-close ms-auto"></i>
                                                 </div>
                                             </div>
-                                            
+
                                          </div>
                                       </div>
                                     @endforeach
@@ -246,7 +246,7 @@
                                                     <i class="lni lni-close ms-auto"></i>
                                                 </div>
                                             </div>
-                                            
+
                                          </div>
                                      </div>
                                    @endforeach
@@ -267,7 +267,7 @@
                                                         <i class="lni lni-close ms-auto"></i>
                                                     </div>
                                                 </div>
-                                                
+
                                              </div>
                                          </div>
                                      @endforeach
@@ -306,12 +306,12 @@
                                                         <i class="lni lni-close ms-auto"></i>
                                                     </div>
                                                 </div>
-                                                
+
                                              </div>
                                          </div>
                                      @endforeach
                                  </div>
-                                 
+
                              </div>
                         </div>
                     </div>
@@ -522,7 +522,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     // Get all card-body cardbodselect elements end
 
-    //choose city country or region according to its geography start
+    /*//choose city country or region according to its geography start
     const geographySelect = document.getElementById('inputGeography');
     const levelSelect = document.getElementById('inputLanguageScript');
     const labelSelect = document.getElementById('inputLanguageLabel');
@@ -549,7 +549,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         // Append new options to the select dropdown
         levelSelect.innerHTML += options.join('');
-    });
+    });*/
     //choose city country or region according to its geography end
 });
 </script>
