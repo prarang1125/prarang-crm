@@ -52,7 +52,6 @@ class MakerController extends Controller
 
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-
         return view('admin.maker.maker-listing', compact('chittis', 'geographyOptions', 'notification'));
     }
 
@@ -62,8 +61,6 @@ class MakerController extends Controller
 
         // Fetch data from the Mtag table based on tagCategoryId
         $timelines = Mtag::where('tagCategoryId', 1)->get();
-        // dd($timelines);
-
         $manSenses = Mtag::where('tagCategoryId', 2)->get();
         $manInventions = Mtag::where('tagCategoryId', 3)->get();
         $geographys = Mtag::where('tagCategoryId', 4)->get();
@@ -98,9 +95,9 @@ class MakerController extends Controller
         ]);
 
         if ($validator->passes()) {
-
             DB::beginTransaction();  // Use DB facade
             try {
+
                 $currentDateTime = getUserCurrentTime();
                 $chitti = new Chitti;
                 $area_id = $request->c2rselect;
@@ -122,12 +119,11 @@ class MakerController extends Controller
                 $chitti->makerId = Auth::guard('admin')->user()->userId;
                 $chitti->makerStatus = 'sent_to_checker';
                 $chitti->finalStatus = '';
-                // $chitti->checkerStatus = 'maker_to_checker';
+                $chitti->checkerStatus = '';
                 $chitti->cityId = $area_id;
                 $chitti->areaId = $areaIdCode;
                 $chitti->geographyId = $request->geography;
                 $chitti->created_at = $currentDateTime;
-                // $chitti->is_active = 1;
                 $chitti->created_by = Auth::guard('admin')->user()->userId;
                 $chitti->save();
                 // get last inserted id
@@ -172,11 +168,11 @@ class MakerController extends Controller
                 $chittitagmapping->created_at = $currentDateTime;
                 $chittitagmapping->created_by = Auth::guard('admin')->user()->userId;
                 $chittitagmapping->save();
-
                 DB::commit();  // Commit transaction
 
                 return redirect()->route('admin.maker-listing')->with('success', 'Post created successfully.');
             } catch (\Exception $e) {
+                // dd($e->getMessage());
                 DB::rollBack();  // Rollback transaction
 
                 return redirect()->route('admin.maker-register')->with('error', 'An error occurred, please try again.');
