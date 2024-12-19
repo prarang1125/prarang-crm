@@ -46,10 +46,10 @@
                     <table class="table mb-0 table-hover">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col" class="text-center">#</th>
-                                <th scope="col" class="text-center">City Name In English</th>
-                                <th scope="col" class="text-center">City Name In Hindi</th>
-                                <th scope="col" class="text-center">Action</th>
+                                <th scope="col" class="">#</th>
+                                <th scope="col" class="">City Name In English</th>
+                                <th scope="col" class="">City Name In Hindi</th>
+                                <th scope="col" class="">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -58,11 +58,11 @@
                             @endphp
                             @foreach ($mcitys as $mcity)
                                 <tr>
-                                    <th scope="row" class="text-center">{{ $index }}</th>
-                                    <td class="text-center">{{ $mcity->citynameInEnglish }}</td>
-                                    <td class="text-center">{{ $mcity->citynameInUnicode }}</td>
+                                    <th scope="row" class="">{{ $index }}</th>
+                                    <td class="">{{ $mcity->citynameInEnglish }}</td>
+                                    <td class="">{{ $mcity->citynameInUnicode }}</td>
 
-                                    <td class="text-center">
+                                    <td class="">
                                         <a href="{{ route('admin.live-city-edit', $mcity->cityId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
 
                                         <form action="{{ route('admin.live-city-delete', $mcity->cityId) }}" method="POST" style="display:inline;">
