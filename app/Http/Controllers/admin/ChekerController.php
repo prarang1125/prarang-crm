@@ -46,7 +46,6 @@ class ChekerController extends Controller
 
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-
         return view('admin.checker.checker-listing', compact('chittis', 'geographyOptions'));
     }
 
@@ -140,7 +139,7 @@ class ChekerController extends Controller
                     DB::rollBack();
                     return redirect()->back()->with('error', 'Error while image uploading, please try again.');
                 }
-            
+
                 Chittiimagemapping::where('chittiId', $id)->update([
                     'imageName'     => $uploadImage['path'],
                     'imageUrl'      => $uploadImage['full_url'],
