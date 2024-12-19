@@ -365,6 +365,7 @@
 <script>
     const uploadUrl = "{{ route('accounts.acc-ckeditor-upload') }}";
     const csrfToken = "{{ csrf_token() }}";
+    const postId="{{$chitti->chittiId}}";
 </script>
 <script>
 function previewImage() {

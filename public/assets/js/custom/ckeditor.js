@@ -21,6 +21,9 @@ class MyUploadAdapter {
         const xhr = this.xhr = new XMLHttpRequest();
         xhr.open('POST', uploadUrl, true);
         xhr.setRequestHeader('x-csrf-token', csrfToken);
+        if (typeof postId !== 'undefined' && postId !== null && postId !== '') {
+            xhr.setRequestHeader('ids', postId);
+        }
         xhr.responseType = 'json';
     }
 
@@ -77,7 +80,7 @@ ClassicEditor
     });
 
 function calculateTotal() {
-    const fields = ['citySubscribers', 'prarangApplication', 'facebookLinkClick', 'websiteGd', 'email', 'instagram'];
+    const fields = ['citySubscribers', 'prarangApplication', 'websiteGd', 'email', 'instagram'];
     let total = 0;
 
     fields.forEach(field => {

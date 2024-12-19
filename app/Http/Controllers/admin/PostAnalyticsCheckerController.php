@@ -27,7 +27,7 @@ class PostAnalyticsCheckerController extends Controller
             });
         }
 
-        $mcitys = $query->paginate(7); // Paginate with 10 items per page
+        $mcitys = $query->paginate(20); // Paginate with 10 items per page
         return view('admin.postanalyticschecker.post-analytics-checker-city-listing', compact('mcitys'));
     }
 
@@ -36,9 +36,9 @@ class PostAnalyticsCheckerController extends Controller
     {
         $cityCode = $request->query('cityCode');
         $chittis = Chitti::where('areaId', $cityCode)
-                    ->where('postStatusMakerChecker', 'send_to_post_checker')
-                    ->where('post_anlytics_rtrn_to_mkr_id', 1)
-                    ->get();
+            ->whereIn('postStatusMakerChecker', ['send_to_post_checker', 'approved'])
+            ->where('post_anlytics_rtrn_to_mkr_id', 1)
+            ->get();
         foreach ($chittis as $chitti) {
             $anlyticsMaker =  $chitti->analyticsMaker;
         }
@@ -120,7 +120,7 @@ class PostAnalyticsCheckerController extends Controller
             'dateOfApprove'     => $uploadDate,
             'uploadDataTime'    => $currentDate,
             'approveDate'       => $reportDate,
-            'finalStatus'       => 'approved',
+            'postStatusMakerChecker'       => 'approved',
             'analyticsChecker'  => $checkerId
         ]);
         return back()->with('success', 'Post Analytics have been approved successfully');

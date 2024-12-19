@@ -2,6 +2,8 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\ImageUploadService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -90,7 +92,7 @@ class PostController extends Controller
         return view('admin.post.post-edit', compact('chitti', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
     }
 
-    public function postUpdate(Request $request, $id)
+    public function postUpdate(Request $request, ImageUploadService $imageUploadService, $id)
     {
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
@@ -106,30 +108,6 @@ class PostController extends Controller
         if ($validator->passes()) {
 
             $currentDateTime = getUserCurrentTime();
-
-            // Handle content images (base64 to file conversion and updating the content HTML)
-            $content = $request->content;
-            $dom = new \DomDocument();
-            @$dom->loadHtml($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-            $images = $dom->getElementsByTagName('img');
-
-            foreach ($images as $img) {
-                $src = $img->getAttribute('src');
-
-                if (Str::startsWith($src, 'data:image')) {
-                    preg_match('/data:image\/(?<mime>.*?)\;base64,(?<data>.*)/', $src, $matches);
-                    $imageData = base64_decode($matches['data']);
-                    $imageMime = $matches['mime'];
-                    $imageName = time() . '_' . uniqid() . '.' . $imageMime;
-                    $path = public_path('uploads/content_images/') . $imageName;
-                    file_put_contents($path, $imageData);
-
-                    // Replace base64 with file URL
-                    $img->setAttribute('src', asset('uploads/content_images/' . $imageName));
-                }
-            }
-            // Save updated content with image URLs
-            $content = $dom->saveHTML();
 
             // Update Chitti record
             $chitti = Chitti::findOrFail($id);
@@ -165,17 +143,17 @@ class PostController extends Controller
 
                 // Update image if provided
                 if ($request->hasFile('makerImage')) {
-                    $makerImage = $request->file('makerImage');
-                    $makerImageName = time() . '_' . $makerImage->getClientOriginalName();
-                    $makerImage->move(public_path('uploads/maker_image/'), $makerImageName);
-                    $url = public_path('uploads/maker_image/') . $makerImageName;
-                    $serviceAccessUrl = "admin.prarang.in/" . $url;
+                    $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
+                        if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
+                            DB::rollBack();
+                            return redirect()->back()->with('error', 'Error while image uploading, please try again.');
+                        }
 
                     // Update Chitti Image Mapping
                     Chittiimagemapping::where('chittiId', $id)->update([
-                        'imageName'     => $makerImageName,
-                        'imageUrl'      => $serviceAccessUrl,
-                        'accessUrl'     => $url,
+                        'imageName'     => $uploadImage['path'],
+                        'imageUrl'      => $uploadImage['full_url'],
+                        'accessUrl'     => $uploadImage['path'],
                         'updated_at'    => $currentDateTime,
                         'updated_by'    => Auth::guard('admin')->user()->userId,
                     ]);

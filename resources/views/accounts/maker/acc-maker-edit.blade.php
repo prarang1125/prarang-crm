@@ -377,6 +377,7 @@
 <script>
     const uploadUrl = "{{ route('accounts.acc-ckeditor-upload') }}";
     const csrfToken = "{{ csrf_token() }}";
+    const postId="{{$chitti->chittiId}}";
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Include PerfectScrollbar JS -->

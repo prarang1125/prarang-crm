@@ -43,7 +43,7 @@ class AccMakerController extends Controller
             ->where('finalStatus', '!=', 'deleted')
             ->select('*')
             ->orderByDesc('dateOfCreation')
-            ->paginate(3); // Change '10' to the number of items per page
+            ->paginate(30); // Change '10' to the number of items per page
 
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
@@ -400,7 +400,7 @@ class AccMakerController extends Controller
     }
 
     // Paginate results
-    $chittis = $query->paginate(2); // Adjust the number of items per page as needed
+    $chittis = $query->paginate(30); // Adjust the number of items per page as needed
 
     $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();

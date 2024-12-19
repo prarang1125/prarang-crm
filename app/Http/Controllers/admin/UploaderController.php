@@ -3,6 +3,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Services\ImageUploadService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -53,7 +54,7 @@ class UploaderController extends Controller
             ->whereNotIn('finalStatus',['deleted'])
             ->orderByDesc('dateOfCreation')
             ->select('chittiId', 'Title', 'SubTitle', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
-            ->paginate(10); // Adjust the number per page
+            ->paginate(30); // Adjust the number per page
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
@@ -92,7 +93,7 @@ class UploaderController extends Controller
                 });
             })
             ->where('uploaderStatus', '=', 'sent_to_uploader')
-            ->paginate(10); // Adjust the number of items per page
+            ->paginate(30); // Adjust the number of items per page
 
         // Fetch geography options
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
@@ -228,7 +229,7 @@ class UploaderController extends Controller
         return view('admin.uploader.uploader-edit', compact('chitti','subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
     }
 
-    public function uploaderUpdate(Request $request, $id)
+    public function uploaderUpdate(Request $request, $id, ImageUploadService $imageUploadService)
     {
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
@@ -244,33 +245,6 @@ class UploaderController extends Controller
         if ($validator->passes()) {
 
             $currentDateTime = getUserCurrentTime();
-
-            $content = $request->content;
-            $dom = new \DomDocument();
-            @$dom->loadHtml($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-            $images = $dom->getElementsByTagName('img');
-
-            foreach ($images as $img) {
-                $src = $img->getAttribute('src');
-
-                // Check if the image source is base64 (embedded image)
-                if (Str::startsWith($src, 'data:image')) {
-                    // Extract the base64 image data and save it as a file
-                    preg_match('/data:image\/(?<mime>.*?)\;base64,(?<data>.*)/', $src, $matches);
-                    $imageData = base64_decode($matches['data']);
-                    $imageMime = $matches['mime'];
-                    $imageName = time() . '_' . uniqid() . '.' . $imageMime;
-                    $path = public_path('uploads/content_images/') . $imageName;
-                    file_put_contents($path, $imageData);
-
-                    // Replace the base64 image source with the URL of the saved image
-                    $img->setAttribute('src', asset('uploads/content_images/' . $imageName));
-                }
-            }
-
-            // Save the updated content with proper image URLs
-            $content = $dom->saveHTML();
-            // dd($content);
 
             // Update Chitti record with approved
             $chitti = Chitti::findOrFail($id);
@@ -304,20 +278,18 @@ class UploaderController extends Controller
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::guard('admin')->user()->userId,
                 ]);
-
-                // Update image if provided
-                if ($request->hasFile('makerImage')) {
-                    $makerImage = $request->file('makerImage');
-                    $makerImageName = time() . '_' . $makerImage->getClientOriginalName();
-                    $makerImage->move(public_path('uploads/maker_image/'), $makerImageName);
-                    $url = public_path('uploads/maker_image/') . $makerImageName;
-                    $serviceAccessUrl = "admin.prarang.in/" . $url;
+                if($request->hasFile('makerImage')){
+                $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
+                if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
+                    DB::rollBack();
+                    return redirect()->back()->with('error', 'Error while image uploading, please try again.');
+                }
 
                     // Update Chitti Image Mapping
                     Chittiimagemapping::where('chittiId', $id)->update([
-                        'imageName'     => $makerImageName,
-                        'imageUrl'      => $serviceAccessUrl,
-                        'accessUrl'     => $url,
+                        'imageName'     => $uploadImage['path'],
+                        'imageUrl'      => $uploadImage['full_url'],
+                        'accessUrl'     => $uploadImage['path'],
                         'updated_at'    => $currentDateTime,
                         'updated_by'    => Auth::guard('admin')->user()->userId,
                     ]);

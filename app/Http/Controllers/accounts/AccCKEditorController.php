@@ -3,27 +3,24 @@
 namespace App\Http\Controllers\accounts;
 
 use App\Http\Controllers\Controller;
+use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 
 class AccCKEditorController extends Controller
 {
-    public function accUpload(Request $request)
-    {
+  
+    public function accUpload(Request $request,ImageUploadService $imageUploadService)
+    {        
+        $prefix=$request->hasHeader('ids')?$request->header('ids'):date('d');
+
         if ($request->hasFile('upload'))
         {
-           $originName = $request->file('upload')->getClientOriginalName();
-           $fileName   = pathinfo($originName, PATHINFO_FILENAME);
-           $extension  = $request->file('upload')->getClientOriginalExtension();
-           $fileName   = $fileName . '_' . time() . '.' .$extension;
-           $request->file('upload')->move(public_path('uploads/ckeditor_images'), $fileName);
-           $url = asset('uploads/ckeditor_images/' . $fileName);
-
-           return response()->json([
+            $image=$imageUploadService->uploadImage($request->file('upload'),$prefix);
+            return response()->json([
                 'uploaded' => true,
-                'fileName' => $fileName,
-                'url' => $url,
+                'fileName' => $image['path'],
+                'url' =>$image['full_url'],
             ]);
         }
-
     }
 }

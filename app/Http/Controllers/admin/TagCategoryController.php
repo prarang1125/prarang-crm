@@ -25,7 +25,7 @@ class TagCategoryController extends Controller
             });
         }
 
-        $mtagcategorys = $query->paginate(5);
+        $mtagcategorys = $query->paginate(30);
 
         return view('admin.tagcategory.tag-category-listing', compact('mtagcategorys'));
     }

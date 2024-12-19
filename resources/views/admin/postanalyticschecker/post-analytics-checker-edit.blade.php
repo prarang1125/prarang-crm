@@ -80,8 +80,8 @@
                             <div class="select-wrapper">
                                 <select class="form-control @error('advertisementInPost') is-invalid @enderror" id="advertisementInPost" name="advertisementInPost">
                                     <option value="" selected disabled>Select</option>
-                                    <option value="Yes" {{ old('advertisementInPost') == 'Yes' ? 'selected' : '' }}>Yes</option>
-                                    <option value="No" {{ old('advertisementInPost') == 'No' ? 'selected' : '' }}>No</option>
+                                    <option value="Yes" {{ old('advertisementInPost', $chitti->advertisementPost) == 'Yes' ? 'selected' : '' }}>Yes</option>
+                                    <option value="No" {{ old('advertisementInPost', $chitti->advertisementPost) == 'No' ? 'selected' : '' }}>No</option>
                                 </select>
                                 <span class="select-arrow">&#9662;</span> <!-- Unicode arrow symbol -->
                             </div>
@@ -171,6 +171,9 @@
                         </div>
                     </div>
 
+                    @if ($chitti->postStatusMakerChecker=='approved')
+                        <div class="modal-footer mt-3"></div>
+                    @else
                     <div class="modal-footer mt-3">
                         <div class="col-md-6"></div>
                         <div class="col-md-1">
@@ -183,13 +186,14 @@
                                 <a href="{{ route('admin.post-analytics-checker-return-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}" class="btn btn-primary">Send to maker</a>
                             </div>
                         </div>
-                        {{-- @dd($chitti->chittiId) --}}
+
                         <div class="col-md-1">
                             <div class="form-group">
                                 <a href="{{ route('admin.post-analytics-checker-approve', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&approve={{ 'approve' }}" class="btn btn-primary">Approve</a>
                             </div>
                         </div>
                     </div>
+                    @endif
                 </form>
             </div>
         </div>
