@@ -59,8 +59,8 @@
                             @foreach ($mcitys as $mcity)
                                 <tr>
                                     <th scope="row" class="text-center">{{ $index }}</th>
-                                    <td class="text-center">{{ $mcity->cityNameInEnglish }}</td>
-                                    <td class="text-center">{{ $mcity->cityNameInUnicode }}</td>
+                                    <td class="text-center">{{ $mcity->citynameInEnglish }}</td>
+                                    <td class="text-center">{{ $mcity->citynameInUnicode }}</td>
 
                                     <td class="text-center">
                                         <a href="{{ route('admin.live-city-edit', $mcity->cityId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
