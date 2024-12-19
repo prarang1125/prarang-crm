@@ -52,6 +52,7 @@ class MakerController extends Controller
 
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+
         return view('admin.maker.maker-listing', compact('chittis', 'geographyOptions', 'notification'));
     }
 
@@ -208,6 +209,7 @@ class MakerController extends Controller
         $facityValue = $chitti->facity ? $chitti->facity->value : null;
 
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
+
         return view('admin.maker.maker-edit', compact('chitti', 'subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
     }
 
