@@ -23,7 +23,7 @@ class TagController extends Controller
             });
         }
 
-        $mtags = $query->paginate(5);
+        $mtags = $query->paginate(20);
         return view('admin.tag.tag-listing', compact('mtags'));
     }
 

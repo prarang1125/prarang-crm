@@ -26,7 +26,7 @@ class LanguageScriptController extends Controller
             });
         }
 
-        $languagescripts = $query->paginate(3);
+        $languagescripts = $query->paginate(30);
 
         return view('admin.languagescript.languagescript-listing', compact('languagescripts'));
     }

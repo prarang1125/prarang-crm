@@ -42,7 +42,7 @@ class ChekerController extends Controller
                     ->orWhereRaw('LOWER(createDate) LIKE ?', ['%' . mb_strtolower($search, 'UTF-8') . '%']);
             })
             ->orderByDesc('dateOfCreation')
-            ->paginate(10);
+            ->paginate(30);
 
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();

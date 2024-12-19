@@ -94,7 +94,7 @@ class AccChekerController extends Controller
             ->whereIn('checkerStatus', ['maker_to_checker'])
             ->where('makerStatus', 'sent_to_checker')
             ->select('chittiId', 'Title', 'TitleHindi', 'dateOfCreation', 'finalStatus', 'checkerStatus')
-            ->paginate(10); // Pagination with 10 items per page
+            ->paginate(30); // Pagination with 10 items per page
 
         return view('accounts.checker.acc-checker-listing', compact('chittis', 'geographyOptions'));
     }

@@ -21,10 +21,10 @@ class UserCityController extends Controller
                     $query->where('cityNameInEnglish', 'like', "%$search%")
                     ->orWhere('cityNameInHindi', 'like', "%$search%");
                 })
-                ->paginate(5);
+                ->paginate(20);
         } else {
             // If no search term, just get active cities
-            $usercitys = UserCity::where('isActive', 1)->paginate(5);
+            $usercitys = UserCity::where('isActive', 1)->paginate(20);
         }
         return view('admin.usercity.user-city-listing', compact('usercitys'));
     }
