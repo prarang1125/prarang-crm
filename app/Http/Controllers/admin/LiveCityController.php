@@ -26,7 +26,6 @@ class LiveCityController extends Controller
                 });
             })
             ->paginate(30);
-
         return view('admin.livecity.live-city-listing', compact('mcitys'));
     }
 
