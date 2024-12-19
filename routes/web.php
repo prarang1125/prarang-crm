@@ -29,7 +29,10 @@ use App\Http\Controllers\admin\UploaderController;
 use App\Http\Controllers\admin\UserCityController;
 use App\Http\Controllers\admin\UserCountryController;
 use App\Http\Controllers\LoginController;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+
+// dd(Hash::make('123456'));2
 
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
 Route::group(['prefix' => 'accounts'], function () {
