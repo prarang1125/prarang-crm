@@ -21,4 +21,5 @@ class AdminRedirect
         }
         return $next($request);
     }
+    
 }
