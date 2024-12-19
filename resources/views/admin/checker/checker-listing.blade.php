@@ -90,6 +90,7 @@
                                                 {{ $mapping->areaId }} <!-- Fallback to areaId if no match -->
                                             @endif
                                         </td>
+
                                     @endforeach
                                     <td>{{ $chitti->checkerStatus }}</td>
 

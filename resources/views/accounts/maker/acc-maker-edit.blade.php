@@ -166,7 +166,7 @@
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
-                        
+
                     </div>
                     {{-- title and subtitle code end--}}
 
@@ -196,7 +196,7 @@
                             </div>
                         </div>
                     </div>
-                   
+
                     {{-- above city or about city code end--}}
 
                     {{-- nature and culture code start--}}
@@ -221,7 +221,7 @@
                             @enderror
                         </div>
                     </div>
-                
+
                     <!-- Tab structure to display based on radio button selection -->
                     <div id="cultureNatureTabs" style="display: none;">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -235,7 +235,7 @@
                             <li class="nav-item">
                                 <a class="nav-link {{$subTag == 3 ? 'active' : ''}}" id="culture-tab3" data-bs-toggle="tab" href="#cultureTab3" role="tab" style="background-color: #1919d9;color: white;">Man and his Inventions</a>
                             </li>
-                    
+
                             <!-- Nature tabs -->
                             <li class="nav-item">
                                 <a class="nav-link {{$subTag == 4 ? 'active' : ''}}" id="nature-tab1" data-bs-toggle="tab" href="#natureTab1" role="tab" style="background-color: #faff98;color: #282828;">Geography</a>
@@ -247,7 +247,7 @@
                                 <a class="nav-link {{$subTag == 6 ? 'active' : ''}}" id="nature-tab3" data-bs-toggle="tab" href="#natureTab3" role="tab" style="background-color: #339933;color: #fff;">Flora</a>
                             </li>
                         </ul>
-                   
+
                         <div class="tab-content">
                             <div class="tab-pane fade show {{$subTag==1 ? "active show": ""}}" id="cultureTab1" role="tabpanel">
                                 <div class="row">
@@ -273,11 +273,11 @@
                                     @foreach ($manSenses as $sense)
                                     <div class="col-md-4">
                                         <div class="card">
-                                           
+
                                             <div class="card-body cardbodselect mt-3" style="background-color: #ffff18; color: #282828;">
                                                 <div class="d-flex align-items-center">
                                                     <input type="radio" name="tagId" value="{{ $sense->tagId }}"  {{ $sense->tagId == $chittiTagMapping->tagId ? 'checked' : '' }} id="sense{{ $sense->id }}" class="me-2">
-                                                    <label for="sense{{ $sense->id }}" class="mb-0">{{ $sense->tagInEnglish }}</label>  
+                                                    <label for="sense{{ $sense->id }}" class="mb-0">{{ $sense->tagInEnglish }}</label>
                                                     <i class="lni lni-close ms-auto"></i>
                                                 </div>
                                             </div>
@@ -324,7 +324,7 @@
                                     @endforeach
                                 </div>
                             </div>
-                    
+
                             <!-- Content for Fauna -->
                             <div class="tab-pane fade {{$subTag == 5 ? 'show active' : ''}}" id="natureTab2" role="tabpanel">
                                 <div class="row">
@@ -343,7 +343,7 @@
                                     @endforeach
                                 </div>
                             </div>
-                    
+
                             <!-- Content for Flora -->
                             <div class="tab-pane fade {{$subTag == 6 ? 'show active' : ''}}" id="natureTab3" role="tabpanel">
                                 <div class="row">
@@ -362,13 +362,13 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="modal-footer mt-3">
                         <button type="submit" class="btn btn-primary" name="action" value="update_maker">Update Maker</button>
                         <button type="submit" class="btn btn-primary" name="action" value="send_to_checker" onclick="return confirm('Are you sure you want to send this to the checker?')">Send to Checker</button>
                     </div>
-                    
-                    
+
+
                 </form>
             </div>
         </div>
@@ -469,7 +469,7 @@
         // Get all card-body cardbodselect elements end
 
         // Choose city, country, or region according to its geography
-        const geographySelect = document.getElementById('inputGeography');
+        /*const geographySelect = document.getElementById('inputGeography');
         const levelSelect = document.getElementById('inputLanguageScript');
         const labelSelect = document.getElementById('inputLanguageLabel');
 
@@ -502,12 +502,12 @@
                 levelSelect.innerHTML += options.join('');
             }
         });
-    });
+    });*/
 
     // Get all card-body cardbodselect elements end
 
     // Choose city, country, or region according to its geography
-    const geographySelect = document.getElementById('inputGeography');
+    /*const geographySelect = document.getElementById('inputGeography');
     const levelSelect = document.getElementById('inputLanguageScript');
     const labelSelect = document.getElementById('inputLanguageLabel');
 
@@ -539,7 +539,7 @@
         if (options.length > 0) {
             levelSelect.innerHTML += options.join('');
         }
-    });
+    });*/
 
 $(document).ready(function () {
         // Check if element exists before applying PerfectScrollbar

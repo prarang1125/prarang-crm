@@ -450,6 +450,41 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
     // Get all card-body cardbodselect elements end
+
+    /*// Choose city, country, or region according to its geography
+    const geographySelect = document.getElementById('inputGeography');
+    const levelSelect = document.getElementById('inputLanguageScript');
+    const labelSelect = document.getElementById('inputLanguageLabel');
+
+    // Regions, Cities, and Countries are passed as JSON from Blade
+    const regions = @json($regions);
+    const cities = @json($cities);
+    const countries = @json($countries);
+
+    geographySelect.addEventListener('change', function () {
+        const selectedValue = this.value;
+        let options = [];
+
+        // Clear the existing options
+        levelSelect.innerHTML = '<option selected disabled>Choose...</option>';
+
+        // Check which geography option is selected and populate the dropdown accordingly
+        if (selectedValue == 5) { // Region selected
+            options = regions.map(region => `<option value="${region.regionId}">${region.regionnameInEnglish}</option>`);
+            labelSelect.textContent = 'Select Region'; // Update label text
+        } else if (selectedValue == 6) { // City selected
+            options = cities.map(city => `<option value="${city.cityId}">${city.cityNameInEnglish}</option>`);
+            labelSelect.textContent = 'Select City'; // Update label text
+        } else if (selectedValue == 7) { // Country selected
+            options = countries.map(country => `<option value="${country.countryId}">${country.countryNameInEnglish}</option>`);
+            labelSelect.textContent = 'Select Country'; // Update label text
+        }
+
+        // Append new options to the select dropdown
+        if (options.length > 0) {
+            levelSelect.innerHTML += options.join('');
+        }
+    });*/
 });
 </script>
 @endsection

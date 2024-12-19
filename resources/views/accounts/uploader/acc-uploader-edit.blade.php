@@ -182,7 +182,7 @@
                     {{-- nature and culture code start--}}
                     <div class="row mt-3">
                         <div class="col-sm-2">
-                            <div class="form-check">              
+                            <div class="form-check">
                                 <input class="form-check-input @error('isCultureNature') is-invalid @enderror" @if(in_array($subTag, config('tagidmap.1'))) checked @endif
                                     type="radio" name="isCultureNature" id="cultureNatureYes" value="1"
                                     {{ old('isCultureNature', $chittiTagMapping->tagId) == 1 ? 'checked' : '' }}> <!-- Default checked -->
@@ -201,7 +201,7 @@
                             @enderror
                         </div>
                     </div>
-                   
+
                     <!-- Tab structure to display based on radio button selection -->
                     <div id="cultureNatureTabs" style="display: none;">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -215,7 +215,7 @@
                             <li class="nav-item">
                                 <a class="nav-link {{$subTag == 3 ? 'active' : ''}}" id="culture-tab3" data-bs-toggle="tab" href="#cultureTab3" role="tab" style="background-color: #1919d9;color: white;">Man and his Inventions</a>
                             </li>
-                    
+
                             <!-- Nature tabs -->
                             <li class="nav-item">
                                 <a class="nav-link {{$subTag == 4 ? 'active' : ''}}" id="nature-tab1" data-bs-toggle="tab" href="#natureTab1" role="tab" style="background-color: #faff98;color: #282828;">Geography</a>
@@ -227,8 +227,8 @@
                                 <a class="nav-link {{$subTag == 6 ? 'active' : ''}}" id="nature-tab3" data-bs-toggle="tab" href="#natureTab3" role="tab" style="background-color: #339933;color: #fff;">Flora</a>
                             </li>
                         </ul>
-                      
-                    
+
+
                         <div class="tab-content">
                             <div class="tab-pane fade  {{$subTag==1 ? "active show": ""}}" id="cultureTab1" role="tabpanel">
                                 <div class="row">
@@ -254,11 +254,11 @@
                                     @foreach ($manSenses as $sense)
                                     <div class="col-md-4">
                                         <div class="card">
-                                           
+
                                             <div class="card-body cardbodselect mt-3" style="background-color: #ffff18; color: #282828;">
                                                 <div class="d-flex align-items-center">
                                                     <input type="radio" name="tagId" value="{{ $sense->tagId }}"  {{ $sense->tagId == $chittiTagMapping->tagId ? 'checked' : '' }} id="sense{{ $sense->id }}" class="me-2">
-                                                    <label for="sense{{ $sense->id }}" class="mb-0">{{ $sense->tagInEnglish }}</label>  
+                                                    <label for="sense{{ $sense->id }}" class="mb-0">{{ $sense->tagInEnglish }}</label>
                                                     <i class="lni lni-close ms-auto"></i>
                                                 </div>
                                             </div>
@@ -305,7 +305,7 @@
                                     @endforeach
                                 </div>
                             </div>
-                    
+
                             <!-- Content for Fauna -->
                             <div class="tab-pane fade {{$subTag == 5 ? 'show active' : ''}}" id="natureTab2" role="tabpanel">
                                 <div class="row">
@@ -324,7 +324,7 @@
                                     @endforeach
                                 </div>
                             </div>
-                    
+
                             <!-- Content for Flora -->
                             <div class="tab-pane fade {{$subTag == 6 ? 'show active' : ''}}" id="natureTab3" role="tabpanel">
                                 <div class="row">
@@ -348,10 +348,10 @@
                     <p>Published at {{$chitti->dateOfApprove  }}</p>
                     @endif
                         <button type="submit" name="action" value="update_uploader" class="btn btn-primary">Update</button>
-                        
+
                         @if($chitti->finalStatus !=='approved')
                         <button type="submit" name="action" value="approvd" class="btn btn-primary" onclick="return confirm('Are you sure you want to publish this to the post?')">Publish Post</button>
-                   
+
 
                         @endif
                         {{-- <a href="{{ route('admin.uploader-listing-detail', $chitti->chittiId) }}" class="btn btn-primary">Send to Uploader</a> --}}
@@ -453,6 +453,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     // Get all card-body cardbodselect elements end
 
+    /*
     // Choose city, country, or region according to its geography
     const geographySelect = document.getElementById('inputGeography');
     const levelSelect = document.getElementById('inputLanguageScript');
@@ -486,7 +487,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (options.length > 0) {
             levelSelect.innerHTML += options.join('');
         }
-    });
+    });*/
 });
 </script>
 @endsection
