@@ -28,7 +28,7 @@ class SCityController extends Controller
         }
 
         // Fetch active cities with pagination
-        $scities = $query->where('isActive', 1)->paginate(10);
+        $scities = $query->where('isActive', 1)->paginate(30);
 
         return view('admin.scities.scities-listing', compact('scities'));
     }

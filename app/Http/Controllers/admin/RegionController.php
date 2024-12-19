@@ -23,7 +23,7 @@ class RegionController extends Controller
                             ->orWhere('regionnameInUnicode', 'like', "%{$search}%");
                         });
                     })
-                    ->paginate(5);
+                    ->paginate(30);
 
         return view("admin.region.region-listing", compact('regions'));
     }

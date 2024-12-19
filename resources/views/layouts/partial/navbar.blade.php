@@ -4,7 +4,7 @@
         <nav class="navbar navbar-expand">
             <div class="mobile-toggle-menu"><i class='bx bx-menu'></i>
             </div>
-            <!-- dont remove  -->
+            <!-- Don't remove  -->
             <div class="top-menu ms-auto">
                 <ul class="navbar-nav align-items-center">
                     <li class="nav-item mobile-search-icon">

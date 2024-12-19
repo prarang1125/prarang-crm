@@ -54,7 +54,7 @@ class UploaderController extends Controller
             ->whereNotIn('finalStatus',['deleted'])
             ->orderByDesc('dateOfCreation')
             ->select('chittiId', 'Title', 'SubTitle', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
-            ->paginate(10); // Adjust the number per page
+            ->paginate(30); // Adjust the number per page
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
@@ -93,7 +93,7 @@ class UploaderController extends Controller
                 });
             })
             ->where('uploaderStatus', '=', 'sent_to_uploader')
-            ->paginate(10); // Adjust the number of items per page
+            ->paginate(30); // Adjust the number of items per page
 
         // Fetch geography options
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();

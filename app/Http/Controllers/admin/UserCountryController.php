@@ -22,7 +22,7 @@ class UserCountryController extends Controller
             });
         }
 
-        $userCountrys = $query->paginate(2);
+        $userCountrys = $query->paginate(20);
 
         return view('admin.usercountry.user-country-listing', compact('userCountrys'));
     }

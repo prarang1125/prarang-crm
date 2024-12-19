@@ -24,7 +24,7 @@ class CountryController extends Controller
                     ->orWhere('countryNameInUnicode', 'like', '%' . $search . '%');
                 });
             })
-            ->paginate(10);
+            ->paginate(30);
 
         return view('admin.country.country-listing', compact('mcountrys'));
     }

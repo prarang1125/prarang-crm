@@ -23,7 +23,7 @@ class RoleController extends Controller
             });
         }
 
-        $roles = $query->paginate(5);
+        $roles = $query->paginate(30);
         return view('admin.role.role-listing', compact('roles'));
     }
 
