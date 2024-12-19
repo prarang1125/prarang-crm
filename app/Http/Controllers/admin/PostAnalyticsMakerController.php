@@ -7,6 +7,7 @@ use App\Models\Chitti;
 use App\Models\Mcity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PostAnalyticsMakerController extends Controller
 {
@@ -22,8 +23,8 @@ class PostAnalyticsMakerController extends Controller
 
     public function index(Request $request)
     {
-        $query = Mcity::where('isActive', 1);
-
+        // $query = Mcity::where('isActive', 1);
+        $query = DB::table('vGeography');
         // Search functionality
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
@@ -49,7 +50,7 @@ class PostAnalyticsMakerController extends Controller
         // dd($cityCode);
         // $chittis = Chitti::with('city')->where('cityId', $areaId)->get();
         $chittis = Chitti::where('areaId', $cityCode)
-            ->whereNotIn('postStatusMakerChecker', ['send_to_post_checker', 'approved'])->paginate(20);
+            ->where('finalStatus', 'approved')->paginate(20);
 
         // dd($chittis);
         // $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
@@ -110,16 +111,10 @@ class PostAnalyticsMakerController extends Controller
         ]);
 
         // Redirect with success message
-        return back()->with('success', 'Data updated successfully.');
+        return redirect()->route('admin.post-analytics-maker-listing', ['citycode' => $request->query('city')])
+            ->with('success', 'Data updated successfully.');
 
     }
-
-    //this method is use for show the listing of rejected post ananlytics via checker
-    // public function postAnalyticsListReturnFromCheckerL()
-    // {
-    //     $chittis = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->get();
-    //     return view('admin.postanalyticsmaker.post-analytics-rejected-from-checker-listing', compact('chittis'));
-    // }
 
     public function postAnalyticsListReturnFromCheckerL(Request $request)
     {

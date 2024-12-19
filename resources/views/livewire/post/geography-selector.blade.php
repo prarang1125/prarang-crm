@@ -3,7 +3,7 @@
         <label for="geography" class="form-label">Geography</label>
         <select id="geography" name="geography" class="form-select" wire:change="changeGeography"
             wire:model="selectedGeography">
-            <option selected>Choose...</option>
+            <option>Select Geography</option>
             @foreach ($geographyOptions as $geo)
                 <option value="{{ $geo->id }}">
                     {{ $geo->labelInEnglish }}
