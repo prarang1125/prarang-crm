@@ -10,7 +10,7 @@ class CKEditorController extends Controller
 {
     public function upload(Request $request,ImageUploadService $imageUploadService)
     {
-        
+
         $prefix=$request->hasHeader('ids')?$request->header('ids'):date('d');
 
         if ($request->hasFile('upload'))
