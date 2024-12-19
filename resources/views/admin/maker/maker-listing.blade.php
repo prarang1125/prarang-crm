@@ -120,9 +120,9 @@
                                     </a></td>
                                 <td class="">{{ $chitti->dateOfCreation }}</td>
                                 @foreach ($chitti->geographyMappings as $mapping)
-                                @php
-                                $option = $geographyOptions->firstWhere('id', $mapping->geographyId);
-                                @endphp
+                                    @php
+                                    $option = $geographyOptions->firstWhere('id', $mapping->geographyId);
+                                    @endphp
                                 <td data-gmid="{{ $mapping->geographyId }}">
                                     @if($option)
                                     {{ $option->labelInEnglish }}
