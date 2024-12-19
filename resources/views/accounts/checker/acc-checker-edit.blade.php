@@ -111,7 +111,7 @@
                                     @foreach($cities as $city)
                                         <option value="{{ $city->cityId }}"
                                             {{ $geographyMapping->areaId == $city->cityId ? 'selected' : '' }}>
-                                            {{ $city->cityNameInEnglish }}
+                                            {{ $city->citynameInEnglish }}
                                         </option>
                                     @endforeach
                                 @endif
