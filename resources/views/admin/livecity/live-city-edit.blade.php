@@ -35,14 +35,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label for="cityNameInEnglish" class="form-label">City Name In English</label>
-                            <input type="text" class="form-control  @error('cityNameInEnglish') is-invalid @enderror" id="cityNameInEnglish" name="cityNameInEnglish" value="{{ old('cityNameInEnglish' ,$mcity->cityNameInEnglish) }} " >
+                            <input type="text" class="form-control  @error('cityNameInEnglish') is-invalid @enderror" id="cityNameInEnglish" name="cityNameInEnglish" value="{{ old('cityNameInEnglish' ,$mcity->citynameInEnglish) }} " >
                             @error('cityNameInEnglish')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="cityNameInUnicode" class="form-label">City Name In Hindi</label>
-                            <input type="text" class="form-control  @error('cityNameInUnicode') is-invalid @enderror" id="cityNameInUnicode" name="cityNameInUnicode" value="{{ old('cityNameInUnicode' , $mcity->cityNameInUnicode) }}" >
+                            <input type="text" class="form-control  @error('cityNameInUnicode') is-invalid @enderror" id="cityNameInUnicode" name="cityNameInUnicode" value="{{ old('cityNameInUnicode' , $mcity->citynameInUnicode) }}" >
                             @error('cityNameInUnicode')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
