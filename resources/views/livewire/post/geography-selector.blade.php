@@ -4,11 +4,9 @@
         <select id="geography" name="geography" class="form-select" wire:change="changeGeography"
             wire:model="selectedGeography">
             <option>Select Geography</option>
-            @foreach ($geographyOptions as $geo)
-                <option value="{{ $geo->id }}">
-                    {{ $geo->labelInEnglish }}
-                </option>
-            @endforeach
+            <option value="1">Country</option>
+            <option value="2">City</option>
+            <option value="3">Region</option>
         </select>
     </div>
 

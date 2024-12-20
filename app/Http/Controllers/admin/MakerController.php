@@ -124,7 +124,7 @@ class MakerController extends Controller
                 $chitti->finalStatus = '';
                 $chitti->checkerStatus = '';
                 $chitti->cityId = $area_id;
-                $chitti->areaId = $areaIdCode;
+                $chitti->areaId = $area_id;
                 $chitti->geographyId = $request->geography;
                 $chitti->created_at = $currentDateTime;
                 $chitti->created_by = Auth::guard('admin')->user()->userId;
@@ -145,7 +145,7 @@ class MakerController extends Controller
                 $chitti->uploaderReason = '';
                 $chitti->save();
                 $lastId = $chitti->chittiId;
-                
+
                 $facity = new Facity;
                 $facity->value = $request->forTheCity;
                 $facity->from_chittiId = $lastId;
