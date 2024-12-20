@@ -37,17 +37,17 @@ class GeographySelector extends Component
         $this->filteredOptions = [];
 
         switch ($this->selectedGeography) {
-            case 5: // Region
+            case 3: // Region
                 $this->filteredOptions = Mregion::where('isActive', 1)
                     ->get(['regionId as id', 'regionnameInEnglish as name']);
                 $this->changeTitle = 'Region';
                 break;
-            case 6: // City
+            case 2: // City
                 $this->filteredOptions = Mcity::where('isActive', 1)
                     ->get(['cityId as id', 'citynameInEnglish as name']);
                 $this->changeTitle = 'City';
                 break;
-            case 7: // Country
+            case 1: // Country
                 $this->filteredOptions = Mcountry::where('isActive', 1)
                     ->get(['countryId as id', 'countryNameInEnglish as name']);
                 $this->changeTitle = 'Country';
