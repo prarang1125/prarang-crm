@@ -14,6 +14,7 @@ use App\Models\Mcountry;
 use App\Models\Mregion;
 use App\Models\Mtag;
 use App\Services\ImageUploadService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -260,7 +261,7 @@ class UploaderController extends Controller
                     'finalStatus' => 'approved',
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::guard('admin')->user()->userId,
-                    'dateOfApprove' => $currentDateTime,
+                    'dateOfApprove' => Carbon::parse($currentDateTime)->format('d-m-Y g:i A'),
                 ]);
 
                 return redirect()->route('admin.uploader-listing', ['id' => $chitti->chittiId])->with('success', 'Uploader updated successfully.');
