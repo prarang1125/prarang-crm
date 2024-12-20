@@ -142,5 +142,10 @@ class Chitti extends Model
         return $this->hasMany(Chitticomment::class, 'chittiId', 'chittiId');
     }
 
+    public function geographyDetails()
+    {
+        return $this->hasMany(VChittiGeography::class, 'chittiId', 'chittiId');
+    }
+
 }
 
