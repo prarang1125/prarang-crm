@@ -145,6 +145,7 @@ class MakerController extends Controller
                 $chitti->uploaderReason = '';
                 $chitti->save();
                 $lastId = $chitti->chittiId;
+                
                 $facity = new Facity;
                 $facity->value = $request->forTheCity;
                 $facity->from_chittiId = $lastId;

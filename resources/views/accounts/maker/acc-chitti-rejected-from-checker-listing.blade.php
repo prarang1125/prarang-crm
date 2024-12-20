@@ -6,13 +6,13 @@
 <div class="page-content">
     <!--breadcrumb-->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div class="breadcrumb-title pe-3">Admin</div>
+        <div class="breadcrumb-title pe-3">Accounts</div>
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
                     {{-- <li class="breadcrumb-item"><a href="{{ url('admin/maker/maker-listing')}}"><i class="bx bx-user"></i></a>
                     </li> --}}
-                    <li class="breadcrumb-item active" aria-current="page">Return Maker Listing</li>
+                    <li class="breadcrumb-item active" aria-current="page">Accounts Return Maker Listing</li>
                 </ol>
             </nav>
         </div>
@@ -104,7 +104,7 @@
                                         <a href="{{ route('accounts.acc-maker-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
 
                                         <form action="{{ route('accounts.acc-maker-delete', ['id'=>$chitti->chittiId]) }}" method="GET" style="display:inline;">
-                
+
                                             <button type="submit"  onclick="return confirm('Are you want to delete this post.')" class="btn btn-sm btn-danger delete-user">Delete</button>
                                         </form>
                                         {{-- <a href="{{ route('admin.maker-update', $chitti->chittiId) }}" class="btn btn-sm btn-primary update-user mt-3">Send to checker</a> --}}

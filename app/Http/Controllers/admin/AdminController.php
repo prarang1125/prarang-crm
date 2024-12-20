@@ -88,27 +88,27 @@ class AdminController extends Controller
     #this method is use for update admin user profile
     // public function updateProfile(Request $request)
     // {
-    //     $user = Auth::guard('admin')->user();
+        //     $user = Auth::guard('admin')->user();
 
-    //     $user->firstName = explode(' ', $request->input('fullName'))[0];
-    //     $user->lastName = explode(' ', $request->input('fullName'))[1];
-    //     $user->emailId = $request->input('emailId');
-    //     $user->languageId = $request->input('languageId');
-    //     $user->save();
+        //     $user->firstName = explode(' ', $request->input('fullName'))[0];
+        //     $user->lastName = explode(' ', $request->input('fullName'))[1];
+        //     $user->emailId = $request->input('emailId');
+        //     $user->languageId = $request->input('languageId');
+        //     $user->save();
 
-    //     return response()->json(['success' => true]);
-    // }
+        //     return response()->json(['success' => true]);
+        // }
 
-    #this method is use for show user listing data
-    // public function userListing(Request $request) {
-    //     $role = $request->query('role');
-    //     if ($role) {
-    //         $users = Muser::whereHas('role', function($query) use ($role) {
-    //             $query->where('roleName', $role);
-    //         })->get();
-    //     } else {
-    //         $users = Muser::with('role')->get();
-    //     }
+        #this method is use for show user listing data
+        // public function userListing(Request $request) {
+        //     $role = $request->query('role');
+        //     if ($role) {
+        //         $users = Muser::whereHas('role', function($query) use ($role) {
+        //             $query->where('roleName', $role);
+        //         })->get();
+        //     } else {
+        //         $users = Muser::with('role')->get();
+        //     }
     //     return view('admin.user-listing', compact('users'));
     // }
 
@@ -182,7 +182,7 @@ class AdminController extends Controller
                 'isActive' => 1
             ]);
 
-           
+
             try {
                 Mail::to($request->emailId)->send(new NewRegistrationMail($request));
                 return redirect()->route('admin.user-listing');

@@ -236,7 +236,8 @@ class UploaderController extends Controller
             'title' => 'required|string|max:255',
             'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
-            'isCultureNature' => 'required|boolean',
+            // 'isCultureNature' => 'required|boolean',
+            'tagId' => 'required',
         ]);
 
         if ($validator->passes()) {

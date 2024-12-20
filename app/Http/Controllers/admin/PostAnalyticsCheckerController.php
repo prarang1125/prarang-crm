@@ -102,7 +102,9 @@ class PostAnalyticsCheckerController extends Controller
             'analyticsChecker' => $checkerId,
         ]);
 
-        return back()->with('success', 'Data updated successfully.');
+        return redirect()->route('admin.post-analytics-checker-city-listing')
+            ->with('success', 'Data updated successfully.');
+        // return back()->with('success', 'Data updated successfully.');
     }
 
     //this method is use for approve checker post analytics.
@@ -122,7 +124,9 @@ class PostAnalyticsCheckerController extends Controller
             'analyticsChecker' => $checkerId,
         ]);
 
-        return back()->with('success', 'Post Analytics have been approved successfully');
+        return redirect()->route('admin.post-analytics-checker-city-listing')
+            ->with('success', 'Post Analytics have been approved successfully.');
+        // return back()->with('success', 'Post Analytics have been approved successfully');
     }
 
     //this method is use for make page for write the region of return to maker
@@ -130,7 +134,6 @@ class PostAnalyticsCheckerController extends Controller
     {
         $cityCode = $request->query('City');
         $checkerId = $request->query('checkerId');
-        // dd($id);
         $chitti = Chitti::where('areaId', $cityCode)
             ->where('chittiId', $id)
             ->first();
@@ -159,6 +162,8 @@ class PostAnalyticsCheckerController extends Controller
             'post_anlytics_rtrn_to_mkr_id' => 0,
         ]);
 
-        return back()->with('success', 'Post Analytics have been return maker post analytics from checker successfully');
+        return redirect()->route('admin.post-analytics-checker-city-listing')
+            ->with('success', 'Post Analytics have been return maker post analytics from checker successfully.');
+        // return back()->with('success', 'Post Analytics have been return maker post analytics from checker successfully');
     }
 }

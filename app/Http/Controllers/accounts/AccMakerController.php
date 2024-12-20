@@ -5,6 +5,7 @@ namespace  App\Http\Controllers\accounts;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Services\ImageUploadService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -42,7 +43,7 @@ class AccMakerController extends Controller
             ->where('makerStatus', '=', 'sent_to_checker')
             ->where('finalStatus', '!=', 'deleted')
             ->select('*')
-            ->orderByDesc('dateOfCreation')
+            ->orderByDesc('chittiId')
             ->paginate(30); // Change '10' to the number of items per page
 
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
@@ -55,7 +56,6 @@ class AccMakerController extends Controller
     {
         // Fetch data from the Mtag table based on tagCategoryId
         $timelines = Mtag::where('tagCategoryId', 1)->get();
-        // dd($timelines);
         $manSenses = Mtag::where('tagCategoryId', 2)->get();
         $manInventions = Mtag::where('tagCategoryId', 3)->get();
         $geographys = Mtag::where('tagCategoryId', 4)->get();
@@ -71,9 +71,9 @@ class AccMakerController extends Controller
     }
 
     #this method is use for accounts maker store
-    public function accMakerStore(Request $request)
+    public function accMakerStore(Request $request, ImageUploadService $imageUploadService)
     {
-      
+
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
             'makerImage' => 'required|image|max:2048',
@@ -86,38 +86,13 @@ class AccMakerController extends Controller
             // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
         ]);
-        
+
         if ($validator->passes()) {
 
             DB::beginTransaction();  // Use DB facade
             try {
             $currentDateTime = getUserCurrentTime();
 
-            $content = $request->content;
-            $dom = new \DomDocument();
-            @$dom->loadHtml($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-            $images = $dom->getElementsByTagName('img');
-
-            foreach ($images as $img) {
-                $src = $img->getAttribute('src');
-
-                // Check if the image source is base64 (embedded image)
-                if (Str::startsWith($src, 'data:image')) {
-                    // Extract the base64 image data and save it as a file
-                    preg_match('/data:image\/(?<mime>.*?)\;base64,(?<data>.*)/', $src, $matches);
-                    $imageData = base64_decode($matches['data']);
-                    $imageMime = $matches['mime'];
-                    $imageName = time() . '_' . uniqid() . '.' . $imageMime;
-                    $path = public_path('uploads/content_images/') . $imageName;
-                    file_put_contents($path, $imageData);
-
-                    // Replace the base64 image source with the URL of the saved image
-                    $img->setAttribute('src', asset('uploads/content_images/' . $imageName));
-                }
-            }
-
-            // Save the updated content with proper image URLs
-            $content = $dom->saveHTML();
             $chitti = new Chitti();
             $area_id = $request->c2rselect;
             $areaIdCode = '';
@@ -131,22 +106,35 @@ class AccMakerController extends Controller
 
             $chitti->languageId = 1;
             $chitti->description = $request->content;
-            $chitti->dateOfCreation =  $currentDateTime;
-            $chitti->createDate =  $currentDateTime;
+            $chitti->dateOfCreation = $currentDateTime;
+            $chitti->createDate = $currentDateTime;
             $chitti->Title = $request->title;
             $chitti->SubTitle = $request->subtitle;
             $chitti->makerId = Auth::user()->userId;
             $chitti->makerStatus = 'sent_to_checker';
-            $chitti->finalStatus = '';            
-            // $chitti->checkerStatus = 'maker_to_checker';
+            $chitti->finalStatus = '';
+            $chitti->checkerStatus = '';
             $chitti->cityId = $area_id;
             $chitti->areaId = $areaIdCode;
             $chitti->geographyId = $request->geography;
             $chitti->created_at = $currentDateTime;
-            $chitti->is_active = 1;
             $chitti->created_by = Auth::user()->userId;
+            $chitti->chittiname = '';
+            $chitti->chittiUrl = '';
+            $chitti->Show_description = '';
+            $chitti->dateOfReturnToMaker = '';
+            $chitti->returnDateMaker = '';
+            $chitti->dateSentToUploader = '';
+            $chitti->sendDateToUploader = '';
+            $chitti->dateOfReturnToChecker = '';
+            $chitti->returnDateToChecker = '';
+            $chitti->dateOfApprove = '';
+            $chitti->uploadDataTime = '';
+            $chitti->approveDate = '';
+            $chitti->dateOfUpload = '';
+            $chitti->checkerReason = '';
+            $chitti->uploaderReason = '';
             $chitti->save();
-            // get last inserted id
             $lastId = $chitti->chittiId;
 
             $facity = new Facity();
@@ -157,22 +145,22 @@ class AccMakerController extends Controller
             $facity->save();
 
             if ($request->hasFile('makerImage')) {
-                $makerImage = $request->file('makerImage');
-                $makerImageName = time() . '_' . $makerImage->getClientOriginalName();
-                $makerImage->move(public_path('uploads/maker_image/'), $makerImageName);
-                $url = public_path('uploads/maker_image/') . "" . $makerImageName;
-                // $serviceAccessUrl = "admin.prarang.in".$url;
-                $serviceAccessUrl = $url;
+                $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $lastId);
+                if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
+                    DB::rollBack();
+
+                    return redirect()->back()->with('error', 'Error while image uploading, please try again.');
+                }
             }
 
             $chittiimagemapping = new Chittiimagemapping();
-            $chittiimagemapping->imageName = $makerImageName;
-            $chittiimagemapping->imageUrl = $serviceAccessUrl;
-            $chittiimagemapping->accessUrl = $url;
+            $chittiimagemapping->imageName = $uploadImage['path'];;
+            $chittiimagemapping->imageUrl = $uploadImage['full_url'];
+            $chittiimagemapping->accessUrl = $uploadImage['path'];
             $chittiimagemapping->isActive = '1';
             $chittiimagemapping->chittiId = $lastId;
             $chittiimagemapping->isDefult = 'true';
-            $chittiimagemapping->imageTag = $makerImageName;
+            $chittiimagemapping->imageTag = $uploadImage['path'];
             $chittiimagemapping->created_at = $currentDateTime;
             $chittiimagemapping->created_by = Auth::user()->userId;
             $chittiimagemapping->save();
@@ -227,24 +215,16 @@ class AccMakerController extends Controller
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         $regions = Mregion::where('isActive', 1)->get();
         $cities = Mcity::where('isActive', 1)->get();
-        $countries = Mcountry::where('isActive', 1)->get();        
+        $countries = Mcountry::where('isActive', 1)->get();
         $geographyMapping = $chitti->geographyMappings->first();
         $facityValue = $chitti->facity ? $chitti->facity->value : null;
 
          $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
 
-        // Check if chittiTagMapping, tag, and tagcategory are set before accessing tagCategoryInUnicode
-        // $tagCategoryInUnicode = $chittiTagMapping && $chittiTagMapping->tag && $chittiTagMapping->tag->tagcategory
-        //     ? $chittiTagMapping->tag->tagcategory->tagCategoryInUnicode
-        //     : null;
-
-        // dd($tagCategoryInUnicode);
-        // return view('admin.maker.maker-edit', compact('chitti', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping'));
-
         return view('accounts.maker.acc-maker-edit', compact('chitti','subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
     }
 
-    public function accMakerUpdate(Request $request, $id)
+    public function accMakerUpdate(Request $request, $id, ImageUploadService $imageUploadService)
     {
        // dd($request);
         $validator = Validator::make($request->all(), [
@@ -259,40 +239,16 @@ class AccMakerController extends Controller
             // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
         ]);
-       
+
         if ($validator->passes()) {
-            
-            // DB::beginTransaction();
-            // try {
+
+            DB::beginTransaction();
+            try {
             $currentDateTime = getUserCurrentTime();
-
-            // Handle content images (base64 to file conversion and updating the content HTML)
-            $content = $request->content;
-            $dom = new \DomDocument();
-            @$dom->loadHtml($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-            $images = $dom->getElementsByTagName('img');
-
-            foreach ($images as $img) {
-                $src = $img->getAttribute('src');
-
-                if (Str::startsWith($src, 'data:image')) {
-                    preg_match('/data:image\/(?<mime>.*?)\;base64,(?<data>.*)/', $src, $matches);
-                    $imageData = base64_decode($matches['data']);
-                    $imageMime = $matches['mime'];
-                    $imageName = time() . '_' . uniqid() . '.' . $imageMime;
-                    $path = public_path('uploads/content_images/') . $imageName;
-                    file_put_contents($path, $imageData);
-
-                    // Replace base64 with file URL
-                    $img->setAttribute('src', asset('uploads/content_images/' . $imageName));
-                }
-            }
-            // Save updated content with image URLs
-            $content = $dom->saveHTML();
 
             // Update Chitti record
             $chitti = Chitti::findOrFail($id);
-          
+
 
 
             if ($request->action === 'send_to_checker') {
@@ -305,9 +261,9 @@ class AccMakerController extends Controller
                     'return_chitti_post_from_checker_id' => 0,
                     'returnDateToChecker' => $currentDateTime,
                     'makerId'       => Auth::user()->userId,
-                    'finalStatus'   => 'Null',
+                    // 'finalStatus'   => 'Null',
                 ]);
-                // DB::commit();
+                DB::commit();
                 // Redirect to the checker listing
                 return redirect()->route('accounts.maker-dashboard')
                     ->with('success', 'Sent to Checker successfully.');
@@ -329,7 +285,7 @@ class AccMakerController extends Controller
                     'SubTitle'      => $request->subtitle,
                     'makerStatus'   => 'sent_to_checker',
                     'makerId'       => Auth::user()->userId,
-                    'finalStatus'   => 'Null',
+                    // 'finalStatus'   => 'Null',
                     // 'checkerStatus' => 'Null',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
@@ -339,7 +295,7 @@ class AccMakerController extends Controller
                     'areaId' => $areaIdCode,
                     'geographyId' => $request->geography,
                 ]);
-              
+
                 // Update Facity record
                 Facity::where('from_chittiId', $id)->update([
                     'value'         => $request->forTheCity,
@@ -349,17 +305,18 @@ class AccMakerController extends Controller
 
                 // Update image if provided
                 if ($request->hasFile('makerImage')) {
-                    $makerImage = $request->file('makerImage');
-                    $makerImageName = time() . '_' . $makerImage->getClientOriginalName();
-                    $makerImage->move(public_path('uploads/maker_image/'), $makerImageName);
-                    $url = public_path('uploads/maker_image/') . $makerImageName;
-                    $serviceAccessUrl = "admin.prarang.in/" . $url;
+                    $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
+                        if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
+                            DB::rollBack();
+
+                            return redirect()->back()->with('error', 'Error while image uploading, please try again.');
+                        }
 
                     // Update Chitti Image Mapping
                     Chittiimagemapping::where('chittiId', $id)->update([
-                        'imageName'     => $makerImageName,
-                        'imageUrl'      => $serviceAccessUrl,
-                        'accessUrl'     => $url,
+                        'imageName'     => $uploadImage['path'],
+                        'imageUrl'      => $uploadImage['full_url'],
+                        'accessUrl'     => $uploadImage['path'],
                         'updated_at'    => $currentDateTime,
                         'updated_by'    => Auth::user()->userId,
                     ]);
@@ -379,15 +336,15 @@ class AccMakerController extends Controller
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
                 ]);
-                // DB::commit();
+                DB::commit();
                 return redirect()->route('accounts.maker-dashboard')->with('success', 'Maker updated successfully.');
             }
-        // } catch (\Exception $e) {
-           
-        //     DB::rollBack();
-        //     Log::error('Maker Update Error: ' . $e->getMessage(), ['exception' => $e]);
-        //     return redirect()->back()->with('error', 'An error occurred while updating the maker.')->withInput();
-        // }
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+            Log::error('Maker Update Error: ' . $e->getMessage(), ['exception' => $e]);
+            return redirect()->back()->with('error', 'An error occurred while updating the maker.')->withInput();
+        }
         } else {
             return redirect()->back()
                 ->withInput()

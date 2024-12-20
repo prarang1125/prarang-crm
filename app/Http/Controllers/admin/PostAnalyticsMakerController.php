@@ -111,7 +111,7 @@ class PostAnalyticsMakerController extends Controller
         ]);
 
         // Redirect with success message
-        return redirect()->route('admin.post-analytics-maker-listing', ['citycode' => $request->query('city')])
+        return redirect()->route('admin.post-analytics-maker-city-listing')
             ->with('success', 'Data updated successfully.');
 
     }
