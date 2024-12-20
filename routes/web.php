@@ -77,7 +77,7 @@ Route::group(['prefix' => 'accounts'], function () {
 
         // Route::get('/checker/checker-listing/{id}', [AccChekerController::class, 'accIndex'])->name('accounts.acc-checker-listing');
 
-        Route::get('/checker/acc-checker-edit/{id}', [AccChekerController::class, 'checkerEdit'])->name('accounts.acc-checker-edit');
+        Route::get('/checker/acc-checker-edit/{id}', [AccChekerController::class, 'accCheckerEdit'])->name('accounts.acc-checker-edit');
 
         Route::put('/checker/acc-checker-update/{id}', [AccChekerController::class, 'accCheckerUpdate'])->name('accounts.acc-checker-update');
         //this method is use for account checker listing end
