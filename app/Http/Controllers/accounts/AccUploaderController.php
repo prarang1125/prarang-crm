@@ -17,6 +17,8 @@ use App\Models\Mcity;
 use App\Models\Facity;
 use App\Models\Chittiimagemapping;
 use App\Models\Chittigeographymapping;
+use App\Services\ImageUploadService;
+use Illuminate\Support\Facades\DB;
 
 class AccUploaderController extends Controller
 {
@@ -202,7 +204,7 @@ class AccUploaderController extends Controller
     //     }
     // }
 
-    public function accUploaderUpdate(Request $request, $id)
+    public function accUploaderUpdate(Request $request, $id, ImageUploadService $imageUploadService)
     {
         $validator = Validator::make($request->all(), [
             'content'   => 'required|string',
@@ -212,42 +214,16 @@ class AccUploaderController extends Controller
             'title'     => 'required|string|max:255',
             'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
-            'isCultureNature' => 'required|boolean',
+            // 'isCultureNature' => 'required|boolean',
+            'tagId' => 'required',
         ]);
 
         if ($validator->passes()) {
 
             $currentDateTime = getUserCurrentTime();
-
-            $content = $request->content;
-            $dom = new \DomDocument();
-            @$dom->loadHtml($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-            $images = $dom->getElementsByTagName('img');
-
-            foreach ($images as $img) {
-                $src = $img->getAttribute('src');
-
-                // Check if the image source is base64 (embedded image)
-                if (Str::startsWith($src, 'data:image')) {
-                    // Extract the base64 image data and save it as a file
-                    preg_match('/data:image\/(?<mime>.*?)\;base64,(?<data>.*)/', $src, $matches);
-                    $imageData = base64_decode($matches['data']);
-                    $imageMime = $matches['mime'];
-                    $imageName = time() . '_' . uniqid() . '.' . $imageMime;
-                    $path = public_path('uploads/content_images/') . $imageName;
-                    file_put_contents($path, $imageData);
-
-                    // Replace the base64 image source with the URL of the saved image
-                    $img->setAttribute('src', asset('uploads/content_images/' . $imageName));
-                }
-            }
-
-            // Save the updated content with proper image URLs
-            $content = $dom->saveHTML();
-            // dd($content);
+            $chitti = Chitti::findOrFail($id);
 
             // Update Chitti record with approved
-            $chitti = Chitti::findOrFail($id);
             if ($request->action === 'approvd'){
                 $chitti->update([
                     'description'   => $request->content,
@@ -292,17 +268,18 @@ class AccUploaderController extends Controller
 
                 // Update image if provided
                 if ($request->hasFile('makerImage')) {
-                    $makerImage = $request->file('makerImage');
-                    $makerImageName = time() . '_' . $makerImage->getClientOriginalName();
-                    $makerImage->move(public_path('uploads/maker_image/'), $makerImageName);
-                    $url = public_path('uploads/maker_image/') . $makerImageName;
-                    $serviceAccessUrl = "admin.prarang.in/" . $url;
+                    $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
+                    if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
+                        DB::rollBack();
+
+                        return redirect()->back()->with('error', 'Error while image uploading, please try again.');
+                    }
 
                     // Update Chitti Image Mapping
                     Chittiimagemapping::where('chittiId', $id)->update([
-                        'imageName'     => $makerImageName,
-                        'imageUrl'      => $serviceAccessUrl,
-                        'accessUrl'     => $url,
+                        'imageName'     => $uploadImage['path'],
+                        'imageUrl'      => $uploadImage['full_url'],
+                        'accessUrl'     => $uploadImage['path'],
                         'updated_at'    => $currentDateTime,
                         'updated_by'    => Auth::user()->userId,
                     ]);
