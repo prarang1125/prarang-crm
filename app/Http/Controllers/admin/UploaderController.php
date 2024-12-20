@@ -41,8 +41,10 @@ class UploaderController extends Controller
     {
         $search = $request->input('search');
 
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-            ->whereNotNull('Title')
+        $chittis = DB::table('chitti as ch')
+        ->select('ch.*','vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+           ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+           ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography') ->whereNotNull('Title')
             ->where('Title', '!=', '')
             ->where('uploaderStatus', '=', 'sent_to_uploader')
             ->when($search, function ($query, $search) {
@@ -53,7 +55,7 @@ class UploaderController extends Controller
             })
             ->whereNotIn('finalStatus', ['deleted'])
             ->orderByDesc('dateOfCreation')
-            ->select('chittiId', 'Title', 'SubTitle', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
+            // ->select('chittiId', 'Title', 'SubTitle', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
             ->paginate(30); // Adjust the number per page
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
@@ -83,7 +85,10 @@ class UploaderController extends Controller
         $search = $request->input('search');
 
         // Fetch Chitti records with relationships and pagination
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        $chittis = DB::table('chitti as ch')
+        ->select('ch.*','vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+           ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+           ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($subQuery) use ($search) {
                     $subQuery->where('Title', 'LIKE', "%$search%")

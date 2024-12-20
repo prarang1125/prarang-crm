@@ -29,7 +29,10 @@ class AccChekerController extends Controller
         $search = $request->input('search');
 
         // Query builder with search and filter conditions
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        $chittis = DB::table('chitti as ch')
+        ->select('ch.*','vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+           ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+           ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
             ->whereNotNull('Title')
             ->where('Title', '!=', '')
             ->where('checkerStatus', '!=', '')

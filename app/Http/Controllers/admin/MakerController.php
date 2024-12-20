@@ -30,26 +30,26 @@ class MakerController extends Controller
 
         $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
         $cacheDuration = 180; // Cache duration in minutes
-
-        //    return $chittis = Cache::remember($cacheKey, $cacheDuration, function () use ($search) {
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-            ->when($search, function ($query, $search) {
-                return $query->where(function ($q) use ($search) {
-                    $q->where('Title', 'LIKE', '%'.$search.'%')
-                        ->orWhere('SubTitle', 'LIKE', '%'.$search.'%')
-                        ->orWhere('createDate', 'LIKE', '%'.$search.'%');
-                });
-            })
+        $chittis = DB::table('chitti as ch')
+        ->select('ch.*','vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+           ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+           ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+           ->when($search, function ($query, $search) {
+               $query->where(function ($q) use ($search) {
+                   $q->where('Title', 'LIKE', '%' . $search . '%')
+                       ->orWhere('SubTitle', 'LIKE', '%' . $search . '%')
+                       ->orWhere('createDate', 'LIKE', '%' . $search . '%');
+               });
+           })
+            // ->where('ch.chittiId' , 11383 	)
             ->whereNotNull('Title')
             ->where('Title', '!=', '')
             ->where('makerStatus', '=', 'sent_to_checker')
             ->where('finalStatus', '!=', 'deleted')
-            ->select('*')
-        // ->orderByRaw("STR_TO_DATE(dateOfCreation, '%Y-%m-%d') ASC")
-            ->orderByDesc('chittiId')
-            ->paginate(30); // Change '30' to the number of items per page
+            ->orderByDesc('ch.chittiId')
+            ->paginate(30);
+        // Change '30' to the number of items per page
         // });
-
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
