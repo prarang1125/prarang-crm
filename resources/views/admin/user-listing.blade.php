@@ -74,7 +74,7 @@
                                     <td>{{ $user->firstName }}</td>
                                     <td>{{ $user->lastName }}</td>
                                     <td>{{ $user->emailId }}</td>
-                                    <td>{{ $user->role->roleName }}</td>
+                                    <td>{{ $user->role ? $user->role->roleName : 'N/A' }}</td>
                                     <td class="{{ $user->languageId? 'text-success':'text-success' }}">{{ $user->languageId? 'English':'Hindi' }} </td>
 
                                     <td class="{{ $user->isActive? 'text-success':'text-danger' }}">{{ $user->isActive? 'Active':'Deactive' }}

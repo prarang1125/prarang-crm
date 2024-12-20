@@ -33,6 +33,7 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
     {{-- <title>Prarang Admin Home</title> --}}
     <title>@yield('title', 'Login')</title>
+    @livewireStyles
 </head>
 
 <body>

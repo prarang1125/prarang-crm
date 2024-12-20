@@ -111,7 +111,7 @@
                                     @foreach($cities as $city)
                                         <option value="{{ $city->cityId }}"
                                             {{ $geographyMapping->areaId == $city->cityId ? 'selected' : '' }}>
-                                            {{ $city->cityNameInEnglish }}
+                                            {{ $city->citynameInEnglish }}
                                         </option>
                                     @endforeach
                                 @endif
@@ -452,7 +452,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Get all card-body cardbodselect elements end
 
     // Choose city, country, or region according to its geography
-    const geographySelect = document.getElementById('inputGeography');
+    /*const geographySelect = document.getElementById('inputGeography');
     const levelSelect = document.getElementById('inputLanguageScript');
     const labelSelect = document.getElementById('inputLanguageLabel');
 
@@ -484,7 +484,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (options.length > 0) {
             levelSelect.innerHTML += options.join('');
         }
-    });
+    });*/
 });
 </script>
 @endsection

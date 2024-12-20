@@ -60,7 +60,7 @@
                                 <tr>
                                     <th scope="col" class="text-center">#</th>
                                     <th scope="col" class="text-center">City Name In English</th>
-                                    <th scope="col" class="text-center">City Name In Hindi</th>
+                                    {{-- <th scope="col" class="text-center">City Name In Hindi</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -71,17 +71,12 @@
                                     <tr>
                                         <th scope="row" class="text-center">{{ $index }}</th>
                                         <td class="text-center">
-                                            <a href="{{ route('admin.post-analytics-maker-listing', ['cityCode' => $mcity->cityCode]) }}"
+                                            <a href="{{ route('admin.post-analytics-maker-listing', ['cityCode' => $mcity->geographycode]) }}"
                                                 class="text-primary">
-                                                {{ $mcity->citynameInEnglish }}
+                                                {{ $mcity->geography }}
                                             </a>
                                         </td>
-                                        <td class="text-center">
-                                            <a href="{{ route('admin.post-analytics-maker-listing', ['cityCode' => $mcity->cityCode]) }}"
-                                                class="text-primary">
-                                                {{ $mcity->citynameInUnicode }}
-                                            </a>
-                                        </td>
+
                                     </tr>
                                     @php $index++;  @endphp
                                 @endforeach

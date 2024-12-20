@@ -90,7 +90,7 @@
                                             @if ($mapping->geographyId == 5 && $mapping->region)
                                                 {{ $mapping->region->regionnameInEnglish }} <!-- Show region name -->
                                             @elseif ($mapping->geographyId == 6 && $mapping->city)
-                                                {{ $mapping->city->cityNameInEnglish }} <!-- Show city name -->
+                                                {{ $mapping->city->citynameInEnglish }} <!-- Show city name -->
                                             @elseif ($mapping->geographyId == 7 && $mapping->country)
                                                 {{ $mapping->country->countryNameInEnglish }} <!-- Show country name -->
                                             @else
@@ -104,7 +104,7 @@
                                         <a href="{{ route('admin.maker-edit', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Edit</a>
 
                                         <form action="{{ route('admin.maker-delete', ['id'=>$chitti->chittiId]) }}" method="GET" style="display:inline;">
-                
+
                                             <button type="submit"  onclick="return confirm('Are you want to delete this post.')" class="btn btn-sm btn-danger delete-user">Delete</button>
                                         </form>
                                         {{-- <a href="{{ route('admin.maker-update', $chitti->chittiId) }}" class="btn btn-sm btn-primary update-user mt-3">Send to checker</a> --}}

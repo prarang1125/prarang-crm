@@ -32,7 +32,7 @@ use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
-// dd(Hash::make('123456'));2
+// dd(Hash::make('password'));
 
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
 Route::group(['prefix' => 'accounts'], function () {

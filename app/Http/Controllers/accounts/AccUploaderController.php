@@ -71,7 +71,7 @@ class AccUploaderController extends Controller
         $geographys = Mtag::where('tagCategoryId', 4)->get();
         $faunas = Mtag::where('tagCategoryId', 5)->get();
         $floras = Mtag::where('tagCategoryId', 6)->get();
-        
+
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         $regions = Mregion::all();
         $cities = Mcity::all();
@@ -262,6 +262,15 @@ class AccUploaderController extends Controller
 
                 return redirect()->route('accounts.uploader-dashboard')->with('success', 'Uploader updated successfully.');
             }else{
+                $area_id = $request->c2rselect;
+                $areaIdCode = '';
+                if ($request->geography == 6) { //6 is use for city
+                    $areaIdCode = 'c'.$area_id;
+                } elseif ($request->geography == 5) { //5 is use for region
+                    $areaIdCode = 'r'.$area_id;
+                } elseif ($request->geography == 7) { // 7 is use for country
+                    $areaIdCode = 'con'.$area_id;
+                }
                 // Update Chitti record
                 $chitti->update([
                     'description'   => $request->content,
@@ -269,6 +278,9 @@ class AccUploaderController extends Controller
                     'SubTitle'      => $request->subtitle,
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
+                    'cityId' => $area_id,
+                    'areaId' => $areaIdCode,
+                    'geographyId' => $request->geography,
                 ]);
 
                 // Update Facity record

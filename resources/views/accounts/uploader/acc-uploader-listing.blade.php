@@ -83,7 +83,7 @@
                                             @if ($mapping->geographyId == 5 && $mapping->region)
                                                 {{ $mapping->region->regionnameInEnglish }} <!-- Show region name -->
                                             @elseif ($mapping->geographyId == 6 && $mapping->city)
-                                                {{ $mapping->city->cityNameInEnglish }} <!-- Show city name -->
+                                                {{ $mapping->city->citynameInEnglish }} <!-- Show city name -->
                                             @elseif ($mapping->geographyId == 7 && $mapping->country)
                                                 {{ $mapping->country->countryNameInEnglish }} <!-- Show country name -->
                                             @else
