@@ -25,8 +25,10 @@ class ChekerController extends Controller
     {
 
         $search = $request->input('search');
-
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        $chittis = DB::table('chitti as ch')
+        ->select('ch.*','vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+           ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+           ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
             ->whereNotNull('Title')
             ->where('Title', '!=', '')
             ->where('makerStatus', 'sent_to_checker')

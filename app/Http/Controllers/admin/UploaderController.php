@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Models\ColorInfo;
 
 class UploaderController extends Controller
 {
@@ -41,8 +42,10 @@ class UploaderController extends Controller
     {
         $search = $request->input('search');
 
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-            ->whereNotNull('Title')
+        $chittis = DB::table('chitti as ch')
+        ->select('ch.*','vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+           ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+           ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography') ->whereNotNull('Title')
             ->where('Title', '!=', '')
             ->where('uploaderStatus', '=', 'sent_to_uploader')
             ->when($search, function ($query, $search) {
@@ -53,10 +56,11 @@ class UploaderController extends Controller
             })
             ->whereNotIn('finalStatus', ['deleted'])
             ->orderByDesc('dateOfCreation')
-            ->select('chittiId', 'Title', 'SubTitle', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
+            // ->select('chittiId', 'Title', 'SubTitle', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
             ->paginate(30); // Adjust the number per page
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+
 
         return view('admin.uploader.uploader-listing', compact('chittis', 'geographyOptions', 'search'));
     }
@@ -83,7 +87,10 @@ class UploaderController extends Controller
         $search = $request->input('search');
 
         // Fetch Chitti records with relationships and pagination
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        $chittis = DB::table('chitti as ch')
+        ->select('ch.*','vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+           ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+           ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($subQuery) use ($search) {
                     $subQuery->where('Title', 'LIKE', "%$search%")
@@ -204,7 +211,7 @@ class UploaderController extends Controller
 
     public function uploaderEdit($id)
     {
-        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->findOrFail($id);
+        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity', 'writerColor', 'readerColor')->findOrFail($id);
         $image = $chitti->chittiimagemappings()->first();
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
         $subTag = $chittiTagMapping->tag->tagCategoryId;
@@ -223,8 +230,10 @@ class UploaderController extends Controller
         $facityValue = $chitti->facity ? $chitti->facity->value : null;
 
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
-
-        return view('admin.uploader.uploader-edit', compact('chitti', 'subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
+        $colorOptions = ColorInfo::where('emotionType', 1)->get();
+        $readerOptions = ColorInfo::where('emotionType', 0)->get();
+        // dd($chitti->readerColor);
+        return view('admin.uploader.uploader-edit', compact('chitti', 'subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras', 'colorOptions', 'readerOptions' ));
     }
 
     public function uploaderUpdate(Request $request, $id, ImageUploadService $imageUploadService)
@@ -239,6 +248,8 @@ class UploaderController extends Controller
             'forTheCity' => 'required|boolean',
             // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
+            'writercolor' => 'required',
+            'reader'   => 'required',
         ]);
 
         if ($validator->passes()) {
@@ -277,10 +288,11 @@ class UploaderController extends Controller
                     'SubTitle' => $request->subtitle,
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::guard('admin')->user()->userId,
-                    // 'date',
                     'cityId' => $area_id,
-                    'areaId' => $areaIdCode,
-                    'geographyId' => $request->geography,
+                    'areaId' =>  $area_id,
+                    'geographyId'   => $request->geography,
+                    'writercolor'   => $request->writercolor,
+                    'color_value'   => $request->reader,
                 ]);
 
                 // Update Facity record
