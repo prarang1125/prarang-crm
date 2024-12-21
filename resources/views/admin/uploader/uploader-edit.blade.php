@@ -169,9 +169,9 @@
                                 </select>
 
                                 <!-- Show the current reader color name -->
-                                @if(isset($chitti->readerColor))
+                                {{-- @if(isset($chitti->readerColor))
                                     <small>Current: {{ $chitti->readerColor->name }}</small>
-                                @endif
+                                @endif --}}
                                 @error('reader')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
@@ -446,6 +446,7 @@
         const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
         const csrfToken = "{{ csrf_token() }}";
         const postId = "{{ $chitti->chittiId }}";
+
     </script>
     <script>
         function previewImage() {
