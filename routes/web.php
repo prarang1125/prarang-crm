@@ -55,6 +55,8 @@ Route::group(['prefix' => 'accounts'], function () {
         Route::get('/maker/acc-maker-delete/{id}', [AccMakerController::class, 'accMakerDelete'])->name('accounts.acc-maker-delete');
 
         Route::put('/maker/acc-maker-update/{id}', [AccMakerController::class, 'accMakerUpdate'])->name('accounts.acc-maker-update');
+
+        Route::post('/maker/acc-maker-update-title', [MakerController::class, 'updateTitle'])->name('update.title');
         //this method is use for account maker listing end
 
         // Routes for Makers
