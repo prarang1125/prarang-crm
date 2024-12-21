@@ -249,12 +249,23 @@ class UploaderController extends Controller
             // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
             'writercolor' => 'required',
-            'reader'   => 'required',
+            // 'reader'   => 'required',
         ]);
-
+        $readerValue = $request->input('reader');
+        if (is_string($readerValue)) {
+            $decoded = json_decode($readerValue, true);
+            if (json_last_error() === JSON_ERROR_NONE && isset($decoded['id'])) {
+                // If valid JSON, extract the `id`
+                $readerValue = $decoded['id'];
+            }
+        }
         if ($validator->passes()) {
 
             $currentDateTime = getUserCurrentTime();
+            if (isset($data['reader']) && is_string($data['reader'])) {
+                $reader = json_decode($data['reader'], true);
+                $data['reader'] = $reader['id'] ?? null; // Use the `id` field from the decoded object
+            }
 
             // Update Chitti record with approved
             $chitti = Chitti::findOrFail($id);
@@ -292,7 +303,7 @@ class UploaderController extends Controller
                     'areaId' =>  $area_id,
                     'geographyId'   => $request->geography,
                     'writercolor'   => $request->writercolor,
-                    'color_value'   => $request->reader,
+                    'color_value'   => $readerValue,
                 ]);
 
                 // Update Facity record

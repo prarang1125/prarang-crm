@@ -66,7 +66,7 @@ class AccUploaderController extends Controller
 
     public function accUploaderEdit($id)
     {
-        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')->findOrFail($id);
+        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity', 'writerColor', 'readerColor')->findOrFail($id);
         $image = $chitti->chittiimagemappings()->first();
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
         $subTag=$chittiTagMapping->tag->tagCategoryId;
@@ -85,8 +85,10 @@ class AccUploaderController extends Controller
         $facityValue = $chitti->facity ? $chitti->facity->value : null;
 
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
+        $colorOptions = ColorInfo::where('emotionType', 1)->get();
+        $readerOptions = ColorInfo::where('emotionType', 0)->get();
 
-        return view('accounts.uploader.acc-uploader-edit', compact('chitti','subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras'));
+        return view('accounts.uploader.acc-uploader-edit', compact('chitti','subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras', 'colorOptions', 'readerOptions'));
     }
 
     // public function accUploaderUpdate(Request $request, $id)
@@ -219,7 +221,17 @@ class AccUploaderController extends Controller
             'forTheCity' => 'required|boolean',
             // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
+            'writercolor' => 'required',
         ]);
+
+        $readerValue = $request->input('reader');
+        if (is_string($readerValue)) {
+            $decoded = json_decode($readerValue, true);
+            if (json_last_error() === JSON_ERROR_NONE && isset($decoded['id'])) {
+                // If valid JSON, extract the `id`
+                $readerValue = $decoded['id'];
+            }
+        }
 
         if ($validator->passes()) {
 
@@ -258,8 +270,10 @@ class AccUploaderController extends Controller
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
                     'cityId' => $area_id,
-                    'areaId' => $areaIdCode,
+                    'areaId' => $area_id,
                     'geographyId' => $request->geography,
+                    'writercolor'   => $request->writercolor,
+                    'color_value'   => $readerValue,
                 ]);
 
                 // Update Facity record
