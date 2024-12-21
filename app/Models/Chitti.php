@@ -147,5 +147,15 @@ class Chitti extends Model
         return $this->hasMany(VChittiGeography::class, 'chittiId', 'chittiId');
     }
 
+    public function writerColor()
+    {
+        return $this->belongsTo(ColorInfo::class, 'writercolor', 'colorcode');
+    }
+
+    public function readerColor()
+    {
+        return $this->belongsTo(ColorInfo::class, 'color_value', 'id');
+    }
+
 }
 
