@@ -49,7 +49,7 @@
                                 <div class="image-preview-mt" id="image-preview"
                                     style="max-width: 300px; max-height: 300px; overflow: hidden; border: 1px solid #ccc; padding: 5px;">
                                     <img id="preview-img"
-                                        src="{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}"
+                                        src="{{ $image ? $image->imageUrl : '/img/blankImage2.png' }}"
                                         alt="Image Preview" style="width: 288px; height: 250px; background-size: cover;" />
                                 </div>
                             </div>
@@ -58,9 +58,16 @@
                                 <div id="thumbnail" class="d-flex flex-wrap"
                                     style="gap: 10px; border: 1px solid #ccc; padding: 5px; min-height: 80px; background-color: #28252517;">
                                     <div class="thumbnail-slot"
-                                        style="background-image: url('{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}'); background-size: cover; width:100%; height:100px;position:relative;">
+                                        style="background-image: url('{{ $image ? $image->imageUrl : '/img/blankImage2.png' }}'); background-size: cover; width:100%; height:100px;position:relative;">
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label for="makerImage" class="form-label">Video ID (Only youtube)</label>
+                                <input type="text" class="form-control" name="Videourl"/>
                             </div>
                         </div>
 
@@ -106,6 +113,72 @@
                             </div>
                         </div>
                         {{-- title and subtitle code end --}}
+
+                                                {{-- Select Writer Emotion start --}}
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label for="writer" class="form-label">Select Writer Emotion (select one):</label>
+                                <select class="form-control" id="writercolor" name="writercolor">
+                                    <!-- Pre-selected option -->
+                                    @if(isset($chitti->writercolor))
+                                        <option value="{{ $chitti->writercolor }}" selected>
+                                            {{ $chitti->writerColor->name ?? 'Select' }}
+                                        </option>
+                                    @else
+                                        <option value="" selected disabled>Select</option>
+                                    @endif
+
+                                    <!-- Options for all available colors -->
+                                    @foreach($colorOptions as $color)
+                                        <option value="{{ $color->id }}"
+                                            {{ $chitti->writercolor == $color->id ? 'selected' : '' }}>
+                                            {{ $color->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                <!-- Show the current writer color name -->
+                                @if(isset($chitti->writerColor))
+                                    <small>Current: {{ $chitti->writerColor->name }}</small>
+                                @endif
+                                @error('writercolor')
+                                    <p class="invalid-feedback">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            {{--  Reader Emotion code  --}}
+                            <div class="col-md-6">
+                                <label for="reader" class="form-label">Select Reader Emotion(select one):</label>
+                                <select class="form-control" id="reader" name="reader">
+                                    <!-- Pre-selected option -->
+                                    @if(isset($chitti->readercolor))
+                                        <option value="{{ $chitti->readercolor }}" selected>
+                                            {{ $chitti->readerColor->name ?? 'Select' }}
+                                        </option>
+                                    @else
+                                        <option value="" selected disabled>Select</option>
+                                    @endif
+
+                                    <!-- Options for all available colors -->
+                                    @foreach($readerOptions as $color)
+                                    {{-- @dd($color->id); --}}
+                                        <option value="{{ $color->id }}"
+                                            {{ $chitti->readercolor == $color->colorcode ? 'selected' : '' }}>
+                                            {{ $color->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                <!-- Show the current reader color name -->
+                                {{-- @if(isset($chitti->readerColor))
+                                    <small>Current: {{ $chitti->readerColor->name }}</small>
+                                @endif --}}
+                                @error('reader')
+                                    <p class="invalid-feedback">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        {{-- Select Writer Emotion and Reader Emotion code end --}}
 
                         {{-- above city or about city code start --}}
                         <div class="row mt-1">

@@ -68,7 +68,7 @@ function SimpleUploadAdapterPlugin(editor) {
     };
 }
 
-ClassicEditor
+/*ClassicEditor
     .create(document.querySelector('#editor'), {
         extraPlugins: [SimpleUploadAdapterPlugin],
         toolbar: [
@@ -77,7 +77,23 @@ ClassicEditor
     })
     .catch(error => {
         console.error(error);
+    });*/
+
+    ClassicEditor
+    .create(document.querySelector('#editor'), {
+        extraPlugins: [SimpleUploadAdapterPlugin], // Add your custom adapter
+        toolbar: [
+            'heading', '|', 'bold', 'italic', '|', 'link', 'bulletedList', 'numberedList', '|',
+            'imageUpload', 'mediaEmbed', '|', 'undo', 'redo', '|', 'fullscreen'
+        ],
+        mediaEmbed: {
+            previewsInData: true // Allows embedding previews in the editor
+        }
+    })
+    .catch(error => {
+        console.error(error);
     });
+
 
 function calculateTotal() {
     const fields = ['citySubscribers', 'prarangApplication', 'websiteGd', 'email', 'instagram'];

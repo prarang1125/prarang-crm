@@ -16,11 +16,9 @@ use App\Models\Mtag;
 use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class MakerController extends Controller
 {
@@ -29,38 +27,35 @@ class MakerController extends Controller
         $search = $request->input('search');
 
         $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
-        $cacheDuration = 180; // Cache duration in minutes
+        $cacheDuration = 180;
         $chittis = DB::table('chitti as ch')
-        ->select('ch.*','vg.*', 'vCg.*', 'ch.chittiId as chittiId')
-           ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-           ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
-           ->when($search, function ($query, $search) {
-               $query->where(function ($q) use ($search) {
-                   $q->where('Title', 'LIKE', '%' . $search . '%')
-                       ->orWhere('SubTitle', 'LIKE', '%' . $search . '%')
-                       ->orWhere('createDate', 'LIKE', '%' . $search . '%');
-               });
-           })
-            // ->where('ch.chittiId' , 11383 	)
+            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('Title', 'LIKE', '%'.$search.'%')
+                        ->orWhere('SubTitle', 'LIKE', '%'.$search.'%')
+                        ->orWhere('createDate', 'LIKE', '%'.$search.'%');
+                });
+            })
+
             ->whereNotNull('Title')
             ->where('Title', '!=', '')
             ->where('makerStatus', '=', 'sent_to_checker')
             ->where('finalStatus', '!=', 'deleted')
-            ->orderByDesc('ch.chittiId')
+            ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%Y-%m-%d')"))
             ->paginate(30);
-        // Change '30' to the number of items per page
-        // });
+
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
         return view('admin.maker.maker-listing', compact('chittis', 'geographyOptions', 'notification'));
     }
 
-    //this method is use for maker make new post
     public function makerRegister()
     {
 
-        // Fetch data from the Mtag table based on tagCategoryId
         $timelines = Mtag::where('tagCategoryId', 1)->get();
         $manSenses = Mtag::where('tagCategoryId', 2)->get();
         $manInventions = Mtag::where('tagCategoryId', 3)->get();
@@ -68,7 +63,7 @@ class MakerController extends Controller
         $faunas = Mtag::where('tagCategoryId', 5)->get();
         $floras = Mtag::where('tagCategoryId', 6)->get();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-        // Fetch all regions, cities, and countries
+
         $regions = Mregion::where('isActive', 1)->get();
 
         $cities = Mcity::where('isActive', 1)->get();
@@ -77,7 +72,6 @@ class MakerController extends Controller
         return view('admin.maker.maker-register', compact('timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras', 'geographyOptions', 'regions', 'cities', 'countries'));
     }
 
-    //this method is use for store maker data
     public function makerStore(Request $request, ImageUploadService $imageUploadService)
     {
 
@@ -87,30 +81,28 @@ class MakerController extends Controller
             'geography' => 'required',
             'c2rselect' => 'required',
             'title' => 'required|string|max:255',
-            // 'subtitle' => 'required|string|max:255',
+
             'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'forTheCity' => 'required|boolean',
-            // 'isCultureNature' => 'required|boolean',
+
             'tagId' => 'required',
 
         ]);
 
-        // return $validator;
-
         if ($validator->passes()) {
 
-            DB::beginTransaction();  // Use DB facade
+            DB::beginTransaction();
             try {
 
                 $currentDateTime = getUserCurrentTime();
                 $chitti = new Chitti;
                 $area_id = $request->c2rselect;
                 $areaIdCode = '';
-                if ($request->geography == 6) { //6 is use for city
+                if ($request->geography == 6) {
                     $areaIdCode = 'c'.$area_id;
-                } elseif ($request->geography == 5) { //5 is use for region
+                } elseif ($request->geography == 5) {
                     $areaIdCode = 'r'.$area_id;
-                } elseif ($request->geography == 7) { // 7 is use for country
+                } elseif ($request->geography == 7) {
                     $areaIdCode = 'con'.$area_id;
                 }
                 $chitti->languageId = 1;
@@ -185,12 +177,12 @@ class MakerController extends Controller
                 $chittitagmapping->created_at = $currentDateTime;
                 $chittitagmapping->created_by = Auth::guard('admin')->user()->userId;
                 $chittitagmapping->save();
-                DB::commit();  // Commit transaction
+                DB::commit();
 
                 return redirect()->route('admin.maker-listing')->with('success', 'Post created successfully.');
             } catch (\Exception $e) {
                 dd($e->getMessage());
-                DB::rollBack();  // Rollback transaction
+                DB::rollBack();
 
                 return redirect()->route('admin.maker-register')->with('error', 'An error occurred, please try again.');
             }
@@ -232,7 +224,7 @@ class MakerController extends Controller
 
     public function makerUpdate(Request $request, $id, ImageUploadService $imageUploadService)
     {
-        // return $request;
+
         $validator = Validator::make($request->all(), [
             'content' => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
@@ -240,9 +232,9 @@ class MakerController extends Controller
             'c2rselect' => 'required',
             'title' => 'required|string|max:255',
             'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
-            // 'subtitle' => 'required|string|max:255',
+
             'forTheCity' => 'required|boolean',
-            // 'isCultureNature' => 'required|boolean',
+
             'tagId' => 'required',
         ]);
 
@@ -250,9 +242,9 @@ class MakerController extends Controller
             DB::beginTransaction();
             try {
                 $currentDateTime = getUserCurrentTime();
-                // Update Chitti record
+
                 $chitti = Chitti::findOrFail($id);
-                // dd($request->action);
+
                 if ($request->action === 'send_to_checker') {
                     $chitti->update([
                         'makerStatus' => 'sent_to_checker',
@@ -263,32 +255,29 @@ class MakerController extends Controller
                         'returnDateToChecker' => $currentDateTime,
                         'makerId' => Auth::guard('admin')->user()->userId,
 
-                        // 'finalStatus'   => 'Null',
                     ]);
                     DB::commit();
 
-                    // Redirect to the checker listing
                     return redirect()->route('admin.maker-listing', $chitti->chittiId)
                         ->with('success', 'Sent to Checker successfully.');
                 } else {
                     $area_id = $request->c2rselect;
                     $areaIdCode = '';
-                    if ($request->geography == 6) { //6 is use for city
+                    if ($request->geography == 6) {
                         $areaIdCode = 'c'.$area_id;
-                    } elseif ($request->geography == 5) { //5 is use for region
+                    } elseif ($request->geography == 5) {
                         $areaIdCode = 'r'.$area_id;
-                    } elseif ($request->geography == 7) { // 7 is use for country
+                    } elseif ($request->geography == 7) {
                         $areaIdCode = 'con'.$area_id;
                     }
                     $chitti->update([
                         'description' => $request->content,
                         'Title' => $request->title,
                         'SubTitle' => $request->subtitle,
-                        // 'checkerStatus' => 'maker_to_checker',
+
                         'makerStatus' => 'sent_to_checker',
                         'makerId' => Auth::guard('admin')->user()->userId,
-                        // 'finalStatus'   => 'Null',
-                        // 'checkerStatus' => 'Null',
+
                         'updated_at' => $currentDateTime,
                         'updated_by' => Auth::guard('admin')->user()->userId,
                         'return_chitti_post_from_checker_id' => 0,
@@ -299,14 +288,12 @@ class MakerController extends Controller
 
                     ]);
 
-                    // Update Facity record
                     Facity::where('from_chittiId', $id)->update([
                         'value' => $request->forTheCity,
                         'updated_at' => $currentDateTime,
                         'updated_by' => Auth::guard('admin')->user()->userId,
                     ]);
 
-                    // Update image if provided
                     if ($request->hasFile('makerImage')) {
                         $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
                         if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
@@ -323,7 +310,7 @@ class MakerController extends Controller
                         ]);
 
                     }
-                    // Update Geography Mapping
+
                     Chittigeographymapping::where('chittiId', $id)->update([
                         'areaId' => $request->c2rselect,
                         'geographyId' => $request->geography,
@@ -331,7 +318,6 @@ class MakerController extends Controller
                         'updated_by' => Auth::guard('admin')->user()->userId,
                     ]);
 
-                    // Update Tag Mapping
                     Chittitagmapping::where('chittiId', $id)->update([
                         'tagId' => $request->tagId,
                         'updated_at' => $currentDateTime,
@@ -371,8 +357,7 @@ class MakerController extends Controller
             });
         }
 
-        // Paginate results
-        $chittis = $query->paginate(30); // Adjust the number of items per page as needed
+        $chittis = $query->paginate(30);
 
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
@@ -395,7 +380,7 @@ class MakerController extends Controller
         }
     }
 
-    public function updateTitle(Request $request) //Code: Vivek Yadav
+    public function updateTitle(Request $request)
     {
 
         $validatedData = $request->validate([
