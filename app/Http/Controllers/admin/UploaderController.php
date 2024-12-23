@@ -23,21 +23,6 @@ use Illuminate\Support\Facades\Validator;
 
 class UploaderController extends Controller
 {
-    // public function indexMain()
-    // {
-    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-    //     ->whereNotNull('Title')
-    //     ->where('Title', '!=', '')
-    //     ->where('uploaderStatus', '!=', '')
-    //     ->where('uploaderStatus', '=', 'sent_to_uploader')
-    //     ->orderByDesc('dateOfCreation')
-    //     // ->where('finalStatus', '=', 'sent_to_uploader')
-    //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
-    //     ->get();
-    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-    //     return view('admin.uploader.uploader-listing', compact('chittis', 'geographyOptions'));
-    // }
-
     public function indexMain(Request $request)
     {
         $search = $request->input('search');
