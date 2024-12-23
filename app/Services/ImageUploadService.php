@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ImageUploadService
 {
-    public function uploadImage($image,$prefix = 'upload', $folder = 'posts')
+    /*public function uploadImage($image,$prefix = 'upload', $folder = 'posts')
     {
 
         try {
@@ -31,5 +31,37 @@ class ImageUploadService
                 'message' => $e->getMessage(),
             ];
         }
+    }*/
+
+    public function uploadImage($file, $prefix = 'upload', $folder = 'posts')
+    {
+        try {
+            $extension = $file->getClientOriginalExtension();
+            $isVideo = in_array($extension, ['mp4', 'avi', 'mov', 'webm']);
+            $subFolder = $isVideo ? 'videos' : 'images'; // Separate folders for videos and images
+
+            $filename = $prefix . '_' . date('F_Y') . '_' . uniqid() . '.' . $extension;
+            $disk = env('FILESYSTEM_DISK', 'local');
+
+            if ($disk === 's3') {
+                $data['path'] = Storage::disk('s3')->putFileAs("$folder/$subFolder", $file, $filename);
+                $data['url'] = Storage::disk('s3')->url($data['path']);
+            } else {
+                $data['path'] = $file->storeAs("$folder/$subFolder", $filename, 'public');
+                $data['url'] = Storage::disk('public')->url($data['path']);
+            }
+
+            return [
+                'storage_driver' => $disk,
+                'path' => $data['path'],
+                'full_url' => $data['url'],
+            ];
+        } catch (Exception $e) {
+            return [
+                'error' => true,
+                'message' => $e->getMessage(),
+            ];
+        }
     }
+
 }

@@ -43,9 +43,9 @@ class UploaderController extends Controller
         $search = $request->input('search');
 
         $chittis = DB::table('chitti as ch')
-        ->select('ch.*','vg.*', 'vCg.*', 'ch.chittiId as chittiId')
-           ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-           ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography') ->whereNotNull('Title')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')->whereNotNull('Title')
             ->where('Title', '!=', '')
             ->where('uploaderStatus', '=', 'sent_to_uploader')
             ->when($search, function ($query, $search) {
@@ -88,9 +88,9 @@ class UploaderController extends Controller
 
         // Fetch Chitti records with relationships and pagination
         $chittis = DB::table('chitti as ch')
-        ->select('ch.*','vg.*', 'vCg.*', 'ch.chittiId as chittiId')
-           ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-           ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($subQuery) use ($search) {
                     $subQuery->where('Title', 'LIKE', "%$search%")
@@ -233,11 +233,13 @@ class UploaderController extends Controller
         $colorOptions = ColorInfo::where('emotionType', 1)->get();
         $readerOptions = ColorInfo::where('emotionType', 0)->get();
         // dd($chitti->readerColor);
-        return view('admin.uploader.uploader-edit', compact('chitti', 'subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras', 'colorOptions', 'readerOptions' ));
+        return view('admin.uploader.uploader-edit', compact('chitti', 'subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras', 'colorOptions', 'readerOptions'));
     }
 
     public function uploaderUpdate(Request $request, $id, ImageUploadService $imageUploadService)
     {
+
+
         $validator = Validator::make($request->all(), [
             'content' => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
@@ -286,11 +288,11 @@ class UploaderController extends Controller
                 $area_id = $request->c2rselect;
                 $areaIdCode = '';
                 if ($request->geography == 6) { //6 is use for city
-                    $areaIdCode = 'c'.$area_id;
+                    $areaIdCode = 'c' . $area_id;
                 } elseif ($request->geography == 5) { //5 is use for region
-                    $areaIdCode = 'r'.$area_id;
+                    $areaIdCode = 'r' . $area_id;
                 } elseif ($request->geography == 7) { // 7 is use for country
-                    $areaIdCode = 'con'.$area_id;
+                    $areaIdCode = 'con' . $area_id;
                 }
                 // Update Chitti record
                 $chitti->update([
@@ -312,23 +314,37 @@ class UploaderController extends Controller
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::guard('admin')->user()->userId,
                 ]);
-                if ($request->hasFile('makerImage')) {
-                    $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
-                    if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
-                        DB::rollBack();
 
-                        return redirect()->back()->with('error', 'Error while image uploading, please try again.');
-                    }
+                if (isset($request->Videourl)) {
 
-                    // Update Chitti Image Mapping
+                    $data = $this->videoPost($request->Videourl);
                     Chittiimagemapping::where('chittiId', $id)->update([
-                        'imageName' => $uploadImage['path'],
-                        'imageUrl' => $uploadImage['full_url'],
-                        'accessUrl' => $uploadImage['path'],
+                        'imageName' => $data['video-image'],
+                        'imageUrl' => $data['video-image'],
+                        'VideoURL' => $data['video-url'],
+                        'VideoId' => $data['video-id'],
+                        'VideoExist' => 1,
                         'updated_at' => $currentDateTime,
                         'updated_by' => Auth::guard('admin')->user()->userId,
                     ]);
+                } else {
+                    if ($request->hasFile('makerImage')) {
+                        $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
+                        if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
+                            DB::rollBack();
+
+                            return redirect()->back()->with('error', 'Error while image uploading, please try again.');
+                        }
+                        Chittiimagemapping::where('chittiId', $id)->update([
+                            'imageName' => $uploadImage['path'],
+                            'imageUrl' => $uploadImage['full_url'],
+                            'accessUrl' => $uploadImage['path'],
+                            'updated_at' => $currentDateTime,
+                            'updated_by' => Auth::guard('admin')->user()->userId,
+                        ]);
+                    }
                 }
+
 
                 // Update Geography Mapping
                 Chittigeographymapping::where('chittiId', $id)->update([
@@ -345,12 +361,23 @@ class UploaderController extends Controller
                     'updated_by' => Auth::guard('admin')->user()->userId,
                 ]);
 
-                return redirect()->route('admin.uploader-listing', ['id' => $chitti->chittiId])->with('success', 'Uploader updated successfully.');
+                return redirect()->back()->with('success', 'Uploader updated successfully.');
             }
         } else {
             return redirect()->back()
                 ->withInput()
                 ->withErrors($validator);
         }
+    }
+
+    private function videoPost($vidUrl)
+    {
+        parse_str(parse_url($vidUrl, PHP_URL_QUERY), $queryParams);
+        $data['video-id'] = $queryParams['v'] ?? null;
+        $data['video-url'] = '<iframe width="100%" height="500" src="https://www.youtube.com/embed/' . $data['video-id'] . '"
+        title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
+        $data['video-image'] = 'https://img.youtube.com/vi/' . $data['video-id'] . '/0.jpg';
+        return $data;
     }
 }
