@@ -55,8 +55,7 @@ class UploaderController extends Controller
                 });
             })
             ->whereNotIn('finalStatus', ['deleted'])
-            ->orderByDesc(DB::raw("STR_TO_DATE(CreateDate, '%Y-%m-%d')"))
-            // ->select('chittiId', 'Title', 'SubTitle', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
+            ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%Y-%m-%d')"))
             ->paginate(30); // Adjust the number per page
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
