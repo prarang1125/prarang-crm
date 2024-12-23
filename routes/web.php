@@ -56,7 +56,7 @@ Route::group(['prefix' => 'accounts'], function () {
 
         Route::put('/maker/acc-maker-update/{id}', [AccMakerController::class, 'accMakerUpdate'])->name('accounts.acc-maker-update');
 
-        Route::post('/maker/acc-maker-update-title', [MakerController::class, 'updateTitle'])->name('update.title');
+        Route::post('/maker/acc-maker-update-title', [AccMakerController::class, 'updateTitle'])->name('accupdate.title');
         //this method is use for account maker listing end
 
         // Routes for Makers
@@ -94,8 +94,6 @@ Route::group(['prefix' => 'accounts'], function () {
         //     Route::get('/checker/dashboard', [ChekerController::class, 'index'])->name('checker.dashboard');
         //     // Route::get('/checker/profile', [ChekerController::class, 'profile'])->name('checker.profile');
         // });
-
-        Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('update.title');
 
         //this method is use for account uploader listing start
         Route::get('/uploader/dashboard', [AccUploaderController::class, 'accIndexMain'])->name('accounts.uploader-dashboard');
@@ -309,6 +307,7 @@ Route::group(['prefix' => 'admin'], function () {
         //show the listing of rejected maker start
         Route::get('/maker/chitti-rejected-from-checker-listing', [MakerController::class, 'chittiListReturnFromCheckerL'])->name('admin.post-return-from-checker-listing');
         //show the listing of rejected maker end
+        // Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('admin.update.title');
         Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('update.title');
         // Portal ->Vivek
         Route::resource('portal', PortalController::class);

@@ -121,16 +121,13 @@
                                         <td class="">{{ $chitti->dateOfCreation }}</td>
                                         <td>
                                             @if (array_key_exists($chitti->geographyId, config('geography')))
-                                                {{ config('geography')[$chitti->geographyId]}}
+                                                {{ config('geography')[$chitti->geographyId] }}
                                             @endif
                                         </td>
                                         <td>
-                                            {{ $chitti->geography  }}
+                                            {{ $chitti->geography }}
                                         </td>
-                                        @endforeach
                                         <td>{{ $chitti->makerStatus }}</td>
-
-
                                         <td class="">
                                             @if ($chitti->checkerStatus != 'maker_to_checker' && $chitti->checkerStatus != 'sent_to_uploader')
                                                 <a href="{{ route('accounts.acc-maker-edit', $chitti->chittiId) }}"
@@ -140,8 +137,6 @@
                                             @else
                                                 <x-post.maker.change-title :chittiId="$chitti->chittiId" />
                                             @endif
-
-                                            {{-- <a href="{{ route('admin.maker-update', $chitti->chittiId) }}" class="btn btn-sm btn-primary update-user mt-3">Send to checker</a> --}}
                                         </td>
                                     </tr>
                                     @php $index++; @endphp

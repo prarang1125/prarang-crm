@@ -25,7 +25,7 @@ use App\Models\Chittitagmapping;
 class AccMakerController extends Controller
 {
     #this method is use for show the listing of maker
-    public function index(Request $request)
+    /*public function index(Request $request)
     {
         $search = $request->input('search'); // Get the search query from the request
 
@@ -50,7 +50,40 @@ class AccMakerController extends Controller
             ->paginate(30); // Change '10' to the number of items per page
 
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
+         dd("your data is here");
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        return view('accounts.maker.acc-maker-listing', compact('chittis', 'geographyOptions', 'notification'));
+    }*/
+
+     public function index(Request $request)
+    {
+        $search = $request->input('search');
+
+        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
+        $cacheDuration = 180; // Cache duration in minutes
+        $chittis = DB::table('chitti as ch')
+        ->select('ch.*','vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+           ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+           ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+           ->when($search, function ($query, $search) {
+               $query->where(function ($q) use ($search) {
+                   $q->where('Title', 'LIKE', '%' . $search . '%')
+                       ->orWhere('SubTitle', 'LIKE', '%' . $search . '%')
+                       ->orWhere('createDate', 'LIKE', '%' . $search . '%');
+               });
+           })
+            // ->where('ch.chittiId' , 11383    )
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->where('makerStatus', '=', 'sent_to_checker')
+            ->where('finalStatus', '!=', 'deleted')
+            ->orderByDesc('ch.chittiId')
+            ->paginate(30);
+        // Change '30' to the number of items per page
+        // });
+        $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
+        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+
         return view('accounts.maker.acc-maker-listing', compact('chittis', 'geographyOptions', 'notification'));
     }
 

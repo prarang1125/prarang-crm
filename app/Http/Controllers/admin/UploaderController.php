@@ -67,19 +67,19 @@ class UploaderController extends Controller
 
     //this method is use for show the listing of maker
     // public function index($id)
-    // {
-    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-    //     ->where('chittiId', $id)
-    //     ->whereNotNull('Title')
-    //     ->where('Title', '!=', '')
-    //     ->where('uploaderStatus', '!=', '')
-    //     ->where('uploaderStatus', '=', 'sent_to_uploader')
-    //     // ->where('finalStatus', '=', 'approved')
-    //     // ->where('finalStatus', '=', 'sent_to_uploader')
-    //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus','uploaderStatus')
-    //     ->get();
-    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-    //     return view('admin.uploader.uploader-listing', compact('chittis', 'geographyOptions'));
+        // {
+        //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        //     ->where('chittiId', $id)
+        //     ->whereNotNull('Title')
+        //     ->where('Title', '!=', '')
+        //     ->where('uploaderStatus', '!=', '')
+        //     ->where('uploaderStatus', '=', 'sent_to_uploader')
+        //     // ->where('finalStatus', '=', 'approved')
+        //     // ->where('finalStatus', '=', 'sent_to_uploader')
+        //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus','uploaderStatus')
+        //     ->get();
+        //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        //     return view('admin.uploader.uploader-listing', compact('chittis', 'geographyOptions'));
     // }
 
     public function index(Request $request)
@@ -316,7 +316,7 @@ class UploaderController extends Controller
                 ]);
 
                 if (isset($request->Videourl)) {
-
+                    // dd($request->Videourl);
                     $data = $this->videoPost($request->Videourl);
                     Chittiimagemapping::where('chittiId', $id)->update([
                         'imageName' => $data['video-image'],
@@ -328,13 +328,15 @@ class UploaderController extends Controller
                         'updated_by' => Auth::guard('admin')->user()->userId,
                     ]);
                 } else {
+                    dd('data2');
+                    dd($request->Videourl);
                     if ($request->hasFile('makerImage')) {
                         $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
                         if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
                             DB::rollBack();
 
                             return redirect()->back()->with('error', 'Error while image uploading, please try again.');
-                        }
+                        }dd('data3');
                         Chittiimagemapping::where('chittiId', $id)->update([
                             'imageName' => $uploadImage['path'],
                             'imageUrl' => $uploadImage['full_url'],
@@ -372,6 +374,7 @@ class UploaderController extends Controller
 
     private function videoPost($vidUrl)
     {
+        // dd($vidUrl);
         parse_str(parse_url($vidUrl, PHP_URL_QUERY), $queryParams);
         $data['video-id'] = $queryParams['v'] ?? null;
         $data['video-url'] = '<iframe width="100%" height="500" src="https://www.youtube.com/embed/' . $data['video-id'] . '"

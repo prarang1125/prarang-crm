@@ -24,7 +24,7 @@ class AccCKEditorController extends Controller
     //     }
     // }
 
-    public function upload(Request $request, ImageUploadService $imageUploadService)
+    public function accUpload(Request $request, ImageUploadService $imageUploadService)
     {
         $prefix = $request->hasHeader('ids') ? $request->header('ids') : date('d');
 

@@ -105,6 +105,7 @@ class MakerController extends Controller
                 $currentDateTime = getUserCurrentTime();
                 $chitti = new Chitti;
                 $area_id = $request->c2rselect;
+                // dd($area_id);
                 $areaIdCode = '';
                 if ($request->geography == 6) { //6 is use for city
                     $areaIdCode = 'c'.$area_id;
@@ -272,14 +273,14 @@ class MakerController extends Controller
                         ->with('success', 'Sent to Checker successfully.');
                 } else {
                     $area_id = $request->c2rselect;
-                    $areaIdCode = '';
-                    if ($request->geography == 6) { //6 is use for city
-                        $areaIdCode = 'c'.$area_id;
-                    } elseif ($request->geography == 5) { //5 is use for region
-                        $areaIdCode = 'r'.$area_id;
-                    } elseif ($request->geography == 7) { // 7 is use for country
-                        $areaIdCode = 'con'.$area_id;
-                    }
+                    // $areaIdCode = '';
+                    // if ($request->geography == 6) { //6 is use for city
+                    //     $areaIdCode = 'c'.$area_id;
+                    // } elseif ($request->geography == 5) { //5 is use for region
+                    //     $areaIdCode = 'r'.$area_id;
+                    // } elseif ($request->geography == 7) { // 7 is use for country
+                    //     $areaIdCode = 'con'.$area_id;
+                    // }
                     $chitti->update([
                         'description' => $request->content,
                         'Title' => $request->title,
@@ -294,7 +295,7 @@ class MakerController extends Controller
                         'return_chitti_post_from_checker_id' => 0,
                         'returnDateToChecker' => $currentDateTime,
                         'cityId' => $area_id,
-                        'areaId' => $areaIdCode,
+                        'areaId' => $area_id,
                         'geographyId' => $request->geography,
 
                     ]);
