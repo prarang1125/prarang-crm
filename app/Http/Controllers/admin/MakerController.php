@@ -44,7 +44,7 @@ class MakerController extends Controller
             ->where('Title', '!=', '')
             ->where('makerStatus', '=', 'sent_to_checker')
             ->where('finalStatus', '!=', 'deleted')
-            ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%Y-%m-%d')"))
+            ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"))
             ->paginate(30);
 
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();

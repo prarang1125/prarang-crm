@@ -118,7 +118,9 @@
                                                 class="text-primary">
                                                 {{ $chitti->Title }}
                                             </a></td>
-                                        <td class="">{{ $chitti->dateOfCreation }}</td>
+                                        <td class="">
+                                            {{ $chitti->dateOfCreation }}
+                                        </td>
 
                                         <td>
                                             @if (array_key_exists($chitti->geographyId, config('geography')))
