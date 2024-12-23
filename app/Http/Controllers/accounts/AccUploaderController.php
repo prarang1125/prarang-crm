@@ -237,6 +237,10 @@ class AccUploaderController extends Controller
 
             $currentDateTime = getUserCurrentTime();
             $chitti = Chitti::findOrFail($id);
+            if (isset($data['reader']) && is_string($data['reader'])) {
+                $reader = json_decode($data['reader'], true);
+                $data['reader'] = $reader['id'] ?? null; // Use the `id` field from the decoded object
+            }
 
             // Update Chitti record with approved
             if ($request->action === 'approvd'){
@@ -284,22 +288,34 @@ class AccUploaderController extends Controller
                 ]);
 
                 // Update image if provided
-                if ($request->hasFile('makerImage')) {
-                    $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
-                    if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
-                        DB::rollBack();
+                if (isset($request->Videourl)) {
 
-                        return redirect()->back()->with('error', 'Error while image uploading, please try again.');
-                    }
-
-                    // Update Chitti Image Mapping
+                    $data = $this->videoPost($request->Videourl);
                     Chittiimagemapping::where('chittiId', $id)->update([
-                        'imageName'     => $uploadImage['path'],
-                        'imageUrl'      => $uploadImage['full_url'],
-                        'accessUrl'     => $uploadImage['path'],
-                        'updated_at'    => $currentDateTime,
-                        'updated_by'    => Auth::user()->userId,
+                        'imageName' => $data['video-image'],
+                        'imageUrl' => $data['video-image'],
+                        'VideoURL' => $data['video-url'],
+                        'VideoId' => $data['video-id'],
+                        'VideoExist' => 1,
+                        'updated_at' => $currentDateTime,
+                        'updated_by' => Auth::user()->userId,
                     ]);
+                } else {
+                    if ($request->hasFile('makerImage')) {
+                        $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
+                        if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
+                            DB::rollBack();
+
+                            return redirect()->back()->with('error', 'Error while image uploading, please try again.');
+                        }
+                        Chittiimagemapping::where('chittiId', $id)->update([
+                            'imageName' => $uploadImage['path'],
+                            'imageUrl' => $uploadImage['full_url'],
+                            'accessUrl' => $uploadImage['path'],
+                            'updated_at' => $currentDateTime,
+                            'updated_by' => Auth::user()->userId,
+                        ]);
+                    }
                 }
 
                 // Update Geography Mapping
@@ -324,5 +340,16 @@ class AccUploaderController extends Controller
                 ->withInput()
                 ->withErrors($validator);
         }
+    }
+
+    private function videoPost($vidUrl)
+    {
+        parse_str(parse_url($vidUrl, PHP_URL_QUERY), $queryParams);
+        $data['video-id'] = $queryParams['v'] ?? null;
+        $data['video-url'] = '<iframe width="100%" height="500" src="https://www.youtube.com/embed/' . $data['video-id'] . '"
+        title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
+        $data['video-image'] = 'https://img.youtube.com/vi/' . $data['video-id'] . '/0.jpg';
+        return $data;
     }
 }
