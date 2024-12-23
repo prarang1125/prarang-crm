@@ -31,6 +31,7 @@ use App\Http\Controllers\admin\UserCountryController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
+// dd(Hash::make('password'));
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
 Route::group(['prefix' => 'accounts'], function () {
     Route::group(['middleware' => 'guest'], function () {
