@@ -55,6 +55,7 @@ class UploaderController extends Controller
                 });
             })
             ->whereNotIn('finalStatus', ['deleted'])
+            ->orderByDesc('chittiId')
             ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%Y-%m-%d')"))
             ->paginate(30); // Adjust the number per page
 
