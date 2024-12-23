@@ -139,6 +139,12 @@
                                                     class="btn btn-sm btn-danger delete-user">Delete</a>
                                             @else
                                                 <x-post.maker.change-title :chittiId="$chitti->chittiId" />
+
+                                                    {{-- @if (Auth::guard('admin')->check())
+                                                        <x-post.maker.change-title :chittiId="$chitti->chittiId" :$route="route('admin.update.title')" />
+                                                    @else
+                                                        <x-post.maker.change-title :chittiId="$chitti->chittiId" :$route="route('account.update.title')" />
+                                                    @endif --}}
                                             @endif
 
                                             {{-- <a href="{{ route('admin.maker-update', $chitti->chittiId) }}" class="btn btn-sm btn-primary update-user mt-3">Send to checker</a> --}}

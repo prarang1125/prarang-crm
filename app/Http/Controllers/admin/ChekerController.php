@@ -132,7 +132,7 @@ class ChekerController extends Controller
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::guard('admin')->user()->userId,
                     'cityId' => $area_id,
-                    'areaId' => $areaIdCode,
+                    'areaId' => $area_id,
                     'geographyId' => $request->geography,
                 ]);
 
@@ -183,6 +183,7 @@ class ChekerController extends Controller
     //this method is use for return from checker to maker with region
     public function checkerChittiReturnMakerRegion(Request $request, $id)
     {
+        // dd($id);
         $cityCode = $request->query('City');
         $checkerId = $request->query('checkerId');
 

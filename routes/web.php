@@ -53,6 +53,17 @@ Route::group(['prefix' => 'accounts'], function () {
 
         Route::put('/maker/acc-maker-update/{id}', [AccMakerController::class, 'accMakerUpdate'])->name('accounts.acc-maker-update');
 
+        Route::post('/maker/acc-maker-update-title', [AccMakerController::class, 'updateTitle'])->name('accupdate.title');
+        //this method is use for account maker listing end
+
+        // Routes for Makers
+        // Route::middleware('role:maker')->group(function () {
+        //     // dd('data is here');
+        //     Route::get('/maker/dashboard', [AccMakerController::class, 'index'])->name('maker.dashboard');
+        //     // Route::get('/maker/profile', [MakerController::class, 'profile'])->name('maker.profile');
+        // });
+
+        //upload image using accounts ck-editor start
         Route::post('/accounts/acc-ckeditor-upload', [AccCKEditorController::class, 'accUpload'])->name('accounts.acc-ckeditor-upload');
 
         Route::get('/maker/acc-chitti-rejected-from-checker-listing', [AccMakerController::class, 'accChittiListReturnFromCheckerL'])->name('accounts.acc-post-return-from-checker-listing');
@@ -66,6 +77,7 @@ Route::group(['prefix' => 'accounts'], function () {
         Route::get('/checker/acc-checker-chitti-return-to-maker-region/{id}', [AccChekerController::class, 'accCheckerChittiReturnMakerRegion'])->name('accounts.acc-checker-chitti-return-to-maker-region');
         Route::put('/checker/acc-chitti-checker-sendtomaker/sendtomaker/{id}', [AccChekerController::class, 'accCheckerChittiSendToMaker'])->name('accounts.acc-chitti-checker-sendtomaker');
 
+        //this method is use for account uploader listing start
         Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('update.title');
 
         Route::get('/uploader/dashboard', [AccUploaderController::class, 'accIndexMain'])->name('accounts.uploader-dashboard');
@@ -233,7 +245,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::put('/checker/chitti-checker-sendtomaker/sendtomaker/{id}', [ChekerController::class, 'checkerChittiSendToMaker'])->name('admin.chitti-checker-sendtomaker');
 
         Route::get('/maker/chitti-rejected-from-checker-listing', [MakerController::class, 'chittiListReturnFromCheckerL'])->name('admin.post-return-from-checker-listing');
-
+        //show the listing of rejected maker end
+        // Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('admin.update.title');
         Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('update.title');
 
         Route::resource('portal', PortalController::class);

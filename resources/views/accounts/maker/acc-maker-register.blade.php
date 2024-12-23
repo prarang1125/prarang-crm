@@ -10,7 +10,7 @@
             <div class="ps-3">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0 p-0">
-                        <li class="breadcrumb-item"><a href="{{ url('/accounts/maker-dashboard')}}"><i
+                        <li class="breadcrumb-item"><a href="{{ url('/accounts/maker-dashboard') }}"><i
                                     class="bx bx-user"></i></a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">Maker Register</li>
