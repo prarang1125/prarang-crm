@@ -118,7 +118,7 @@ class AccMakerController extends Controller
             $chitti->finalStatus = '';
             $chitti->checkerStatus = '';
             $chitti->cityId = $area_id;
-            $chitti->areaId = $areaIdCode;
+            $chitti->areaId = $area_id;
             $chitti->geographyId = $request->geography;
             $chitti->created_at = $currentDateTime;
             $chitti->created_by = Auth::user()->userId;
@@ -295,7 +295,7 @@ class AccMakerController extends Controller
                     'return_chitti_post_from_checker_id' => 0,
                     'returnDateToChecker' => $currentDateTime,
                     'cityId' => $area_id,
-                    'areaId' => $areaIdCode,
+                    'areaId' => $area_id,
                     'geographyId' => $request->geography,
                 ]);
 
@@ -393,5 +393,30 @@ class AccMakerController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('accounts.maker-dashboard')->withErrors(['error' => 'An error occurred while trying to soft delete the listing.']);
         }
+    }
+
+    public function updateTitle(Request $request) //Code: Vivek Yadav
+    {
+
+        $validatedData = $request->validate([
+            'Title' => 'required|string|max:255',
+            'subTitle' => [
+                'required',
+                'regex:/^[a-zA-Z0-9 -]+$/',
+            ],
+            'chittiId' => 'required|integer|exists:chitti,chittiId',
+        ], [
+            'Title.required' => 'The title field is required.',
+            'subTitle.required' => 'The subtitle field is required.',
+            'subTitle.regex' => 'The subtitle must contain only letters and numbers.',
+            'chittiId.required' => 'Chitti ID is required.',
+            'chittiId.exists' => 'The provided Chitti ID does not exist.',
+        ]);
+        $chitti = Chitti::where('chittiId', $validatedData['chittiId'])->firstOrFail();
+        $chitti->Title = $validatedData['Title'];
+        $chitti->subTitle = $validatedData['subTitle'];
+        $chitti->save();
+
+        return redirect()->back()->with('success', 'Post Title Updated Successfully.');
     }
 }
