@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace App\Livewire\Localization;
 
 use Illuminate\Support\Facades\File;
@@ -7,22 +8,26 @@ use Livewire\Component;
 class Portal extends Component
 {
     public $jsonFiles;
+
     public $liveMessage = '';
+
     public $newLanguageCode = '';
+
     public $editingFile = null;
+
     public $fileContent = '';
 
     public function mount()
     {
         $path = resource_path('lang/portals/');
 
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             throw new \Exception("Directory does not exist: {$path}");
         }
 
         $files = collect(scandir($path))
-            ->filter(fn($file) => pathinfo($file, PATHINFO_EXTENSION) === 'json')
-            ->map(fn($file) => [
+            ->filter(fn ($file) => pathinfo($file, PATHINFO_EXTENSION) === 'json')
+            ->map(fn ($file) => [
                 'name' => $file,
                 'path' => str_replace('\\', '/', "{$path}/{$file}"),
                 'content' => json_decode(file_get_contents("{$path}/{$file}"), true),
@@ -37,6 +42,7 @@ class Portal extends Component
 
         if (File::exists($path)) {
             $this->liveMessage = 'This language file already exists!';
+
             return;
         }
 
