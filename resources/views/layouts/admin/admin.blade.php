@@ -10,6 +10,7 @@
     <div class="page-wrapper">
         @yield('content')
         @include('layouts.partial.footer')
+        @livewireScripts
     </div>
 </div>
 @include('layouts.partial.script')
