@@ -26,9 +26,9 @@ class ChekerController extends Controller
 
         $search = $request->input('search');
         $chittis = DB::table('chitti as ch')
-        ->select('ch.*','vg.*', 'vCg.*', 'ch.chittiId as chittiId')
-           ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-           ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
             ->whereNotNull('Title')
             ->where('Title', '!=', '')
             ->where('makerStatus', 'sent_to_checker')
@@ -187,8 +187,7 @@ class ChekerController extends Controller
         $cityCode = $request->query('City');
         $checkerId = $request->query('checkerId');
 
-        $chitti = Chitti::where('areaId', $cityCode)
-            ->where('chittiId', $id)
+        $chitti = Chitti::where('chittiId', $id)
             ->first();
 
         return view('admin.checker.chitti-checker-return-to-maker-with-region', compact('chitti'));
