@@ -39,12 +39,18 @@ class ChekerController extends Controller
                 $query->where('Title', 'LIKE', "%{$search}%")
                     ->orWhereRaw('LOWER(createDate) LIKE ?', ['%'.mb_strtolower($search, 'UTF-8').'%']);
             })
-            ->orderByDesc('dateOfCreation')
+            ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"))
             ->paginate(30);
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
-        return view('admin.checker.checker-listing', compact('chittis', 'geographyOptions'));
+        $notification = Chitti::whereNotNull('uploaderReason')
+        ->where('uploaderReason', '!=', '')
+        ->where('uploaderStatus', 'sent_to_checker')
+        ->where('finalStatus', 'sent_to_checker')
+        ->count();
+
+        return view('admin.checker.checker-listing', compact('chittis', 'geographyOptions', 'notification'));
     }
 
     public function checkerEdit($id)
@@ -83,9 +89,15 @@ class ChekerController extends Controller
             'content' => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
-            'c2rselect' => 'required',
-            'title' => 'required|string|max:255',
-            'subtitle' => 'required|string|max:255',
+            'c2rselect' => [
+            'required',
+            function ($attribute, $value, $fail) {
+                if ($value === 'Select Select') {
+                    $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
+                }
+            }],
+            'title' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'forTheCity' => 'required|boolean',
 
             'tagId' => 'required',
@@ -102,6 +114,7 @@ class ChekerController extends Controller
                     'uploaderStatus' => 'sent_to_uploader',
                     'checkerStatus' => 'sent_to_uploader',
                     'updated_at' => $currentDateTime,
+                    'dateSentToUploader' => $currentDateTime,
                     'updated_by' => Auth::guard('admin')->user()->userId,
 
                 ]);
@@ -219,5 +232,58 @@ class ChekerController extends Controller
         ]);
 
         return redirect('admin/checker/checker-listing')->with('success', 'Chitti Post have been return to maker from checker successfully');
+    }
+
+    public function chittiListReturnFromUploaderL(Request $request)
+    {
+        /*$query = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->where('finalStatus', '!=', 'deleted')
+            ->where('finalStatus', '=', 'sent_to_checker')
+            ->where('uploaderReason', '!=', '')
+            ->where('finalStatus', '=', 'sent_to_checker');
+
+        if ($request->has('search') && $request->input('search') != '') {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('Title', 'LIKE', "%$search%")
+                    ->orWhere('description', 'LIKE', "%$search%");
+            });
+        }
+
+        $chittis = $query->paginate(30);*/
+
+        $search = $request->input('search');
+        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
+        $cacheDuration = 180;
+        $chittis = DB::table('chitti as ch')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')->whereNotNull('Title')
+            ->where('finalStatus', '!=', 'deleted')
+            ->where('finalStatus', '=', 'sent_to_checker')
+            ->where('uploaderReason', '!=', '')
+            ->where('finalStatus', '=', 'sent_to_checker')
+
+            ->when($search, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('Title', 'like', "%{$search}%")
+                        ->orWhere('SubTitle', 'like', "%{$search}%")
+                        ->orWhere('createDate', 'LIKE', '%'.$search.'%');
+                });
+            })
+            // ->orderByDesc('ch.chittiId')
+            ->orderByDesc(DB::raw("STR_TO_DATE(ch.dateOfCreation, '%d-%b-%y %H:%i:%s')"))
+            ->paginate(30); // Adjust the number per page
+
+        $notification = Chitti::whereNotNull('uploaderReason')
+        ->where('uploaderReason', '!=', '')
+        ->where('uploaderStatus', 'sent_to_checker')
+        ->where('finalStatus', 'sent_to_checker')
+        ->count();
+        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+
+        return view('admin.checker.chitti-rejected-from-uploader-listing', compact('geographyOptions', 'notification', 'chittis'));
     }
 }

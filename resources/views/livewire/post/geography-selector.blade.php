@@ -20,5 +20,8 @@
                 </option>
             @endforeach
         </select>
+        @error('c2rselect')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
 </div>

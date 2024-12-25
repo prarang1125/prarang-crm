@@ -71,7 +71,7 @@
                                                 {{ $chitti->Title }}
                                             </a>
                                         </td>
-                                        <td>{{ $chitti->created_at }}</td>
+                                        <td>{{ $chitti->dateSentToUploader }}</td>
                                         <td>
                                             @if (array_key_exists($chitti->geographyId, config('geography')))
                                                 {{ config('geography')[$chitti->geographyId]}}

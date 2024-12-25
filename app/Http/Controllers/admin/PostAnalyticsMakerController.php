@@ -13,12 +13,12 @@ class PostAnalyticsMakerController extends Controller
 {
     //this method is use for show the listing of live city maker
     // public function index()
-    // {
-    //     $mcitys  = Mcity::where('isActive', 1)->get();
-    //     $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
-    //     $chittis = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->get();
+        // {
+        //     $mcitys  = Mcity::where('isActive', 1)->get();
+        //     $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
+        //     $chittis = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->get();
 
-    //     return view('admin.postanalyticsmaker.post-analytics-maker-city-listing', compact('mcitys', 'notification', 'chittis'));
+        //     return view('admin.postanalyticsmaker.post-analytics-maker-city-listing', compact('mcitys', 'notification', 'chittis'));
     // }
 
     public function index(Request $request)
@@ -41,28 +41,90 @@ class PostAnalyticsMakerController extends Controller
     }
 
     //this method is use for show the listing post analytics maker according to city
+    /*public function postAnalyticsMakerListing(Request $request)
+    {
+
+        // Get the cityCode from the request
+        $cityCode = $request->query('cityCode');
+        $numericPart = preg_replace('/[^0-9]/', '', $cityCode);
+        $areaId = (int) $numericPart;
+
+        // $chittis = Chitti::with('city')->where('cityId', $areaId)->get();
+        $search = $request->input('search');
+        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
+        $cacheDuration = 180;
+        $chittis = DB::table('chitti as ch')
+        ->select('ch.*', 'vg.*', 'vCg.*', 'city.*', 'ch.chittiId as chittiId')
+        ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+        ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+        ->join('mcity as city', 'city.cityId', '=',  'ch.areaId')
+        ->where('areaId', $areaId)
+        ->where('finalStatus', 'approved')
+        ->when($search, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('ch.Title', 'like', "%{$search}%")
+                    ->orWhere('ch.SubTitle', 'like', "%{$search}%");
+            });
+        })
+        ->orderByDesc(DB::raw("STR_TO_DATE(ch.dateSentToUploader, '%d-%b-%y %H:%i:%s')"))
+        ->paginate(20)
+        ->appends([
+            'cityCode' => $areaId,
+            'search' => $search,
+        ]);
+        // dd($chittis);
+        // $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
+        return view('admin.postanalyticsmaker.post-analytics-maker-listing', compact('chittis'));
+    }*/
+
     public function postAnalyticsMakerListing(Request $request)
     {
         // Get the cityCode from the request
         $cityCode = $request->query('cityCode');
-        // $numericPart = preg_replace('/[^0-9]/', '', $cityCode);
-        // $areaId = (int) $numericPart;
-        // dd($cityCode);
-        // $chittis = Chitti::with('city')->where('cityId', $areaId)->get();
-        $chittis = Chitti::where('areaId', $cityCode)
-            ->where('finalStatus', 'approved')->paginate(20);
+        $numericPart = preg_replace('/[^0-9]/', '', $cityCode);
+        $areaId = (int) $numericPart;
 
-        // dd($chittis);
-        // $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
+        // Get the search term from the request
+        $search = $request->input('search');
+        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
+
+        // Query the data
+        $chittis = DB::table('chitti as ch')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'city.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->join('mcity as city', 'city.cityId', '=', 'ch.areaId')
+            ->where('areaId', $areaId)
+            ->where('finalStatus', '!=', 'deleted')
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('ch.Title', 'like', "%{$search}%")
+                        ->orWhere('ch.SubTitle', 'like', "%{$search}%");
+                });
+            })
+            ->orderByDesc(DB::raw("STR_TO_DATE(ch.createDate, '%d-%b-%y %H:%i:%s')"))
+            ->paginate(20)
+            ->appends([
+                'cityCode' => $cityCode,
+                'search' => $search,
+            ]);
+
         return view('admin.postanalyticsmaker.post-analytics-maker-listing', compact('chittis'));
     }
+
 
     //this method is use for  show the post analytics maker edit data and page
     public function postAnalyticsMakerEdit(Request $request)
     {
         $cid = $request->query('id');
         $cityCode = $request->query('city');
-        $chitti = Chitti::where('chittiId', $cid)->first();
+
+        $chitti =  DB::table('chitti as ch')
+        ->select('ch.*', 'vg.*', 'vCg.*', 'city.*', 'ch.chittiId as chittiId')
+        ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+        ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+        ->join('mcity as city', 'city.cityId', '=', 'ch.areaId')
+        ->where('ch.chittiId', $cid)->first();
 
         return view('admin.postanalyticsmaker.post-analytics-maker-create', compact('chitti'));
     }
@@ -90,6 +152,8 @@ class PostAnalyticsMakerController extends Controller
             'instagram' => 'nullable|string',
         ]);
 
+        // dd($request->all());
+        $currentDateTime = getUserCurrentTime();
         $chitti = Chitti::findOrFail($id);
         $chitti->update([
             'postViewershipDate' => $request->postViewershipFrom,
@@ -108,6 +172,7 @@ class PostAnalyticsMakerController extends Controller
             'fb_link_click' => $request->facebookLinkClick,
             'postStatusMakerChecker' => 'send_to_post_checker',
             'post_anlytics_rtrn_to_mkr_id' => 1,
+            // 'createDate' => $currentDateTime
         ]);
 
         // Redirect with success message

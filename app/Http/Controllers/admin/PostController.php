@@ -75,7 +75,13 @@ class PostController extends Controller
             'content' => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
-            'c2rselect' => 'required',
+            'c2rselect' => [
+            'required',
+            function ($attribute, $value, $fail) {
+                if ($value === 'Select Select') {
+                    $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
+                }
+            },
             'title' => 'required|string|max:255',
             'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',

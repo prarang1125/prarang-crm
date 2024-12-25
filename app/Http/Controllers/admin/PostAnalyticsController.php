@@ -20,34 +20,35 @@ use App\Models\Makerlebal;
 use App\Models\Mregion;
 use App\Models\Mcity;
 use App\Models\Mcountry;
+use Illuminate\Support\Facades\DB;
 
 class PostAnalyticsController extends Controller
 {
     // public function index()
     // {
-    //     #show the select country city region accrording to giography data
-    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-    //     #Fetch all regions, cities, and countries
-    //     $regions    = Mregion::all();
-    //     $cities     = Mcity::all();
-    //     $countries  = Mcountry::all();
+        //     #show the select country city region accrording to giography data
+        //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        //     #Fetch all regions, cities, and countries
+        //     $regions    = Mregion::all();
+        //     $cities     = Mcity::all();
+        //     $countries  = Mcountry::all();
 
-    //     #show the geography and counry in analytics listing
-    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country', 'likes', 'comments'])
-    //     ->whereNotNull('Title')
-    //     ->where('Title', '!=', '')
-    //     ->select('*')
-    //     ->paginate(10);
+        //     #show the geography and counry in analytics listing
+        //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country', 'likes', 'comments'])
+        //     ->whereNotNull('Title')
+        //     ->where('Title', '!=', '')
+        //     ->select('*')
+        //     ->paginate(10);
 
-    //     #get the all current month date year and
-    //     $startDate  = Carbon::now()->startOfMonth();
-    //     $endDate    = Carbon::now()->endOfMonth();
+        //     #get the all current month date year and
+        //     $startDate  = Carbon::now()->startOfMonth();
+        //     $endDate    = Carbon::now()->endOfMonth();
 
-    //     $dates = [];
-    //     while ($startDate <= $endDate) {
-    //         $dates[] = $startDate->format('d-m-Y');
-    //         $startDate->addDay();
-    //     }
+        //     $dates = [];
+        //     while ($startDate <= $endDate) {
+        //         $dates[] = $startDate->format('d-m-Y');
+        //         $startDate->addDay();
+        //     }
 
     //     return view('admin.postanalytics.post-analytics-listing', compact('dates', 'geographyOptions', 'regions', 'cities', 'countries', 'chittis'));
     // }
@@ -65,10 +66,17 @@ class PostAnalyticsController extends Controller
         $countries = Mcountry::all();
 
         # Initialize base query
-        $chittisQuery = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country', 'likes', 'comments'])
-            ->whereNotNull('Title')
-            ->where('Title', '!=', '')
-            ->select('*');
+        // $chittisQuery = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country', 'likes', 'comments'])
+        //     ->whereNotNull('Title')
+        //     ->where('Title', '!=', '')
+        //     ->select('*');
+
+        $chittisQuery = DB::table('chitti as ch')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId', 'like.*', 'comment.*')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->join('chittilike as like', 'like.chittiId', '=', 'ch.chittiId')
+            ->join('chitticomment as comment', 'comment.chittiId', '=', 'ch.chittiId');
 
         # Search functionality
         if ($request->has('search') && !empty($request->search)) {
@@ -84,8 +92,8 @@ class PostAnalyticsController extends Controller
         }
 
         # Paginate results
-        $chittis = $chittisQuery->paginate(20);
-
+        $chittis = $chittisQuery->paginate(2);
+        dd($chittis);
         # Get the current month dates for the date picker
         $startDate = Carbon::now()->startOfMonth();
         $endDate = Carbon::now()->endOfMonth();
