@@ -83,7 +83,7 @@
                                                 {{ $chitti->Title }}
                                             </a>
                                         </td>
-                                        <td> {{ $chitti->created_at }}</td>
+                                        <td> {{ $chitti->dateOfReturnToChecker }}</td>
                                         <td>
                                             @if (array_key_exists($chitti->geographyId, config('geography')))
                                                 {{ config('geography')[$chitti->geographyId]}}
@@ -92,9 +92,7 @@
                                         <td>
                                             {{ $chitti->geography  }}
                                         </td>
-                                        @if ($chitti->uploaderStatus == 'sent_to_uploader')
-                                            <td>{{ $chitti->uploaderStatus }}</td>
-                                        @elseif ($chitti->uploaderStatus == 'sent_to_uploader')
+                                        @if ($chitti->uploaderStatus == 'sent_to_checker')
                                             <td>{{ $chitti->uploaderStatus }}</td>
                                         @else
                                             <td>{{ $chitti->checkerStatus }}</td>

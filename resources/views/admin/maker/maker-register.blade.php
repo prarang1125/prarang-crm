@@ -197,9 +197,9 @@
                                         style="display:none; background-color: #339933;color: #fff;">Flora</a>
                                 </li>
                             </ul>
-                            @error('tagId')
-                                <p class="invalid-feedback" style="color: red; font-size: 0.875em;">{{ $message }}</p>
-                            @enderror
+                            {{-- @error('tagId')
+                                <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                            @enderror --}}
                             <div class="tab-content">
                                 <!-- Content for Culture Tab 1 (Timelines) -->
                                 <div class="tab-pane fade show active" id="cultureTab1" role="tabpanel">
@@ -222,6 +222,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <!-- Content for Man And His Senses -->
                                 <div class="tab-pane fade" id="cultureTab2" role="tabpanel">
@@ -245,6 +248,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Man And His Inventions -->
@@ -269,6 +275,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Nature (Geography, Flora, etc.) -->
@@ -294,6 +303,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <div class="tab-pane fade" id="natureTab2" role="tabpanel">
@@ -317,6 +329,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <div class="tab-pane fade" id="natureTab3" role="tabpanel">
@@ -341,7 +356,9 @@
                                             </div>
                                         @endforeach
                                     </div>
-
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
                         </div>

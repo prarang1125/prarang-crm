@@ -79,13 +79,20 @@ class MakerController extends Controller
             'content' => 'required|string',
             'makerImage' => 'required|image|max:2048',
             'geography' => 'required',
-            'c2rselect' => 'required',
-            'title' => 'required|string|max:255',
+            'title' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
 
             'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'forTheCity' => 'required|boolean',
 
             'tagId' => 'required',
+            'c2rselect' => [
+            'required',
+            function ($attribute, $value, $fail) {
+                if ($value === 'Select Select') {
+                    $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
+                }
+            },
+        ],
 
         ]);
 
@@ -230,13 +237,20 @@ class MakerController extends Controller
             'content' => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
-            'c2rselect' => 'required',
-            'title' => 'required|string|max:255',
+            'title' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
 
             'forTheCity' => 'required|boolean',
 
             'tagId' => 'required',
+            'c2rselect' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if ($value === 'Select Select') {
+                        $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
+                    }
+                },
+            ]
         ]);
 
         if ($validator->passes()) {
@@ -385,7 +399,10 @@ class MakerController extends Controller
     {
 
         $validatedData = $request->validate([
-            'Title' => 'required|string|max:255',
+            'Title' => [
+                'required',
+                'regex:/^[a-zA-Z0-9 -]+$/',
+            ],
             'subTitle' => [
                 'required',
                 'regex:/^[a-zA-Z0-9 -]+$/',
@@ -393,6 +410,7 @@ class MakerController extends Controller
             'chittiId' => 'required|integer|exists:chitti,chittiId',
         ], [
             'Title.required' => 'The title field is required.',
+            'Title.regex' => 'must contain only letters and numbers.',
             'subTitle.required' => 'The subtitle field is required.',
             'subTitle.regex' => 'The subtitle must contain only letters and numbers.',
             'chittiId.required' => 'Chitti ID is required.',

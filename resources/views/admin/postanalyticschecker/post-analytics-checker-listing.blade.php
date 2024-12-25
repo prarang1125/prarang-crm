@@ -53,23 +53,23 @@
                                         <a class="text-primary">{{$chitti->Title}}
                                         </a>
                                     </td>
-                                    <td class="">{{ $muserMaker ?? 'N/A' }} </td>
-                                    <td class="">{{ \Carbon\Carbon::parse($chitti->created_at)->format('Y-m-d') }}</td>
-                                    <td class="">{{ (int) \Carbon\Carbon::parse($chitti->created_at)->diffInDays(now()) }}</td>
-                                    <td class="">{{ $chitti->city->cityNameInEnglish ?? 'N/A' }} </td>
+                                    <td class="">{{ $chitti->firstName . ' ' . $chitti->lastName ?? 'N/A' }}</td>
+                                    <td class="">{{ \Carbon\Carbon::parse($chitti->createDate)->format('Y-m-d') }}</td>
+                                    <td class="">{{ (int) \Carbon\Carbon::parse($chitti->createDate)->diffInDays(now()) }}</td>
+                                    <td class="">{{ $chitti->citynameInEnglish ?? 'N/A' }} </td>
                                     <td class="">{{ 'N/A' }} </td>
                                     <td class="">{{ $chitti->totalViewerCount }}</td>
 
                                     @if ($chitti->postStatusMakerChecker == 'approved')
                                         <td class="">
-                                            <a href="{{ route('admin.post-analytics-checker-edit', ['id' => $chitti->chittiId, 'city' => $chitti->city->cityCode ?? 'N/A']) }}" class="text-primary">
+                                            <a href="{{ route('admin.post-analytics-checker-edit', ['id' => $chitti->chittiId, 'city' => $chitti->cityCode ?? 'N/A']) }}" class="text-primary">
                                                 {{ 'Approved' }}
                                             </a>
                                             {{-- <span class="custom-approved">{{ 'Approved' }}</span> --}}
                                         </td>
                                     @else
                                     <td class="">
-                                        <a href="{{ route('admin.post-analytics-checker-edit', ['id' => $chitti->chittiId, 'city' => $chitti->city->cityCode ?? 'N/A']) }}" class="text-primary">
+                                        <a href="{{ route('admin.post-analytics-checker-edit', ['id' => $chitti->chittiId, 'city' => $chitti->cityCode ?? 'N/A']) }}" class="text-primary">
                                             {{ 'Review' }}
                                         </a>
                                     </td>

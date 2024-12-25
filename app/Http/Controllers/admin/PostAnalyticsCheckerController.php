@@ -30,12 +30,48 @@ class PostAnalyticsCheckerController extends Controller
     //this method is use for show the listing of post anlytics checker
     public function postAnalyticsCheckerListing(Request $request)
     {
-        $cityCode = $request->query('cityCode');
-        $chittis = Chitti::where('areaId', $cityCode)
+        /*$cityCode = $request->query('cityCode');
+        $numericPart = preg_replace('/[^0-9]/', '', $cityCode);
+        $areaId = (int) $numericPart;
+
+        $chittis = Chitti::where('areaId', $areaId)
             ->whereIn('postStatusMakerChecker', ['send_to_post_checker', 'approved'])
-            ->where('post_anlytics_rtrn_to_mkr_id', 1)
-            ->get();
-        foreach ($chittis as $chitti) {
+            // ->where('post_anlytics_rtrn_to_mkr_id', 1)
+            ->get();*/
+
+        // Get the cityCode from the request
+        $cityCode = $request->query('cityCode');
+        $numericPart = preg_replace('/[^0-9]/', '', $cityCode);
+        $areaId = (int) $numericPart;
+
+        // Get the search term from the request
+        $search = $request->input('search');
+        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
+
+        // Query the data
+        $chittis = DB::table('chitti as ch')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'city.*', 'user.*',  'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->join('mcity as city', 'city.cityId', '=', 'ch.areaId')
+            ->join('muser as user', 'user.userId', '=', 'ch.analyticsMaker')
+            ->where('areaId', $areaId)
+            ->whereIn('postStatusMakerChecker', ['send_to_post_checker', 'approved'])
+            // ->where('finalStatus', '!=', 'deleted')
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('ch.Title', 'like', "%{$search}%")
+                        ->orWhere('ch.SubTitle', 'like', "%{$search}%");
+                });
+            })
+            ->orderByDesc(DB::raw("STR_TO_DATE(ch.createDate, '%d-%b-%y %H:%i:%s')"))
+            ->paginate(20)
+            ->appends([
+                'cityCode' => $cityCode,
+                'search' => $search,
+            ]);
+
+        /*foreach ($chittis as $chitti) {
             $anlyticsMaker = $chitti->analyticsMaker;
         }
 
@@ -45,17 +81,36 @@ class PostAnalyticsCheckerController extends Controller
             foreach ($musers as $username) {
                 $muserMaker = $username->firstName.' '.$username->lastName;
             }
-        }
+        }*/
 
-        return view('admin.postanalyticschecker.post-analytics-checker-listing', compact('chittis', 'muserMaker'));
+        return view('admin.postanalyticschecker.post-analytics-checker-listing', compact('chittis'));
     }
 
     public function postAnalyticsChckerEdit(Request $request)
     {
         $cid = $request->query('id');
-        $cityCode = $request->query('city');
-        $chitti = Chitti::where('chittiId', $cid)->first();
+        // $cityCode = $request->query('city');
 
+        // $chitti = Chitti::where('chittiId', $cid)->first();
+
+        $cityCode = $request->query('cityCode');
+        $numericPart = preg_replace('/[^0-9]/', '', $cityCode);
+        $areaId = (int) $numericPart;
+
+        // Get the search term from the request
+        $search = $request->input('search');
+        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
+
+        // Query the data
+        $chitti =  DB::table('chitti as ch')
+        ->select('ch.*', 'vg.*', 'vCg.*', 'user.*', 'city.*', 'ch.chittiId as chittiId')
+        ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+        ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+        ->join('mcity as city', 'city.cityId', '=', 'ch.areaId')
+        ->join('muser as user', 'user.userId', '=', 'ch.analyticsMaker')
+        ->where('ch.chittiId', $cid)->first();
+
+        // dd($chitti);
         return view('admin.postanalyticschecker.post-analytics-checker-edit', compact('chitti'));
     }
 

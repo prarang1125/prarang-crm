@@ -25,8 +25,10 @@ class UploaderController extends Controller
 {
     public function indexMain(Request $request)
     {
+        // dd('your data is here');
         $search = $request->input('search');
-
+        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
+        $cacheDuration = 180;
         $chittis = DB::table('chitti as ch')
             ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
             ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
@@ -36,12 +38,13 @@ class UploaderController extends Controller
             ->when($search, function ($query, $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('Title', 'like', "%{$search}%")
-                        ->orWhere('SubTitle', 'like', "%{$search}%");
+                        ->orWhere('SubTitle', 'like', "%{$search}%")
+                        ->orWhere('createDate', 'LIKE', '%'.$search.'%');
                 });
             })
             ->whereNotIn('finalStatus', ['deleted'])
             ->orderByDesc('ch.chittiId')
-            ->orderByDesc(DB::raw("STR_TO_DATE(ch.dateOfCreation, '%Y-%m-%d')"))
+            ->orderByDesc(DB::raw("STR_TO_DATE(ch.dateSentToUploader, '%d-%b-%y %H:%i:%s')"))
             ->paginate(30); // Adjust the number per page
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
@@ -68,22 +71,29 @@ class UploaderController extends Controller
 
     public function index(Request $request)
     {
+        // dd('your data is here');
         $search = $request->input('search');
-
-        // Fetch Chitti records with relationships and pagination
+        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
+        $cacheDuration = 180;
         $chittis = DB::table('chitti as ch')
             ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
             ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
-            ->when($search, function ($query) use ($search) {
-                $query->where(function ($subQuery) use ($search) {
-                    $subQuery->where('Title', 'LIKE', "%$search%")
-                        ->orWhere('SubTitle', 'LIKE', "%$search%")
-                        ->orWhere('metaTag', 'LIKE', "%$search%");
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->whereIn('uploaderStatus', ['sent_to_uploader', 'approved'])
+            ->when($search, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('Title', 'like', "%{$search}%")
+                        ->orWhere('SubTitle', 'like', "%{$search}%")
+                        ->orWhere('createDate', 'LIKE', '%'.$search.'%');
                 });
             })
-            ->where('uploaderStatus', '=', 'sent_to_uploader')
-            ->paginate(30); // Adjust the number of items per page
+            ->whereNotIn('finalStatus', ['deleted', 'sent_to_checker'])
+            ->orderByDesc('ch.chittiId')
+            ->orderByDesc(DB::raw("STR_TO_DATE(ch.dateOfCreation, '%d-%b-%y %H:%i:%s')"))
+            ->paginate(30); // Adjust the number per page
+
+        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
         // Fetch geography options
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
@@ -118,7 +128,13 @@ class UploaderController extends Controller
             'content'   => 'required|string|max:1000',
             'makerImage' => 'required|image|max:2048',
             'geography' => 'required',
-            'c2rselect' => 'required',
+            'c2rselect' => [
+            'required',
+            function ($attribute, $value, $fail) {
+                if ($value === 'Select Select') {
+                    $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
+                }
+            },
             'title'     => 'required|string|max:255',
             'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
@@ -228,9 +244,15 @@ class UploaderController extends Controller
             'content' => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
-            'c2rselect' => 'required',
-            'title' => 'required|string|max:255',
-            'subtitle' => 'required|string|max:255',
+            'c2rselect' => [
+            'required',
+            function ($attribute, $value, $fail) {
+                if ($value === 'Select Select') {
+                    $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
+                }
+            }],
+            'title' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'forTheCity' => 'required|boolean',
             // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
@@ -265,6 +287,7 @@ class UploaderController extends Controller
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::guard('admin')->user()->userId,
                     'dateOfApprove' => Carbon::parse($currentDateTime)->format('d-m-Y g:i A'),
+                    'uploaderId' => Auth::guard('admin')->user()->userId,
                 ]);
 
                 return redirect()->route('admin.uploader-listing', ['id' => $chitti->chittiId])->with('success', 'Uploader updated successfully.');
@@ -283,8 +306,10 @@ class UploaderController extends Controller
                     'description' => $request->content,
                     'Title' => $request->title,
                     'SubTitle' => $request->subtitle,
+                    'dateSentToUploader' => $currentDateTime,
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::guard('admin')->user()->userId,
+                    'uploaderId' => Auth::guard('admin')->user()->userId,
                     'cityId' => $area_id,
                     'areaId' => $area_id,
                     'geographyId' => $request->geography,
@@ -312,8 +337,6 @@ class UploaderController extends Controller
                         'updated_by' => Auth::guard('admin')->user()->userId,
                     ]);
                 } else {
-                    dd('data2');
-                    dd($request->Videourl);
                     if ($request->hasFile('makerImage')) {
                         $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
                         if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
@@ -357,7 +380,7 @@ class UploaderController extends Controller
 
     private function videoPost($vidUrl)
     {
-        // dd($vidUrl);
+
         parse_str(parse_url($vidUrl, PHP_URL_QUERY), $queryParams);
         $data['video-id'] = $queryParams['v'] ?? null;
         $data['video-url'] = '<iframe width="100%" height="500" src="https://www.youtube.com/embed/'.$data['video-id'].'"
@@ -366,5 +389,43 @@ class UploaderController extends Controller
         $data['video-image'] = 'https://img.youtube.com/vi/'.$data['video-id'].'/0.jpg';
 
         return $data;
+    }
+
+    //this method is use for return from uploader to checker with region
+    public function uploaderChittiReturnCheckerRegion(Request $request, $id)
+    {
+        // dd($id);
+        $cityCode = $request->query('City');
+        $checkerId = $request->query('checkerId');
+
+        $chitti = Chitti::where('chittiId', $id)
+            ->first();
+
+        return view('admin.uploader.chitti-uploader-return-to-checker-with-region', compact('chitti'));
+    }
+
+    //this method is use for update eturn from checker to maker with region
+    public function uploaderChittiSendToChecker(Request $request, $id)
+    {
+        // dd('your data is here');
+        $checkerId = $request->query('checkerId');
+        $City = $request->query('City');
+        $currentDate = date('d-M-y H:i:s');
+
+        $validated = $request->validate([
+            'returnChittiToCheckerWithRegion' => 'required|string',
+        ]);
+        // dd($request->returnChittiToCheckerWithRegion);
+        $chitti = Chitti::findOrFail($id);
+        $chitti->update([
+            'uploaderStatus' => 'sent_to_checker',
+            'checkerStatus'  => '',
+            'uploaderId'     => Auth::guard('admin')->user()->userId,
+            'uploaderReason' => $request->returnChittiToCheckerWithRegion,
+            'dateOfReturnToChecker' => $currentDate,
+            'finalStatus'     => 'sent_to_checker',
+        ]);
+
+        return redirect('admin/uploader/uploader-listing')->with('success', 'Chitti Post have been return to checker from Uploader successfully');
     }
 }

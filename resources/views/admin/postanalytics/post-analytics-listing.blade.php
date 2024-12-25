@@ -118,33 +118,18 @@
                                 <tr>
                                     {{-- <td class="">{{ $date }}</td> --}}
                                     <td class="">{{ $index }}</td>
-                                    @foreach ($chitti->geographyMappings as $mapping)
-                                        @php
-                                            $option = $geographyOptions->firstWhere('id', $mapping->geographyId);
-                                        @endphp
-                                        <td data-gmid="{{ $mapping->geographyId }}">
-                                            @if($option)
-                                                {{ $option->labelInEnglish }}
-                                            @else
-                                                {{ $mapping->geographyId }}
-                                            @endif
-                                        </td>
-                                        <td data-areaid="{{ $mapping->areaId }}">
-                                            @if ($mapping->geographyId == 5 && $mapping->region)
-                                                {{ $mapping->region->regionnameInEnglish }} <!-- Show region name -->
-                                            @elseif ($mapping->geographyId == 6 && $mapping->city)
-                                                {{ $mapping->city->cityNameInEnglish }} <!-- Show city name -->
-                                            @elseif ($mapping->geographyId == 7 && $mapping->country)
-                                                {{ $mapping->country->countryNameInEnglish }} <!-- Show country name -->
-                                            @else
-                                                {{ $mapping->areaId }} <!-- Fallback to areaId if no match -->
-                                            @endif
-                                        </td>
-                                    @endforeach
+                                    <td>
+                                        @if (array_key_exists($chitti->geographyId, config('geography')))
+                                            {{ config('geography')[$chitti->geographyId]}}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{ $chitti->geography  }}
+                                    </td>
                                     <td class="">{{ $chitti->makerId ?? 0 }}</td>
                                     <td class="">{{ $chitti->checkerId ?? 0 }}</td>
                                     <td class="">{{ $chitti->uploaderId ?? 0 }} </td>
-                                    <td class="">{{ $chitti->comments->count() ?? 0 }}
+                                    <td class="">{{ $chitti->comment->count() ?? 0 }}
                                     <td class="">{{ $chitti->likes->count() ?? 0 }}</td>
                                     <td class="">{{ $chitti->prarangApplication ?? 0 }}</td>
                                     <td class="">{{ $chitti->SubTitle ?? '--' }}</td>
@@ -188,7 +173,7 @@
             options = regions.map(region => `<option value="${region.regionId}">${region.regionnameInEnglish}</option>`);
             label = 'Select Region';
         } else if (selectedValue == 6) { // City selected
-            options = cities.map(city => `<option value="${city.cityId}">${city.cityNameInEnglish}</option>`);
+            options = cities.map(city => `<option value="${city.cityId}">${city.citynameInEnglish}</option>`);
             label = 'Select City';
         } else if (selectedValue == 7) { // Country selected
             options = countries.map(country => `<option value="${country.countryId}">${country.countryNameInEnglish}</option>`);
