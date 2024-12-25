@@ -27,7 +27,19 @@
                         {{ session('success') }}
                     </div>
                 @endif
-                <h6 class="mb-0 text-uppercase">Checker Listing</h6>
+                <!-- <h6 class="mb-0 text-uppercase">Checker Listing</h6>
+                <hr /> -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 text-uppercase">Checker Listing</h6>
+                    <a class="nav-link dropdown-toggle-nocaret position-relative btn btn-outline-primary p-1"
+                        href="{{ route('admin.post-return-from-uploader-listing') }}" role="button">
+                        @if ($notification > 0)
+                            {{-- <span class="alert-count"></span> --}}
+                            <span class="alert-count">{{ $notification }}</span>
+                        @endif
+                        <i class="bx bx-bell"></i>
+                    </a>
+                </div>
                 <hr />
                 <div class="card">
                     <div class="card-body d-flex justify-content-end align-items-end">

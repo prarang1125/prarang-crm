@@ -51,7 +51,7 @@
 
                         <div class="col-md-2">
                             <label for="uploadDate" class="form-label">Upload Date</label>
-                            <input type="text" class="form-control  @error('uploadDate') is-invalid @enderror" id="uploadDate" name="uploadDate" value="{{ old('uploadDate', \Carbon\Carbon::parse($chitti->created_at)->format('Y-m-d') ?? '') }}" readonly>
+                            <input type="text" class="form-control  @error('uploadDate') is-invalid @enderror" id="uploadDate" name="uploadDate" value="{{ old('uploadDate', \Carbon\Carbon::parse($chitti->createDate)->format('Y-m-d') ?? '') }}" readonly>
                             @error('uploadDate')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -59,7 +59,7 @@
 
                         <div class="col-md-2">
                             <label for="numberOfDays" class="form-label">Number of Days</label>
-                            <input type="text" class="form-control  @error('numberOfDays') is-invalid @enderror" id="numberOfDays" name="numberOfDays" value="{{ old('numberOfDays', (int) \Carbon\Carbon::parse($chitti->created_at ?? now())->diffInDays(now())) }}" readonly>
+                            <input type="text" class="form-control  @error('numberOfDays') is-invalid @enderror" id="numberOfDays" name="numberOfDays" value="{{ old('numberOfDays', (int) \Carbon\Carbon::parse($chitti->createDate ?? now())->diffInDays(now())) }}" readonly>
                             @error('numberOfDays')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -67,7 +67,7 @@
 
                         <div class="col-md-3">
                             <label for="nameOfCity" class="form-label">Name of City</label>
-                            <input type="text" class="form-control  @error('nameOfCity') is-invalid @enderror" id="nameOfCity" name="nameOfCity" value="{{ old('nameOfCity', $chitti->city->cityNameInEnglish ?? 'N/A') }}" readonly>
+                            <input type="text" class="form-control  @error('nameOfCity') is-invalid @enderror" id="nameOfCity" name="nameOfCity" value="{{ old('nameOfCity', $chitti->citynameInEnglish ?? 'N/A') }}" readonly>
                             @error('nameOfCity')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
@@ -91,7 +91,7 @@
                         </div>
                         <div class="col-md-3">
                             <label for="postViewershipFrom" class="form-label">Post Viewership From</label>
-                            <input type="text" class="form-control  @error('postViewershipFrom') is-invalid @enderror" id="postViewershipFrom" name="postViewershipFrom" value="{{ old('postViewershipFrom', \Carbon\Carbon::parse($chitti->created_at)->format('Y-m-d') ?? '') }}" readonly>
+                            <input type="text" class="form-control  @error('postViewershipFrom') is-invalid @enderror" id="postViewershipFrom" name="postViewershipFrom" value="{{ old('postViewershipFrom', \Carbon\Carbon::parse($chitti->createDate)->format('Y-m-d') ?? '') }}" readonly>
                             @error('postViewershipFrom')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror

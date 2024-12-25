@@ -98,12 +98,12 @@
 
                                         <td class="">
                                             {{-- <a href="{{ route('admin.checker-listing', $chitti->chittiId) }}" class="btn btn-sm btn-primary edit-user">Sent_to_checker</a> --}}
-                                            <form action="{{ route('admin.send-to-checker', $chitti->chittiId) }}"
+                                            {{-- <form action="{{ route('admin.send-to-checker', $chitti->chittiId) }}"
                                                 method="POST">
                                                 @csrf
                                                 <button type="submit" class="btn btn-primary" name="action"
                                                     value="send_to_checker">Send to Checker</button>
-                                            </form>
+                                            </form> --}}
 
                                             <form action="{{ route('admin.post-delete', $chitti->chittiId) }}"
                                                 method="POST" style="display:inline;">

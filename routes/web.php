@@ -88,6 +88,15 @@ Route::group(['prefix' => 'accounts'], function () {
 
         Route::put('/uploader/aac-uploader-update/{id}', [AccUploaderController::class, 'accUploaderUpdate'])->name('accounts.acc-uploader-update');
 
+        //this method is use for account post analytics listing start
+        /*Route::get('/postanalyticsmaker/acc-post-analytics-maker-city-listing', [AccPostAnalyticsMakerController::class, 'index'])->name('accounts.acc-post-analytics-maker-city-listing');
+
+        Route::get('/postanalyticsmaker/acc-post-analytics-maker-listing', [AccPostAnalyticsMakerController::class, 'accPostAnalyticsMakerListing'])->name('accounts.acc-post-analytics-maker-listing');
+
+        Route::get('/postanalyticsmaker/acc-post-analytics-maker-create', [AccPostAnalyticsMakerController::class, 'accPostAnalyticsMakerEdit'])->name('accounts.acc-post-analytics-maker-create');
+
+        Route::put('/postanalyticsmaker/acc-post-analytics-maker/update/{id}', [AccPostAnalyticsMakerController::class, 'accPostAnalyticsMakerUpdate'])->name('accounts.acc-post-analytics-maker-update');*/
+
     });
 
 });
@@ -201,6 +210,10 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/uploader/uploader-edit/{id}', [UploaderController::class, 'uploaderEdit'])->name('admin.uploader-edit');
         Route::put('/uploader/uploader-update/{id}', [UploaderController::class, 'uploaderUpdate'])->name('admin.uploader-update');
 
+        Route::get('/uploader/uploader-chitti-return-to-checker-region/{id}', [UploaderController::class, 'uploaderChittiReturnCheckerRegion'])->name('admin.uploader-chitti-return-to-checker-region');
+
+        Route::put('/uploader/chitti-uploader-sendtochecker/sendtochecker/{id}', [UploaderController::class, 'uploaderChittiSendToChecker'])->name('admin.chitti-uploader-sendtouploader');
+
         Route::get('/post/post-listing', [PostController::class, 'index'])->name('admin.post-listing');
         Route::get('/post/post-edit/{id}', [PostController::class, 'postEdit'])->name('admin.post-edit');
         Route::put('/post/post-update/{id}', [PostController::class, 'postUpdate'])->name('admin.post-update');
@@ -233,6 +246,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/postanalyticsmaker/post-analytics-from-checker-listing', [PostAnalyticsMakerController::class, 'postAnalyticsListReturnFromCheckerL'])->name('admin.post-analytics-from-checker-listing');
 
         Route::get('/postanalytics/post-analytics-listing', [PostAnalyticsController::class, 'index'])->name('admin.post-analytics-listing');
+
         Route::get('/post-analytics/export', [PostAnalyticsController::class, 'export'])->name('postanalytics.export');
 
         Route::get('/misreport/mis-report', [MisReportController::class, 'index'])->name('admin.mis-report');
@@ -245,6 +259,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::put('/checker/chitti-checker-sendtomaker/sendtomaker/{id}', [ChekerController::class, 'checkerChittiSendToMaker'])->name('admin.chitti-checker-sendtomaker');
 
         Route::get('/maker/chitti-rejected-from-checker-listing', [MakerController::class, 'chittiListReturnFromCheckerL'])->name('admin.post-return-from-checker-listing');
+
+        Route::get('/checker/chitti-rejected-from-uploader-listing', [ChekerController::class, 'chittiListReturnFromUploaderL'])->name('admin.post-return-from-uploader-listing');
         //show the listing of rejected maker end
         // Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('admin.update.title');
         Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('update.title');
