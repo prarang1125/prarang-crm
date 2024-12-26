@@ -3,9 +3,9 @@
 use App\Http\Controllers\accounts\AccChekerController;
 use App\Http\Controllers\accounts\AccCKEditorController;
 use App\Http\Controllers\accounts\AccMakerController;
-use App\Http\Controllers\accounts\AccUploaderController;
-use App\Http\Controllers\accounts\AccPostAnalyticsMakerController;
 use App\Http\Controllers\accounts\AccPostAnalyticsCheckerController;
+use App\Http\Controllers\accounts\AccPostAnalyticsMakerController;
+use App\Http\Controllers\accounts\AccUploaderController;
 use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\AdminLoginController;
@@ -32,7 +32,6 @@ use App\Http\Controllers\admin\UserCityController;
 use App\Http\Controllers\admin\UserCountryController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
-
 
 // dd(Hash::make('password'));
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
