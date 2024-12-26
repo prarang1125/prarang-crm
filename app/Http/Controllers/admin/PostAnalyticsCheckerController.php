@@ -50,14 +50,14 @@ class PostAnalyticsCheckerController extends Controller
 
         // Query the data
         $chittis = DB::table('chitti as ch')
-            ->select('ch.*', 'vg.*', 'vCg.*', 'city.*', 'user.*',  'ch.chittiId as chittiId')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'city.*', 'user.*', 'ch.chittiId as chittiId')
             ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
             ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
             ->join('mcity as city', 'city.cityId', '=', 'ch.areaId')
-            ->join('muser as user', 'user.userId', '=', 'ch.analyticsMaker')
+            ->leftJoin('muser as user', 'user.userId', '=', 'ch.analyticsMaker')
             ->where('areaId', $areaId)
-            ->whereIn('postStatusMakerChecker', ['send_to_post_checker', 'approved'])
-            // ->where('finalStatus', '!=', 'deleted')
+            ->whereIn('postStatusMakerChecker', ['send_to_post_checker'])
+            ->where('finalStatus', '!=', 'deleted')
             ->when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
                     $q->where('ch.Title', 'like', "%{$search}%")
@@ -70,18 +70,18 @@ class PostAnalyticsCheckerController extends Controller
                 'cityCode' => $cityCode,
                 'search' => $search,
             ]);
+            // dd($chittis);
+            // foreach ($chittis as $chitti) {
+            //     $anlyticsMaker = $chitti->analyticsMaker;
+            // }
 
-        /*foreach ($chittis as $chitti) {
-            $anlyticsMaker = $chitti->analyticsMaker;
-        }
-
-        $muserMaker = '';
-        if (! empty($anlyticsMaker)) {
-            $musers = Muser::where('userId', $anlyticsMaker)->get();
-            foreach ($musers as $username) {
-                $muserMaker = $username->firstName.' '.$username->lastName;
-            }
-        }*/
+            // $muserMaker = '';
+            // if (! empty($anlyticsMaker)) {
+            //     $musers = Muser::where('userId', $anlyticsMaker)->get();
+            //     foreach ($musers as $username) {
+            //         $muserMaker = $username->firstName.' '.$username->lastName;
+            //     }
+            // }
 
         return view('admin.postanalyticschecker.post-analytics-checker-listing', compact('chittis'));
     }

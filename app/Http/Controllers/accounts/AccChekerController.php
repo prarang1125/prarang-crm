@@ -119,9 +119,9 @@ class AccChekerController extends Controller
                 if ($value === 'Select Select') {
                     $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
                 }
-            },
-            'title'     => 'required|string|max:255',
-            'subtitle' => 'required|string|max:255',
+            }],
+            'title'     => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'forTheCity' => 'required|boolean',
             'tagId'     => 'required'
         ]);
@@ -137,7 +137,7 @@ class AccChekerController extends Controller
                 $chitti->update([
                     'uploaderStatus'   => 'sent_to_uploader',
                     'checkerStatus' => 'sent_to_uploader',
-
+                    'dateSentToUploader' => $currentDateTime,
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
                 ]);
