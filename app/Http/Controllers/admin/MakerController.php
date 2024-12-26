@@ -14,6 +14,7 @@ use App\Models\Mcountry;
 use App\Models\Mregion;
 use App\Models\Mtag;
 use App\Services\ImageUploadService;
+use App\Services\Posts\ChittiListingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,8 +23,19 @@ use Illuminate\Support\Facades\Validator;
 
 class MakerController extends Controller
 {
+    protected $chittiListingService;
+
+    public function __construct(ChittiListingService $chittiListingService)
+    {
+        $this->chittiListingService = $chittiListingService;
+        dd($this->chittiListingService);
+    }
+
     public function index(Request $request)
     {
+
+        // return $chittis = $chittiListingService->getChittiListings($request, 'sent_to_checker');
+
         $search = $request->input('search');
 
         $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
