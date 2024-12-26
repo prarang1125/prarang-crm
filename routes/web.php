@@ -4,6 +4,8 @@ use App\Http\Controllers\accounts\AccChekerController;
 use App\Http\Controllers\accounts\AccCKEditorController;
 use App\Http\Controllers\accounts\AccMakerController;
 use App\Http\Controllers\accounts\AccUploaderController;
+use App\Http\Controllers\accounts\AccPostAnalyticsMakerController;
+use App\Http\Controllers\accounts\AccPostAnalyticsCheckerController;
 use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\AdminLoginController;
@@ -30,6 +32,7 @@ use App\Http\Controllers\admin\UserCityController;
 use App\Http\Controllers\admin\UserCountryController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
+
 
 // dd(Hash::make('password'));
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
@@ -96,13 +99,29 @@ Route::group(['prefix' => 'accounts'], function () {
         Route::put('/uploader/acc-chitti-uploader-sendtochecker/sendtochecker/{id}', [AccUploaderController::class, 'accUploaderChittiSendToChecker'])->name('accounts.acc-chitti-uploader-sendtouploader');
 
         //this method is use for account post analytics listing start
-        /*Route::get('/postanalyticsmaker/acc-post-analytics-maker-city-listing', [AccPostAnalyticsMakerController::class, 'index'])->name('accounts.acc-post-analytics-maker-city-listing');
+        Route::get('/postanalyticsmaker/acc-post-analytics-maker-city-listing', [AccPostAnalyticsMakerController::class, 'index'])->name('accounts.analyticsmaker-dashboard');
 
         Route::get('/postanalyticsmaker/acc-post-analytics-maker-listing', [AccPostAnalyticsMakerController::class, 'accPostAnalyticsMakerListing'])->name('accounts.acc-post-analytics-maker-listing');
 
         Route::get('/postanalyticsmaker/acc-post-analytics-maker-create', [AccPostAnalyticsMakerController::class, 'accPostAnalyticsMakerEdit'])->name('accounts.acc-post-analytics-maker-create');
 
-        Route::put('/postanalyticsmaker/acc-post-analytics-maker/update/{id}', [AccPostAnalyticsMakerController::class, 'accPostAnalyticsMakerUpdate'])->name('accounts.acc-post-analytics-maker-update');*/
+        Route::put('/postanalyticsmaker/acc-post-analytics-maker/update/{id}', [AccPostAnalyticsMakerController::class, 'accPostAnalyticsMakerUpdate'])->name('accounts.acc-post-analytics-maker-update');
+
+        Route::get('/postanalyticsmaker/acc-post-analytics-from-checker-listing', [AccPostAnalyticsMakerController::class, 'accPostAnalyticsListReturnFromCheckerL'])->name('accounts.acc-post-analytics-from-checker-listing');
+
+        Route::get('/postanalyticschecker/acc-post-analytics-checker-city-listing', [AccPostAnalyticsCheckerController::class, 'index'])->name('accounts.analyticschecker-dashboard');
+
+        Route::get('/postanalyticschecker/acc-post-analytics-checker-listing', [AccPostAnalyticsCheckerController::class, 'accPostAnalyticsCheckerListing'])->name('accounts.acc-post-analytics-checker-listing');
+
+        Route::get('/postanalyticschecker/acc-post-analytics-checker-edit', [AccPostAnalyticsCheckerController::class, 'accPostAnalyticsChckerEdit'])->name('accounts.acc-post-analytics-checker-edit');
+
+        Route::put('/postanalyticschecker/acc-post-analytics-checker/update/{id}', [AccPostAnalyticsCheckerController::class, 'accPostAnalyticsCheckerUpdate'])->name('accounts.acc-post-analytics-checker-update');
+
+        Route::get('/postanalyticschecker/acc-post-analytics-checker/approve/{id}', [AccPostAnalyticsCheckerController::class, 'accPostAnalyticsCheckerApprove'])->name('accounts.acc-post-analytics-checker-approve');
+
+        Route::get('/postanalyticschecker/acc-post-analytics-checker-return-region/{id}', [AccPostAnalyticsCheckerController::class, 'accPostAnalyticsCheckerReturnRegion'])->name('accounts.acc-post-analytics-checker-return-region');
+
+        Route::put('/postanalyticschecker/acc-post-analytics-checker-sendtomaker/sendtomaker/{id}', [AccPostAnalyticsCheckerController::class, 'accPostAnalyticsCheckerSendToMaker'])->name('accounts.acc-post-analytics-checker-sendtomaker');
 
     });
 
