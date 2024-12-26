@@ -77,6 +77,9 @@ Route::group(['prefix' => 'accounts'], function () {
         Route::get('/checker/acc-checker-chitti-return-to-maker-region/{id}', [AccChekerController::class, 'accCheckerChittiReturnMakerRegion'])->name('accounts.acc-checker-chitti-return-to-maker-region');
         Route::put('/checker/acc-chitti-checker-sendtomaker/sendtomaker/{id}', [AccChekerController::class, 'accCheckerChittiSendToMaker'])->name('accounts.acc-chitti-checker-sendtomaker');
 
+        Route::get('/checker/chitti-rejected-from-uploader-listing', [AccChekerController::class, 'accChittiListReturnFromUploaderL'])->name('accounts.acc-post-return-from-uploader-listing');
+
+
         //this method is use for account uploader listing start
         Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('update.title');
 
@@ -87,6 +90,10 @@ Route::group(['prefix' => 'accounts'], function () {
         Route::get('/uploader/acc-uploader-edit/{id}', [AccUploaderController::class, 'accUploaderEdit'])->name('accounts.acc-uploader-edit');
 
         Route::put('/uploader/aac-uploader-update/{id}', [AccUploaderController::class, 'accUploaderUpdate'])->name('accounts.acc-uploader-update');
+
+        Route::get('/uploader/acc-uploader-chitti-return-to-checker-region/{id}', [AccUploaderController::class, 'accUploaderChittiReturnCheckerRegion'])->name('accounts.acc-uploader-chitti-return-to-checker-region');
+
+        Route::put('/uploader/acc-chitti-uploader-sendtochecker/sendtochecker/{id}', [AccUploaderController::class, 'accUploaderChittiSendToChecker'])->name('accounts.acc-chitti-uploader-sendtouploader');
 
         //this method is use for account post analytics listing start
         /*Route::get('/postanalyticsmaker/acc-post-analytics-maker-city-listing', [AccPostAnalyticsMakerController::class, 'index'])->name('accounts.acc-post-analytics-maker-city-listing');

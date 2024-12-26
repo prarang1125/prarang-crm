@@ -47,8 +47,12 @@ class AccChekerController extends Controller
             ->paginate(10); // Adjust the number of items per page
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-
-        return view('accounts.checker.acc-checker-listing', compact('chittis', 'geographyOptions'));
+        $notification = Chitti::whereNotNull('uploaderReason')
+        ->where('uploaderReason', '!=', '')
+        ->where('uploaderStatus', 'sent_to_checker')
+        ->where('finalStatus', 'sent_to_checker')
+        ->count();
+        return view('accounts.checker.acc-checker-listing', compact('chittis', 'geographyOptions', 'notification'));
     }
 
     public function accIndex(Request $request , $id)
@@ -73,7 +77,12 @@ class AccChekerController extends Controller
             ->select('chittiId', 'Title', 'TitleHindi', 'dateOfCreation', 'finalStatus', 'checkerStatus')
             ->paginate(30); // Pagination with 10 items per page
 
-        return view('accounts.checker.acc-checker-listing', compact('chittis', 'geographyOptions'));
+        $notification = Chitti::whereNotNull('uploaderReason')
+        ->where('uploaderReason', '!=', '')
+        ->where('uploaderStatus', 'sent_to_checker')
+        ->where('finalStatus', 'sent_to_checker')
+        ->count();
+        return view('accounts.checker.acc-checker-listing', compact('chittis', 'geographyOptions', 'notification'));
     }
 
     #this method is use for accounts checker edit
@@ -261,6 +270,42 @@ class AccChekerController extends Controller
             'finalStatus'           => '',
         ]);
         return redirect()->route('accounts.checker-dashboard')->with('success', 'Chitti Post have been return to maker from checker successfully');
+    }
+
+
+    public function accChittiListReturnFromUploaderL(Request $request)
+    {
+        $search = $request->input('search');
+        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
+        $cacheDuration = 180;
+        $chittis = DB::table('chitti as ch')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')->whereNotNull('Title')
+            ->where('finalStatus', '!=', 'deleted')
+            ->where('finalStatus', '=', 'sent_to_checker')
+            ->where('uploaderReason', '!=', '')
+            ->where('finalStatus', '=', 'sent_to_checker')
+
+            ->when($search, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('Title', 'like', "%{$search}%")
+                        ->orWhere('SubTitle', 'like', "%{$search}%")
+                        ->orWhere('createDate', 'LIKE', '%'.$search.'%');
+                });
+            })
+            // ->orderByDesc('ch.chittiId')
+            ->orderByDesc(DB::raw("STR_TO_DATE(ch.dateOfCreation, '%d-%b-%y %H:%i:%s')"))
+            ->paginate(30); // Adjust the number per page
+
+        $notification = Chitti::whereNotNull('uploaderReason')
+        ->where('uploaderReason', '!=', '')
+        ->where('uploaderStatus', 'sent_to_checker')
+        ->where('finalStatus', 'sent_to_checker')
+        ->count();
+        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+
+        return view('accounts.checker.acc-chitti-rejected-from-uploader-listing', compact('geographyOptions', 'notification', 'chittis'));
     }
 
 }
