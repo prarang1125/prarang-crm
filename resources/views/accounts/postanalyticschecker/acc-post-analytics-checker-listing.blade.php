@@ -6,11 +6,11 @@
 <div class="page-content">
     <!--breadcrumb-->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div class="breadcrumb-title pe-3">Admin</div>
+        <div class="breadcrumb-title pe-3">Account</div>
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
-                    <li class="breadcrumb-item"><a href="{{ url('admin/postanalyticschecker/post-analytics-checker-city-listing')}}"><i class="bx bx-user"></i></a>
+                    <li class="breadcrumb-item"><a href="{{ url('accounts/postanalyticschecker/acc-post-analytics-checker-city-listing')}}"><i class="bx bx-user"></i></a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">Post Analytics Checker Listing</li>
                 </ol>
@@ -31,7 +31,7 @@
             <div class="card">
                 <!-- Add the Search Form -->
                 <div class="card-body d-flex justify-content-end align-items-end">
-                    <form action="{{ url('admin/postanalyticschecker/post-analytics-checker-listing') }}" method="GET" class="d-flex me-3">
+                    <form action="{{ url('accounts/postanalyticschecker/acc-post-analytics-checker-listing') }}" method="GET" class="d-flex me-3">
                         <input type="hidden" name="cityCode" value="{{ request()->query('cityCode') }}">
                         <input type="text" name="search" class="form-control me-2" placeholder="Search by Title or SubTitle" value="{{ request()->query('search') }}">
                         <button type="submit" class="btn btn-secondary">Search</button>
@@ -78,14 +78,14 @@
 
                                     @if ($chitti->postStatusMakerChecker == 'approved')
                                         <td class="">
-                                            <a href="{{ route('admin.post-analytics-checker-edit', ['id' => $chitti->chittiId, 'city' => $chitti->cityCode ?? 'N/A']) }}" class="text-primary">
+                                            <a href="{{ route('accounts.acc-post-analytics-checker-edit', ['id' => $chitti->chittiId, 'city' => $chitti->cityCode ?? 'N/A']) }}" class="text-primary">
                                                 {{ 'Approved' }}
                                             </a>
                                             {{-- <span class="custom-approved">{{ 'Approved' }}</span> --}}
                                         </td>
                                     @else
                                     <td class="">
-                                        <a href="{{ route('admin.post-analytics-checker-edit', ['id' => $chitti->chittiId, 'city' => $chitti->cityCode ?? 'N/A']) }}" class="text-primary">
+                                        <a href="{{ route('accounts.acc-post-analytics-checker-edit', ['id' => $chitti->chittiId, 'city' => $chitti->cityCode ?? 'N/A']) }}" class="text-primary">
                                             {{ 'Review' }}
                                         </a>
                                     </td>

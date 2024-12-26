@@ -3,6 +3,8 @@
 use App\Http\Controllers\accounts\AccChekerController;
 use App\Http\Controllers\accounts\AccCKEditorController;
 use App\Http\Controllers\accounts\AccMakerController;
+use App\Http\Controllers\accounts\AccPostAnalyticsCheckerController;
+use App\Http\Controllers\accounts\AccPostAnalyticsMakerController;
 use App\Http\Controllers\accounts\AccUploaderController;
 use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\admin\AdminController;
@@ -77,6 +79,8 @@ Route::group(['prefix' => 'accounts'], function () {
         Route::get('/checker/acc-checker-chitti-return-to-maker-region/{id}', [AccChekerController::class, 'accCheckerChittiReturnMakerRegion'])->name('accounts.acc-checker-chitti-return-to-maker-region');
         Route::put('/checker/acc-chitti-checker-sendtomaker/sendtomaker/{id}', [AccChekerController::class, 'accCheckerChittiSendToMaker'])->name('accounts.acc-chitti-checker-sendtomaker');
 
+        Route::get('/checker/chitti-rejected-from-uploader-listing', [AccChekerController::class, 'accChittiListReturnFromUploaderL'])->name('accounts.acc-post-return-from-uploader-listing');
+
         //this method is use for account uploader listing start
         Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('update.title');
 
@@ -88,14 +92,34 @@ Route::group(['prefix' => 'accounts'], function () {
 
         Route::put('/uploader/aac-uploader-update/{id}', [AccUploaderController::class, 'accUploaderUpdate'])->name('accounts.acc-uploader-update');
 
+        Route::get('/uploader/acc-uploader-chitti-return-to-checker-region/{id}', [AccUploaderController::class, 'accUploaderChittiReturnCheckerRegion'])->name('accounts.acc-uploader-chitti-return-to-checker-region');
+
+        Route::put('/uploader/acc-chitti-uploader-sendtochecker/sendtochecker/{id}', [AccUploaderController::class, 'accUploaderChittiSendToChecker'])->name('accounts.acc-chitti-uploader-sendtouploader');
+
         //this method is use for account post analytics listing start
-        /*Route::get('/postanalyticsmaker/acc-post-analytics-maker-city-listing', [AccPostAnalyticsMakerController::class, 'index'])->name('accounts.acc-post-analytics-maker-city-listing');
+        Route::get('/postanalyticsmaker/acc-post-analytics-maker-city-listing', [AccPostAnalyticsMakerController::class, 'index'])->name('accounts.analyticsmaker-dashboard');
 
         Route::get('/postanalyticsmaker/acc-post-analytics-maker-listing', [AccPostAnalyticsMakerController::class, 'accPostAnalyticsMakerListing'])->name('accounts.acc-post-analytics-maker-listing');
 
         Route::get('/postanalyticsmaker/acc-post-analytics-maker-create', [AccPostAnalyticsMakerController::class, 'accPostAnalyticsMakerEdit'])->name('accounts.acc-post-analytics-maker-create');
 
-        Route::put('/postanalyticsmaker/acc-post-analytics-maker/update/{id}', [AccPostAnalyticsMakerController::class, 'accPostAnalyticsMakerUpdate'])->name('accounts.acc-post-analytics-maker-update');*/
+        Route::put('/postanalyticsmaker/acc-post-analytics-maker/update/{id}', [AccPostAnalyticsMakerController::class, 'accPostAnalyticsMakerUpdate'])->name('accounts.acc-post-analytics-maker-update');
+
+        Route::get('/postanalyticsmaker/acc-post-analytics-from-checker-listing', [AccPostAnalyticsMakerController::class, 'accPostAnalyticsListReturnFromCheckerL'])->name('accounts.acc-post-analytics-from-checker-listing');
+
+        Route::get('/postanalyticschecker/acc-post-analytics-checker-city-listing', [AccPostAnalyticsCheckerController::class, 'index'])->name('accounts.analyticschecker-dashboard');
+
+        Route::get('/postanalyticschecker/acc-post-analytics-checker-listing', [AccPostAnalyticsCheckerController::class, 'accPostAnalyticsCheckerListing'])->name('accounts.acc-post-analytics-checker-listing');
+
+        Route::get('/postanalyticschecker/acc-post-analytics-checker-edit', [AccPostAnalyticsCheckerController::class, 'accPostAnalyticsChckerEdit'])->name('accounts.acc-post-analytics-checker-edit');
+
+        Route::put('/postanalyticschecker/acc-post-analytics-checker/update/{id}', [AccPostAnalyticsCheckerController::class, 'accPostAnalyticsCheckerUpdate'])->name('accounts.acc-post-analytics-checker-update');
+
+        Route::get('/postanalyticschecker/acc-post-analytics-checker/approve/{id}', [AccPostAnalyticsCheckerController::class, 'accPostAnalyticsCheckerApprove'])->name('accounts.acc-post-analytics-checker-approve');
+
+        Route::get('/postanalyticschecker/acc-post-analytics-checker-return-region/{id}', [AccPostAnalyticsCheckerController::class, 'accPostAnalyticsCheckerReturnRegion'])->name('accounts.acc-post-analytics-checker-return-region');
+
+        Route::put('/postanalyticschecker/acc-post-analytics-checker-sendtomaker/sendtomaker/{id}', [AccPostAnalyticsCheckerController::class, 'accPostAnalyticsCheckerSendToMaker'])->name('accounts.acc-post-analytics-checker-sendtomaker');
 
     });
 
@@ -105,7 +129,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => 'admin.guest'], function () {
         Route::get('login', [AdminLoginController::class, 'index'])->name('admin.login');
         Route::post('authenticate', [AdminLoginController::class, 'authenticate'])->name('admin.authenticate');
-
     });
     Route::group(['middleware' => 'admin.auth'], function () {
         Route::get('dashboard', [AdminController::class, 'index'])->name('admin.dashboard');

@@ -66,12 +66,12 @@ class PostAnalyticsController extends Controller
         $countries = Mcountry::all();
 
         # Initialize base query
-        // $chittisQuery = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country', 'likes', 'comments'])
-        //     ->whereNotNull('Title')
-        //     ->where('Title', '!=', '')
-        //     ->select('*');
+        $chittisQuery = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country', 'likes', 'comments'])
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->select('*');
 
-        $chittisQuery = DB::table('chitti as ch')
+       /* $chittisQuery = DB::table('chitti as ch')
             ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId', 'like.*', 'comment.*')
             ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
             ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
@@ -89,11 +89,11 @@ class PostAnalyticsController extends Controller
                         $q->where('comment', 'like', "%{$searchTerm}%");
                     });
             });
-        }
+        }*/
 
         # Paginate results
-        $chittis = $chittisQuery->paginate(2);
-        dd($chittis);
+        $chittis = $chittisQuery->paginate(20);
+        // dd($chittis);
         # Get the current month dates for the date picker
         $startDate = Carbon::now()->startOfMonth();
         $endDate = Carbon::now()->endOfMonth();

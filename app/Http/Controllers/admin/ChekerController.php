@@ -96,7 +96,7 @@ class ChekerController extends Controller
                         $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
                     }
                 }],
-            'title' => ['required', 'string', 'max:255', 'regex:/^[^\s]+$/'],
+            'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
             'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
             'forTheCity' => 'required|boolean',
 
@@ -139,14 +139,15 @@ class ChekerController extends Controller
                     'makerStatus' => 'sent_to_checker',
                     'checkerId' => Auth::guard('admin')->user()->userId,
                     'description' => $request->content,
-                    'title' => ['required', 'string', 'max:255', 'regex:/^[^\s]+$/'],
-                    'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
+                    'Title' => $request->title,
+                    'SubTitle' => $request->subtitle,
                     'checkerStatus' => 'maker_to_checker',
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::guard('admin')->user()->userId,
                     'cityId' => $area_id,
                     'areaId' => $area_id,
                     'geographyId' => $request->geography,
+                    'finalStatus' => '',
                 ]);
 
                 Facity::where('from_chittiId', $id)->update([
@@ -261,10 +262,9 @@ class ChekerController extends Controller
             ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
             ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
             ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')->whereNotNull('Title')
-            ->where('finalStatus', '!=', 'deleted')
             ->where('finalStatus', '=', 'sent_to_checker')
             ->where('uploaderReason', '!=', '')
-            ->where('finalStatus', '=', 'sent_to_checker')
+            ->whereNotIn('finalStatus', ['approved', 'deleted'])
 
             ->when($search, function ($query, $search) {
                 $query->where(function ($query) use ($search) {

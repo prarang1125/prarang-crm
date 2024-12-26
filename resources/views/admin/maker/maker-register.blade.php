@@ -35,7 +35,7 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <label for="content" class="form-label">Content</label>
-                                <textarea class="@error('content') is-invalid @enderror" name="content" id="editor">{{ old('text') }}</textarea>
+                                <textarea class="@error('content') is-invalid @enderror" name="content" id="editor">{{ old('content') }}</textarea>
                                 @error('content')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror

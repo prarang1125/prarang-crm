@@ -26,22 +26,24 @@ class AccUploaderController extends Controller
     public function accIndexMain(Request $request)
     {
         $search = $request->input('search');
+        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
+        $cacheDuration = 180;
         $chittis = DB::table('chitti as ch')
-        ->select('ch.*','vg.*', 'vCg.*', 'ch.chittiId as chittiId')
-           ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-           ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
-            ->whereNotNull('Title')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')->whereNotNull('Title')
             ->where('Title', '!=', '')
-            ->where('uploaderStatus', '=', 'sent_to_uploader')
+            ->whereIn('uploaderStatus', ['sent_to_uploader', 'approved'])
             ->when($search, function ($query, $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('Title', 'like', "%{$search}%")
-                        ->orWhere('SubTitle', 'like', "%{$search}%");
+                        ->orWhere('SubTitle', 'like', "%{$search}%")
+                        ->orWhere('createDate', 'LIKE', '%'.$search.'%');
                 });
             })
-            ->whereNotIn('finalStatus',['deleted'])
-            ->orderByDesc('dateOfCreation')
-            // ->select('chittiId', 'Title', 'SubTitle', 'dateOfCreation', 'finalStatus', 'checkerStatus', 'uploaderStatus')
+            ->whereNotIn('finalStatus', ['deleted'])
+            // ->orderByDesc('ch.chittiId')
+            ->orderByDesc(DB::raw("STR_TO_DATE(ch.dateSentToUploader, '%d-%b-%y %H:%i:%s')"))
             ->paginate(30); // Adjust the number per page
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
@@ -99,12 +101,12 @@ class AccUploaderController extends Controller
         //         'makerImage' => 'nullable|image|max:2048',
         //         'geography' => 'required',
         //         'c2rselect' => [
-            'required',
-            function ($attribute, $value, $fail) {
-                if ($value === 'Select Select') {
-                    $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
-                }
-            },
+            // 'required',
+            // function ($attribute, $value, $fail) {
+            //     if ($value === 'Select Select') {
+            //         $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
+            //     }
+            // },
         //         'title'     => 'required|string|max:255',
         //         'subtitle' => 'required|string|max:255',
         //         'forTheCity' => 'required|boolean',
@@ -228,9 +230,9 @@ class AccUploaderController extends Controller
                 if ($value === 'Select Select') {
                     $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
                 }
-            },
-            'title'     => 'required|string|max:255',
-            'subtitle' => 'required|string|max:255',
+            }],
+            'title'     => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'forTheCity' => 'required|boolean',
             // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
@@ -364,5 +366,43 @@ class AccUploaderController extends Controller
         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
         $data['video-image'] = 'https://img.youtube.com/vi/' . $data['video-id'] . '/0.jpg';
         return $data;
+    }
+
+    //this method is use for return from uploader to checker with region
+    public function accUploaderChittiReturnCheckerRegion(Request $request, $id)
+    {
+        // dd($id);
+        $cityCode = $request->query('City');
+        $checkerId = $request->query('checkerId');
+
+        $chitti = Chitti::where('chittiId', $id)
+            ->first();
+
+        return view('accounts.uploader.acc-chitti-uploader-return-to-checker-with-region', compact('chitti'));
+    }
+
+    //this method is use for update eturn from checker to maker with region
+    public function accUploaderChittiSendToChecker(Request $request, $id)
+    {
+        // dd('your data is here');
+        $checkerId = $request->query('checkerId');
+        $City = $request->query('City');
+        $currentDate = date('d-M-y H:i:s');
+
+        $validated = $request->validate([
+            'accreturnChittiToCheckerWithRegion' => 'required|string',
+        ]);
+        // dd($request->returnChittiToCheckerWithRegion);
+        $chitti = Chitti::findOrFail($id);
+        $chitti->update([
+            'uploaderStatus' => 'sent_to_checker',
+            'checkerStatus'  => '',
+            'uploaderId'     => Auth::user()->userId,
+            'uploaderReason' => $request->accreturnChittiToCheckerWithRegion,
+            'dateOfReturnToChecker' => $currentDate,
+            'finalStatus'     => 'sent_to_checker',
+        ]);
+
+        return redirect()->route('accounts.uploader-dashboard')->with('success', 'Chitti Post have been return to checker from Uploader successfully');
     }
 }
