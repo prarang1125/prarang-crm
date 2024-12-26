@@ -55,32 +55,33 @@ class AccMakerController extends Controller
         return view('accounts.maker.acc-maker-listing', compact('chittis', 'geographyOptions', 'notification'));
     }*/
 
-     public function index(Request $request)
+    public function index(Request $request)
     {
         $search = $request->input('search');
 
         $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
-        $cacheDuration = 180; // Cache duration in minutes
+        $cacheDuration = 180;
         $chittis = DB::table('chitti as ch')
-        ->select('ch.*','vg.*', 'vCg.*', 'ch.chittiId as chittiId')
-           ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-           ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
-           ->when($search, function ($query, $search) {
-               $query->where(function ($q) use ($search) {
-                   $q->where('Title', 'LIKE', '%' . $search . '%')
-                       ->orWhere('SubTitle', 'LIKE', '%' . $search . '%')
-                       ->orWhere('createDate', 'LIKE', '%' . $search . '%');
-               });
-           })
-            // ->where('ch.chittiId' , 11383    )
+            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('Title', 'LIKE', '%'.$search.'%')
+                        ->orWhere('SubTitle', 'LIKE', '%'.$search.'%')
+                        ->orWhere('createDate', 'LIKE', '%'.$search.'%');
+                });
+            })
+
             ->whereNotNull('Title')
             ->where('Title', '!=', '')
             ->where('makerStatus', '=', 'sent_to_checker')
             ->where('finalStatus', '!=', 'deleted')
-            ->orderByDesc('ch.chittiId')
+            ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"))
             ->paginate(30);
-        // Change '30' to the number of items per page
-        // });
+
+        $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
+        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
@@ -120,8 +121,8 @@ class AccMakerController extends Controller
                 if ($value === 'Select Select') {
                     $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
                 }
-            },
-            'title'     => 'required|string|max:255',
+            }],
+            'title'     => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             // 'subtitle' => 'required|string|max:255',
             'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'forTheCity' => 'required|boolean',
@@ -279,8 +280,8 @@ class AccMakerController extends Controller
                 if ($value === 'Select Select') {
                     $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
                 }
-            },
-            'title'     => 'required|string|max:255',
+            }],
+            'title'     => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             // 'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
