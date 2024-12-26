@@ -82,11 +82,11 @@ class Chitti extends Model
         'created_at',
         'created_by',
         'updated_at',
-        'updated_by'
+        'updated_by',
     ];
 
-
     const CREATED_AT = 'created_at';
+
     const UPDATED_AT = 'updated_at';
 
     // Optionally, define the date format for the timestamps
@@ -99,7 +99,7 @@ class Chitti extends Model
 
     public function facity()
     {
-        return $this->hasOne(Facity::class, 'from_chittiId', 'chittiId');
+        return $this->hasOne(Facity::class, 'chittiId', 'chittiId');
     }
 
     public function chittiimagemappings()
@@ -156,6 +156,4 @@ class Chitti extends Model
     {
         return $this->belongsTo(ColorInfo::class, 'color_value', 'id');
     }
-
 }
-

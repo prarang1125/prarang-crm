@@ -150,7 +150,7 @@ class ChekerController extends Controller
                     'finalStatus' => '',
                 ]);
 
-                Facity::where('from_chittiId', $id)->update([
+                Facity::where('chittiId', $id)->update([
                     'value' => $request->forTheCity,
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::guard('admin')->user()->userId,

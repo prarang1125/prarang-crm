@@ -4,7 +4,7 @@ namespace App\Services\Posts;
 
 use Illuminate\Support\Facades\DB;
 
-class ChittiListingService
+class ChittiListService
 {
     /**
      * Fetch the listings based on various criteria (search, pagination, filters).
@@ -31,7 +31,9 @@ class ChittiListingService
                 ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
                 ->whereNotNull('Title')
                 ->where('Title', '!=', '')
-                ->orderByDesc('ch.chittiId');
+                // ->orderByDesc('ch.chittiId')
+                ->where('finalStatus', '!=', 'deleted')
+                ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"));
             if ($makerStatus) {
                 $query->where('makerStatus', '=', $makerStatus);
             }
