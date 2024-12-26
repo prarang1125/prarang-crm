@@ -29,6 +29,22 @@
             <h6 class="mb-0 text-uppercase">Post Analytics Checker Listing</h6>
             <hr/>
             <div class="card">
+                <!-- Add the Search Form -->
+                <div class="card-body d-flex justify-content-end align-items-end">
+                    <form action="{{ url('admin/postanalyticschecker/post-analytics-checker-listing') }}" method="GET" class="d-flex me-3">
+                        <input type="hidden" name="cityCode" value="{{ request()->query('cityCode') }}">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search by Title or SubTitle" value="{{ request()->query('search') }}">
+                        <button type="submit" class="btn btn-secondary">Search</button>
+                    </form>
+
+                    @if(request()->has('search'))
+                        <a class="btn btn-primary me-1" href="{{ url()->current() }}?cityCode={{ request()->query('cityCode') }}">
+                            <i class="bx bx-refresh"></i> Clear
+                        </a>
+                    @endif
+                </div>
+
+            <div class="card">
                 <div class="card-body">
                     <table class="table mb-0 table-hover">
                         <thead class="thead-light">
@@ -79,6 +95,10 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-end mt-4">
+                        {{ $chittis->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>

@@ -114,7 +114,7 @@
                         </div>
                         {{-- title and subtitle code end --}}
 
-                                                {{-- Select Writer Emotion start --}}
+                        {{-- Select Writer Emotion start --}}
                         <div class="row mt-3">
                             <div class="col-md-6">
                                 <label for="writer" class="form-label">Select Writer Emotion (select one):</label>
@@ -294,6 +294,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Man And His Senses -->
@@ -319,6 +322,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Man And His Inventions -->
@@ -345,6 +351,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Geography -->
@@ -371,6 +380,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Fauna -->
@@ -397,6 +409,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Flora -->
@@ -420,6 +435,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -429,6 +447,9 @@
                             @endif
                             <button type="submit" name="action" value="update_uploader"
                                 class="btn btn-primary">Update</button>
+
+                                <a href="{{ route('accounts.acc-uploader-chitti-return-to-checker-region', ['id' => $chitti->chittiId]) }}?uploaderId={{ $chitti->uploaderId }}&City={{ $chitti->areaId }}"
+                                    class="btn btn-primary">Back to Checker</a>
 
                             @if ($chitti->finalStatus !== 'approved')
                                 <button type="submit" name="action" value="approvd" class="btn btn-primary"
