@@ -15,6 +15,10 @@ class AccountsController extends Controller
             return redirect()->route('accounts.checker-dashboard');
         } elseif ($user->roleId == "4") {
             return redirect()->route('accounts.uploader-dashboard');
+        } elseif ($user->roleId == "6") {
+            return redirect()->route('accounts.analyticsmaker-dashboard');
+        } elseif ($user->roleId == "7") {
+            return redirect()->route('accounts.analyticschecker-dashboard');
         } else {
             return redirect()->route('accounts.login');
         }
