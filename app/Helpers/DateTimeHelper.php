@@ -1,7 +1,8 @@
 <?php
+
 use Illuminate\Support\Facades\Auth;
 
-if (!function_exists('getUserCurrentTime')) {
+if (! function_exists('getUserCurrentTime')) {
     /**
      * Get the current date and time in the user's timezone.
      *
@@ -31,14 +32,14 @@ if (!function_exists('getUserCurrentTime')) {
         $validTimezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
 
         // Validate the timezone
-        if (!in_array($userTimezone, $validTimezones)) {
+        if (! in_array($userTimezone, $validTimezones)) {
             $userTimezone = 'Asia/Kolkata';
         }
 
         $currentDateTime = new \DateTime('now', new \DateTimeZone($userTimezone));
 
         // Format the date as "d-M-y H:i:s" (e.g., "14-Dec-24 22:12:14")
-        return $currentDateTime->format('d-M-y H:i:s');
+        return $currentDateTime->format('d-m-y H:i:s');
     }
 
 }

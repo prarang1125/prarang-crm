@@ -28,6 +28,7 @@ class MakerController extends Controller
 
         $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
         $cacheDuration = 180;
+
         $chittis = DB::table('chitti as ch')
             ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
             ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
@@ -79,7 +80,7 @@ class MakerController extends Controller
             'content' => 'required|string',
             'makerImage' => 'required|image|max:2048',
             'geography' => 'required',
-            'title' => ['required', 'string', 'max:255', 'regex:/^[^\s]+$/'],
+            'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
             'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
             'forTheCity' => 'required|boolean',
 
@@ -236,7 +237,7 @@ class MakerController extends Controller
             'content' => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
-            'title' => ['required', 'string', 'max:255', 'regex:/^[^\s]+$/'],
+            'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
             'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
 
             'forTheCity' => 'required|boolean',
