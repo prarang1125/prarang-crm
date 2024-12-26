@@ -45,10 +45,10 @@ class ChekerController extends Controller
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
         $notification = Chitti::whereNotNull('uploaderReason')
-        ->where('uploaderReason', '!=', '')
-        ->where('uploaderStatus', 'sent_to_checker')
-        ->where('finalStatus', 'sent_to_checker')
-        ->count();
+            ->where('uploaderReason', '!=', '')
+            ->where('uploaderStatus', 'sent_to_checker')
+            ->where('finalStatus', 'sent_to_checker')
+            ->count();
 
         return view('admin.checker.checker-listing', compact('chittis', 'geographyOptions', 'notification'));
     }
@@ -90,14 +90,14 @@ class ChekerController extends Controller
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
             'c2rselect' => [
-            'required',
-            function ($attribute, $value, $fail) {
-                if ($value === 'Select Select') {
-                    $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
-                }
-            }],
-            'title' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
-            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+                'required',
+                function ($attribute, $value, $fail) {
+                    if ($value === 'Select Select') {
+                        $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
+                    }
+                }],
+            'title' => ['required', 'string', 'max:255', 'regex:/^[^\s]+$/'],
+            'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
             'forTheCity' => 'required|boolean',
 
             'tagId' => 'required',
@@ -139,8 +139,8 @@ class ChekerController extends Controller
                     'makerStatus' => 'sent_to_checker',
                     'checkerId' => Auth::guard('admin')->user()->userId,
                     'description' => $request->content,
-                    'Title' => $request->title,
-                    'SubTitle' => $request->subtitle,
+                    'title' => ['required', 'string', 'max:255', 'regex:/^[^\s]+$/'],
+                    'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
                     'checkerStatus' => 'maker_to_checker',
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::guard('admin')->user()->userId,
@@ -278,10 +278,10 @@ class ChekerController extends Controller
             ->paginate(30); // Adjust the number per page
 
         $notification = Chitti::whereNotNull('uploaderReason')
-        ->where('uploaderReason', '!=', '')
-        ->where('uploaderStatus', 'sent_to_checker')
-        ->where('finalStatus', 'sent_to_checker')
-        ->count();
+            ->where('uploaderReason', '!=', '')
+            ->where('uploaderStatus', 'sent_to_checker')
+            ->where('finalStatus', 'sent_to_checker')
+            ->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
         return view('admin.checker.chitti-rejected-from-uploader-listing', compact('geographyOptions', 'notification', 'chittis'));

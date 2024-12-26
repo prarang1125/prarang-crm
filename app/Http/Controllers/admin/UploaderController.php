@@ -54,19 +54,19 @@ class UploaderController extends Controller
 
     //this method is use for show the listing of maker
     // public function index($id)
-        // {
-        //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        //     ->where('chittiId', $id)
-        //     ->whereNotNull('Title')
-        //     ->where('Title', '!=', '')
-        //     ->where('uploaderStatus', '!=', '')
-        //     ->where('uploaderStatus', '=', 'sent_to_uploader')
-        //     // ->where('finalStatus', '=', 'approved')
-        //     // ->where('finalStatus', '=', 'sent_to_uploader')
-        //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus','uploaderStatus')
-        //     ->get();
-        //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-        //     return view('admin.uploader.uploader-listing', compact('chittis', 'geographyOptions'));
+    // {
+    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+    //     ->where('chittiId', $id)
+    //     ->whereNotNull('Title')
+    //     ->where('Title', '!=', '')
+    //     ->where('uploaderStatus', '!=', '')
+    //     ->where('uploaderStatus', '=', 'sent_to_uploader')
+    //     // ->where('finalStatus', '=', 'approved')
+    //     // ->where('finalStatus', '=', 'sent_to_uploader')
+    //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus','uploaderStatus')
+    //     ->get();
+    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+    //     return view('admin.uploader.uploader-listing', compact('chittis', 'geographyOptions'));
     // }
 
     public function index(Request $request)
@@ -245,14 +245,14 @@ class UploaderController extends Controller
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
             'c2rselect' => [
-            'required',
-            function ($attribute, $value, $fail) {
-                if ($value === 'Select Select') {
-                    $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
-                }
-            }],
-            'title' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
-            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+                'required',
+                function ($attribute, $value, $fail) {
+                    if ($value === 'Select Select') {
+                        $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
+                    }
+                }],
+            'title' => ['required', 'string', 'max:255', 'regex:/^[^\s]+$/'],
+            'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
             'forTheCity' => 'required|boolean',
             // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
@@ -419,11 +419,11 @@ class UploaderController extends Controller
         $chitti = Chitti::findOrFail($id);
         $chitti->update([
             'uploaderStatus' => 'sent_to_checker',
-            'checkerStatus'  => '',
-            'uploaderId'     => Auth::guard('admin')->user()->userId,
+            'checkerStatus' => '',
+            'uploaderId' => Auth::guard('admin')->user()->userId,
             'uploaderReason' => $request->returnChittiToCheckerWithRegion,
             'dateOfReturnToChecker' => $currentDate,
-            'finalStatus'     => 'sent_to_checker',
+            'finalStatus' => 'sent_to_checker',
         ]);
 
         return redirect('admin/uploader/uploader-listing')->with('success', 'Chitti Post have been return to checker from Uploader successfully');

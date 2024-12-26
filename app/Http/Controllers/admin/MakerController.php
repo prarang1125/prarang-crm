@@ -79,20 +79,19 @@ class MakerController extends Controller
             'content' => 'required|string',
             'makerImage' => 'required|image|max:2048',
             'geography' => 'required',
-            'title' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
-
-            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'title' => ['required', 'string', 'max:255', 'regex:/^[^\s]+$/'],
+            'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
             'forTheCity' => 'required|boolean',
 
             'tagId' => 'required',
             'c2rselect' => [
-            'required',
-            function ($attribute, $value, $fail) {
-                if ($value === 'Select Select') {
-                    $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
-                }
-            },
-        ],
+                'required',
+                function ($attribute, $value, $fail) {
+                    if ($value === 'Select Select') {
+                        $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
+                    }
+                },
+            ],
 
         ]);
 
@@ -237,8 +236,8 @@ class MakerController extends Controller
             'content' => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
-            'title' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
-            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'title' => ['required', 'string', 'max:255', 'regex:/^[^\s]+$/'],
+            'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
 
             'forTheCity' => 'required|boolean',
 
@@ -247,10 +246,10 @@ class MakerController extends Controller
                 'required',
                 function ($attribute, $value, $fail) {
                     if ($value === 'Select Select') {
-                        $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
+                        $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
                     }
                 },
-            ]
+            ],
         ]);
 
         if ($validator->passes()) {
@@ -277,18 +276,10 @@ class MakerController extends Controller
                         ->with('success', 'Sent to Checker successfully.');
                 } else {
                     $area_id = $request->c2rselect;
-                    // $areaIdCode = '';
-                    // if ($request->geography == 6) { //6 is use for city
-                    //     $areaIdCode = 'c'.$area_id;
-                    // } elseif ($request->geography == 5) { //5 is use for region
-                    //     $areaIdCode = 'r'.$area_id;
-                    // } elseif ($request->geography == 7) { // 7 is use for country
-                    //     $areaIdCode = 'con'.$area_id;
-                    // }
                     $chitti->update([
                         'description' => $request->content,
-                        'Title' => $request->title,
-                        'SubTitle' => $request->subtitle,
+                        'title' => ['required', 'string', 'max:255', 'regex:/^[^\s]+$/'],
+                        'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
 
                         'makerStatus' => 'sent_to_checker',
                         'makerId' => Auth::guard('admin')->user()->userId,
@@ -401,7 +392,7 @@ class MakerController extends Controller
         $validatedData = $request->validate([
             'Title' => [
                 'required',
-                'regex:/^[a-zA-Z0-9 -]+$/',
+                'regex:/^[^\s]+$/',
             ],
             'subTitle' => [
                 'required',
