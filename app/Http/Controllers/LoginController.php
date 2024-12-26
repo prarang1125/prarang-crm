@@ -67,6 +67,10 @@ class LoginController extends Controller
                         return redirect()->route('accounts.checker-dashboard');
                     case "4":
                         return redirect()->route('accounts.uploader-dashboard');
+                    case "6":
+                        return redirect()->route('accounts.analyticsmaker-dashboard');
+                    case "7":
+                        return redirect()->route('accounts.analyticschecker-dashboard');
                     default:
                         Auth::logout();
                         return redirect()->route('accounts.login')->with('error', 'Unauthorized access');

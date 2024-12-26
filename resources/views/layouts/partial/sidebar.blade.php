@@ -121,6 +121,10 @@
                     <li> <a href="{{ url('/accounts/checker/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Checker</a>
                 @elseif ($user->roleId == "4")
                     <li> <a href="{{ url('/accounts/uploader/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Uploader</a>
+                @elseif ($user->roleId == "6")
+                    <li> <a href="{{ url('/accounts/postanalyticsmaker/acc-post-analytics-maker-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>Analytics Maker</a>
+                @elseif ($user->roleId == "7")
+                    <li> <a href="{{ url('/accounts/postanalyticschecker/acc-post-analytics-checker-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>Analytics Checker</a>
                 @endif
             </ul>
         </li>
