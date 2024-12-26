@@ -79,7 +79,6 @@ Route::group(['prefix' => 'accounts'], function () {
 
         Route::get('/checker/chitti-rejected-from-uploader-listing', [AccChekerController::class, 'accChittiListReturnFromUploaderL'])->name('accounts.acc-post-return-from-uploader-listing');
 
-
         //this method is use for account uploader listing start
         Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('update.title');
 
@@ -112,7 +111,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => 'admin.guest'], function () {
         Route::get('login', [AdminLoginController::class, 'index'])->name('admin.login');
         Route::post('authenticate', [AdminLoginController::class, 'authenticate'])->name('admin.authenticate');
-
     });
     Route::group(['middleware' => 'admin.auth'], function () {
         Route::get('dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
