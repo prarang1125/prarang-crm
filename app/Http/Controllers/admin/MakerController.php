@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+
 
 class MakerController extends Controller
 {
@@ -104,6 +106,8 @@ class MakerController extends Controller
                 $currentDateTime = getUserCurrentTime();
                 $chitti = new Chitti;
                 $area_id = $request->c2rselect;
+                $date = Carbon::now()->format('Y-m-d');
+                $dateofcreation = Carbon::now()->format('d-M-y H:i:s');
                 // dd($area_id);
                 $areaIdCode = '';
                 if ($request->geography == 6) {
@@ -115,8 +119,8 @@ class MakerController extends Controller
                 }
                 $chitti->languageId = 1;
                 $chitti->description = $request->content;
-                $chitti->dateOfCreation = $currentDateTime;
-                $chitti->createDate = $currentDateTime;
+                $chitti->dateOfCreation = $dateofcreation;
+                $chitti->createDate = $date;
                 $chitti->Title = $request->title;
                 $chitti->SubTitle = $request->subtitle;
                 $chitti->makerId = Auth::guard('admin')->user()->userId;
