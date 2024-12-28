@@ -270,6 +270,8 @@ class UploaderController extends Controller
         if ($validator->passes()) {
 
             $currentDateTime = getUserCurrentTime();
+            $date = Carbon::now()->format('Y-m-d');
+            $dateofcreation = Carbon::now()->format('d-M-y H:i:s');
             if (isset($data['reader']) && is_string($data['reader'])) {
                 $reader = json_decode($data['reader'], true);
                 $data['reader'] = $reader['id'] ?? null; // Use the `id` field from the decoded object
@@ -306,7 +308,7 @@ class UploaderController extends Controller
                     'description' => $request->content,
                     'Title' => $request->title,
                     'SubTitle' => $request->subtitle,
-                    'dateSentToUploader' => $currentDateTime,
+                    'dateSentToUploader' => $dateofcreation,
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::guard('admin')->user()->userId,
                     'uploaderId' => Auth::guard('admin')->user()->userId,
