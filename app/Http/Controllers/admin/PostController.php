@@ -81,7 +81,7 @@ class PostController extends Controller
                 if ($value === 'Select Select') {
                     $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
                 }
-            },
+            }],
             'title' => 'required|string|max:255',
             'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
