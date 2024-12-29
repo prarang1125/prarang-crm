@@ -101,7 +101,7 @@
                                     <th scope="col" class="">Sent Time </th>
                                     <th scope="col" class="">Geography</th>
                                     <th scope="col" class="">Area</th>
-                                    <th scope="col" class="">Status</th>
+                                    <th scope="col" class="">Maker</th>
                                     <th scope="col" class="">Action</th>
                                 </tr>
                             </thead>
@@ -110,7 +110,7 @@
                                     $index = ($chittis->currentPage() - 1) * $chittis->perPage() + 1;
                                 @endphp
                                 @foreach ($chittis as $chitti)
-                                {{-- @dd($chitti); --}}
+                                    {{-- @dd($chitti); --}}
                                     <tr>
                                         <th scope="row" class="" data-id="{{ $chitti->chittiId }}">
                                             {{ $index }}</th>
@@ -118,19 +118,17 @@
                                                 class="text-primary">
                                                 {{ $chitti->Title }}
                                             </a></td>
-                                        <td class="">
-                                            {{ $chitti->dateOfCreation }}
-                                        </td>
+                                        <td>{{ \Carbon\Carbon::parse($chitti->createDate)->format('d M, Y') }}</td>
 
                                         <td>
                                             @if (array_key_exists($chitti->geographyId, config('geography')))
-                                                {{ config('geography')[$chitti->geographyId]}}
+                                                {{ config('geography')[$chitti->geographyId] }}
                                             @endif
                                         </td>
                                         <td>
-                                            {{ $chitti->geography  }}
+                                            {{ $chitti->geography }}
                                         </td>
-                                        <td>{{ $chitti->makerStatus }}</td>
+                                        <td>{{ $chitti->userName ?? 'N/A' }}</td>
 
 
                                         <td class="">
@@ -141,15 +139,8 @@
                                                     class="btn btn-sm btn-danger delete-user">Delete</a>
                                             @else
                                                 <x-post.maker.change-title :chittiId="$chitti->chittiId" />
-
-                                                    {{-- @if (Auth::guard('admin')->check())
-                                                        <x-post.maker.change-title :chittiId="$chitti->chittiId" :$route="route('admin.update.title')" />
-                                                    @else
-                                                        <x-post.maker.change-title :chittiId="$chitti->chittiId" :$route="route('account.update.title')" />
-                                                    @endif --}}
                                             @endif
 
-                                            {{-- <a href="{{ route('admin.maker-update', $chitti->chittiId) }}" class="btn btn-sm btn-primary update-user mt-3">Send to checker</a> --}}
                                         </td>
                                     </tr>
                                     @php $index++; @endphp

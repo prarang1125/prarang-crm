@@ -14,7 +14,7 @@
     </div>
 
     <div class="col-md-6">
-        <label for="c2rselectsx" class="form-label">Select </label>
+        <label for="c2rselectsx" class="form-label">Select {{ $changeTitle }}</label>
         <select id="c2rselectsx" name="c2rselect" class="form-select">
             <option>Select {{ $changeTitle }}</option>
             @foreach ($filteredOptions as $option)

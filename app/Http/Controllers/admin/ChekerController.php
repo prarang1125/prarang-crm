@@ -14,36 +14,18 @@ use App\Models\Mcountry;
 use App\Models\Mregion;
 use App\Models\Mtag;
 use App\Services\ImageUploadService;
+use App\Services\Posts\ChittiListService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Carbon\Carbon;
 
 class ChekerController extends Controller
 {
-    public function indexMain(Request $request)
+    public function indexMain(Request $request, ChittiListService $chittiListService)
     {
-
-        $search = $request->input('search');
-        $chittis = DB::table('chitti as ch')
-            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
-            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
-            ->whereNotNull('Title')
-            ->where('Title', '!=', '')
-            ->where('makerStatus', 'sent_to_checker')
-            ->whereIn('checkerStatus', ['maker_to_checker'])
-            ->whereNotIn('finalStatus', ['approved', 'deleted'])
-
-            ->when($search, function ($query) use ($search) {
-                $query->where('Title', 'LIKE', "%{$search}%")
-                    ->orWhereRaw('LOWER(createDate) LIKE ?', ['%'.mb_strtolower($search, 'UTF-8').'%']);
-            })
-            ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"))
-            ->paginate(30);
-
-        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        $chittis = $chittiListService->getChittiListings($request, 'sent_to_checker', 'checker');
 
         $notification = Chitti::whereNotNull('uploaderReason')
             ->where('uploaderReason', '!=', '')
@@ -51,7 +33,7 @@ class ChekerController extends Controller
             ->where('finalStatus', 'sent_to_checker')
             ->count();
 
-        return view('admin.checker.checker-listing', compact('chittis', 'geographyOptions', 'notification'));
+        return view('admin.checker.checker-listing', compact('chittis', 'notification'));
     }
 
     public function checkerEdit($id)
@@ -77,6 +59,7 @@ class ChekerController extends Controller
         $cities = Mcity::all();
         $countries = Mcountry::all();
         $geographyMapping = $chitti->geographyMappings->first();
+
         $facityValue = $chitti->facity ? $chitti->facity->value : null;
 
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();

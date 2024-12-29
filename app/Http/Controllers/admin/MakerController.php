@@ -205,7 +205,7 @@ class MakerController extends Controller
         $countries = Mcountry::where('isActive', 1)->get();
         $geographyMapping = $chitti->geographyMappings->first();
 
-        return $facityValue = $chitti->facity ? $chitti->facity->value : null;
+        $facityValue = $chitti->facity ? $chitti->facity->value : null;
 
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
 
@@ -332,11 +332,14 @@ class MakerController extends Controller
 
     public function chittiListReturnFromCheckerL(Request $request)
     {
-        $query = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-            ->whereNotNull('Title')
-            ->where('Title', '!=', '')
-            ->where('finalStatus', '!=', 'deleted')
-            ->where('return_chitti_post_from_checker_id', 1);
+        $query = DB::table('chitti as ch')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->whereNotNull('ch.Title')
+            ->where('ch.Title', '!=', '')
+            ->where('ch.finalStatus', '!=', 'deleted')
+            ->where('ch.return_chitti_post_from_checker_id', 1);
 
         if ($request->has('search') && $request->input('search') != '') {
             $search = $request->input('search');
@@ -349,9 +352,8 @@ class MakerController extends Controller
         $chittis = $query->paginate(30);
 
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
-        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
-        return view('admin.maker.chitti-rejected-from-checker-listing', compact('geographyOptions', 'notification', 'chittis'));
+        return view('admin.maker.chitti-rejected-from-checker-listing', compact('notification', 'chittis'));
     }
 
     public function makerDelete($id)
@@ -375,7 +377,7 @@ class MakerController extends Controller
         $validatedData = $request->validate([
             'Title' => [
                 'required',
-                'regex:/^[^\s]+$/',
+                'regex:/^[^@#;"`~\[\]\\\\]+$/',
             ],
             'subTitle' => [
                 'required',
@@ -390,6 +392,7 @@ class MakerController extends Controller
             'chittiId.required' => 'Chitti ID is required.',
             'chittiId.exists' => 'The provided Chitti ID does not exist.',
         ]);
+
         $chitti = Chitti::where('chittiId', $validatedData['chittiId'])->firstOrFail();
         $chitti->Title = $validatedData['Title'];
         $chitti->subTitle = $validatedData['subTitle'];

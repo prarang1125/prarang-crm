@@ -20,42 +20,47 @@ class ChittiListService
     public function getChittiListings($request, $makerStatus = null, $listingType = null)
     {
         $search = $request->input('search');
-        $page = $request->input('page');
-        $cacheKey = 'chittis_'.md5($search.$page);
-        $cacheDuration = 180;
 
-        $chittis = cache()->remember($cacheKey, $cacheDuration, function () use ($search, $makerStatus, $listingType) {
-            $query = DB::table('chitti as ch')
-                ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
-                ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-                ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
-                ->whereNotNull('Title')
-                ->where('Title', '!=', '')
-                // ->orderByDesc('ch.chittiId')
-                ->where('finalStatus', '!=', 'deleted')
-                ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"));
-            if ($makerStatus) {
-                $query->where('makerStatus', '=', $makerStatus);
-            }
+        $query = DB::table('chitti as ch')
+            ->select('ch.*', 'vg.*', 'vCg.*', DB::raw("CONCAT(user.firstName, ' ', user.lastName) as userName"), 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->where('finalStatus', '!=', 'deleted')
+            ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"));
 
-            if ($listingType == 'checker') {
-                $query->whereIn('checkerStatus', ['maker_to_checker']);
-                $query->whereNotIn('finalStatus', ['approved', 'deleted']);
-            } elseif ($listingType == 'uploader') {
-                $query->whereIn('uploaderStatus', ['sent_to_uploader', 'approved']);
-            }
+        if ($makerStatus) {
+            $query->where('makerStatus', '=', $makerStatus);
 
-            if ($search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('Title', 'LIKE', "%{$search}%")
-                        ->orWhere('SubTitle', 'LIKE', "%{$search}%")
-                        ->orWhereRaw('LOWER(createDate) LIKE ?', ['%'.mb_strtolower($search, 'UTF-8').'%']);
-                });
-            }
+        }
+        if ($listingType == 'checker') {
+            $query->whereIn('checkerStatus', ['maker_to_checker']);
+            $query->whereNotIn('finalStatus', ['approved', 'deleted']);
+            $query = $this->users($query, 'ch.makerId');
+        } elseif ($listingType == 'uploader') {
+            $query->whereIn('uploaderStatus', ['sent_to_uploader', 'approved']);
+            // $query->whereNotIn('finalStatus', ['approved', 'deleted']);
+            $query = $this->users($query, 'ch.checkerId');
+        } else {
+            $query = $this->users($query, 'ch.makerId');
+        }
 
-            return $query->paginate(30);
-        });
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('Title', 'LIKE', "%{$search}%")
+                    ->orWhere('SubTitle', 'LIKE', "%{$search}%")
+                    ->orWhereRaw('LOWER(createDate) LIKE ?', ['%'.mb_strtolower($search, 'UTF-8').'%']);
+            });
+        }
+
+        $chittis = $query->paginate(30);
 
         return $chittis;
+    }
+
+    private function users($query, $field)
+    {
+        return $query->leftJoin('muser as user', 'user.userId', '=', $field);
     }
 }

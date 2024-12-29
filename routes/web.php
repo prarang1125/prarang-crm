@@ -229,7 +229,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::put('/checker/checker-update/{id}', [ChekerController::class, 'checkerUpdate'])->name('admin.checker-update');
 
         Route::get('/uploader/uploader-listing', [UploaderController::class, 'indexMain'])->name('admin.uploader-listing');
-        Route::get('/uploader/uploader-listing/{id}', [UploaderController::class, 'index'])->name('admin.uploader-listing');
+        // Route::get('/uploader/uploader-listing/{id}', [UploaderController::class, 'index'])->name('admin.uploader-listing');
         Route::get('/uploader/uploader-edit/{id}', [UploaderController::class, 'uploaderEdit'])->name('admin.uploader-edit');
         Route::put('/uploader/uploader-update/{id}', [UploaderController::class, 'uploaderUpdate'])->name('admin.uploader-update');
 

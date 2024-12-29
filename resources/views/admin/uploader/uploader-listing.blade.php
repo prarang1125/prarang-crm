@@ -51,9 +51,10 @@
                                     <th scope="col" class="">Chitti No.</th>
                                     <th scope="col" class="">Title</th>
                                     <th scope="col" class="">Created Date</th>
+                                    <th scope="col" class="">Checker</th>
                                     <th scope="col" class="">Geography</th>
                                     <th scope="col" class="">Area</th>
-                                    <th scope="col" class="">Status</th>
+                                    <th scope="col" class=""></th>
                                     <th scope="col" class="">Action</th>
                                 </tr>
                             </thead>
@@ -71,19 +72,21 @@
                                                 {{ $chitti->Title }}
                                             </a>
                                         </td>
-                                        <td>{{ $chitti->dateSentToUploader }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($chitti->createDate)->format('d M, Y') }}</td>
+
+                                        <td>{{ $chitti->userName ?? 'N/A' }}</td>
                                         <td>
                                             @if (array_key_exists($chitti->geographyId, config('geography')))
-                                                {{ config('geography')[$chitti->geographyId]}}
+                                                {{ config('geography')[$chitti->geographyId] }}
                                             @endif
                                         </td>
                                         <td>
-                                            {{ $chitti->geography  }}
+                                            {{ $chitti->geography }}
                                         </td>
                                         @if ($chitti->finalStatus == 'approved')
-                                            <td>{{ $chitti->finalStatus }}</td>
+                                            <td><i class="bx bx-check-circle text-success fs-5"></i></td>
                                         @else
-                                            <td>{{ $chitti->uploaderStatus }}</td>
+                                            <td><i class="bx bx-info-circle text-warning fs-5"></i></td>
                                         @endif
 
 

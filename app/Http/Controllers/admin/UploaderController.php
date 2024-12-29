@@ -15,6 +15,7 @@ use App\Models\Mcountry;
 use App\Models\Mregion;
 use App\Models\Mtag;
 use App\Services\ImageUploadService;
+use App\Services\Posts\ChittiListService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,190 +24,12 @@ use Illuminate\Support\Facades\Validator;
 
 class UploaderController extends Controller
 {
-    public function indexMain(Request $request)
+    public function indexMain(Request $request, ChittiListService $chittiListService)
     {
-        // dd('your data is here');
-        $search = $request->input('search');
-        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
-        $cacheDuration = 180;
-        $chittis = DB::table('chitti as ch')
-            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
-            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')->whereNotNull('Title')
-            ->where('Title', '!=', '')
-            ->whereIn('uploaderStatus', ['sent_to_uploader', 'approved'])
-            ->when($search, function ($query, $search) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('Title', 'like', "%{$search}%")
-                        ->orWhere('SubTitle', 'like', "%{$search}%")
-                        ->orWhere('createDate', 'LIKE', '%'.$search.'%');
-                });
-            })
-            ->whereNotIn('finalStatus', ['deleted'])
-            ->orderByDesc('ch.chittiId')
-            ->orderByDesc(DB::raw("STR_TO_DATE(ch.dateSentToUploader, '%d-%b-%y %H:%i:%s')"))
-            ->paginate(30); // Adjust the number per page
+        $chittis = $chittiListService->getChittiListings($request, 'sent_to_checker', 'uploader');
 
-        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-
-        return view('admin.uploader.uploader-listing', compact('chittis', 'geographyOptions', 'search'));
+        return view('admin.uploader.uploader-listing', compact('chittis'));
     }
-
-    //this method is use for show the listing of maker
-    // public function index($id)
-    // {
-    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-    //     ->where('chittiId', $id)
-    //     ->whereNotNull('Title')
-    //     ->where('Title', '!=', '')
-    //     ->where('uploaderStatus', '!=', '')
-    //     ->where('uploaderStatus', '=', 'sent_to_uploader')
-    //     // ->where('finalStatus', '=', 'approved')
-    //     // ->where('finalStatus', '=', 'sent_to_uploader')
-    //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'checkerStatus','uploaderStatus')
-    //     ->get();
-    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-    //     return view('admin.uploader.uploader-listing', compact('chittis', 'geographyOptions'));
-    // }
-
-    public function index(Request $request)
-    {
-        // dd('your data is here');
-        $search = $request->input('search');
-        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
-        $cacheDuration = 180;
-        $chittis = DB::table('chitti as ch')
-            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
-            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')->whereNotNull('Title')
-            ->where('Title', '!=', '')
-            ->whereIn('uploaderStatus', ['sent_to_uploader', 'approved'])
-            ->when($search, function ($query, $search) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('Title', 'like', "%{$search}%")
-                        ->orWhere('SubTitle', 'like', "%{$search}%")
-                        ->orWhere('createDate', 'LIKE', '%'.$search.'%');
-                });
-            })
-            ->whereNotIn('finalStatus', ['deleted', 'sent_to_checker'])
-            ->orderByDesc('ch.chittiId')
-            ->orderByDesc(DB::raw("STR_TO_DATE(ch.dateOfCreation, '%d-%b-%y %H:%i:%s')"))
-            ->paginate(30); // Adjust the number per page
-
-        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-
-        // Fetch geography options
-        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-
-        // Return view with data
-        return view('admin.uploader.uploader-listing', compact('chittis', 'geographyOptions'));
-    }
-
-    //this method is use for maker make new post
-    /**public function makerRegister()
-    {
-        // Fetch data from the Mtag table based on tagCategoryId
-        $timelines = Mtag::where('tagCategoryId', 1)->get();
-        $manSenses = Mtag::where('tagCategoryId', 2)->get();
-        $manInventions = Mtag::where('tagCategoryId', 3)->get();
-        $geographys = Mtag::where('tagCategoryId', 4)->get();
-        $faunas = Mtag::where('tagCategoryId', 5)->get();
-        $floras = Mtag::where('tagCategoryId', 6)->get();
-        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-        // Fetch all regions, cities, and countries
-        $regions = Mregion::all();
-        $cities = Mcity::all();
-        $countries = Mcountry::all();
-
-        return view('admin.maker.maker-register', compact('timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras', 'geographyOptions', 'regions', 'cities', 'countries'));
-    }*/
-
-    //this method is use for store maker data
-    /**public function makerStore(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'content'   => 'required|string|max:1000',
-            'makerImage' => 'required|image|max:2048',
-            'geography' => 'required',
-            'c2rselect' => [
-            'required',
-            function ($attribute, $value, $fail) {
-                if ($value === 'Select Select') {
-                    $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
-                }
-            },
-            'title'     => 'required|string|max:255',
-            'subtitle' => 'required|string|max:255',
-            'forTheCity' => 'required|boolean',
-            'isCultureNature' => 'required|boolean',
-        ]);
-
-        if($validator->passes())
-        {
-            $currentDateTime = getUserCurrentTime();
-            $chitti = new Chitti();
-            $chitti->languageId = 1;
-            $chitti->description = $request->content;
-            $chitti->dateOfCreation =  $currentDateTime;
-            $chitti->createDate =  $currentDateTime;
-            $chitti->Title = $request->title;
-            $chitti->SubTitle = $request->subtitle;
-            $chitti->makerId = Auth::guard('admin')->user()->userId;
-            $chitti->makerStatus = 'sent_to_checker';
-            $chitti->finalStatus = 'sent_to_checker';
-            $chitti->created_at = $currentDateTime;
-            $chitti->created_by = Auth::guard('admin')->user()->userId;
-            $chitti->save();
-            // get last inserted id
-            $lastId = $chitti->chittiId;
-
-            $facity = new Facity();
-            $facity->value = $request->forTheCity;
-
-            $facity->created_by = Auth::guard('admin')->user()->userId;
-            $facity->save();
-
-            if($request->hasFile('makerImage')){
-                $makerImage = $request->file('makerImage');
-                $makerImageName = time() . '_' . $makerImage->getClientOriginalName();
-                $makerImage->move(public_path('uploads/maker_image/'), $makerImageName);
-                $url = public_path('uploads/maker_image/')."".$makerImageName;
-                $serviceAccessUrl = "admin.prarang.in/".$url;
-            }
-
-            $chittiimagemapping = new Chittiimagemapping();
-            $chittiimagemapping->imageName = $makerImageName;
-            $chittiimagemapping->imageUrl = $serviceAccessUrl;
-            $chittiimagemapping->accessUrl = $url;
-            $chittiimagemapping->isActive = '1';
-            $chittiimagemapping->chittiId = $lastId;
-            $chittiimagemapping->isDefult = 'true';
-            $chittiimagemapping->imageTag = $makerImageName;
-            $chittiimagemapping->created_at = $currentDateTime;
-            $chittiimagemapping->created_by = Auth::guard('admin')->user()->userId;
-            $chittiimagemapping->save();
-
-            $chittigeographymapping = new Chittigeographymapping();
-            $chittigeographymapping->areaId = $request->c2rselect;
-            $chittigeographymapping->geographyId = $request->geography;
-            $chittigeographymapping->chittiId = $lastId;
-            $chittigeographymapping->created_at = $currentDateTime;
-            $chittigeographymapping->created_by = Auth::guard('admin')->user()->userId;
-            $chittigeographymapping->save();
-
-            $chittitagmapping = new Chittitagmapping();
-            $chittitagmapping->chittiId = $lastId;
-            $chittitagmapping->tagId = $request->isCultureNature;
-            $chittitagmapping->created_at = $currentDateTime;
-            $chittitagmapping->created_by = Auth::guard('admin')->user()->userId;
-            $chittitagmapping->save();
-            return redirect()->route('admin.maker-listing')->with('success', 'Post created successfully.');
-        }else{
-            return redirect()->route('admin.maker-register')
-                ->withErrors($validator)
-                ->withInput();
-        }
-    }**/
 
     public function uploaderEdit($id)
     {
@@ -250,7 +73,7 @@ class UploaderController extends Controller
                         $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
                     }
                 }],
-            'title' => ['required', 'string', 'max:255', 'regex:/^[^\s]+$/'],
+            'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
             'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
             'forTheCity' => 'required|boolean',
             // 'isCultureNature' => 'required|boolean',

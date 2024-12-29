@@ -1,7 +1,7 @@
 <div class="col">
 
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#title{{ $chittiId }}"><i
-            class="bx bx-edit-alt"></i></button>
+    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+        data-bs-target="#title{{ $chittiId }}"><i class="bx bx-edit-alt"></i></button>
     <!-- Modal -->
     <div class="modal fade" id="title{{ $chittiId }}" tabindex="-1" aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
