@@ -10,7 +10,9 @@ class Facity extends Model
     use HasFactory;
 
     protected $table = 'facity';
+
     protected $primaryKey = 'chittiId';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -23,10 +25,11 @@ class Facity extends Model
     ];
 
     const CREATED_AT = 'created_at';
+
     const UPDATED_AT = 'updated_at';
 
     public function chitti()
     {
-        return $this->belongsTo(Chitti::class, 'from_chittiId', 'chittiId');
+        return $this->belongsTo(Chitti::class, 'chittiId', 'chittiId');
     }
 }
