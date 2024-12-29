@@ -20,6 +20,7 @@ use App\Models\Chittigeographymapping;
 use App\Models\Chittiimagemapping;
 use App\Models\Facity;
 use App\Models\Chittitagmapping;
+use Carbon\Carbon;
 
 
 class AccMakerController extends Controller
@@ -138,6 +139,9 @@ class AccMakerController extends Controller
 
             $chitti = new Chitti();
             $area_id = $request->c2rselect;
+            $date = Carbon::now()->format('Y-m-d');
+            $dateofcreation = Carbon::now()->format('d-M-y H:i:s');
+           
             $areaIdCode = '';
             if ($request->geography == 6) { //6 is use for city
                 $areaIdCode = 'c' . $area_id;
@@ -149,8 +153,8 @@ class AccMakerController extends Controller
 
             $chitti->languageId = 1;
             $chitti->description = $request->content;
-            $chitti->dateOfCreation = $currentDateTime;
-            $chitti->createDate = $currentDateTime;
+            $chitti->dateOfCreation = $dateofcreation;
+            $chitti->createDate = $date;
             $chitti->Title = $request->title;
             $chitti->SubTitle = $request->subtitle;
             $chitti->makerId = Auth::user()->userId;
@@ -294,7 +298,8 @@ class AccMakerController extends Controller
             DB::beginTransaction();
             try {
             $currentDateTime = getUserCurrentTime();
-
+            $date = Carbon::now()->format('Y-m-d');
+            $dateofcreation = Carbon::now()->format('d-M-y H:i:s');
             // Update Chitti record
             $chitti = Chitti::findOrFail($id);
 
@@ -308,7 +313,7 @@ class AccMakerController extends Controller
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
                     'return_chitti_post_from_checker_id' => 0,
-                    'returnDateToChecker' => $currentDateTime,
+                    'returnDateToChecker' => $dateofcreation,
                     'makerId'       => Auth::user()->userId,
                     // 'finalStatus'   => 'Null',
                 ]);
@@ -339,7 +344,7 @@ class AccMakerController extends Controller
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
                     'return_chitti_post_from_checker_id' => 0,
-                    'returnDateToChecker' => $currentDateTime,
+                    'returnDateToChecker' => $dateofcreation,
                     'cityId' => $area_id,
                     'areaId' => $area_id,
                     'geographyId' => $request->geography,

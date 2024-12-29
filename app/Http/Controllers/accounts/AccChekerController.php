@@ -19,6 +19,7 @@ use App\Models\Mcountry;
 use App\Models\Facity;
 use App\Models\Chittiimagemapping;
 use App\Models\Chittigeographymapping;
+use Carbon\Carbon;
 
 
 class AccChekerController extends Controller
@@ -138,6 +139,8 @@ class AccChekerController extends Controller
         if ($validator->passes()) {
 
             $currentDateTime = getUserCurrentTime();
+            $date = Carbon::now()->format('Y-m-d');
+            $dateofcreation = Carbon::now()->format('d-M-y H:i:s');
             $chitti = Chitti::findOrFail($id);
 
             // Update Chitti record
@@ -146,7 +149,7 @@ class AccChekerController extends Controller
                 $chitti->update([
                     'uploaderStatus'   => 'sent_to_uploader',
                     'checkerStatus' => 'sent_to_uploader',
-                    'dateSentToUploader' => $currentDateTime,
+                    'dateSentToUploader' => $dateofcreation,
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
                 ]);

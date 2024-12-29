@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class ChekerController extends Controller
 {
@@ -106,6 +107,8 @@ class ChekerController extends Controller
         if ($validator->passes()) {
 
             $currentDateTime = getUserCurrentTime();
+            $date = Carbon::now()->format('Y-m-d');
+            $dateofcreation = Carbon::now()->format('d-M-y H:i:s');
 
             $chitti = Chitti::findOrFail($id);
             if ($request->action === 'send_to_uploader') {
@@ -114,7 +117,7 @@ class ChekerController extends Controller
                     'uploaderStatus' => 'sent_to_uploader',
                     'checkerStatus' => 'sent_to_uploader',
                     'updated_at' => $currentDateTime,
-                    'dateSentToUploader' => $currentDateTime,
+                    'dateSentToUploader' => $dateofcreation,
                     'updated_by' => Auth::guard('admin')->user()->userId,
 
                 ]);
@@ -134,7 +137,7 @@ class ChekerController extends Controller
 
                 $currentDate = date('d-M-y H:i:s');
                 $chitti->update([
-                    'dateOfReturnToMaker' => $currentDate,
+                    'dateOfReturnToMaker' => $dateofcreation,
                     'returnDateMaker' => $currentDate,
                     'makerStatus' => 'sent_to_checker',
                     'checkerId' => Auth::guard('admin')->user()->userId,
@@ -217,9 +220,11 @@ class ChekerController extends Controller
         $validated = $request->validate([
             'returnChittiToMakerWithRegion' => 'required|string',
         ]);
+        $date = Carbon::now()->format('Y-m-d');
+        $dateofcreation = Carbon::now()->format('d-M-y H:i:s');
         $chitti = Chitti::findOrFail($id);
         $chitti->update([
-            'dateOfReturnToMaker' => $currentDate,
+            'dateOfReturnToMaker' => $dateofcreation,
             'returnDateMaker' => $currentDate,
             'makerStatus' => 'return_chitti_post_from_checker',
             'checkerId' => $checkerId,

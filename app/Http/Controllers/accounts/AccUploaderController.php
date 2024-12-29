@@ -20,6 +20,7 @@ use App\Models\Chittigeographymapping;
 use App\Services\ImageUploadService;
 use Illuminate\Support\Facades\DB;
 use App\Models\ColorInfo;
+use Carbon\Carbon;
 
 class AccUploaderController extends Controller
 {
@@ -251,6 +252,8 @@ class AccUploaderController extends Controller
         if ($validator->passes()) {
 
             $currentDateTime = getUserCurrentTime();
+            $date = Carbon::now()->format('Y-m-d');
+            $dateofcreation = Carbon::now()->format('d-M-y H:i:s');
             $chitti = Chitti::findOrFail($id);
             if (isset($data['reader']) && is_string($data['reader'])) {
                 $reader = json_decode($data['reader'], true);
@@ -267,7 +270,8 @@ class AccUploaderController extends Controller
                     'finalStatus'   => 'approved',
                     'updated_at'    => $currentDateTime,
                     'updated_by'    => Auth::user()->userId,
-                    'dateOfApprove'=>$currentDateTime
+                    'dateOfApprove'=> Carbon::parse($currentDateTime)->format('d-m-Y g:i A'),
+                    'uploaderId' => Auth::user()->userId,
                 ]);
 
                 return redirect()->route('accounts.uploader-dashboard')->with('success', 'Uploader updated successfully.');
