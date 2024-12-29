@@ -76,12 +76,12 @@ class PostController extends Controller
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
             'c2rselect' => [
-            'required',
-            function ($attribute, $value, $fail) {
-                if ($value === 'Select Select') {
-                    $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
-                }
-            }],
+                'required',
+                function ($attribute, $value, $fail) {
+                    if ($value === 'Select Select') {
+                        $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
+                    }
+                }],
             'title' => 'required|string|max:255',
             'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
@@ -112,7 +112,7 @@ class PostController extends Controller
                     'updated_by' => Auth::guard('admin')->user()->userId,
                 ]);
 
-                Facity::where('from_chittiId', $id)->update([
+                Facity::where('chittiId', $id)->update([
                     'value' => $request->forTheCity,
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::guard('admin')->user()->userId,

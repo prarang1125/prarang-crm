@@ -162,8 +162,7 @@ class UploaderController extends Controller
 
             $facity = new Facity();
             $facity->value = $request->forTheCity;
-            $facity->from_chittiId = $lastId;
-            $facity->created_at = $currentDateTime;
+
             $facity->created_by = Auth::guard('admin')->user()->userId;
             $facity->save();
 
@@ -320,7 +319,7 @@ class UploaderController extends Controller
                 ]);
 
                 // Update Facity record
-                Facity::where('from_chittiId', $id)->update([
+                Facity::where('chittiId', $id)->update([
                     'value' => $request->forTheCity,
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::guard('admin')->user()->userId,

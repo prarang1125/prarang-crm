@@ -17,7 +17,7 @@ class Facity extends Model
 
     protected $fillable = [
         'value',
-        'from_chittiId',
+        'chittiId',
         'created_at',
         'created_by',
         'updated_at',

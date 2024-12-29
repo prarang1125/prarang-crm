@@ -14,6 +14,7 @@ use App\Models\Mcountry;
 use App\Models\Mregion;
 use App\Models\Mtag;
 use App\Services\ImageUploadService;
+use App\Services\Posts\ChittiListService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,34 +24,11 @@ use Illuminate\Support\Facades\Validator;
 
 class MakerController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, ChittiListService $chittiListingService)
     {
-        $search = $request->input('search');
-
-        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
-        $cacheDuration = 180;
-
-        $chittis = DB::table('chitti as ch')
-            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
-            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
-            ->when($search, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('Title', 'LIKE', '%'.$search.'%')
-                        ->orWhere('SubTitle', 'LIKE', '%'.$search.'%')
-                        ->orWhere('createDate', 'LIKE', '%'.$search.'%');
-                });
-            })
-
-            ->whereNotNull('Title')
-            ->where('Title', '!=', '')
-            ->where('makerStatus', '=', 'sent_to_checker')
-            ->where('finalStatus', '!=', 'deleted')
-            ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"))
-            ->paginate(30);
-
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        $chittis = $chittiListingService->getChittiListings($request, 'sent_to_checker');
 
         return view('admin.maker.maker-listing', compact('chittis', 'geographyOptions', 'notification'));
     }
@@ -151,7 +129,7 @@ class MakerController extends Controller
 
                 $facity = new Facity;
                 $facity->value = $request->forTheCity;
-                $facity->from_chittiId = $lastId;
+                $facity->chittiId = $lastId;
                 $facity->created_at = $currentDateTime;
                 $facity->created_by = Auth::guard('admin')->user()->userId;
                 $facity->save();
@@ -299,7 +277,7 @@ class MakerController extends Controller
 
                     ]);
 
-                    Facity::where('from_chittiId', $id)->update([
+                    Facity::where('chittiId', $id)->update([
                         'value' => $request->forTheCity,
                         'updated_at' => $currentDateTime,
                         'updated_by' => Auth::guard('admin')->user()->userId,
