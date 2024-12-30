@@ -261,9 +261,8 @@ class MakerController extends Controller
                     $area_id = $request->c2rselect;
                     $chitti->update([
                         'description' => $request->content,
-                        'title' => ['required', 'string', 'max:255', 'regex:/^[^\s]+$/'],
-                        'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
-
+                        'Title' => $request->title,
+                        'SubTitle' => $request->subtitle,
                         'makerStatus' => 'sent_to_checker',
                         'makerId' => Auth::guard('admin')->user()->userId,
 

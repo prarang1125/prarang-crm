@@ -30,13 +30,13 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 text-uppercase">Return Maker Listing</h6>
                     <!-- <a class="nav-link dropdown-toggle-nocaret position-relative"
-                                                                                                                                                                                                                                                                                                                                                href="{{ route('admin.post-return-from-checker-listing') }}"
-                                                                                                                                                                                                                                                                                                                                                role="button">
-                                                                                                                                                                                                                                                                                                                                                    @if ($notification > 0)
+                                                                                                                                                                                                                                                                                                                                                                                                                            href="{{ route('admin.post-return-from-checker-listing') }}"
+                                                                                                                                                                                                                                                                                                                                                                                                                            role="button">
+                                                                                                                                                                                                                                                                                                                                                                                                                                @if ($notification > 0)
     <span class="alert-count">{{ $notification }}</span>
     @endif
-                                                                                                                                                                                                                                                                                                                                                    <i class="bx bx-bell"></i>
-                                                                                                                                                                                                                                                                                                                                                </a> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="bx bx-bell"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                            </a> -->
                 </div>
                 <hr />
                 <div class="card">
@@ -99,7 +99,8 @@
 
                                                 <button type="submit"
                                                     onclick="return confirm('Are you want to delete this post.')"
-                                                    class="btn btn-sm btn-danger delete-user">Delete</button>
+                                                    class="btn btn-sm btn-danger delete-user"><i
+                                                        class="bx bx-trash"></i></button>
                                             </form>
                                             {{-- <a href="{{ route('admin.maker-update', $chitti->chittiId) }}" class="btn btn-sm btn-primary update-user mt-3">Send to checker</a> --}}
                                         </td>

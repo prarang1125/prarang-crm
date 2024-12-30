@@ -42,7 +42,6 @@
                                 <i class="bx bx-refresh"></i>
                             </a>
                         @endif
-                        {{-- <a href="{{ url('/admin/checker/checker-register') }}" class="btn btn-primary">Add New Maker</a> --}}
                     </div>
                     <div class="card-body">
                         <table class="table mb-0 table-hover">
@@ -50,8 +49,8 @@
                                 <tr>
                                     <th scope="col" class="">Chitti No.</th>
                                     <th scope="col" class="">Title</th>
-                                    <th scope="col" class="">Created Date</th>
                                     <th scope="col" class="">Checker</th>
+                                    <th scope="col" class="">Created Date</th>
                                     <th scope="col" class="">Geography</th>
                                     <th scope="col" class="">Area</th>
                                     <th scope="col" class=""></th>
@@ -72,9 +71,10 @@
                                                 {{ $chitti->Title }}
                                             </a>
                                         </td>
+                                        <td>{{ $chitti->userName ?? 'N/A' }}</td>
                                         <td>{{ \Carbon\Carbon::parse($chitti->createDate)->format('d M, Y') }}</td>
 
-                                        <td>{{ $chitti->userName ?? 'N/A' }}</td>
+
                                         <td>
                                             @if (array_key_exists($chitti->geographyId, config('geography')))
                                                 {{ config('geography')[$chitti->geographyId] }}

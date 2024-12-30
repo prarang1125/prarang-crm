@@ -11,11 +11,11 @@ class ChangeTitle extends Component
     /**
      * Create a new component instance.
      */
-    public $chittiId;
+    public $chitti;
 
-    public function __construct($chittiId)
+    public function __construct($chitti)
     {
-        $this->chittiId = $chittiId;
+        $this->chitti = $chitti;
     }
 
     /**

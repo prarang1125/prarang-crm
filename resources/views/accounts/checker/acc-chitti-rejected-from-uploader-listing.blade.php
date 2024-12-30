@@ -28,7 +28,7 @@
                     </div>
                 @endif
                 <!-- <h6 class="mb-0 text-uppercase">Checker Listing</h6>
-                <hr /> -->
+                                                    <hr /> -->
                 <div class="d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 text-uppercase">Checker Listing</h6>
                     <a class="nav-link dropdown-toggle-nocaret position-relative btn btn-outline-primary p-1"
@@ -86,11 +86,11 @@
                                         <td> {{ $chitti->dateOfReturnToChecker }}</td>
                                         <td>
                                             @if (array_key_exists($chitti->geographyId, config('geography')))
-                                                {{ config('geography')[$chitti->geographyId]}}
+                                                {{ config('geography')[$chitti->geographyId] }}
                                             @endif
                                         </td>
                                         <td>
-                                            {{ $chitti->geography  }}
+                                            {{ $chitti->geography }}
                                         </td>
                                         @if ($chitti->uploaderStatus == 'sent_to_checker')
                                             <td>{{ $chitti->uploaderStatus }}</td>
@@ -100,12 +100,6 @@
                                         <td class="">
                                             <a href="{{ route('accounts.acc-checker-edit', $chitti->chittiId) }}"
                                                 class="btn btn-sm btn-primary edit-user">Edit</a>
-
-                                            {{-- <form action="{{ route('admin.live-city-delete', '$mcity->cityId') }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm btn-danger delete-user">Delete</button>
-                                        </form> --}}
-                                            {{-- <a href="{{ route('admin.maker-update', $chitti->chittiId) }}" class="btn btn-sm btn-primary update-user mt-3">Send to checker</a> --}}
                                         </td>
                                     </tr>
                                     @php $index++;  @endphp

@@ -98,10 +98,11 @@
                                 <tr>
                                     <th scope="col" class="">Chitti No.</th>
                                     <th scope="col" class="">Title</th>
+                                    <th scope="col" class="">Maker</th>
                                     <th scope="col" class="">Sent Time </th>
                                     <th scope="col" class="">Geography</th>
                                     <th scope="col" class="">Area</th>
-                                    <th scope="col" class="">Maker</th>
+                                    <th></th>
                                     <th scope="col" class="">Action</th>
                                 </tr>
                             </thead>
@@ -114,10 +115,10 @@
                                     <tr>
                                         <th scope="row" class="" data-id="{{ $chitti->chittiId }}">
                                             {{ $index }}</th>
-                                        <td class=""><a href="{{ route('admin.maker-edit', $chitti->chittiId) }}"
-                                                class="text-primary">
-                                                {{ $chitti->Title }}
+                                        <td class="">
+                                            {{ $chitti->Title }}
                                             </a></td>
+                                        <td>{{ $chitti->userName ?? 'N/A' }}</td>
                                         <td>{{ \Carbon\Carbon::parse($chitti->createDate)->format('d M, Y') }}</td>
 
                                         <td>
@@ -128,17 +129,25 @@
                                         <td>
                                             {{ $chitti->geography }}
                                         </td>
-                                        <td>{{ $chitti->userName ?? 'N/A' }}</td>
 
 
+                                        <td>
+                                            @if ($chitti->finalStatus === 'approved')
+                                                <i class="bx bx-check-circle text-success mt-2"></i>
+                                            @else
+                                                <i class="bx bx-info-circle text-warning mt-2"></i>
+                                            @endif
+                                        </td>
                                         <td class="">
+
                                             @if ($chitti->checkerStatus != 'maker_to_checker' && $chitti->checkerStatus != 'sent_to_uploader')
                                                 <a href="{{ route('admin.maker-edit', $chitti->chittiId) }}"
                                                     class="btn btn-sm btn-primary edit-user">Edit</a>
                                                 <a href="{{ route('admin.maker-delete', $chitti->chittiId) }}"
-                                                    class="btn btn-sm btn-danger delete-user">Delete</a>
+                                                    onclick="return confirm('Are you want to delete this post.')"
+                                                    class="btn btn-sm btn-danger"><i class="bx bx-trash"></i></a>
                                             @else
-                                                <x-post.maker.change-title :chittiId="$chitti->chittiId" />
+                                                <x-post.maker.change-title :chitti="$chitti" />
                                             @endif
 
                                         </td>

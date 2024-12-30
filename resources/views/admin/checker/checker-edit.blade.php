@@ -379,7 +379,7 @@
                             {{-- <button type="submit" class="btn btn-primary" name="action" value="send_to_maker">Send to maker</button> --}}
 
                             <a href="{{ route('admin.checker-chitti-return-to-maker-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}"
-                                class="btn btn-primary">Send to maker</a>
+                                class="btn btn-primary">Return to maker</a>
 
                             <button type="submit" onclick="return confirm('Do You want to send to Uploader?');"
                                 class="btn btn-primary" name="action" value="send_to_uploader">Send to Uploader</button>

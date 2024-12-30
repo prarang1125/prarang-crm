@@ -225,23 +225,6 @@ class ChekerController extends Controller
 
     public function chittiListReturnFromUploaderL(Request $request)
     {
-        /*$query = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-            ->whereNotNull('Title')
-            ->where('Title', '!=', '')
-            ->where('finalStatus', '!=', 'deleted')
-            ->where('finalStatus', '=', 'sent_to_checker')
-            ->where('uploaderReason', '!=', '')
-            ->where('finalStatus', '=', 'sent_to_checker');
-
-        if ($request->has('search') && $request->input('search') != '') {
-            $search = $request->input('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('Title', 'LIKE', "%$search%")
-                    ->orWhere('description', 'LIKE', "%$search%");
-            });
-        }
-
-        $chittis = $query->paginate(30);*/
 
         $search = $request->input('search');
         $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
@@ -270,8 +253,8 @@ class ChekerController extends Controller
             ->where('uploaderStatus', 'sent_to_checker')
             ->where('finalStatus', 'sent_to_checker')
             ->count();
-        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        // $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
-        return view('admin.checker.chitti-rejected-from-uploader-listing', compact('geographyOptions', 'notification', 'chittis'));
+        return view('admin.checker.chitti-rejected-from-uploader-listing', compact('notification', 'chittis'));
     }
 }
