@@ -69,7 +69,8 @@
         <h1>Welcome to Prarang, {{ $request->firstName }}!</h1>
         <p>We're excited to have you join our platform. Below are your login details for accessing the Prarang CRM:</p>
         <ul>
-            <li><strong>URL:</strong> <a href="https://admin.prarang.in" target="_blank">https://crm-test.prarang.com</a>
+            <li><strong>URL:</strong> <a href="https://crm-test.prarang.com"
+                    target="_blank">https://crm-test.prarang.com</a>
             </li>
             <li><strong>Email:</strong> {{ $request->emailId }}</li>
             <li><strong>Password:</strong> {{ $request->empPassword }}</li>
