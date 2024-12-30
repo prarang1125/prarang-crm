@@ -34,7 +34,7 @@
                     <!-- Search Form -->
                     <form action="{{ url('admin/postanalyticsmaker/post-analytics-maker-listing') }}" method="GET" class="d-flex me-3">
                         <input type="hidden" name="cityCode" value="{{ request()->query('cityCode') }}">
-                        <input type="text" name="search" class="form-control me-2" placeholder="Search by Title" value="{{ request()->query('search') }}">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search by Title" value="{{ request()->query('search') }}" autocomplete="off">
                         <button type="submit" class="btn btn-secondary">Search</button>
                     </form>
 

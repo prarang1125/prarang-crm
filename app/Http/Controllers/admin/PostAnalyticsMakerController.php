@@ -28,8 +28,8 @@ class PostAnalyticsMakerController extends Controller
         // Search functionality
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
-                $q->where('cityNameInEnglish', 'LIKE', "%{$search}%")
-                    ->orWhere('cityNameInUnicode', 'LIKE', "%{$search}%");
+                $q->where('geography', 'LIKE', "%{$search}%")
+                    ->orWhere('geography', 'LIKE', "%{$search}%");
             });
         }
 
@@ -110,6 +110,7 @@ class PostAnalyticsMakerController extends Controller
                 'search' => $search,
             ]);
 
+            // dd($chittis);
         return view('admin.postanalyticsmaker.post-analytics-maker-listing', compact('chittis'));
     }
 
