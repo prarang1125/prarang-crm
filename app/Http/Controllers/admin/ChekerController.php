@@ -269,7 +269,6 @@ class ChekerController extends Controller
             ->where('finalStatus', '!=', 'deleted')
             ->where('finalStatus', '=', 'sent_to_checker')
             ->where('uploaderReason', '!=', '')
-            ->where('finalStatus', '=', 'sent_to_checker')
 
             ->when($search, function ($query, $search) {
                 $query->where(function ($query) use ($search) {
