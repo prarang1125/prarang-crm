@@ -22,7 +22,6 @@ class PostAnalyticsMakerController extends Controller
                     ->orWhere('geography', 'LIKE', "%{$search}%");
             });
         }
-
         // Paginate results
         $mcitys = $query->paginate(20);
         $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
@@ -35,10 +34,11 @@ class PostAnalyticsMakerController extends Controller
         // Get the cityCode from the request
         $cityCode = $request->query('cityCode');
 
+        $geography = DB::table('vGeography')->select('geography', 'geographycode')->get();
+
         $chittis = $chittiListService->getChittiListingsForAnalytics($request, 'maker', $cityCode);
 
-            // dd($chittis);
-        return view('admin.postanalyticsmaker.post-analytics-maker-listing', compact('chittis'));
+        return view('admin.postanalyticsmaker.post-analytics-maker-listing', compact('chittis', 'geography'));
     }
 
     //this method is use for  show the post analytics maker edit data and page
@@ -60,6 +60,7 @@ class PostAnalyticsMakerController extends Controller
     // this method is use for update the post analytics method
     public function postAnalyticsMakerUpdate(Request $request, $id)
     {
+
         $validated = $request->validate([
             'postNumber' => 'required|string',
             'titleOfPost' => 'required|string',
@@ -104,7 +105,7 @@ class PostAnalyticsMakerController extends Controller
         ]);
 
         // Redirect with success message
-        return redirect()->back()
+        return redirect()->route('admin.post-analytics-maker-listing', ['cityCode' => $request->cityCode])
             ->with('success', 'Data updated successfully.');
 
     }

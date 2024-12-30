@@ -33,8 +33,9 @@ class PostAnalyticsCheckerController extends Controller
 
         $cityCode = $request->query('cityCode');
         $chittis = $chittiListService->getChittiListingsForAnalytics($request, 'checker', $cityCode);
+        $geography = DB::table('vGeography')->select('geography', 'geographycode')->get();
 
-        return view('admin.postanalyticschecker.post-analytics-checker-listing', compact('chittis'));
+        return view('admin.postanalyticschecker.post-analytics-checker-listing', compact('chittis', 'geography'));
     }
 
     public function postAnalyticsChckerEdit(Request $request)
@@ -117,9 +118,9 @@ class PostAnalyticsCheckerController extends Controller
             'analyticsChecker' => $checkerId,
         ]);
 
-        return redirect()->route('admin.post-analytics-checker-city-listing')
+        return redirect()->route('admin.post-analytics-checker-listing', ['cityCode' => $request->cityCode])
             ->with('success', 'Post Analytics have been approved successfully.');
-        // return back()->with('success', 'Post Analytics have been approved successfully');
+
     }
 
     //this method is use for make page for write the region of return to maker

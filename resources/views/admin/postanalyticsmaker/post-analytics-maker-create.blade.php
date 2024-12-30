@@ -27,8 +27,9 @@
                     @endif
                     <h6 class="mb-0 text-uppercase text-primary">Create New Maker Analytics</h6>
                     <hr />
-                    <form action="{{ route('admin.post-analytics-maker-update', $chitti->chittiId) }}" method="POST"
-                        enctype="multipart/form-data">
+                    <form
+                        action="{{ route('admin.post-analytics-maker-update', $chitti->chittiId) }}?cityCode={{ Request::query('city') }}"
+                        method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="row">
@@ -113,11 +114,10 @@
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
                             </div>
-
                             <div class="col-md-3">
                                 <label for="to" class="form-label">To</label>
                                 <input type="date" class="form-control @error('to') is-invalid @enderror" id="to"
-                                    name="to" value="{{ date('Y-m-d') }}">
+                                    name="to" value="{{ old('to', $chitti->postViewershipDateTo) }}">
                                 @error('to')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
