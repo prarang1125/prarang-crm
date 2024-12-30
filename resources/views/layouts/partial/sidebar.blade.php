@@ -23,15 +23,20 @@
                 </li>
                 <li> <a href="{{ url('/admin/maker/maker-listing') }}"><i class="bx bx-right-arrow-alt"></i>Maker</a>
                 </li>
-                <li> <a href="{{ url('/admin/checker/checker-listing') }}"><i class="bx bx-right-arrow-alt"></i>Checker</a>
+                <li> <a href="{{ url('/admin/checker/checker-listing') }}"><i
+                            class="bx bx-right-arrow-alt"></i>Checker</a>
                 </li>
-                <li> <a href="{{ url('/admin/uploader/uploader-listing') }}"><i class="bx bx-right-arrow-alt"></i>Uploader</a>
+                <li> <a href="{{ url('/admin/uploader/uploader-listing') }}"><i
+                            class="bx bx-right-arrow-alt"></i>Uploader</a>
                 </li>
-                <li> <a href="{{ url('/admin/postanalyticsmaker/post-analytics-maker-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>Post Analytics Maker</a>
+                <li> <a href="{{ url('/admin/postanalyticsmaker/post-analytics-maker-city-listing') }}"><i
+                            class="bx bx-right-arrow-alt"></i>Post Analytics Maker</a>
                 </li>
-                <li> <a href="{{ url('/admin/postanalyticschecker/post-analytics-checker-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>Post Analytics Checker</a>
+                <li> <a href="{{ url('/admin/postanalyticschecker/post-analytics-checker-city-listing') }}"><i
+                            class="bx bx-right-arrow-alt"></i>Post Analytics Checker</a>
                 </li>
-                <li> <a href="{{ url('/admin/postanalytics/post-analytics-listing') }}"><i class="bx bx-right-arrow-alt"></i>Post Analytics</a>
+                <li> <a href="{{ url('/admin/postanalytics/post-analytics-listing') }}"><i
+                            class="bx bx-right-arrow-alt"></i>Post Analytics</a>
                 </li>
             </ul>
         </li>
@@ -48,86 +53,80 @@
                 </li>
                 <li> <a href="{{ url('/admin/role/role-listing') }}"><i class="bx bx-right-arrow-alt"></i>Role</a>
                 </li>
-                <li> <a href="{{ url('/admin/languagescript/languagescript-listing') }}"><i class="bx bx-right-arrow-alt"></i>Language Script</a>
+                <li> <a href="{{ url('/admin/languagescript/languagescript-listing') }}"><i
+                            class="bx bx-right-arrow-alt"></i>Language Script</a>
                 </li>
-                <li> <a href="{{ url('/admin/country/country-listing') }}"><i class="bx bx-right-arrow-alt"></i>Country</a>
+                <li> <a href="{{ url('/admin/country/country-listing') }}"><i
+                            class="bx bx-right-arrow-alt"></i>Country</a>
                 </li>
-                <li> <a href="{{ url('/admin/livecity/live-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>Live City</a>
+                <li> <a href="{{ url('/admin/livecity/live-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>Live
+                        City</a>
                 </li>
-                <li> <a href="{{ url('/admin/scities/scities-listing') }}"><i class="bx bx-right-arrow-alt"></i>City</a>
+                <li> <a href="{{ url('/admin/scities/scities-listing') }}"><i
+                            class="bx bx-right-arrow-alt"></i>City</a>
                 </li>
-                <li> <a href="{{ url('/admin/region/region-listing') }}"><i class="bx bx-right-arrow-alt"></i>Region</a>
+                <li> <a href="{{ url('/admin/region/region-listing') }}"><i
+                            class="bx bx-right-arrow-alt"></i>Region</a>
                     {{-- Portal: Vivek --}}
-                    <li> <a href="{{ route('portal.index') }}"><i class="bx bx-right-arrow-alt"></i>Portals</a>
-                    </li>
-                    {{-- End Portal:Vivek --}}
+                <li> <a href="{{ route('portal.index') }}"><i class="bx bx-right-arrow-alt"></i>Portals</a>
                 </li>
-                <li> <a href="{{ url('/admin/tagcategory/tag-category-listing') }}"><i class="bx bx-right-arrow-alt"></i>Tag Category</a>
-                </li>
-                <li> <a href="{{ url('/admin/tag/tag-listing') }}"><i class="bx bx-right-arrow-alt"></i>Tag</a>
-                </li>
-                <li> <a href="{{ url('/admin/usercountry/user-country-listing') }}"><i class="bx bx-right-arrow-alt"></i>User Country</a>
-                </li>
-                <li> <a href="{{ url('/admin/usercity/user-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>User City</a>
-                </li>
-                <li> <a href="{{ url('/admin/post/post-listing') }}"><i class="bx bx-right-arrow-alt"></i>Post</a>
-                </li>
-                <li> <a href="{{ url('/admin/deleted-post/deleted-post-listing') }}"><i class="bx bx-right-arrow-alt"></i>Deleted Post</a>
-                </li>
-            </ul>
+                {{-- End Portal:Vivek --}}
         </li>
-        <li>
-            <a href="javascript:;" class="has-arrow">
-                <div class="parent-icon"><i class='bx bx-cart'></i>
-                </div>
-                <div class="menu-title">eCommerce</div>
-            </a>
-            <ul>
-                <li> <a href="ecommerce-products.html"><i class="bx bx-right-arrow-alt"></i>Products</a>
-                </li>
-                <li> <a href="ecommerce-products-details.html"><i class="bx bx-right-arrow-alt"></i>Product Details</a>
-                </li>
-                <li> <a href="ecommerce-add-new-products.html"><i class="bx bx-right-arrow-alt"></i>Add New Products</a>
-                </li>
-                <li> <a href="ecommerce-orders.html"><i class="bx bx-right-arrow-alt"></i>Orders</a>
-                </li>
-            </ul>
+        <li> <a href="{{ url('/admin/tagcategory/tag-category-listing') }}"><i class="bx bx-right-arrow-alt"></i>Tag
+                Category</a>
         </li>
-    @elseif (Auth::check())
-        {{-- Other Roles Sidebar --}}
-        <li>
-            <a href="javascript:;" class="has-arrow">
-                <div class="parent-icon"><i class='bx bx-home-circle'></i></div>
-                <div class="menu-title">Dashboard</div>
-            </a>
-            <ul>
+        <li> <a href="{{ url('/admin/tag/tag-listing') }}"><i class="bx bx-right-arrow-alt"></i>Tag</a>
+        </li>
+        <li> <a href="{{ url('/admin/usercountry/user-country-listing') }}"><i class="bx bx-right-arrow-alt"></i>User
+                Country</a>
+        </li>
+        <li> <a href="{{ url('/admin/usercity/user-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>User
+                City</a>
+        </li>
+        <li> <a href="{{ url('/admin/post/post-listing') }}"><i class="bx bx-right-arrow-alt"></i>Post</a>
+        </li>
+        <li> <a href="{{ url('/admin/deleted-post/deleted-post-listing') }}"><i
+                    class="bx bx-right-arrow-alt"></i>Deleted Post</a>
+        </li>
+</ul>
+</li>
+@elseif (Auth::check())
+{{-- Other Roles Sidebar --}}
+<li>
+    <a href="javascript:;" class="has-arrow">
+        <div class="parent-icon"><i class='bx bx-home-circle'></i></div>
+        <div class="menu-title">Dashboard</div>
+    </a>
+    <ul>
 
-                @php
-                    $user = Auth::user();
-                @endphp
+        @php
+            $user = Auth::user();
+        @endphp
 
-                @if($user->roleId == "2")
-                    <li>
-                        <a href="{{ url('/accounts/dashboard') }}">
-                            <i class="bx bx-right-arrow-alt"></i> Home
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url('/accounts/maker-dashboard') }}">
-                            <i class="bx bx-right-arrow-alt"></i> Maker
-                        </a>
-                    </li>
-                @elseif ($user->roleId == "3")
-                    <li> <a href="{{ url('/accounts/checker/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Checker</a>
-                @elseif ($user->roleId == "4")
-                    <li> <a href="{{ url('/accounts/uploader/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Uploader</a>
-                @elseif ($user->roleId == "6")
-                    <li> <a href="{{ url('/accounts/postanalyticsmaker/acc-post-analytics-maker-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>Analytics Maker</a>
-                @elseif ($user->roleId == "7")
-                    <li> <a href="{{ url('/accounts/postanalyticschecker/acc-post-analytics-checker-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>Analytics Checker</a>
-                @endif
-            </ul>
-        </li>
-    @endif
+        @if ($user->roleId == '2')
+            <li>
+                <a href="{{ url('/accounts/dashboard') }}">
+                    <i class="bx bx-right-arrow-alt"></i> Home
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/accounts/maker-dashboard') }}">
+                    <i class="bx bx-right-arrow-alt"></i> Maker
+                </a>
+            </li>
+        @elseif ($user->roleId == '3')
+            <li> <a href="{{ url('/accounts/checker/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Checker</a>
+            @elseif ($user->roleId == '4')
+            <li> <a href="{{ url('/accounts/uploader/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Uploader</a>
+            @elseif ($user->roleId == '6')
+            <li> <a href="{{ url('/accounts/postanalyticsmaker/acc-post-analytics-maker-city-listing') }}"><i
+                        class="bx bx-right-arrow-alt"></i>Analytics Maker</a>
+            @elseif ($user->roleId == '7')
+            <li> <a href="{{ url('/accounts/postanalyticschecker/acc-post-analytics-checker-city-listing') }}"><i
+                        class="bx bx-right-arrow-alt"></i>Analytics Checker</a>
+        @endif
+    </ul>
+</li>
+@endif
 </ul>
 <!--end navigation-->
