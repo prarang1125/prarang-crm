@@ -61,7 +61,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $index = 1;  @endphp
+                            @php
+                                $index = ($chittis->currentPage() - 1) * $chittis->perPage() + 1;
+                            @endphp
                             @foreach ($chittis as $chitti)
                                 <tr>
                                     <td class="">{{ $index }}</td>
