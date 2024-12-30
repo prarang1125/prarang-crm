@@ -55,9 +55,9 @@ class PostAnalyticsCheckerController extends Controller
             ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
             ->join('mcity as city', 'city.cityId', '=', 'ch.areaId')
             ->leftJoin('muser as user', 'user.userId', '=', 'ch.analyticsMaker')
-            ->where('areaId', $areaId)
+            ->where('ch.areaId', $areaId)
             ->whereIn('postStatusMakerChecker', ['send_to_post_checker'])
-            ->where('finalStatus', '!=', 'deleted')
+            ->where('ch.finalStatus', '!=', 'deleted')
             ->when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
                     $q->where('ch.Title', 'like', "%{$search}%")
