@@ -68,34 +68,19 @@
                                     </a></td> --}}
                                     <td class="">{{ $chitti->Title }}</td>
                                     <td class="">{{ $chitti->dateOfCreation }}</td>
-                                    @foreach ($chitti->geographyMappings as $mapping)
-                                        @php
-                                            $option = $geographyOptions->firstWhere('id', $mapping->geographyId);
-                                        @endphp
-                                        <td data-gmid="{{ $mapping->geographyId }}">
-                                            @if($option)
-                                                {{ $option->labelInEnglish }}
-                                            @else
-                                                {{ $mapping->geographyId }}
-                                            @endif
-                                        </td>
-                                        <td data-areaid="{{ $mapping->areaId }}">
-                                            @if ($mapping->geographyId == 5 && $mapping->region)
-                                                {{ $mapping->region->regionnameInEnglish }} <!-- Show region name -->
-                                            @elseif ($mapping->geographyId == 6 && $mapping->city)
-                                                {{ $mapping->city->cityNameInEnglish }} <!-- Show city name -->
-                                            @elseif ($mapping->geographyId == 7 && $mapping->country)
-                                                {{ $mapping->country->countryNameInEnglish }} <!-- Show country name -->
-                                            @else
-                                                {{ $mapping->areaId }} <!-- Fallback to areaId if no match -->
-                                            @endif
-                                        </td>
-                                    @endforeach
+                                    <td>
+                                        @if (array_key_exists($chitti->geographyId, config('geography')))
+                                            {{ config('geography')[$chitti->geographyId]}}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{ $chitti->geography  }}
+                                    </td>
                                     <td>{{ $chitti->finalStatus }}</td>
                                     <td>
                                     <a class="btn btn-warning btn-sm" onclick="return Confirm('Do you want to Recover this post.')" href="{{route('admin.deletepost-to-checker',['chittiId'=>$chitti->chittiId])}}">Return to Checker</a>
                                     </td>
-                                       
+
                                 </tr>
                                 @php $index++;  @endphp
                             @endforeach
