@@ -25,11 +25,12 @@
                     @else
                         <form method="POST" action="{{ route('accupdate.title') }}">
                             @csrf
-                            <input type="hidden" value="{{ $chittiId }}" name="chittiId">
-                            <input class="form-control mb-3" name="Title" type="text" placeholder="New post title"
-                                aria-label="New post title">
+                            <input type="hidden" value="{{ $chitti->chittiId }}" name="chittiId">
+                            <input class="form-control mb-3" name="Title" type="text" value="{{ $chitti->Title }}"
+                                placeholder="New post title" aria-label="New post title">
                             <input class="form-control mb-3" name="subTitle" type="text"
-                                placeholder="New post Subtitle (English)" aria-label="New post Subtitle (English)">
+                                value="{{ $chitti->SubTitle }}" placeholder="New post Subtitle (English)"
+                                aria-label="New post Subtitle (English)">
                             <button class="form-control mb-3 btn btn-success" type="submit">Update</button>
                         </form>
                     @endif

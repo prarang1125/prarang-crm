@@ -27,8 +27,7 @@ class ChittiListService
             ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
             ->whereNotNull('Title')
             ->where('Title', '!=', '')
-            ->where('finalStatus', '!=', 'deleted')
-            ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"));
+            ->where('finalStatus', '!=', 'deleted');
 
         if ($makerStatus) {
             $query->where('makerStatus', '=', $makerStatus);
@@ -39,6 +38,7 @@ class ChittiListService
             $query->whereNotIn('finalStatus', ['approved', 'deleted']);
             $query = $this->users($query, 'ch.makerId');
         } elseif ($listingType == 'uploader') {
+            $query->orderBy('ch.finalStatus', 'asc');
             $query->whereIn('uploaderStatus', ['sent_to_uploader', 'approved']);
             // $query->whereNotIn('finalStatus', ['approved', 'deleted']);
             $query = $this->users($query, 'ch.checkerId');
@@ -54,9 +54,8 @@ class ChittiListService
             });
         }
 
-        $chittis = $query->paginate(30);
+        return $query->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"))->paginate(30);
 
-        return $chittis;
     }
 
     private function users($query, $field)

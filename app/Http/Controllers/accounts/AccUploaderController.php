@@ -15,59 +15,21 @@ use App\Models\Mcountry;
 use App\Models\Mregion;
 use App\Models\Mtag;
 use App\Services\ImageUploadService;
+use App\Services\Posts\ChittiListService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class AccUploaderController extends Controller
 {
-    public function accIndexMain(Request $request)
+    public function accIndexMain(Request $request, ChittiListService $chittiListService)
     {
-        $search = $request->input('search');
-        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
-        $cacheDuration = 180;
-        $chittis = DB::table('chitti as ch')
-            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
-            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')->whereNotNull('Title')
-            ->where('Title', '!=', '')
-            ->whereIn('uploaderStatus', ['sent_to_uploader', 'approved'])
-            ->when($search, function ($query, $search) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('Title', 'like', "%{$search}%")
-                        ->orWhere('SubTitle', 'like', "%{$search}%")
-                        ->orWhere('createDate', 'LIKE', '%'.$search.'%');
-                });
-            })
-            ->whereNotIn('finalStatus', ['deleted'])
-            // ->orderByDesc('ch.chittiId')
-            ->orderByDesc(DB::raw("STR_TO_DATE(ch.dateSentToUploader, '%d-%b-%y %H:%i:%s')"))
-            ->paginate(30); // Adjust the number per page
+        $chittis = $chittiListService->getChittiListings($request, 'sent_to_checker', 'uploader');
 
-        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-
-        return view('accounts.uploader.acc-uploader-listing', compact('chittis', 'geographyOptions', 'search'));
+        return view('accounts.uploader.acc-uploader-listing', compact('chittis'));
     }
-
-    //this method is use for show the accounts listing of uploader
-    // public function index($id)
-    // {
-    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-    //     ->where('chittiId', $id)
-    //     ->whereNotNull('Title')
-    //     ->where('Title', '!=', '')
-    //     ->where('uploaderStatus', '!=', '')
-    //     ->whereIn('uploaderStatus', ['checker_to_uploader', 'sent_to_uploader'])
-    //     // ->where('finalStatus', '=', 'approved')
-    //     // ->where('finalStatus', '=', 'sent_to_uploader')
-    //     ->select('*')
-    //     ->get();
-    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-    //     return view('accounts.uploader.acc-uploader-listing', compact('chittis', 'geographyOptions'));
-    // }
 
     public function accUploaderEdit($id)
     {
@@ -96,126 +58,6 @@ class AccUploaderController extends Controller
         return view('accounts.uploader.acc-uploader-edit', compact('chitti', 'subTag', 'image', 'geographyOptions', 'regions', 'cities', 'countries', 'geographyMapping', 'facityValue', 'chittiTagMapping', 'timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras', 'colorOptions', 'readerOptions'));
     }
 
-    // public function accUploaderUpdate(Request $request, $id)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'content'   => 'required|string|max:2000',
-    //         'makerImage' => 'nullable|image|max:2048',
-    //         'geography' => 'required',
-    //         'c2rselect' => [
-    // 'required',
-    // function ($attribute, $value, $fail) {
-    //     if ($value === 'Select Select') {
-    //         $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
-    //     }
-    // },
-    //         'title'     => 'required|string|max:255',
-    //         'subtitle' => 'required|string|max:255',
-    //         'forTheCity' => 'required|boolean',
-    //         'isCultureNature' => 'required|boolean',
-    //     ]);
-
-    //     if ($validator->passes()) {
-
-    //         $currentDateTime = getUserCurrentTime();
-
-    //         $content = $request->content;
-    //         $dom = new \DomDocument();
-    //         @$dom->loadHtml($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-    //         $images = $dom->getElementsByTagName('img');
-
-    //         foreach ($images as $img) {
-    //             $src = $img->getAttribute('src');
-
-    //             // Check if the image source is base64 (embedded image)
-    //             if (Str::startsWith($src, 'data:image')) {
-    //                 // Extract the base64 image data and save it as a file
-    //                 preg_match('/data:image\/(?<mime>.*?)\;base64,(?<data>.*)/', $src, $matches);
-    //                 $imageData = base64_decode($matches['data']);
-    //                 $imageMime = $matches['mime'];
-    //                 $imageName = time() . '_' . uniqid() . '.' . $imageMime;
-    //                 $path = public_path('uploads/content_images/') . $imageName;
-    //                 file_put_contents($path, $imageData);
-
-    //                 // Replace the base64 image source with the URL of the saved image
-    //                 $img->setAttribute('src', asset('uploads/content_images/' . $imageName));
-    //             }
-    //         }
-
-    //         // Save the updated content with proper image URLs
-    //         $content = $dom->saveHTML();
-
-    //         // Update Chitti record with approved
-    //         $chitti = Chitti::findOrFail($id);
-    //         if ($request->action === 'approved'){
-    //             $chitti->update([
-    //                 'description'   => $request->content,
-    //                 'Title'         => $request->title,
-    //                 'SubTitle'      => $request->subtitle,
-    //                 'checkerStatus' => 'sent_to_uploader',
-    //                 'finalStatus'   => 'approved',
-    //                 'updated_at'    => $currentDateTime,
-    //                 'updated_by'    => Auth::user()->userId,
-    //             ]);
-
-    //             return redirect()->route('accounts.uploader-dashboard', ['id' => $chitti->chittiId])->with('success', 'Uploader updated successfully.');
-    //         }else{
-    //             // Update Chitti record
-    //             $chitti->update([
-    //                 'description'   => $request->content,
-    //                 'Title'         => $request->title,
-    //                 'SubTitle'      => $request->subtitle,
-    //                 'checkerStatus'   => 'sent_to_uploader',
-    //                 'finalStatus'   => 'sent_to_uploader',
-    //                 'updated_at'    => $currentDateTime,
-    //                 'updated_by'    => Auth::user()->userId,
-    //             ]);
-
-    //             // Update Facity record
-    //
-
-    //             // Update image if provided
-    //             if ($request->hasFile('makerImage')) {
-    //                 $makerImage = $request->file('makerImage');
-    //                 $makerImageName = time() . '_' . $makerImage->getClientOriginalName();
-    //                 $makerImage->move(public_path('uploads/maker_image/'), $makerImageName);
-    //                 $url = public_path('uploads/maker_image/') . $makerImageName;
-    //                 $serviceAccessUrl = "admin.prarang.in/" . $url;
-
-    //                 // Update Chitti Image Mapping
-    //                 Chittiimagemapping::where('chittiId', $id)->update([
-    //                     'imageName'     => $makerImageName,
-    //                     'imageUrl'      => $serviceAccessUrl,
-    //                     'accessUrl'     => $url,
-    //                     'updated_at'    => $currentDateTime,
-    //                     'updated_by'    => Auth::user()->userId,
-    //                 ]);
-    //             }
-
-    //             // Update Geography Mapping
-    //             Chittigeographymapping::where('chittiId', $id)->update([
-    //                 'areaId'        => $request->c2rselect,
-    //                 'geographyId'   => $request->geography,
-    //                 'updated_at'    => $currentDateTime,
-    //                 'updated_by'    => Auth::user()->userId,
-    //             ]);
-
-    //             // Update Tag Mapping
-    //             Chittitagmapping::where('chittiId', $id)->update([
-    //                 'tagId'         => $request->isCultureNature,
-    //                 'updated_at'    => $currentDateTime,
-    //                 'updated_by'    => Auth::user()->userId,
-    //             ]);
-
-    //             return redirect()->route('accounts.uploader-dashboard', ['id' => $chitti->chittiId])->with('success', 'Uploader updated successfully.');
-    //         }
-    //     } else {
-    //         return redirect()->back()
-    //             ->withInput()
-    //             ->withErrors($validator);
-    //     }
-    // }
-
     public function accUploaderUpdate(Request $request, $id, ImageUploadService $imageUploadService)
     {
         $validator = Validator::make($request->all(), [
@@ -229,8 +71,8 @@ class AccUploaderController extends Controller
                         $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
                     }
                 }],
-            'title' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
-            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
+            'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
             'forTheCity' => 'required|boolean',
             // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
@@ -349,7 +191,7 @@ class AccUploaderController extends Controller
                     'updated_by' => Auth::user()->userId,
                 ]);
 
-                return redirect()->route('accounts.uploader-dashboard', ['id' => $chitti->chittiId])->with('success', 'Uploader updated successfully.');
+                return redirect()->back()->with('success', 'Uploader updated successfully.');
             }
         } else {
             return redirect()->back()

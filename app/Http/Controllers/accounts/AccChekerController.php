@@ -14,6 +14,8 @@ use App\Models\Mcountry;
 use App\Models\Mregion;
 use App\Models\Mtag;
 use App\Services\ImageUploadService;
+use App\Services\Posts\ChittiListService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,37 +23,16 @@ use Illuminate\Support\Facades\Validator;
 
 class AccChekerController extends Controller
 {
-    public function accIndexMain(Request $request)
+    public function accIndexMain(Request $request, ChittiListService $chittiListService)
     {
-        // Search query from request
-        $search = $request->input('search');
-
-        // Query builder with search and filter conditions
-        $chittis = DB::table('chitti as ch')
-            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
-            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
-            ->whereNotNull('Title')
-            ->where('Title', '!=', '')
-            ->where('checkerStatus', '!=', '')
-            ->whereIn('checkerStatus', ['maker_to_checker'])
-            ->where('makerStatus', 'sent_to_checker')
-            ->whereNotIn('finalStatus', ['approved', 'deleted'])
-            ->when($search, function ($query) use ($search) {
-                $query->where('Title', 'LIKE', "%{$search}%") // Search in English
-                    ->orWhere('createDate', 'LIKE', '%'.mb_strtolower($search, 'UTF-8').'%'); // Handle Unicode (Hindi, etc.)
-            })
-            ->orderByDesc('dateOfCreation')
-            ->paginate(10); // Adjust the number of items per page
-
-        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        $chittis = $chittiListService->getChittiListings($request, 'sent_to_checker', 'checker');
         $notification = Chitti::whereNotNull('uploaderReason')
             ->where('uploaderReason', '!=', '')
             ->where('uploaderStatus', 'sent_to_checker')
             ->where('finalStatus', 'sent_to_checker')
             ->count();
 
-        return view('accounts.checker.acc-checker-listing', compact('chittis', 'geographyOptions', 'notification'));
+        return view('accounts.checker.acc-checker-listing', compact('chittis', 'notification'));
     }
 
     public function accIndex(Request $request, $id)
@@ -129,8 +110,8 @@ class AccChekerController extends Controller
                         $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
                     }
                 }],
-            'title' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
-            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
+            'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
             'forTheCity' => 'required|boolean',
             'tagId' => 'required',
         ]);
