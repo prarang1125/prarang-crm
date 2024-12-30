@@ -10,9 +10,9 @@
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
-                    <li class="breadcrumb-item"><a href="{{ url('accounts/postanalyticsmaker/acc-post-analytics-maker-city-listing')}}">
-                        {{-- <i class="bx bx-user"></i></a> --}}
-                    </li>
+                    <!-- <li class="breadcrumb-item"><a href="{{ url('accounts/postanalyticsmaker/acc-post-analytics-maker-city-listing')}}">
+                         <i class="bx bx-user"></i></a>
+                    </li> -->
                     <li class="breadcrumb-item active" aria-current="page">Post Analytics Maker Listing</li>
                 </ol>
             </nav>
