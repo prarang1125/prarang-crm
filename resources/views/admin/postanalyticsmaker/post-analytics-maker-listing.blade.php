@@ -10,9 +10,9 @@
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
-                    <li class="breadcrumb-item"><a href="{{ url('admin/postanalyticsmaker/post-analytics-maker-city-listing')}}">
-                        {{-- <i class="bx bx-user"></i></a> --}}
-                    </li>
+                    {{-- <li class="breadcrumb-item"><a href="{{ url('admin/postanalyticsmaker/post-analytics-maker-city-listing')}}">
+                        <i class="bx bx-user"></i></a>
+                    </li> --}}
                     <li class="breadcrumb-item active" aria-current="page">Post Analytics Maker Listing</li>
                 </ol>
             </nav>
@@ -34,7 +34,7 @@
                     <!-- Search Form -->
                     <form action="{{ url('admin/postanalyticsmaker/post-analytics-maker-listing') }}" method="GET" class="d-flex me-3">
                         <input type="hidden" name="cityCode" value="{{ request()->query('cityCode') }}">
-                        <input type="text" name="search" class="form-control me-2" placeholder="Search by Title" value="{{ request()->query('search') }}" autocomplete="off">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search by Title" value="{{ request()->query('search') }}">
                         <button type="submit" class="btn btn-secondary">Search</button>
                     </form>
 
