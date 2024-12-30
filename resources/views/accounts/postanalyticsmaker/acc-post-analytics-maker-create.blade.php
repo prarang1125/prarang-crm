@@ -29,7 +29,7 @@
                     @endif
                     <h6 class="mb-0 text-uppercase text-primary">Create New Maker Analytics</h6>
                     <hr />
-                    <form action="{{ route('admin.post-analytics-maker-update', $chitti->chittiId) }}" method="POST"
+                    <form action="{{ route('accounts.acc-post-analytics-maker-update', $chitti->chittiId) }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')

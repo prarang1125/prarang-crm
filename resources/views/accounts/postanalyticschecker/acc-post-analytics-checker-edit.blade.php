@@ -6,7 +6,7 @@
 <div class="page-content">
     <!--breadcrumb-->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div class="breadcrumb-title pe-3">Admin</div>
+        <div class="breadcrumb-title pe-3">Account</div>
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
@@ -29,7 +29,7 @@
                 @endif
                 <h6 class="mb-0 text-uppercase text-primary">Create New Checker Analytics</h6>
                 <hr/>
-                <form action="{{ route('admin.post-analytics-checker-update', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('accounts.acc-post-analytics-checker-update', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -183,13 +183,13 @@
                         </div>
                         <div class="col-md-2" style="text-align:center;">
                             <div class="form-group">
-                                <a href="{{ route('admin.post-analytics-checker-return-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}" class="btn btn-primary">Send to maker</a>
+                                <a href="{{ route('accounts.acc-post-analytics-checker-return-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}" class="btn btn-primary">Send to maker</a>
                             </div>
                         </div>
 
                         <div class="col-md-1">
                             <div class="form-group">
-                                <a href="{{ route('admin.post-analytics-checker-approve', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&approve={{ 'approve' }}" class="btn btn-primary">Approve</a>
+                                <a href="{{ route('accounts.acc-post-analytics-checker-approve', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&approve={{ 'approve' }}" class="btn btn-primary">Approve</a>
                             </div>
                         </div>
                     </div>

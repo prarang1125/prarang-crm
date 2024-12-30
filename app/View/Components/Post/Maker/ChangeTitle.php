@@ -2,7 +2,6 @@
 
 namespace App\View\Components\Post\Maker;
 
-use App\Models\Chitti;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -12,10 +11,11 @@ class ChangeTitle extends Component
     /**
      * Create a new component instance.
      */
-    public $chittiId;
-    public function __construct($chittiId)
+    public $chitti;
+
+    public function __construct($chitti)
     {
-        $this->chittiId=$chittiId;
+        $this->chitti = $chitti;
     }
 
     /**

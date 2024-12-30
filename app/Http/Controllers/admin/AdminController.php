@@ -238,7 +238,7 @@ class AdminController extends Controller
             ],
             'password' => 'sometimes|confirmed',
             'roleId' => 'required|exists:mrole,roleID',
-            'languageId' => 'required|boolean',
+            'languageId' => 'required',
             'isActive' => 'required|boolean',
         ]);
 

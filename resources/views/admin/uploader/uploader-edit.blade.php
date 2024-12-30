@@ -293,6 +293,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Man And His Senses -->
@@ -318,6 +321,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Man And His Inventions -->
@@ -344,6 +350,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Geography -->
@@ -370,6 +379,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Fauna -->
@@ -396,6 +408,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Flora -->
@@ -419,6 +434,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -428,6 +446,12 @@
                             @endif
                             <button type="submit" name="action" value="update_uploader"
                                 class="btn btn-primary">Update</button>
+
+                            <!-- <button type="submit" name="action" value="sent_uploader_to_checker"
+                                class="btn btn-primary">Sent To Checker</button> -->
+
+                            <a href="{{ route('admin.uploader-chitti-return-to-checker-region', ['id' => $chitti->chittiId]) }}?uploaderId={{ $chitti->uploaderId }}&City={{ $chitti->areaId }}"
+                                class="btn btn-primary">Back to Checker</a>
 
                             @if ($chitti->finalStatus !== 'approved')
                                 <button type="submit" name="action" value="approvd" class="btn btn-primary"

@@ -6,12 +6,12 @@
     <div class="page-content">
         <!--breadcrumb-->
         <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-            <div class="breadcrumb-title pe-3">Admin</div>
+            <div class="breadcrumb-title pe-3">Account</div>
             <div class="ps-3">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0 p-0">
                         <li class="breadcrumb-item"><a
-                                href="{{ url('admin/postanalyticsmaker/post-analytics-maker-city-listing') }}">
+                                href="{{ url('accounts/postanalyticsmaker/acc-post-analytics-maker-city-listing') }}">
                                 {{-- <i class="bx bx-user"></i></a> --}}
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">Live Maker City Listing</li>
@@ -31,7 +31,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 text-uppercase">Live Maker City Listing</h6>
                     <a class="nav-link dropdown-toggle-nocaret position-relative"
-                        href="{{ route('admin.post-analytics-from-checker-listing') }}" role="button">
+                        href="{{ route('accounts.acc-post-analytics-from-checker-listing') }}" role="button">
                         @if ($notification > 0)
                             <span class="alert-count">{{ $notification }}</span>
                         @endif
@@ -42,7 +42,7 @@
                 <div class="card">
                     <div class="card-body d-flex justify-content-end align-items-end">
                         <!-- Search Form -->
-                        <form action="{{ url('admin/postanalyticsmaker/post-analytics-maker-city-listing') }}"
+                        <form action="{{ url('accounts/postanalyticsmaker/acc-post-analytics-maker-city-listing') }}"
                             method="GET" class="d-flex me-3">
                             <input type="text" name="search" class="form-control me-2"
                                 placeholder="Search by Live City Name" value="{{ request()->input('search') }}">
@@ -71,7 +71,7 @@
                                     <tr>
                                         <th scope="row" class="text-center">{{ $index }}</th>
                                         <td class="text-center">
-                                            <a href="{{ route('admin.post-analytics-maker-listing', ['cityCode' => $mcity->geographycode]) }}"
+                                            <a href="{{ route('accounts.acc-post-analytics-maker-listing', ['cityCode' => $mcity->geographycode]) }}"
                                                 class="text-primary">
                                                 {{ $mcity->geography }}
                                             </a>

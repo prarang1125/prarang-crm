@@ -49,7 +49,8 @@ class DeletedPostController extends Controller
     {
         $currentDateTime = getUserCurrentTime();
         $chitti = Chitti::findOrFail($chittiId);
-
+        $date = Carbon::now()->format('Y-m-d');
+        $dateofcreation = Carbon::now()->format('d-M-y H:i:s');
         $chitti->update([
             'makerStatus'   => 'sent_to_checker',
             'checkerStatus' => 'maker_to_checker',
@@ -57,7 +58,7 @@ class DeletedPostController extends Controller
             'updated_at'    => $currentDateTime,
             'updated_by'    => Auth::guard('admin')->user()->userId,
             'return_chitti_post_from_checker_id' => 0,
-            'returnDateToChecker' => $currentDateTime,
+            'returnDateToChecker' => $dateofcreation,
             'makerId'       => Auth::guard('admin')->user()->userId,
             'finalStatus'   => '',
         ]);

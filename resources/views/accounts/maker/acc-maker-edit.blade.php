@@ -222,6 +222,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Man And His Senses -->
@@ -248,6 +251,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Man And His Inventions -->
@@ -274,6 +280,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Geography -->
@@ -300,6 +309,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Fauna -->
@@ -326,6 +338,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Flora -->
@@ -349,6 +364,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
