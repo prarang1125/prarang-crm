@@ -10,9 +10,6 @@
             <div class="ps-3">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0 p-0">
-                        {{-- <li class="breadcrumb-item"><a href="{{ url('admin/postanalyticsmaker/post-analytics-maker-city-listing')}}">
-                        <i class="bx bx-user"></i></a>
-                    </li> --}}
                         <li class="breadcrumb-item active" aria-current="page">Post Analytics Maker Listing</li>
                     </ol>
                 </nav>
@@ -31,6 +28,17 @@
                 <hr />
                 <div class="card">
                     <div class="card-body d-flex justify-content-end align-items-end">
+                        <form class="pe-2">
+                            <label for="geography" class="ps-1">Select Area</label>
+                            <select name="cityCode" id="geography" class="form-control pe-3" onchange="updateCityCode()">
+                                @foreach ($geography as $mcity)
+                                    <option value="{{ $mcity->geographycode }}"
+                                        @if (request()->query('cityCode') == $mcity->geographycode) selected @endif>
+                                        {{ $mcity->geography }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </form>
                         <!-- Search Form -->
                         <form action="{{ url('admin/postanalyticsmaker/post-analytics-maker-listing') }}" method="GET"
                             class="d-flex me-3">
@@ -103,4 +111,20 @@
         </div>
     </div>
     <!--end page wrapper -->
+    <script>
+        function updateCityCode() {
+            const selectedCityCode = document.getElementById('geography').value;
+            const currentUrl = new URL(window.location.href);
+
+            // Update the cityCode parameter in the URL
+            if (selectedCityCode) {
+                currentUrl.searchParams.set('cityCode', selectedCityCode);
+            } else {
+                currentUrl.searchParams.delete('cityCode'); // Remove if no selection
+            }
+
+            // Redirect to the updated URL
+            window.location.href = currentUrl.toString();
+        }
+    </script>
 @endsection

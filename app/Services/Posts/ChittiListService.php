@@ -70,11 +70,12 @@ class ChittiListService
         $query->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
             ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
             ->join('mcity as city', 'city.cityId', '=', 'ch.areaId')
-            ->where('vCg.Geography', $cityCode);
+            ->where('vCg.Geography', $cityCode)
+            ->where('finalStatus', 'approved');
         if ($type === 'checker') {
             $query->leftJoin('muser as user', 'user.userId', '=', 'ch.analyticsMaker')
                 ->addSelect(DB::raw("CONCAT(user.firstName, ' ', user.lastName) as userName"))
-                ->whereIn('postStatusMakerChecker', ['send_to_post_checker']);
+                ->whereIn('postStatusMakerChecker', ['send_to_post_checker', 'approved']);
         } else {
             $query->where('postStatusMakerChecker', '!=', 'send_to_post_checker');
         }

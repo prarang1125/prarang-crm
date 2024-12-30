@@ -31,7 +31,7 @@
                     <h6 class="mb-0 text-uppercase text-primary">Create New Checker Analytics</h6>
                     <hr />
                     <form
-                        action="{{ route('admin.post-analytics-checker-update', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}"
+                        action="{{ route('admin.post-analytics-checker-update', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&cityCode={{ Request::query('city') }}"
                         method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -212,32 +212,33 @@
                             </div>
                         </div>
 
-                        @if ($chitti->postStatusMakerChecker == 'approved')
-                            <div class="modal-footer mt-3"></div>
-                        @else
-                            <div class="modal-footer mt-3">
-                                <div class="col-md-6"></div>
-                                <div class="col-md-1">
-                                    <div class="form-group">
-                                        <button type="submit" name="update" id="update"
-                                            class="btn btn-primary">Update</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-2" style="text-align:center;">
-                                    <div class="form-group">
-                                        <a href="{{ route('admin.post-analytics-checker-return-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}"
-                                            class="btn btn-primary">Send to maker</a>
-                                    </div>
-                                </div>
 
+                        <div class="modal-footer mt-3">
+                            <div class="col-md-6"></div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <button type="submit" name="update" id="update"
+                                        class="btn btn-primary">Update</button>
+                                </div>
+                            </div>
+                            <div class="col-md-2" style="text-align:center;">
+                                <div class="form-group">
+                                    <a href="{{ route('admin.post-analytics-checker-return-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}"
+                                        class="btn btn-primary">Send to maker</a>
+                                </div>
+                            </div>
+                            @if ($chitti->postStatusMakerChecker == 'approved')
+                                <div class="modal-footer mt-3">Approved</div>
+                            @else
                                 <div class="col-md-1">
                                     <div class="form-group">
-                                        <a href="{{ route('admin.post-analytics-checker-approve', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&approve={{ 'approve' }}"
+                                        <a href="{{ route('admin.post-analytics-checker-approve', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&approve={{ 'approve' }}&cityCode={{ Request::query('city') }}"
                                             class="btn btn-primary">Approve</a>
                                     </div>
                                 </div>
-                            </div>
-                        @endif
+                            @endif
+                        </div>
+
                     </form>
                 </div>
             </div>

@@ -27,8 +27,9 @@
                     @endif
                     <h6 class="mb-0 text-uppercase text-primary">Create New Maker Analytics</h6>
                     <hr />
-                    <form action="{{ route('admin.post-analytics-maker-update', $chitti->chittiId) }}" method="POST"
-                        enctype="multipart/form-data">
+                    <form
+                        action="{{ route('admin.post-analytics-maker-update', $chitti->chittiId) }}?cityCode={{ Request::query('city') }}"
+                        method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="row">

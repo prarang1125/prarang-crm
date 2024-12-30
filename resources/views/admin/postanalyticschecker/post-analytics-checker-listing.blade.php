@@ -33,6 +33,17 @@
                 <div class="card">
                     <!-- Add the Search Form -->
                     <div class="card-body d-flex justify-content-end align-items-end">
+                        <form class="pe-2">
+                            <label for="geography" class="ps-1">Select Area</label>
+                            <select name="cityCode" id="geography" class="form-control pe-3" onchange="updateCityCode()">
+                                @foreach ($geography as $mcity)
+                                    <option value="{{ $mcity->geographycode }}"
+                                        @if (request()->query('cityCode') == $mcity->geographycode) selected @endif>
+                                        {{ $mcity->geography }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </form>
                         <form action="{{ url('admin/postanalyticschecker/post-analytics-checker-listing') }}" method="GET"
                             class="d-flex me-3">
                             <input type="hidden" name="cityCode" value="{{ request()->query('cityCode') }}">
@@ -85,22 +96,14 @@
                                             {{-- <td class="">{{ 'N/A' }} </td> --}}
                                             <td class="">{{ $chitti->totalViewerCount }}</td>
 
-                                            @if ($chitti->postStatusMakerChecker == 'approved')
-                                                <td class="">
-                                                    <a href="{{ route('admin.post-analytics-checker-edit', ['id' => $chitti->chittiId, 'city' => $chitti->cityCode ?? 'N/A']) }}"
-                                                        class="text-primary">
-                                                        {{ 'Approved' }}
-                                                    </a>
-                                                    {{-- <span class="custom-approved">{{ 'Approved' }}</span> --}}
-                                                </td>
-                                            @else
-                                                <td class="">
-                                                    <a href="{{ route('admin.post-analytics-checker-edit', ['id' => $chitti->chittiId, 'city' => $chitti->cityCode ?? 'N/A']) }}"
-                                                        class="text-primary">
-                                                        {{ 'Review' }}
-                                                    </a>
-                                                </td>
-                                            @endif
+
+                                            <td class="">
+                                                <a href="{{ route('admin.post-analytics-checker-edit', ['id' => $chitti->chittiId, 'city' => $chitti->cityCode ?? 'N/A']) }}"
+                                                    class="text-primary">
+                                                    {{ 'Review' }}
+                                                </a>
+                                            </td>
+
                                         </tr>
                                         @php $index++;  @endphp
                                     @endforeach
@@ -116,4 +119,20 @@
             </div>
         </div>
         <!--end page wrapper -->
+        <script>
+            function updateCityCode() {
+                const selectedCityCode = document.getElementById('geography').value;
+                const currentUrl = new URL(window.location.href);
+
+                // Update the cityCode parameter in the URL
+                if (selectedCityCode) {
+                    currentUrl.searchParams.set('cityCode', selectedCityCode);
+                } else {
+                    currentUrl.searchParams.delete('cityCode'); // Remove if no selection
+                }
+
+                // Redirect to the updated URL
+                window.location.href = currentUrl.toString();
+            }
+        </script>
     @endsection
