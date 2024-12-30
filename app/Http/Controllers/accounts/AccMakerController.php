@@ -355,18 +355,22 @@ class AccMakerController extends Controller
     //this method is use for account chitti return from checker
     public function accChittiListReturnFromCheckerL(Request $request)
     {
-        $query = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-            ->whereNotNull('Title')
-            ->where('Title', '!=', '')
-            ->where('finalStatus', '!=', 'deleted')
-            ->where('return_chitti_post_from_checker_id', 1);
+        // $query = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        $query = DB::table('chitti as ch')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->whereNotNull('ch.Title')
+            ->where('ch.Title', '!=', '')
+            ->where('ch.finalStatus', '!=', 'deleted')
+            ->where('ch.return_chitti_post_from_checker_id', 1);
 
         // Handle search
         if ($request->has('search') && $request->input('search') != '') {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
-                $q->where('Title', 'LIKE', "%$search%")
-                    ->orWhere('description', 'LIKE', "%$search%");
+                $q->where('ch.Title', 'LIKE', "%$search%")
+                    ->orWhere('ch.description', 'LIKE', "%$search%");
             });
         }
 

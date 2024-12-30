@@ -25,21 +25,23 @@ class PostController extends Controller
     {
         $search = $request->input('search');
 
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        $chittis = DB::table('chitti as ch')
+        ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+        ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+        ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
             ->when($search, function ($query, $search) {
                 $query->where(function ($query) use ($search) {
-                    $query->where('Title', 'LIKE', "%{$search}%")
-                        ->orWhere('description', 'LIKE', "%{$search}%");
+                    $query->where('ch.Title', 'LIKE', "%{$search}%")
+                        ->orWhere('ch.description', 'LIKE', "%{$search}%");
                 });
             })
-            ->whereNotNull('Title')
-            ->where('Title', '!=', '')
-            ->where('finalStatus', '!=', 'deleted')
+            ->whereNotNull('ch.Title')
+            ->where('ch.Title', '!=', '')
+            ->where('ch.finalStatus', '!=', 'deleted')
             ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%Y-%m-%d')"))
             ->paginate(30);
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-
         return view('admin.post.post-listing', compact('chittis', 'geographyOptions'));
     }
 

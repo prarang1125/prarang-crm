@@ -12,6 +12,9 @@ class ChittiListService
      * @param  \Illuminate\Http\Request  $request
      * @param  string|null  $status
      * @param  string|null  $filterType
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string|null  $type
+     * @param  string|null  $cityCode
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      *
      * @author Vivek Yadav <dev.vivek16@email.com>#ASG Kali
@@ -40,7 +43,7 @@ class ChittiListService
         } elseif ($listingType == 'uploader') {
             $query->orderBy('ch.finalStatus', 'asc');
             $query->whereIn('uploaderStatus', ['sent_to_uploader', 'approved']);
-            // $query->whereNotIn('finalStatus', ['approved', 'deleted']);
+
             $query = $this->users($query, 'ch.checkerId');
         } else {
             $query = $this->users($query, 'ch.makerId');
@@ -55,6 +58,40 @@ class ChittiListService
         }
 
         return $query->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"))->paginate(30);
+
+    }
+
+    public function getChittiListingsForAnalytics($request, $type = 'maker', $cityCode = null)
+    {
+
+        $search = $request->input('search');
+        $query = DB::table('chitti as ch')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'city.*', 'ch.chittiId as chittiId');
+        $query->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->join('mcity as city', 'city.cityId', '=', 'ch.areaId')
+            ->where('vCg.Geography', $cityCode);
+        if ($type === 'checker') {
+            $query->leftJoin('muser as user', 'user.userId', '=', 'ch.analyticsMaker')
+                ->addSelect(DB::raw("CONCAT(user.firstName, ' ', user.lastName) as userName"))
+                ->whereIn('postStatusMakerChecker', ['send_to_post_checker']);
+        } else {
+            $query->where('postStatusMakerChecker', '!=', 'send_to_post_checker');
+        }
+
+        $query->where('finalStatus', '!=', 'deleted')
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('ch.Title', 'like', "%{$search}%")
+                        ->orWhere('ch.SubTitle', 'like', "%{$search}%");
+                });
+            });
+        $query->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"));
+
+        return $query->paginate(31)->appends([
+            'cityCode' => $cityCode,
+            'search' => $search,
+        ]);
 
     }
 

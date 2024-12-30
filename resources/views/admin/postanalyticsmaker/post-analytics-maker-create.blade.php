@@ -2,6 +2,7 @@
 @section('title', 'New Maker Analytics Register')
 
 @section('content')
+    {{-- @dd($chitti); --}}
     <!--start page wrapper -->
     <div class="page-content">
         <!--breadcrumb-->
@@ -10,8 +11,6 @@
             <div class="ps-3">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0 p-0">
-                        {{-- <li class="breadcrumb-item"><a href="{{ url('admin/postanalyticsmaker/post-analytics-maker-listing')}}"><i class="bx bx-user"></i></a>
-                    </li> --}}
                         <li class="breadcrumb-item active" aria-current="page">Maker Analytics Register</li>
                     </ol>
                 </nav>
@@ -21,7 +20,6 @@
         <div class="row">
             <div class="card" style="padding-top: 15px;">
                 <div class="col-xl-9 mx-auto w-100">
-                    <!-- Success Message -->
                     @if (session('success'))
                         <div class="alert alert-success mt-3">
                             {{ session('success') }}
@@ -37,8 +35,7 @@
                             <div class="col-md-2">
                                 <label for="postNumber" class="form-label">Post Number</label>
                                 <input type="text" class="form-control  @error('postNumber') is-invalid @enderror"
-                                    id="postNumber" name="postNumber"
-                                    value="{{ old('postNumber', $chitti->chittiId ?? '') }}" readonly>
+                                    id="postNumber" name="postNumber" value="{{ $chitti->chittiId }}" readonly>
                                 @error('postNumber')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
@@ -47,8 +44,7 @@
                             <div class="col-md-3">
                                 <label for="titleOfPost" class="form-label">Title of Post</label>
                                 <input type="text" class="form-control  @error('titleOfPost') is-invalid @enderror"
-                                    id="titleOfPost" name="titleOfPost"
-                                    value="{{ old('postNumber', $chitti->Title ?? '') }}" readonly>
+                                    id="titleOfPost" name="titleOfPost" value="{{ $chitti->Title }}" readonly>
                                 @error('titleOfPost')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
@@ -58,8 +54,7 @@
                                 <label for="uploadDate" class="form-label">Upload Date</label>
                                 <input type="text" class="form-control  @error('uploadDate') is-invalid @enderror"
                                     id="uploadDate" name="uploadDate"
-                                    value="{{ old('uploadDate', \Carbon\Carbon::parse($chitti->createDate)->format('Y-m-d') ?? '') }}"
-                                    readonly>
+                                    value="{{ \Carbon\Carbon::parse($chitti->createDate)->format('Y-M-d') }}" readonly>
                                 @error('uploadDate')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
@@ -94,11 +89,9 @@
                                     <select class="form-control @error('advertisementInPost') is-invalid @enderror"
                                         id="advertisementInPost" name="advertisementInPost">
                                         <option value="" selected disabled>Select</option>
-                                        <option value="Yes"
-                                            {{ old('advertisementInPost', $chitti->advertisementPost) == 'Yes' ? 'selected' : '' }}>
+                                        <option value="Yes" {{ 'Yes' == $chitti->advertisementPost ? 'selected' : '' }}>
                                             Yes</option>
-                                        <option value="No"
-                                            {{ old('advertisementInPost', $chitti->advertisementPost) == 'No' ? 'selected' : '' }}>
+                                        <option value="No" {{ 'No' == $chitti->advertisementPost ? 'selected' : '' }}>
                                             No</option>
                                     </select>
                                     <span class="select-arrow">&#9662;</span> <!-- Unicode arrow symbol -->
@@ -114,7 +107,7 @@
                                 <input type="text"
                                     class="form-control  @error('postViewershipFrom') is-invalid @enderror"
                                     id="postViewershipFrom" name="postViewershipFrom"
-                                    value="{{ old('postViewershipFrom', \Carbon\Carbon::parse($chitti->createDate)->format('Y-m-d') ?? '') }}"
+                                    value="{{ \Carbon\Carbon::parse($chitti->createDate)->format('Y-m-d') ?? '' }}"
                                     readonly>
                                 @error('postViewershipFrom')
                                     <p class="invalid-feedback">{{ $message }}</p>
@@ -124,7 +117,7 @@
                             <div class="col-md-3">
                                 <label for="to" class="form-label">To</label>
                                 <input type="date" class="form-control @error('to') is-invalid @enderror" id="to"
-                                    name="to" value="{{ old('to', date('Y-m-d')) }}">
+                                    name="to" value="{{ date('Y-m-d') }}">
                                 @error('to')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
@@ -137,8 +130,7 @@
                                     <input type="text"
                                         class="form-control  @error('citySubscribers') is-invalid @enderror"
                                         id="citySubscribers" name="citySubscribers" id="citySubscribers"
-                                        value="{{ old('citySubscribers', $chitti->citySubscriber ?? '') }}"
-                                        oninput="calculateTotal()">
+                                        value="{{ $chitti->citySubscriber }}" oninput="calculateTotal()">
                                     @error('citySubscribers')
                                         <p class="invalid-feedback">{{ $message }}</p>
                                     @enderror
@@ -147,8 +139,7 @@
                                 <div class="col-md-6">
                                     <label for="total" class="form-label">Total</label>
                                     <input type="text" class="form-control  @error('total') is-invalid @enderror"
-                                        id="total" name="total"
-                                        value="{{ old('total', $chitti->totalViewerCount ?? '') }}" readonly>
+                                        id="total" name="total" value="{{ $chitti->totalViewerCount }}" readonly>
                                     @error('total')
                                         <p class="invalid-feedback">{{ $message }}</p>
                                     @enderror
@@ -243,11 +234,12 @@
                         @else
                             <div class="row mt-1">
                                 <div class="col-md-6">
+
                                     <label for="citySubscribers" class="form-label">City Subscribers(FB)</label>
                                     <input type="text"
                                         class="form-control  @error('citySubscribers') is-invalid @enderror"
                                         id="citySubscribers" name="citySubscribers" id="citySubscribers"
-                                        value="{{ old('citySubscribers') }}" oninput="calculateTotal()">
+                                        value="{{ $chitti->citySubscriber }}" oninput="calculateTotal()">
                                     @error('citySubscribers')
                                         <p class="invalid-feedback">{{ $message }}</p>
                                     @enderror
@@ -256,7 +248,7 @@
                                 <div class="col-md-6">
                                     <label for="total" class="form-label">Total</label>
                                     <input type="text" class="form-control  @error('total') is-invalid @enderror"
-                                        id="total" name="total" value="{{ old('total') }}" readonly>
+                                        id="total" name="total" value="{{ $chitti->totalViewerCount }}" readonly>
                                     @error('total')
                                         <p class="invalid-feedback">{{ $message }}</p>
                                     @enderror
@@ -269,7 +261,7 @@
                                     <input type="text"
                                         class="form-control  @error('prarangApplication') is-invalid @enderror"
                                         id="prarangApplication" name="prarangApplication"
-                                        value="{{ old('prarangApplication') }}" oninput="calculateTotal()">
+                                        value="{{ $chitti->prarangApplication }}" oninput="calculateTotal()">
                                     @error('prarangApplication')
                                         <p class="invalid-feedback">{{ $message }}</p>
                                     @enderror
@@ -282,7 +274,7 @@
                                     <input type="text"
                                         class="form-control  @error('facebookLinkClick') is-invalid @enderror"
                                         id="facebookLinkClick" name="facebookLinkClick"
-                                        value="{{ old('facebookLinkClick') }}" oninput="calculateTotal()">
+                                        value="{{ $chitti->fb_link_click }}" oninput="calculateTotal()">
                                     @error('facebookLinkClick')
                                         <p class="invalid-feedback">{{ $message }}</p>
                                     @enderror
@@ -293,7 +285,7 @@
                                 <div class="col-md-6">
                                     <label for="websiteGd" class="form-label">Website (Google+Direct)</label>
                                     <input type="text" class="form-control  @error('websiteGd') is-invalid @enderror"
-                                        id="websiteGd" name="websiteGd" value="{{ old('websiteGd') }}"
+                                        id="websiteGd" name="websiteGd" value="{{ $chitti->websiteCount }}"
                                         oninput="calculateTotal()">
                                     @error('websiteGd')
                                         <p class="invalid-feedback">{{ $message }}</p>
@@ -303,7 +295,7 @@
                                 <div class="col-md-6">
                                     <label for="monthDay" class="form-label">Month Day</label>
                                     <input type="text" class="form-control  @error('monthDay') is-invalid @enderror"
-                                        id="monthDay" name="monthDay" value="{{ old('monthDay') }}">
+                                        id="monthDay" name="monthDay" value="{{ $chitti->monthDay }}">
                                     @error('monthDay')
                                         <p class="invalid-feedback">{{ $message }}</p>
                                     @enderror
@@ -314,7 +306,7 @@
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">Email</label>
                                     <input type="text" class="form-control  @error('email') is-invalid @enderror"
-                                        id="email" name="email" value="{{ old('email') }}"
+                                        id="email" name="email" value="{{ $chitti->emailCount }}"
                                         oninput="calculateTotal()">
                                     @error('email')
                                         <p class="invalid-feedback">{{ $message }}</p>
@@ -324,7 +316,7 @@
                                 <div class="col-md-6">
                                     <label for="sponsored" class="form-label">This Post was Sponsored by</label>
                                     <input type="text" class="form-control  @error('sponsored') is-invalid @enderror"
-                                        id="sponsored" name="sponsored" value="{{ old('sponsored') }}">
+                                        id="sponsored" name="sponsored" value="{{ $chitti->sponsoredBy }}">
                                     @error('sponsored')
                                         <p class="invalid-feedback">{{ $message }}</p>
                                     @enderror
@@ -335,7 +327,7 @@
                                 <div class="col-md-6">
                                     <label for="instagram" class="form-label">Instagram</label>
                                     <input type="text" class="form-control  @error('instagram') is-invalid @enderror"
-                                        id="instagram" name="instagram" value="{{ old('instagram') }}"
+                                        id="instagram" name="instagram" value="{{ $chitti->instagramCount }}"
                                         oninput="calculateTotal()">
                                     @error('instagram')
                                         <p class="invalid-feedback">{{ $message }}</p>

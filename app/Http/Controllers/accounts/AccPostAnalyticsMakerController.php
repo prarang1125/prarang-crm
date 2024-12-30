@@ -19,8 +19,8 @@ class AccPostAnalyticsMakerController extends Controller
         // Search functionality
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
-                $q->where('cityNameInEnglish', 'LIKE', "%{$search}%")
-                    ->orWhere('cityNameInUnicode', 'LIKE', "%{$search}%");
+                $q->where('geography', 'LIKE', "%{$search}%")
+                    ->orWhere('geography', 'LIKE', "%{$search}%");
             });
         }
 

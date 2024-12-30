@@ -8,40 +8,44 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Makerlebal;
 use App\Models\Chitti;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DeletedPostController extends Controller
 {
     #this method is use for show the listing of maker
     // public function index()
     // {
-    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-    //     ->whereNotNull('Title')
-    //     ->where('Title', '!=', '')
-    //     ->where('finalStatus', '=', 'deleted')
-    //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'makerStatus', 'checkerStatus')
-    //     ->get();
-    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-    //     return view('admin.deleted-post.deleted-post-listing', compact('chittis', 'geographyOptions'));
+        //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        //     ->whereNotNull('Title')
+        //     ->where('Title', '!=', '')
+        //     ->where('finalStatus', '=', 'deleted')
+        //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'makerStatus', 'checkerStatus')
+        //     ->get();
+        //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        //     return view('admin.deleted-post.deleted-post-listing', compact('chittis', 'geographyOptions'));
     // }
 
     public function index(Request $request)
     {
         $search = $request->input('search');
 
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-            ->where('finalStatus', '=', 'deleted')
+        // $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        $chittis = DB::table('chitti as ch')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->where('ch.finalStatus', '=', 'deleted')
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('Title', 'LIKE', "%{$search}%")
-                        ->orWhere('SubTitle', 'LIKE', "%{$search}%"); // Assuming SubTitle might store another language
+                    $q->where('ch.Title', 'LIKE', "%{$search}%")
+                        ->orWhere('ch.SubTitle', 'LIKE', "%{$search}%"); // Assuming SubTitle might store another language
                 });
             })
-            ->orderByDesc('dateOfCreation')
-            ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus')
+            ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"))
+            // ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus')
             ->paginate(30); // Adjust the number of items per page as needed
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-
         return view('admin.deleted-post.deleted-post-listing', compact('chittis', 'geographyOptions'));
     }
 
