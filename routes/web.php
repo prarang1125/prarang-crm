@@ -33,7 +33,6 @@ use App\Http\Controllers\admin\UserCountryController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
-// dd(Hash::make('password'));
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
 Route::group(['prefix' => 'accounts'], function () {
     Route::group(['middleware' => 'guest'], function () {
@@ -64,13 +63,6 @@ Route::group(['prefix' => 'accounts'], function () {
 
             //this method is use for account uploader listing start
             Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('update.title');
-
-            // Routes for Makers
-            // Route::middleware('role:maker')->group(function () {
-            //     // dd('data is here');
-            //     Route::get('/maker/dashboard', [AccMakerController::class, 'index'])->name('maker.dashboard');
-            //     // Route::get('/maker/profile', [MakerController::class, 'profile'])->name('maker.profile');
-            // });
         });
         //upload image using accounts ck-editor start
         Route::post('/accounts/acc-ckeditor-upload', [AccCKEditorController::class, 'accUpload'])->name('accounts.acc-ckeditor-upload');
@@ -296,7 +288,6 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::get('/checker/chitti-rejected-from-uploader-listing', [ChekerController::class, 'chittiListReturnFromUploaderL'])->name('admin.post-return-from-uploader-listing');
         //show the listing of rejected maker end
-        // Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('admin.update.title');
         Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('update.title');
 
         Route::resource('portal', PortalController::class);

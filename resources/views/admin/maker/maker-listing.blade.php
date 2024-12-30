@@ -96,7 +96,7 @@
                         <table class="table mb-0 table-hover">
                             <thead class="thead-light">
                                 <tr>
-                                    <th scope="col" class="">Chitti No.</th>
+                                    <th scope="col" class="">Sr.</th>
                                     <th scope="col" class="">Title</th>
                                     <th scope="col" class="">Maker</th>
                                     <th scope="col" class="">Sent Time </th>

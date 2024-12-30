@@ -270,7 +270,7 @@
                             </ul>
 
                             <div class="tab-content">
-                                <div class="tab-pane fade  {{ $subTag == 1 ? 'active show' : '' }}" id="cultureTab1"
+                                <div class="tab-pane fade show {{ $subTag == 1 ? 'active show' : '' }}" id="cultureTab1"
                                     role="tabpanel">
                                     <div class="row">
                                         @foreach ($timelines as $timeline)
@@ -305,6 +305,7 @@
                                         @foreach ($manSenses as $sense)
                                             <div class="col-md-4">
                                                 <div class="card">
+
                                                     <div class="card-body cardbodselect mt-3"
                                                         style="background-color: #ffff18; color: #282828;">
                                                         <div class="d-flex align-items-center">
