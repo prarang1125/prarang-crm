@@ -141,7 +141,7 @@ class AccMakerController extends Controller
             $area_id = $request->c2rselect;
             $date = Carbon::now()->format('Y-m-d');
             $dateofcreation = Carbon::now()->format('d-M-y H:i:s');
-           
+
             $areaIdCode = '';
             if ($request->geography == 6) { //6 is use for city
                 $areaIdCode = 'c' . $area_id;
@@ -409,26 +409,30 @@ class AccMakerController extends Controller
     #this method is use for account chitti return from checker
     public function accChittiListReturnFromCheckerL(Request $request)
     {
-        $query = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        ->whereNotNull('Title')
-        ->where('Title', '!=', '')
-        ->where('finalStatus', '!=', 'deleted')
-        ->where('return_chitti_post_from_checker_id', 1);
+        // $query = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+        $query = DB::table('chitti as ch')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->whereNotNull('ch.Title')
+            ->where('ch.Title', '!=', '')
+            ->where('ch.finalStatus', '!=', 'deleted')
+            ->where('ch.return_chitti_post_from_checker_id', 1);
 
-    // Handle search
-    if ($request->has('search') && $request->input('search') != '') {
-        $search = $request->input('search');
-        $query->where(function ($q) use ($search) {
-            $q->where('Title', 'LIKE', "%$search%")
-            ->orWhere('description', 'LIKE', "%$search%");
-        });
-    }
+        // Handle search
+        if ($request->has('search') && $request->input('search') != '') {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('ch.Title', 'LIKE', "%$search%")
+                ->orWhere('ch.description', 'LIKE', "%$search%");
+            });
+        }
 
-    // Paginate results
-    $chittis = $query->paginate(30); // Adjust the number of items per page as needed
+        // Paginate results
+        $chittis = $query->paginate(30); // Adjust the number of items per page as needed
 
-    $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
-    $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
+        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         return view('accounts.maker.acc-chitti-rejected-from-checker-listing', compact('geographyOptions', 'notification', 'chittis'));
     }
     public function accMakerDelete($id)
