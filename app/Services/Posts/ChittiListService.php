@@ -34,7 +34,6 @@ class ChittiListService
 
         if ($makerStatus) {
             $query->where('makerStatus', '=', $makerStatus);
-
         }
         if ($listingType == 'checker') {
             $query->whereIn('checkerStatus', ['maker_to_checker']);
@@ -58,12 +57,10 @@ class ChittiListService
         }
 
         return $query->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"))->paginate(30);
-
     }
 
     public function getChittiListingsForAnalytics($request, $type = 'maker', $cityCode = null)
     {
-
         $search = $request->input('search');
         $query = DB::table('chitti as ch')
             ->select('ch.*', 'vg.*', 'vCg.*', 'city.*', 'ch.chittiId as chittiId');
@@ -77,7 +74,7 @@ class ChittiListService
                 ->addSelect(DB::raw("CONCAT(user.firstName, ' ', user.lastName) as userName"))
                 ->whereIn('postStatusMakerChecker', ['send_to_post_checker', 'approved']);
         } else {
-            $query->where('postStatusMakerChecker', '!=', 'send_to_post_checker');
+            // $query->where('postStatusMakerChecker', '!=', 'send_to_post_checker');
         }
 
         $query->where('finalStatus', '!=', 'deleted')

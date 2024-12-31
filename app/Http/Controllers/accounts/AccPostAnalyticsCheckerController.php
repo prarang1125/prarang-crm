@@ -21,7 +21,6 @@ class AccPostAnalyticsCheckerController extends Controller
                     ->orWhere('citynameInUnicode', 'LIKE', "%$search%");
             });
         }
-
         $mcitys = $query->paginate(20); // Paginate with 10 items per page
 
         return view('accounts.postanalyticschecker.acc-post-analytics-checker-city-listing', compact('mcitys'));
@@ -33,8 +32,9 @@ class AccPostAnalyticsCheckerController extends Controller
 
         $cityCode = $request->query('cityCode');
         $chittis = $chittiListService->getChittiListingsForAnalytics($request, 'checker', $cityCode);
+        $geography = DB::table('vGeography')->select('geography', 'geographycode')->get();
 
-        return view('accounts.postanalyticschecker.acc-post-analytics-checker-listing', compact('chittis'));
+        return view('accounts.postanalyticschecker.acc-post-analytics-checker-listing', compact('chittis', 'geography'));
     }
 
     public function accPostAnalyticsChckerEdit(Request $request)
@@ -108,7 +108,7 @@ class AccPostAnalyticsCheckerController extends Controller
             'analyticsChecker' => $checkerId,
         ]);
 
-        return redirect()->route('accounts.analyticschecker-dashboard')
+        return redirect()->route('accounts.acc-post-analytics-checker-listing', ['cityCode' => $request->cityCode])
             ->with('success', 'Data updated successfully.');
         // return back()->with('success', 'Data updated successfully.');
     }
@@ -130,7 +130,7 @@ class AccPostAnalyticsCheckerController extends Controller
             'analyticsChecker' => $checkerId,
         ]);
 
-        return redirect()->route('accounts.analyticschecker-dashboard')
+        return redirect()->route('accounts.acc-post-analytics-checker-listing', ['cityCode' => $request->cityCode])
             ->with('success', 'Post Analytics have been approved successfully.');
         // return back()->with('success', 'Post Analytics have been approved successfully');
     }

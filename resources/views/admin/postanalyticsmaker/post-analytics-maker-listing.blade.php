@@ -87,10 +87,10 @@
                                             </a>
                                         </td>
                                         <td class="">
-                                            {{ \Carbon\Carbon::parse($chitti->createDate)->format('d-M-Y') }}
+                                            {{ \Carbon\Carbon::parse($chitti->dateOfApprove)->format('d-M-Y') }}
                                         </td>
                                         <td class="">
-                                            {{ (int) \Carbon\Carbon::parse($chitti->createDate)->diffInDays(now()) }}
+                                            {{ (int) \Carbon\Carbon::parse($chitti->dateOfApprove)->diffInDays(now()) }}
                                         </td>
                                         <td class="">{{ $chitti->citynameInEnglish ?? 'N/A' }} </td>
 
@@ -110,7 +110,7 @@
             </div>
         </div>
     </div>
-    <!--end page wrapper -->
+
     <script>
         function updateCityCode() {
             const selectedCityCode = document.getElementById('geography').value;

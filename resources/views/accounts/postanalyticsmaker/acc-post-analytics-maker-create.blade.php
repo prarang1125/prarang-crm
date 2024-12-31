@@ -10,8 +10,7 @@
             <div class="ps-3">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0 p-0">
-                        {{-- <li class="breadcrumb-item"><a href="{{ url('admin/postanalyticsmaker/post-analytics-maker-listing')}}"><i class="bx bx-user"></i></a>
-                    </li> --}}
+
                         <li class="breadcrumb-item active" aria-current="page">Maker Analytics Register</li>
                     </ol>
                 </nav>
@@ -28,9 +27,10 @@
                         </div>
                     @endif
                     <h6 class="mb-0 text-uppercase text-primary">Create New Maker Analytics</h6>
-                    <hr />
-                    <form action="{{ route('accounts.acc-post-analytics-maker-update', $chitti->chittiId) }}" method="POST"
-                        enctype="multipart/form-data">
+                    <hr>
+                    <form
+                        action="{{ route('accounts.acc-post-analytics-maker-update', ['id' => $chitti->chittiId, 'cityCode' => Request::query('city')]) }}"
+                        method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="row">
@@ -135,9 +135,9 @@
                                 <div class="col-md-6">
                                     <label for="citySubscribers" class="form-label">City Subscribers(FB)</label>
                                     <input type="text"
-                                        class="form-control  @error('citySubscribers') is-invalid @enderror"
-                                        id="citySubscribers" name="citySubscribers" id="citySubscribers"
-                                        value="{{ old('citySubscribers', $chitti->citySubscriber ?? '') }}"
+                                        class="form-control @error('citySubscribers') is-invalid @enderror"
+                                        id="citySubscribers" name="citySubscribers"
+                                        value="{{ old('citySubscribers', $chitti->citySubscriber) }}"
                                         oninput="calculateTotal()">
                                     @error('citySubscribers')
                                         <p class="invalid-feedback">{{ $message }}</p>
@@ -146,9 +146,9 @@
 
                                 <div class="col-md-6">
                                     <label for="total" class="form-label">Total</label>
-                                    <input type="text" class="form-control  @error('total') is-invalid @enderror"
+                                    <input type="text" class="form-control @error('total') is-invalid @enderror"
                                         id="total" name="total"
-                                        value="{{ old('total', $chitti->totalViewerCount ?? '') }}" readonly>
+                                        value="{{ old('total', $chitti->totalViewerCount) }}" readonly>
                                     @error('total')
                                         <p class="invalid-feedback">{{ $message }}</p>
                                     @enderror
@@ -159,9 +159,9 @@
                                 <div class="col-md-6">
                                     <label for="prarangApplication" class="form-label">Prarang Application</label>
                                     <input type="text"
-                                        class="form-control  @error('prarangApplication') is-invalid @enderror"
+                                        class="form-control @error('prarangApplication') is-invalid @enderror"
                                         id="prarangApplication" name="prarangApplication"
-                                        value="{{ old('prarangApplication', $chitti->prarangApplication ?? '') }}"
+                                        value="{{ old('prarangApplication', $chitti->prarangApplication) }}"
                                         oninput="calculateTotal()">
                                     @error('prarangApplication')
                                         <p class="invalid-feedback">{{ $message }}</p>
@@ -173,9 +173,9 @@
                                 <div class="col-md-6">
                                     <label for="facebookLinkClick" class="form-label">Facebook Link Click</label>
                                     <input type="text"
-                                        class="form-control  @error('facebookLinkClick') is-invalid @enderror"
+                                        class="form-control @error('facebookLinkClick') is-invalid @enderror"
                                         id="facebookLinkClick" name="facebookLinkClick"
-                                        value="{{ old('facebookLinkClick', $chitti->prarangApplication ?? '') }}"
+                                        value="{{ old('facebookLinkClick', $chitti->fb_link_click) }}"
                                         oninput="calculateTotal()">
                                     @error('facebookLinkClick')
                                         <p class="invalid-feedback">{{ $message }}</p>
@@ -186,10 +186,9 @@
                             <div class="row mt-1">
                                 <div class="col-md-6">
                                     <label for="websiteGd" class="form-label">Website (Google+Direct)</label>
-                                    <input type="text" class="form-control  @error('websiteGd') is-invalid @enderror"
+                                    <input type="text" class="form-control @error('websiteGd') is-invalid @enderror"
                                         id="websiteGd" name="websiteGd"
-                                        value="{{ old('websiteGd', $chitti->websiteCount ?? '') }}"
-                                        oninput="calculateTotal()">
+                                        value="{{ old('websiteGd', $chitti->websiteCount) }}" oninput="calculateTotal()">
                                     @error('websiteGd')
                                         <p class="invalid-feedback">{{ $message }}</p>
                                     @enderror
@@ -197,9 +196,8 @@
 
                                 <div class="col-md-6">
                                     <label for="monthDay" class="form-label">Month Day</label>
-                                    <input type="text" class="form-control  @error('monthDay') is-invalid @enderror"
-                                        id="monthDay" name="monthDay"
-                                        value="{{ old('monthDay', $chitti->monthDay ?? '') }}">
+                                    <input type="text" class="form-control @error('monthDay') is-invalid @enderror"
+                                        id="monthDay" name="monthDay" value="{{ old('monthDay', $chitti->monthDay) }}">
                                     @error('monthDay')
                                         <p class="invalid-feedback">{{ $message }}</p>
                                     @enderror
@@ -209,9 +207,9 @@
                             <div class="row mt-1">
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">Email</label>
-                                    <input type="text" class="form-control  @error('email') is-invalid @enderror"
-                                        id="email" name="email"
-                                        value="{{ old('email', $chitti->emailCount ?? '') }}" oninput="calculateTotal()">
+                                    <input type="text" class="form-control @error('email') is-invalid @enderror"
+                                        id="email" name="email" value="{{ old('email', $chitti->emailCount) }}"
+                                        oninput="calculateTotal()">
                                     @error('email')
                                         <p class="invalid-feedback">{{ $message }}</p>
                                     @enderror
@@ -219,9 +217,9 @@
 
                                 <div class="col-md-6">
                                     <label for="sponsored" class="form-label">This Post was Sponsored by</label>
-                                    <input type="text" class="form-control  @error('sponsored') is-invalid @enderror"
+                                    <input type="text" class="form-control @error('sponsored') is-invalid @enderror"
                                         id="sponsored" name="sponsored"
-                                        value="{{ old('sponsored', $chitti->sponsoredBy ?? '') }}">
+                                        value="{{ old('sponsored', $chitti->sponsoredBy) }}">
                                     @error('sponsored')
                                         <p class="invalid-feedback">{{ $message }}</p>
                                     @enderror
@@ -231,9 +229,9 @@
                             <div class="row mt-1">
                                 <div class="col-md-6">
                                     <label for="instagram" class="form-label">Instagram</label>
-                                    <input type="text" class="form-control  @error('instagram') is-invalid @enderror"
+                                    <input type="text" class="form-control @error('instagram') is-invalid @enderror"
                                         id="instagram" name="instagram"
-                                        value="{{ old('instagram', $chitti->instagramCount ?? '') }}"
+                                        value="{{ old('instagram', $chitti->instagramCount) }}"
                                         oninput="calculateTotal()">
                                     @error('instagram')
                                         <p class="invalid-feedback">{{ $message }}</p>
@@ -300,10 +298,26 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-6 p-4">
                                     <label for="monthDay" class="form-label">Month Day</label>
-                                    <input type="text" class="form-control  @error('monthDay') is-invalid @enderror"
-                                        id="monthDay" name="monthDay" value="{{ old('monthDay') }}">
+                                    <div class="row">
+                                        <div class="form-check col-sm">
+                                            <input class="form-check-input @error('monthDay') is-invalid @enderror"
+                                                type="radio" id="monthDay1" name="monthDay" value="(5th) Day"
+                                                {{ old('monthDay', $chitti->monthDay ?? '') == '(5th) Day' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="monthDay1">
+                                                (5th) Day
+                                            </label>
+                                        </div>
+                                        <div class="form-check col-sm ps-2">
+                                            <input class="form-check-input @error('monthDay') is-invalid @enderror"
+                                                type="radio" id="monthDay2" name="monthDay" value="(31st) Day"
+                                                {{ old('monthDay', $chitti->monthDay ?? '') == '(31st) Day' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="monthDay2">
+                                                (31st) Day
+                                            </label>
+                                        </div>
+                                    </div>
                                     @error('monthDay')
                                         <p class="invalid-feedback">{{ $message }}</p>
                                     @enderror

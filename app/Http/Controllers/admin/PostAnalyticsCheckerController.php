@@ -75,6 +75,7 @@ class PostAnalyticsCheckerController extends Controller
             'email' => 'nullable|string',
             'sponsored' => 'nullable|string',
             'instagram' => 'nullable|string',
+            'monthDay' => 'required|string',
         ]);
 
         $total = [$request->citySubscribers, $request->prarangApplication, $request->websiteGd, $request->email, $request->instagram];
@@ -94,6 +95,7 @@ class PostAnalyticsCheckerController extends Controller
             'instagramCount' => $request->instagram,
             'advertisementPost' => $request->advertisementInPost,
             'analyticsChecker' => $checkerId,
+            'monthDay' => $request->monthDay,
         ]);
 
         // return redirect()->route('admin.post-analytics-checker-city-listing')
