@@ -141,6 +141,7 @@ class PostAnalyticsCheckerController extends Controller
     public function postAnalyticsCheckerSendToMaker(Request $request, $id)
     {
         $checkerId = $request->query('checkerId');
+
         $City = $request->query('City');
         $currentDate = date('d-M-y H:i:s');
 
@@ -151,15 +152,14 @@ class PostAnalyticsCheckerController extends Controller
         $chitti = Chitti::findOrFail($id);
         $chitti->update([
             'analyticsChecker' => $checkerId,
-            'checkerReason' => $request->returnToMakerWithRegion,
+            // 'checkerReason' => $request->returnToMakerWithRegion,
             'post_anlytics_rtrn_to_mkr' => $request->returnToMakerWithRegion,
-            'dateOfReturnToMaker' => $currentDate,
+            'dateOfReturnToMaker' => date('d-m-Y'),
             'postStatusMakerChecker' => 'return_post_from_checker',
             'post_anlytics_rtrn_to_mkr_id' => 0,
         ]);
 
-        return redirect()->route('admin.post-analytics-checker-city-listing')
+        return redirect()->route('admin.post-analytics-checker-listing', ['cityCode' => $request->cityCode])
             ->with('success', 'Post Analytics have been return maker post analytics from checker successfully.');
-        // return back()->with('success', 'Post Analytics have been return maker post analytics from checker successfully');
     }
 }
