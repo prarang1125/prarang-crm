@@ -112,7 +112,7 @@
                                 <input type="text"
                                     class="form-control  @error('postViewershipFrom') is-invalid @enderror"
                                     id="postViewershipFrom" name="postViewershipFrom"
-                                    value="{{ \Carbon\Carbon::parse($chitti->dateOdfApprove)->format('Y-M-d') ?? '' }}"
+                                    value="{{ \Carbon\Carbon::parse($chitti->dateOfApprove)->format('Y-M-d') ?? '' }}"
                                     readonly>
                                 @error('postViewershipFrom')
                                     <p class="invalid-feedback">{{ $message }}</p>
@@ -121,7 +121,7 @@
                             <div class="col-md-3">
                                 <label for="to" class="form-label">To</label>
                                 <input type="date" class="form-control @error('to') is-invalid @enderror" id="to"
-                                    name="to" value="{{ old('to', $chitti->dateOfPost) }}">
+                                    name="to" value="{{ old('to', $chitti->postViewershipDateTo) }}">
                                 @error('to')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
@@ -247,7 +247,7 @@
                             </div>
                             <div class="col-md-2" style="text-align:center;">
                                 <div class="form-group">
-                                    <a href="{{ route('admin.post-analytics-checker-return-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}"
+                                    <a href="{{ route('admin.post-analytics-checker-return-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&cityCode={{ Request::query('city') }}"
                                         class="btn btn-primary">Send to maker</a>
                                 </div>
                             </div>
