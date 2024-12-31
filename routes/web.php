@@ -296,3 +296,5 @@ Route::group(['prefix' => 'admin'], function () {
 
     });
 });
+
+Route::get('get-out-teams', [OurTeamController::class, 'getAllTeamsJson']);
