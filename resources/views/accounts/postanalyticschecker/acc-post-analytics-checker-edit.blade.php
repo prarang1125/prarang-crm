@@ -12,7 +12,7 @@
                     <ol class="breadcrumb mb-0 p-0">
                         {{-- <li class="breadcrumb-item"><a href="{{ url('admin/postanalyticsmaker/post-analytics-maker-listing')}}"><i class="bx bx-user"></i></a>
                     </li> --}}
-                        <li class="breadcrumb-item active" aria-current="page">Checker Analytics Register</li>
+                        <li class="breadcrumb-item active" aria-current="page">Checker</li>
                     </ol>
                 </nav>
             </div>
@@ -30,7 +30,7 @@
                     <h6 class="mb-0 text-uppercase text-primary">Create New Checker Analytics</h6>
                     <hr />
                     <form
-                        action="{{ route('accounts.acc-post-analytics-checker-update', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}"
+                        action="{{ route('accounts.acc-post-analytics-checker-update', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&cityCode={{ Request::query('city') }}"
                         method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -113,7 +113,7 @@
                                 <input type="text"
                                     class="form-control  @error('postViewershipFrom') is-invalid @enderror"
                                     id="postViewershipFrom" name="postViewershipFrom"
-                                    value="{{ old('postViewershipFrom', \Carbon\Carbon::parse($chitti->createDate)->format('Y-m-d') ?? '') }}"
+                                    value="{{ old('postViewershipFrom', \Carbon\Carbon::parse($chitti->postViewershipDate)->format('Y-m-d') ?? '') }}"
                                     readonly>
                                 @error('postViewershipFrom')
                                     <p class="invalid-feedback">{{ $message }}</p>
@@ -122,7 +122,7 @@
                             <div class="col-md-3">
                                 <label for="to" class="form-label">To</label>
                                 <input type="date" class="form-control @error('to') is-invalid @enderror" id="to"
-                                    name="to" value="{{ old('to', date('Y-m-d')) }}">
+                                    name="to" value="{{ old('to', $chitti->postViewershipDateTo) }}">
                                 @error('to')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
@@ -174,6 +174,30 @@
                                     value="{{ old('websiteGd', $chitti->websiteCount ?? '') }}"
                                     oninput="calculateTotal()">
                                 @error('websiteGd')
+                                    <p class="invalid-feedback">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 p-4">
+                                <label for="monthDay" class="form-label">Month Day</label>
+                                <div class="row">
+                                    <div class="form-check col-sm">
+                                        <input class="form-check-input @error('monthDay') is-invalid @enderror"
+                                            type="radio" id="monthDay1" name="monthDay" value="(5th) Day"
+                                            {{ old('monthDay', $chitti->monthDay ?? '') == '(5th) Day' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="monthDay1">
+                                            (5th) Day
+                                        </label>
+                                    </div>
+                                    <div class="form-check col-sm ps-2">
+                                        <input class="form-check-input @error('monthDay') is-invalid @enderror"
+                                            type="radio" id="monthDay2" name="monthDay" value="(31st) Day"
+                                            {{ old('monthDay', $chitti->monthDay ?? '') == '(31st) Day' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="monthDay2">
+                                            (31st) Day
+                                        </label>
+                                    </div>
+                                </div>
+                                @error('monthDay')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -229,11 +253,11 @@
                                 </div>
                             </div>
                             @if ($chitti->postStatusMakerChecker == 'approved')
-                                <p>{{ $chitti->postStatusMakerChecker }}</p>
+                                <div class="modal-footer mt-3">Aproved</div>
                             @else
                                 <div class="col-md-1">
                                     <div class="form-group">
-                                        <a href="{{ route('accounts.acc-post-analytics-checker-approve', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&approve={{ 'approve' }}"
+                                        <a href="{{ route('accounts.acc-post-analytics-checker-approve', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}&approve={{ 'approve' }}&cityCode={{ Request::query('city') }}"
                                             class="btn btn-primary">Approve</a>
                                     </div>
                                 </div>
@@ -249,7 +273,7 @@
 
     <script>
         function calculateTotal() {
-            const fields = ['citySubscribers', 'prarangApplication', 'facebookLinkClick', 'websiteGd', 'email',
+            const fields = ['citySubscribers', 'prarangApplication', , 'websiteGd', 'email',
                 'instagram'
             ];
             let total = 0;

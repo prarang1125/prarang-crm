@@ -38,8 +38,9 @@ class AccPostAnalyticsMakerController extends Controller
         $cityCode = $request->query('cityCode');
 
         $chittis = $chittiListService->getChittiListingsForAnalytics($request, 'maker', $cityCode);
+        $geography = DB::table('vGeography')->select('geography', 'geographycode')->get();
 
-        return view('accounts.postanalyticsmaker.acc-post-analytics-maker-listing', compact('chittis'));
+        return view('accounts.postanalyticsmaker.acc-post-analytics-maker-listing', compact('chittis', 'geography'));
     }
 
     //this method is use for  show the post analytics maker edit data and page
@@ -105,7 +106,7 @@ class AccPostAnalyticsMakerController extends Controller
         ]);
 
         // Redirect with success message
-        return redirect()->route('accounts.analyticsmaker-dashboard')
+        return redirect()->route('accounts.acc-post-analytics-maker-listing', ['cityCode' => $request->cityCode])
             ->with('success', 'Data updated successfully.');
 
     }

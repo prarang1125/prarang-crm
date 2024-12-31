@@ -33,6 +33,17 @@
                 <div class="card">
                     <!-- Add the Search Form -->
                     <div class="card-body d-flex justify-content-end align-items-end">
+                        <form class="pe-2">
+                            <label for="geography" class="ps-1">Select Area</label>
+                            <select name="cityCode" id="geography" class="form-control pe-3" onchange="updateCityCode()">
+                                @foreach ($geography as $mcity)
+                                    <option value="{{ $mcity->geographycode }}"
+                                        @if (request()->query('cityCode') == $mcity->geographycode) selected @endif>
+                                        {{ $mcity->geography }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </form>
                         <form action="{{ url('accounts/postanalyticschecker/acc-post-analytics-checker-listing') }}"
                             method="GET" class="d-flex me-3">
                             <input type="hidden" name="cityCode" value="{{ request()->query('cityCode') }}">
@@ -69,7 +80,6 @@
                                     @php $index = 1;  @endphp
                                     @foreach ($chittis as $chitti)
                                         <tr>
-
                                             <td class="">{{ $index }}</td>
                                             <td class="">
                                                 <a class="text-primary">{{ $chitti->Title }}
@@ -78,16 +88,13 @@
                                             <td class="">{{ $chitti->userName ?? 'N/A' }}
                                             </td>
                                             <td class="">
-                                                {{ \Carbon\Carbon::parse($chitti->createDate)->format('d-M-Y') }}</td>
+                                                {{ \Carbon\Carbon::parse($chitti->dateOfApprove)->format('d-M-Y') }}</td>
                                             <td class="">
-                                                {{ (int) \Carbon\Carbon::parse($chitti->createDate)->diffInDays(now()) }}
+                                                {{ (int) \Carbon\Carbon::parse($chitti->dateOfApprove)->diffInDays(now()) }}
                                             </td>
-                                            <td class="">{{ $chitti->citynameInEnglish ?? 'N/A' }} </td>
+                                            <td class="">{{ $chitti->geography ?? 'N/A' }} </td>
                                             {{-- <td class="">{{ 'N/A' }} </td> --}}
                                             <td class="">{{ $chitti->totalViewerCount }}</td>
-
-
-
                                             <td class="">
                                                 <a href="{{ route('accounts.acc-post-analytics-checker-edit', ['id' => $chitti->chittiId, 'city' => $chitti->cityCode ?? 'N/A']) }}"
                                                     class="text-primary">
@@ -110,4 +117,20 @@
             </div>
         </div>
         <!--end page wrapper -->
+        <script>
+            function updateCityCode() {
+                const selectedCityCode = document.getElementById('geography').value;
+                const currentUrl = new URL(window.location.href);
+
+                // Update the cityCode parameter in the URL
+                if (selectedCityCode) {
+                    currentUrl.searchParams.set('cityCode', selectedCityCode);
+                } else {
+                    currentUrl.searchParams.delete('cityCode'); // Remove if no selection
+                }
+
+                // Redirect to the updated URL
+                window.location.href = currentUrl.toString();
+            }
+        </script>
     @endsection

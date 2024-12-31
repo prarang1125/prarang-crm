@@ -71,7 +71,7 @@
                                 <label for="numberOfDays" class="form-label">Number of Days</label>
                                 <input type="text" class="form-control  @error('numberOfDays') is-invalid @enderror"
                                     id="numberOfDays" name="numberOfDays"
-                                    value="{{ old('numberOfDays', (int) \Carbon\Carbon::parse($chitti->createDate ?? now())->diffInDays(now())) }}"
+                                    value="{{ old('numberOfDays', (int) \Carbon\Carbon::parse($chitti->dateOfApprove ?? now())->diffInDays(now())) }}"
                                     readonly>
                                 @error('numberOfDays')
                                     <p class="invalid-feedback">{{ $message }}</p>
@@ -82,7 +82,7 @@
                                 <label for="nameOfCity" class="form-label">Name of City</label>
                                 <input type="text" class="form-control  @error('nameOfCity') is-invalid @enderror"
                                     id="nameOfCity" name="nameOfCity"
-                                    value="{{ old('nameOfCity', $chitti->citynameInEnglish ?? 'N/A') }}" readonly>
+                                    value="{{ old('nameOfCity', $chitti->geography ?? 'N/A') }}" readonly>
                                 @error('nameOfCity')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
@@ -112,7 +112,7 @@
                                 <input type="text"
                                     class="form-control  @error('postViewershipFrom') is-invalid @enderror"
                                     id="postViewershipFrom" name="postViewershipFrom"
-                                    value="{{ \Carbon\Carbon::parse($chitti->createDate)->format('Y-M-d') ?? '' }}"
+                                    value="{{ \Carbon\Carbon::parse($chitti->dateOdfApprove)->format('Y-M-d') ?? '' }}"
                                     readonly>
                                 @error('postViewershipFrom')
                                     <p class="invalid-feedback">{{ $message }}</p>
@@ -121,7 +121,7 @@
                             <div class="col-md-3">
                                 <label for="to" class="form-label">To</label>
                                 <input type="date" class="form-control @error('to') is-invalid @enderror" id="to"
-                                    name="to" value="{{ old('to', date('Y-m-d')) }}">
+                                    name="to" value="{{ old('to', $chitti->dateOfPost) }}">
                                 @error('to')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
@@ -173,6 +173,30 @@
                                     value="{{ old('websiteGd', $chitti->websiteCount ?? '') }}"
                                     oninput="calculateTotal()">
                                 @error('websiteGd')
+                                    <p class="invalid-feedback">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 p-4">
+                                <label for="monthDay" class="form-label">Month Day</label>
+                                <div class="row">
+                                    <div class="form-check col-sm">
+                                        <input class="form-check-input @error('monthDay') is-invalid @enderror"
+                                            type="radio" id="monthDay1" name="monthDay" value="(5th) Day"
+                                            {{ old('monthDay', $chitti->monthDay ?? '') == '(5th) Day' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="monthDay1">
+                                            (5th) Day
+                                        </label>
+                                    </div>
+                                    <div class="form-check col-sm ps-2">
+                                        <input class="form-check-input @error('monthDay') is-invalid @enderror"
+                                            type="radio" id="monthDay2" name="monthDay" value="(31st) Day"
+                                            {{ old('monthDay', $chitti->monthDay ?? '') == '(31st) Day' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="monthDay2">
+                                            (31st) Day
+                                        </label>
+                                    </div>
+                                </div>
+                                @error('monthDay')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
                             </div>

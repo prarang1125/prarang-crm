@@ -30,7 +30,7 @@
                     @endif
                     <h6 class="mb-0 text-uppercase text-primary">Maker Edit</h6>
                     <hr />
-                    <form action="{{ route('accounts.acc-maker-update',  $chitti->chittiId) }}" method="POST"
+                    <form action="{{ route('accounts.acc-maker-update', $chitti->chittiId) }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -387,7 +387,7 @@
     <script>
         const uploadUrl = "{{ route('accounts.acc-ckeditor-upload') }}";
         const csrfToken = "{{ csrf_token() }}";
-        const postId="{{$chitti->chittiId}}";
+        const postId = "{{ $chitti->chittiId }}";
     </script>
     <script>
         function previewImage() {

@@ -10,9 +10,7 @@
             <div class="ps-3">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0 p-0">
-                        <!-- <li class="breadcrumb-item"><a href="{{ url('accounts/postanalyticsmaker/acc-post-analytics-maker-city-listing') }}">
-                                                                                                                                                                                     <i class="bx bx-user"></i></a>
-                                                                                                                                                                                </li> -->
+                        </li> -->
                         <li class="breadcrumb-item active" aria-current="page">Post Analytics Maker Listing</li>
                     </ol>
                 </nav>
@@ -31,6 +29,17 @@
                 <hr />
                 <div class="card">
                     <div class="card-body d-flex justify-content-end align-items-end">
+                        <form class="pe-2">
+                            <label for="geography" class="ps-1">Select Area</label>
+                            <select name="cityCode" id="geography" class="form-control pe-3" onchange="updateCityCode()">
+                                @foreach ($geography as $mcity)
+                                    <option value="{{ $mcity->geographycode }}"
+                                        @if (request()->query('cityCode') == $mcity->geographycode) selected @endif>
+                                        {{ $mcity->geography }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </form>
                         <!-- Search Form -->
                         <form action="{{ url('accounts/postanalyticsmaker/acc-post-analytics-maker-listing') }}"
                             method="GET" class="d-flex me-3">
@@ -52,16 +61,12 @@
                         <table class="table mb-0 table-hover">
                             <thead class="thead-light">
                                 <tr>
-                                    {{-- <th scope="col" class="">#</th> --}}
                                     <th scope="col" class="">Sr.</th>
                                     <th scope="col" class="">Title</th>
                                     <th scope="col" class="">Upload Date</th>
                                     <th scope="col" class="">Days</th>
                                     <th scope="col" class="">Area</th>
-                                    {{-- <th scope="col" class="">Ad</th> --}}
                                     <th scope="col" class="">Viewership</th>
-                                    {{-- <th scope="col" class="">Status</th> --}}
-                                    {{-- <th scope="col" class="">Sent Time</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,7 +75,6 @@
                                 @endphp
                                 @foreach ($chittis as $chitti)
                                     <tr>
-                                        {{-- <th scope="row" class="text-center">{{ $index }}</th> --}}
                                         <td class="">{{ $index }}</td>
                                         <td class="">
                                             <a href="{{ route('accounts.acc-post-analytics-maker-create', ['id' => $chitti->chittiId, 'city' => $chitti->cityCode ?? 'N/A']) }}"
@@ -79,13 +83,12 @@
                                             </a>
                                         </td>
                                         <td class="">
-                                            {{ \Carbon\Carbon::parse($chitti->createDate)->format('d-M-Y') }}
+                                            {{ \Carbon\Carbon::parse($chitti->dateOfApprove)->format('d-M-Y') }}
                                         </td>
                                         <td class="">
                                             {{ (int) \Carbon\Carbon::parse($chitti->dateOfApprove)->diffInDays(now()) }}
                                         </td>
-                                        <td class="">{{ $chitti->citynameInEnglish ?? 'N/A' }} </td>
-
+                                        <td class="">{{ $chitti->geography ?? 'N/A' }} </td>
                                         <td class="">{{ $chitti->totalViewerCount }}</td>
                                     </tr>
                                     @php $index++;  @endphp
@@ -100,5 +103,17 @@
             </div>
         </div>
     </div>
-    <!--end page wrapper -->
+
+    <script>
+        function updateCityCode() {
+            const selectedCityCode = document.getElementById('geography').value;
+            const currentUrl = new URL(window.location.href);
+            if (selectedCityCode) {
+                currentUrl.searchParams.set('cityCode', selectedCityCode);
+            } else {
+                currentUrl.searchParams.delete('cityCode'); // Remove if no selection
+            }
+            window.location.href = currentUrl.toString();
+        }
+    </script>
 @endsection
