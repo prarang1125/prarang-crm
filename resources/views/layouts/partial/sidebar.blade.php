@@ -50,27 +50,26 @@
                 <li> <a href="{{ url('/admin/user-profile') }}"><i class="bx bx-right-arrow-alt"></i>User Profile</a>
                 </li>
                 <li> <a href="{{ url('/admin/user-listing') }}"><i class="bx bx-right-arrow-alt"></i>User</a>
+                <li> <a href="{{ route('our-team.index') }}"><i class="bx bx-right-arrow-alt"></i>Our Teams</a>
                 </li>
-                <li> <a href="{{ url('/admin/role/role-listing') }}"><i class="bx bx-right-arrow-alt"></i>Role</a>
-                </li>
-                <li> <a href="{{ url('/admin/languagescript/languagescript-listing') }}"><i
-                            class="bx bx-right-arrow-alt"></i>Language Script</a>
-                </li>
-                <li> <a href="{{ url('/admin/country/country-listing') }}"><i
-                            class="bx bx-right-arrow-alt"></i>Country</a>
-                </li>
-                <li> <a href="{{ url('/admin/livecity/live-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>Live
-                        City</a>
-                </li>
-                <li> <a href="{{ url('/admin/scities/scities-listing') }}"><i
-                            class="bx bx-right-arrow-alt"></i>City</a>
-                </li>
-                <li> <a href="{{ url('/admin/region/region-listing') }}"><i
-                            class="bx bx-right-arrow-alt"></i>Region</a>
-                    {{-- Portal: Vivek --}}
-                <li> <a href="{{ route('portal.index') }}"><i class="bx bx-right-arrow-alt"></i>Portals</a>
-                </li>
-                {{-- End Portal:Vivek --}}
+        </li>
+        <li> <a href="{{ url('/admin/role/role-listing') }}"><i class="bx bx-right-arrow-alt"></i>Role</a>
+        </li>
+        <li> <a href="{{ url('/admin/languagescript/languagescript-listing') }}"><i
+                    class="bx bx-right-arrow-alt"></i>Language Script</a>
+        </li>
+        <li> <a href="{{ url('/admin/country/country-listing') }}"><i class="bx bx-right-arrow-alt"></i>Country</a>
+        </li>
+        <li> <a href="{{ url('/admin/livecity/live-city-listing') }}"><i class="bx bx-right-arrow-alt"></i>Live
+                City</a>
+        </li>
+        <li> <a href="{{ url('/admin/scities/scities-listing') }}"><i class="bx bx-right-arrow-alt"></i>City</a>
+        </li>
+        <li> <a href="{{ url('/admin/region/region-listing') }}"><i class="bx bx-right-arrow-alt"></i>Region</a>
+            {{-- Portal: Vivek --}}
+        <li> <a href="{{ route('portal.index') }}"><i class="bx bx-right-arrow-alt"></i>Portals</a>
+        </li>
+        {{-- End Portal:Vivek --}}
         </li>
         <li> <a href="{{ url('/admin/tagcategory/tag-category-listing') }}"><i class="bx bx-right-arrow-alt"></i>Tag
                 Category</a>
