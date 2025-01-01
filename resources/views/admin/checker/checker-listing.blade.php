@@ -28,7 +28,7 @@
                     </div>
                 @endif
                 <!-- <h6 class="mb-0 text-uppercase">Checker Listing</h6>
-                                                                                                                                                                                                                                                                                                                                        <hr /> -->
+                                                                                                                                                                                                                                                                                                                                                                                    <hr /> -->
                 <div class="d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 text-uppercase">Checker Listing</h6>
                     <a class="nav-link dropdown-toggle-nocaret position-relative btn btn-outline-primary p-1"
@@ -90,7 +90,7 @@
                                         <td>
                                             @if (array_key_exists($chitti->geographyId, config('geography')))
                                                 {{ config('geography')[$chitti->geographyId] }}
-                                            @endifChitti
+                                            @endif
                                         </td>
                                         <td>
                                             {{ $chitti->geography }}
