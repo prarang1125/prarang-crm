@@ -293,7 +293,6 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::resource('portal', PortalController::class);
         Route::resource('our-team', OurTeamController::class);
-
     });
 });
 

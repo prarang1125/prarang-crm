@@ -28,6 +28,16 @@
                             {{ session('success') }}
                         </div>
                     @endif
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <h6 class="mb-0 text-uppercase text-primary">Uploader Edit</h6>
                     <hr />
                     <form action="{{ route('admin.uploader-update', $chitti->chittiId) }}" method="POST"
@@ -49,8 +59,7 @@
                                 <label>Image Preview</label>
                                 <div class="image-preview-mt" id="image-preview"
                                     style="max-width: 300px; max-height: 300px; overflow: hidden; border: 1px solid #ccc; padding: 5px;">
-                                    <img id="preview-img"
-                                        src="{{ $image ? $image->imageUrl : '/img/blankImage2.png' }}"
+                                    <img id="preview-img" src="{{ $image ? $image->imageUrl : '/img/blankImage2.png' }}"
                                         alt="Image Preview" style="width: 288px; height: 250px; background-size: cover;" />
                                 </div>
                             </div>
@@ -67,7 +76,7 @@
                         <div class="row mt-3">
                             <div class="col-md-12">
                                 <label for="makerImage" class="form-label">Video ID (Only youtube)</label>
-                                <input type="text" class="form-control" name="Videourl"/>
+                                <input type="text" class="form-control" name="Videourl" />
                             </div>
                         </div>
                         {{-- image upload --}}
@@ -119,7 +128,7 @@
                                 <label for="writer" class="form-label">Select Writer Emotion (select one):</label>
                                 <select class="form-control" id="writercolor" name="writercolor">
                                     <!-- Pre-selected option -->
-                                    @if(isset($chitti->writercolor))
+                                    @if (isset($chitti->writercolor))
                                         <option value="{{ $chitti->writercolor }}" selected>
                                             {{ $chitti->writerColor->name ?? 'Select' }}
                                         </option>
@@ -128,7 +137,7 @@
                                     @endif
 
                                     <!-- Options for all available colors -->
-                                    @foreach($colorOptions as $color)
+                                    @foreach ($colorOptions as $color)
                                         <option value="{{ $color->id }}"
                                             {{ $chitti->writercolor == $color->id ? 'selected' : '' }}>
                                             {{ $color->name }}
@@ -137,7 +146,7 @@
                                 </select>
 
                                 <!-- Show the current writer color name -->
-                                @if(isset($chitti->writerColor))
+                                @if (isset($chitti->writerColor))
                                     <small>Current: {{ $chitti->writerColor->name }}</small>
                                 @endif
                                 @error('writercolor')
@@ -150,7 +159,7 @@
                                 <label for="reader" class="form-label">Select Reader Emotion(select one):</label>
                                 <select class="form-control" id="reader" name="reader">
                                     <!-- Pre-selected option -->
-                                    @if(isset($chitti->readercolor))
+                                    @if (isset($chitti->readercolor))
                                         <option value="{{ $chitti->readercolor }}" selected>
                                             {{ $chitti->readerColor->name ?? 'Select' }}
                                         </option>
@@ -159,8 +168,8 @@
                                     @endif
 
                                     <!-- Options for all available colors -->
-                                    @foreach($readerOptions as $color)
-                                    {{-- @dd($color->id); --}}
+                                    @foreach ($readerOptions as $color)
+                                        {{-- @dd($color->id); --}}
                                         <option value="{{ $color->id }}"
                                             {{ $chitti->readercolor == $color->colorcode ? 'selected' : '' }}>
                                             {{ $color->name }}
@@ -169,7 +178,7 @@
                                 </select>
 
                                 <!-- Show the current reader color name -->
-                                {{-- @if(isset($chitti->readerColor))
+                                {{-- @if (isset($chitti->readerColor))
                                     <small>Current: {{ $chitti->readerColor->name }}</small>
                                 @endif --}}
                                 @error('reader')
@@ -449,7 +458,7 @@
                                 class="btn btn-primary">Update</button>
 
                             <!-- <button type="submit" name="action" value="sent_uploader_to_checker"
-                                class="btn btn-primary">Sent To Checker</button> -->
+                                                                class="btn btn-primary">Sent To Checker</button> -->
 
                             <a href="{{ route('admin.uploader-chitti-return-to-checker-region', ['id' => $chitti->chittiId]) }}?uploaderId={{ $chitti->uploaderId }}&City={{ $chitti->areaId }}"
                                 class="btn btn-primary">Back to Checker</a>
@@ -471,7 +480,6 @@
         const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
         const csrfToken = "{{ csrf_token() }}";
         const postId = "{{ $chitti->chittiId }}";
-
     </script>
     <script>
         function previewImage() {

@@ -79,8 +79,13 @@ class UploaderController extends Controller
             // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
             'writercolor' => 'required',
-            // 'reader'   => 'required',
+            'reader' => 'required',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         $readerValue = $request->input('reader');
         if (is_string($readerValue)) {
             $decoded = json_decode($readerValue, true);
@@ -89,6 +94,8 @@ class UploaderController extends Controller
                 $readerValue = $decoded['id'];
             }
         }
+
+        // return $readerValue;
         if ($validator->passes()) {
 
             $currentDateTime = getUserCurrentTime();
