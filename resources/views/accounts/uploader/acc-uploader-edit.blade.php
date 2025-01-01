@@ -205,6 +205,20 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="col-sm-6"></div>
+                            <div class="col-sm-6">
+                                <div class="">
+                                    <label for="dateOfApprove" class="form-label">Publish Date</label>
+                                    <input type="text"
+                                        class="form-control @error('dateOfApprove') is-invalid @enderror"
+                                        id="dateOfApprove" name="dateOfApprove"
+                                        value="{{ old('dateOfApprove', $chitti->dateOfApprove ? \Carbon\Carbon::parse($chitti->dateOfApprove)->format('d-m-Y h:i A') : now()->format('d-m-Y h:i A')) }}">
+                                    @error('dateOfApprove')
+                                        <p class="invalid-feedback">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                            </div>
                         </div>
                         {{-- nature and culture code start --}}
                         <div class="row mt-3">
