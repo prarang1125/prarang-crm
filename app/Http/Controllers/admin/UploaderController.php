@@ -80,6 +80,8 @@ class UploaderController extends Controller
             'tagId' => 'required',
             'writercolor' => 'required',
             'reader' => 'required',
+            'dateOfApprove' => 'required',
+            // 'action' => ['required', 'string', 'in:approvd,reject'],
         ]);
 
         if ($validator->fails()) {
@@ -117,7 +119,7 @@ class UploaderController extends Controller
                     'finalStatus' => 'approved',
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::guard('admin')->user()->userId,
-                    'dateOfApprove' => Carbon::parse($currentDateTime)->format('d-m-Y g:i A'),
+                    'dateOfApprove' => Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A'),
                     'uploaderId' => Auth::guard('admin')->user()->userId,
                 ]);
 
@@ -146,6 +148,7 @@ class UploaderController extends Controller
                     'geographyId' => $request->geography,
                     'writercolor' => $request->writercolor,
                     'color_value' => $readerValue,
+                    'dateOfApprove' => Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A'),
                 ]);
 
                 // Update Facity record

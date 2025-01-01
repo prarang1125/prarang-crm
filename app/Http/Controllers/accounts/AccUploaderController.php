@@ -77,7 +77,7 @@ class AccUploaderController extends Controller
             // 'isCultureNature' => 'required|boolean',
             'tagId' => 'required',
             'writercolor' => 'required',
-        ]);
+            'dateOfApprove' => 'required',        ]);
 
         $readerValue = $request->input('reader');
         if (is_string($readerValue)) {
@@ -109,7 +109,7 @@ class AccUploaderController extends Controller
                     'finalStatus' => 'approved',
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::user()->userId,
-                    'dateOfApprove' => Carbon::parse($currentDateTime)->format('d-m-Y g:i A'),
+                    'dateOfApprove' => Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A'),
                     'uploaderId' => Auth::user()->userId,
                 ]);
 
@@ -136,6 +136,7 @@ class AccUploaderController extends Controller
                     'geographyId' => $request->geography,
                     'writercolor' => $request->writercolor,
                     'color_value' => $readerValue,
+                    'dateOfApprove' => Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A'),
                 ]);
 
                 // Update Facity record
