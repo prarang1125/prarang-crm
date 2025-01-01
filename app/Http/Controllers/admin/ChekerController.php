@@ -27,10 +27,9 @@ class ChekerController extends Controller
     {
         $chittis = $chittiListService->getChittiListings($request, 'sent_to_checker', 'checker');
 
-        $notification = Chitti::whereNotNull('uploaderReason')
-            ->where('uploaderReason', '!=', '')
-            ->where('uploaderStatus', 'sent_to_checker')
-            ->where('finalStatus', 'sent_to_checker')
+        $notification = Chitti::where('uploaderStatus', 'sent_to_checker')
+            ->whereNotIn('finalStatus', ['approved', 'deleted'])
+            // ->where('finalStatus', 'sent_to_checker')
             ->count();
 
         return view('admin.checker.checker-listing', compact('chittis', 'notification'));
@@ -39,7 +38,7 @@ class ChekerController extends Controller
     public function checkerEdit($id)
     {
 
-        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')
+         $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')
             ->whereNotIn('finalStatus', ['approved', 'deleted'])
             ->whereNot('checkerStatus', 'sent_to_uploader')->findOrFail($id);
 
@@ -134,6 +133,7 @@ class ChekerController extends Controller
                     'areaId' => $area_id,
                     'geographyId' => $request->geography,
                     'finalStatus' => '',
+                    'uploaderStatus' => '',
                 ]);
 
                 Facity::where('chittiId', $id)->update([
@@ -233,8 +233,7 @@ class ChekerController extends Controller
             ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
             ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
             ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')->whereNotNull('Title')
-            ->where('finalStatus', '=', 'sent_to_checker')
-            ->where('uploaderReason', '!=', '')
+            ->where('uploaderStatus', '=', 'sent_to_checker')
             ->whereNotIn('finalStatus', ['approved', 'deleted'])
 
             ->when($search, function ($query, $search) {
@@ -248,10 +247,8 @@ class ChekerController extends Controller
             ->orderByDesc(DB::raw("STR_TO_DATE(ch.dateOfCreation, '%d-%b-%y %H:%i:%s')"))
             ->paginate(30); // Adjust the number per page
 
-        $notification = Chitti::whereNotNull('uploaderReason')
-            ->where('uploaderReason', '!=', '')
-            ->where('uploaderStatus', 'sent_to_checker')
-            ->where('finalStatus', 'sent_to_checker')
+        $notification = Chitti::where('uploaderStatus', 'sent_to_checker')
+            ->whereNotIn('finalStatus', ['approved', 'deleted'])          
             ->count();
         // $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 

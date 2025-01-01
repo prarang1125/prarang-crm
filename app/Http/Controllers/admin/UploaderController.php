@@ -257,7 +257,7 @@ class UploaderController extends Controller
             'uploaderId' => Auth::guard('admin')->user()->userId,
             'uploaderReason' => $request->returnChittiToCheckerWithRegion,
             'dateOfReturnToChecker' => $currentDate,
-            'finalStatus' => 'sent_to_checker',
+            'finalStatus' => '',
         ]);
 
         return redirect('admin/uploader/uploader-listing')->with('success', 'Chitti Post have been return to checker from Uploader successfully');

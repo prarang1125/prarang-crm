@@ -375,8 +375,11 @@
                         <a href="{{ route('admin.checker-listing', $chitti->chittiId) }}" class="btn btn-primary">Send to Checker</a> --}}
                             <button type="submit" class="btn btn-primary" name="action" value="update_maker">Update
                                 Maker</button>
-                            <button type="submit" class="btn btn-primary" name="action" value="send_to_checker">Send
-                                to Checker</button>
+                            @if ($chitti->return_chitti_post_from_checker_id == 0)
+                                <button type="submit" class="btn btn-primary" name="action"
+                                    value="send_to_checker">Send
+                                    to Checker</button>
+                            @endif
                         </div>
                     </form>
                 </div>
