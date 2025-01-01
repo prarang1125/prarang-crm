@@ -380,9 +380,10 @@
 
                             <a href="{{ route('accounts.acc-checker-chitti-return-to-maker-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}"
                                 class="btn btn-primary">Return to maker</a>
-
+                                @if($chitti->uploaderStatus!=='sent_to_checker')
                             <button type="submit" class="btn btn-primary" name="action" value="send_to_uploader">Send
                                 to Uploader</button>
+                                @endif
                         </div>
                     </form>
                 </div>

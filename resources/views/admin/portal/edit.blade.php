@@ -97,7 +97,7 @@
                             </div>
                             <div class="mt-3">
                                 <label for="map_link">Map Link</label>
-                                <input class="form-control"  type="url" name="map_link" id="map_link" value="{{ old('map_link',$portal->map_link) }}">
+                                <input class="form-control"  type="text" name="map_link" id="map_link" value="{{ old('map_link',$portal->map_link) }}">
                                 @error('map_link')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
