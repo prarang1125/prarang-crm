@@ -97,7 +97,8 @@
                             </div>
                             <div class="mt-3">
                                 <label for="map_link">Map Link</label>
-                                <input class="form-control"  type="text" name="map_link" id="map_link" value="{{ old('map_link',$portal->map_link) }}">
+                                <textarea class="form-control"  type="text" name="map_link" id="map_link" value="{{ old('map_link',$portal->map_link) }}"></textarea>
+                                
                                 @error('map_link')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -134,7 +135,7 @@
                             <!-- Local Matrics -->
                             <div class="mt-3">
                                 <label for="local_matrics">Local Metrics</label>
-                                <textarea class="form-control"  name="local_matrics" id="local_matrics">{{ old('local_matrics',$portal->local_matrics) }}</textarea>
+                                <textarea class="form-control ckeditorinit"  name="local_matrics" id="local_matrics">{{ old('local_matrics',$portal->local_matrics) }}</textarea>
                                 @error('local_matrics')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -217,7 +218,7 @@
 </script>
 <script>
     // Select all textarea elements
-    document.querySelectorAll('textarea').forEach(function(textarea) {
+    document.querySelectorAll('.ckeditorinit').forEach(function(textarea) {
         ClassicEditor
             .create(textarea)
             .catch(error => {
