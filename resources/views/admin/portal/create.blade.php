@@ -144,7 +144,7 @@
                                 <!-- Local Matrics -->
                                 <div class="mt-3">
                                     <label for="local_matrics">Local Metrics</label>
-                                    <textarea class="form-control" name="local_matrics" id="local_matrics">{{ old('local_matrics') }}</textarea>
+                                    <textarea class="form-control ckeditorinit" name="local_matrics" id="local_matrics">{{ old('local_matrics') }}</textarea>
                                     @error('local_matrics')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -224,7 +224,7 @@
     </script>
     <script>
         // Select all textarea elements
-        document.querySelectorAll('textarea').forEach(function(textarea) {
+        document.querySelectorAll('.ckeditorinit').forEach(function(textarea) {
             ClassicEditor
                 .create(textarea)
                 .catch(error => {
