@@ -301,4 +301,4 @@ Route::group(['prefix' => 'admin'], function () {
     });
 });
 
-Route::get('get-out-teams', [OurTeamController::class, 'getAllTeamsJson']);
+Route::get('get-our-teams', [OurTeamController::class, 'getAllTeamsJson']);
