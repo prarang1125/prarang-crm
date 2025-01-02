@@ -222,6 +222,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Man And His Senses -->
@@ -248,6 +251,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Man And His Inventions -->
@@ -274,6 +280,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Geography -->
@@ -300,6 +309,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Fauna -->
@@ -326,6 +338,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Flora -->
@@ -349,19 +364,26 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer mt-3">
                             {{-- <button type="submit" class="btn btn-primary">Update Checker</button>
                             <a href="{{ url('/admin/uploader/uploader-listing', $chitti->chittiId) }}" class="btn btn-primary">Send to Uploader</a> --}}
-                            <button type="submit" class="btn btn-primary" name="action" value="update_checker">Update Checker</button>
+                            <button type="submit" class="btn btn-primary" name="action" value="update_checker">Update
+                                Checker</button>
 
                             {{-- <button type="submit" class="btn btn-primary" name="action" value="send_to_maker">Send to maker</button> --}}
 
-                            <a href="{{ route('accounts.acc-checker-chitti-return-to-maker-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}" class="btn btn-primary">Send to maker</a>
-
-                            <button type="submit" class="btn btn-primary" name="action" value="send_to_uploader">Send to Uploader</button>
+                            <a href="{{ route('accounts.acc-checker-chitti-return-to-maker-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}"
+                                class="btn btn-primary">Return to maker</a>
+                                @if($chitti->uploaderStatus!=='sent_to_checker')
+                            <button type="submit" class="btn btn-primary" name="action" value="send_to_uploader">Send
+                                to Uploader</button>
+                                @endif
                         </div>
                     </form>
                 </div>
@@ -372,7 +394,7 @@
     <script>
         const uploadUrl = "{{ route('accounts.acc-ckeditor-upload') }}";
         const csrfToken = "{{ csrf_token() }}";
-        const postId="{{$chitti->chittiId}}";
+        const postId = "{{ $chitti->chittiId }}";
     </script>
     <script>
         function previewImage() {

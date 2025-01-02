@@ -11,8 +11,8 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0 p-0">
                         <li class="breadcrumb-item"><a
-                                href="{{ url('admin/postanalyticsmaker/post-analytics-maker-city-listing') }}"><i
-                                    class="bx bx-user"></i></a>
+                                href="{{ url('admin/postanalyticsmaker/post-analytics-maker-city-listing') }}">
+                                {{-- <i class="bx bx-user"></i></a> --}}
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">Live Maker City Listing</li>
                     </ol>
@@ -35,7 +35,7 @@
                         @if ($notification > 0)
                             <span class="alert-count">{{ $notification }}</span>
                         @endif
-                        <i class="bx bx-bell"></i>
+                        {{-- <i class="bx bx-bell"></i> --}}
                     </a>
                 </div>
                 <hr />

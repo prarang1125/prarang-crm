@@ -27,7 +27,19 @@
                         {{ session('success') }}
                     </div>
                 @endif
-                <h6 class="mb-0 text-uppercase">Checker Listing</h6>
+                <!-- <h6 class="mb-0 text-uppercase">Checker Listing</h6>
+                                                                                                                                                                                                                                                                                                                                                                                    <hr /> -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 text-uppercase">Checker Listing</h6>
+                    <a class="nav-link dropdown-toggle-nocaret position-relative btn btn-outline-primary p-1"
+                        href="{{ route('admin.post-return-from-uploader-listing') }}" role="button">
+                        @if ($notification > 0)
+                            {{-- <span class="alert-count"></span> --}}
+                            <span class="alert-count">{{ $notification }}</span>
+                        @endif
+                        <i class="bx bx-bell"></i>
+                    </a>
+                </div>
                 <hr />
                 <div class="card">
                     <div class="card-body d-flex justify-content-end align-items-end">
@@ -48,12 +60,12 @@
                         <table class="table mb-0 table-hover">
                             <thead class="thead-light">
                                 <tr>
-                                    <th scope="col" class="">Chitti No.</th>
+                                    <th scope="col" class="">Sn.</th>
                                     <th scope="col" class="">Title</th>
+                                    <th scope="col" class="">Maker</th>
                                     <th scope="col" class="">Created Date</th>
                                     <th scope="col" class="">Geography</th>
                                     <th scope="col" class="">Area</th>
-                                    <th scope="col" class="">Status</th>
                                     <th scope="col" class="">Action</th>
                                 </tr>
                             </thead>
@@ -71,34 +83,33 @@
                                                 {{ $chitti->Title }}
                                             </a>
                                         </td>
-                                        <td> {{ $chitti->created_at }}</td>
+                                        <td>{{ $chitti->userName }}</td>
+
+                                        <td>{{ \Carbon\Carbon::parse($chitti->createDate)->format('d M, Y') }}</td>
+
                                         <td>
                                             @if (array_key_exists($chitti->geographyId, config('geography')))
-                                                {{ config('geography')[$chitti->geographyId]}}
+                                                {{ config('geography')[$chitti->geographyId] }}
                                             @endif
                                         </td>
                                         <td>
-                                            {{ $chitti->geography  }}
+                                            {{ $chitti->geography }}
                                         </td>
-                                        @if ($chitti->uploaderStatus == 'sent_to_uploader')
-                                            <td>{{ $chitti->uploaderStatus }}</td>
-                                        @elseif ($chitti->uploaderStatus == 'sent_to_uploader')
-                                            <td>{{ $chitti->uploaderStatus }}</td>
-                                        @else
-                                            <td>{{ $chitti->checkerStatus }}</td>
-                                        @endif
+
                                         <td class="">
+                                            @if ($chitti->finalStatus === 'approved')
+                                                <i class="bx bx-check-circle text-success"></i>
+                                            @else
+                                                <i class="bx bx-info-circle text-warning"></i>
+                                            @endif
                                             <a href="{{ route('admin.checker-edit', $chitti->chittiId) }}"
                                                 class="btn btn-sm btn-primary edit-user">Edit</a>
 
-                                            {{-- <form action="{{ route('admin.live-city-delete', '$mcity->cityId') }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm btn-danger delete-user">Delete</button>
-                                        </form> --}}
-                                            {{-- <a href="{{ route('admin.maker-update', $chitti->chittiId) }}" class="btn btn-sm btn-primary update-user mt-3">Send to checker</a> --}}
                                         </td>
                                     </tr>
-                                    @php $index++;  @endphp
+                                    @php
+                                        $index++;
+                                    @endphp
                                 @endforeach
                             </tbody>
                         </table>

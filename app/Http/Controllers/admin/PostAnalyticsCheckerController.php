@@ -4,7 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Chitti;
-use App\Models\Muser;
+use App\Services\Posts\ChittiListService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -28,33 +28,27 @@ class PostAnalyticsCheckerController extends Controller
     }
 
     //this method is use for show the listing of post anlytics checker
-    public function postAnalyticsCheckerListing(Request $request)
+    public function postAnalyticsCheckerListing(Request $request, ChittiListService $chittiListService)
     {
+
         $cityCode = $request->query('cityCode');
-        $chittis = Chitti::where('areaId', $cityCode)
-            ->whereIn('postStatusMakerChecker', ['send_to_post_checker', 'approved'])
-            ->where('post_anlytics_rtrn_to_mkr_id', 1)
-            ->get();
-        foreach ($chittis as $chitti) {
-            $anlyticsMaker = $chitti->analyticsMaker;
-        }
+        $chittis = $chittiListService->getChittiListingsForAnalytics($request, 'checker', $cityCode);
+        $geography = DB::table('vGeography')->select('geography', 'geographycode')->get();
 
-        $muserMaker = '';
-        if (! empty($anlyticsMaker)) {
-            $musers = Muser::where('userId', $anlyticsMaker)->get();
-            foreach ($musers as $username) {
-                $muserMaker = $username->firstName.' '.$username->lastName;
-            }
-        }
-
-        return view('admin.postanalyticschecker.post-analytics-checker-listing', compact('chittis', 'muserMaker'));
+        return view('admin.postanalyticschecker.post-analytics-checker-listing', compact('chittis', 'geography'));
     }
 
     public function postAnalyticsChckerEdit(Request $request)
     {
         $cid = $request->query('id');
         $cityCode = $request->query('city');
-        $chitti = Chitti::where('chittiId', $cid)->first();
+        $numericPart = preg_replace('/[^0-9]/', '', $cityCode);
+        $areaId = (int) $numericPart;
+        $search = $request->input('search');
+        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
+
+        $chitti = DB::table('chitti')
+            ->where('chitti.chittiId', $cid)->first();
 
         return view('admin.postanalyticschecker.post-analytics-checker-edit', compact('chitti'));
     }
@@ -81,6 +75,7 @@ class PostAnalyticsCheckerController extends Controller
             'email' => 'nullable|string',
             'sponsored' => 'nullable|string',
             'instagram' => 'nullable|string',
+            'monthDay' => 'required|string',
         ]);
 
         $total = [$request->citySubscribers, $request->prarangApplication, $request->websiteGd, $request->email, $request->instagram];
@@ -100,11 +95,12 @@ class PostAnalyticsCheckerController extends Controller
             'instagramCount' => $request->instagram,
             'advertisementPost' => $request->advertisementInPost,
             'analyticsChecker' => $checkerId,
+            'monthDay' => $request->monthDay,
         ]);
 
-        return redirect()->route('admin.post-analytics-checker-city-listing')
-            ->with('success', 'Data updated successfully.');
-        // return back()->with('success', 'Data updated successfully.');
+        // return redirect()->route('admin.post-analytics-checker-city-listing')
+        //     ->with('success', 'Data updated successfully.');
+        return back()->with('success', 'Data updated successfully.');
     }
 
     //this method is use for approve checker post analytics.
@@ -124,9 +120,9 @@ class PostAnalyticsCheckerController extends Controller
             'analyticsChecker' => $checkerId,
         ]);
 
-        return redirect()->route('admin.post-analytics-checker-city-listing')
+        return redirect()->route('admin.post-analytics-checker-listing', ['cityCode' => $request->cityCode])
             ->with('success', 'Post Analytics have been approved successfully.');
-        // return back()->with('success', 'Post Analytics have been approved successfully');
+
     }
 
     //this method is use for make page for write the region of return to maker
@@ -145,6 +141,7 @@ class PostAnalyticsCheckerController extends Controller
     public function postAnalyticsCheckerSendToMaker(Request $request, $id)
     {
         $checkerId = $request->query('checkerId');
+
         $City = $request->query('City');
         $currentDate = date('d-M-y H:i:s');
 
@@ -155,15 +152,14 @@ class PostAnalyticsCheckerController extends Controller
         $chitti = Chitti::findOrFail($id);
         $chitti->update([
             'analyticsChecker' => $checkerId,
-            'checkerReason' => $request->returnToMakerWithRegion,
+            // 'checkerReason' => $request->returnToMakerWithRegion,
             'post_anlytics_rtrn_to_mkr' => $request->returnToMakerWithRegion,
-            'dateOfReturnToMaker' => $currentDate,
+            'dateOfReturnToMaker' => date('d-m-Y'),
             'postStatusMakerChecker' => 'return_post_from_checker',
             'post_anlytics_rtrn_to_mkr_id' => 0,
         ]);
 
-        return redirect()->route('admin.post-analytics-checker-city-listing')
+        return redirect()->route('admin.post-analytics-checker-listing', ['cityCode' => $request->cityCode])
             ->with('success', 'Post Analytics have been return maker post analytics from checker successfully.');
-        // return back()->with('success', 'Post Analytics have been return maker post analytics from checker successfully');
     }
 }

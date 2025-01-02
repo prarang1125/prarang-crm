@@ -14,6 +14,8 @@ use App\Models\Mcountry;
 use App\Models\Mregion;
 use App\Models\Mtag;
 use App\Services\ImageUploadService;
+use App\Services\Posts\ChittiListService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,33 +24,11 @@ use Illuminate\Support\Facades\Validator;
 
 class MakerController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, ChittiListService $chittiListingService)
     {
-        $search = $request->input('search');
-
-        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
-        $cacheDuration = 180;
-        $chittis = DB::table('chitti as ch')
-            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
-            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
-            ->when($search, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('Title', 'LIKE', '%'.$search.'%')
-                        ->orWhere('SubTitle', 'LIKE', '%'.$search.'%')
-                        ->orWhere('createDate', 'LIKE', '%'.$search.'%');
-                });
-            })
-
-            ->whereNotNull('Title')
-            ->where('Title', '!=', '')
-            ->where('makerStatus', '=', 'sent_to_checker')
-            ->where('finalStatus', '!=', 'deleted')
-            ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%Y-%m-%d')"))
-            ->paginate(30);
-
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        $chittis = $chittiListingService->getChittiListings($request, 'sent_to_checker');
 
         return view('admin.maker.maker-listing', compact('chittis', 'geographyOptions', 'notification'));
     }
@@ -79,13 +59,19 @@ class MakerController extends Controller
             'content' => 'required|string',
             'makerImage' => 'required|image|max:2048',
             'geography' => 'required',
-            'c2rselect' => 'required',
-            'title' => 'required|string|max:255',
-
-            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
+            'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
             'forTheCity' => 'required|boolean',
 
             'tagId' => 'required',
+            'c2rselect' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if ($value === 'Select Select') {
+                        $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
+                    }
+                },
+            ],
 
         ]);
 
@@ -97,6 +83,9 @@ class MakerController extends Controller
                 $currentDateTime = getUserCurrentTime();
                 $chitti = new Chitti;
                 $area_id = $request->c2rselect;
+                $date = Carbon::now()->format('Y-m-d');
+                $dateofcreation = Carbon::now()->format('d-M-y H:i:s');
+                // dd($area_id);
                 $areaIdCode = '';
                 if ($request->geography == 6) {
                     $areaIdCode = 'c'.$area_id;
@@ -107,8 +96,8 @@ class MakerController extends Controller
                 }
                 $chitti->languageId = 1;
                 $chitti->description = $request->content;
-                $chitti->dateOfCreation = $currentDateTime;
-                $chitti->createDate = $currentDateTime;
+                $chitti->dateOfCreation = $dateofcreation;
+                $chitti->createDate = $date;
                 $chitti->Title = $request->title;
                 $chitti->SubTitle = $request->subtitle;
                 $chitti->makerId = Auth::guard('admin')->user()->userId;
@@ -140,7 +129,7 @@ class MakerController extends Controller
 
                 $facity = new Facity;
                 $facity->value = $request->forTheCity;
-                $facity->from_chittiId = $lastId;
+                $facity->chittiId = $lastId;
                 $facity->created_at = $currentDateTime;
                 $facity->created_by = Auth::guard('admin')->user()->userId;
                 $facity->save();
@@ -215,6 +204,7 @@ class MakerController extends Controller
         $cities = Mcity::where('isActive', 1)->get();
         $countries = Mcountry::where('isActive', 1)->get();
         $geographyMapping = $chitti->geographyMappings->first();
+
         $facityValue = $chitti->facity ? $chitti->facity->value : null;
 
         $chittiTagMapping = Chittitagmapping::with('tag.tagcategory')->where('chittiId', $id)->first();
@@ -229,13 +219,20 @@ class MakerController extends Controller
             'content' => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
-            'c2rselect' => 'required',
-            'title' => 'required|string|max:255',
-            'subtitle' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
+            'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
 
             'forTheCity' => 'required|boolean',
 
             'tagId' => 'required',
+            'c2rselect' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if ($value === 'Select Select') {
+                        $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
+                    }
+                },
+            ],
         ]);
 
         if ($validator->passes()) {
@@ -262,19 +259,10 @@ class MakerController extends Controller
                         ->with('success', 'Sent to Checker successfully.');
                 } else {
                     $area_id = $request->c2rselect;
-                    $areaIdCode = '';
-                    if ($request->geography == 6) {
-                        $areaIdCode = 'c'.$area_id;
-                    } elseif ($request->geography == 5) {
-                        $areaIdCode = 'r'.$area_id;
-                    } elseif ($request->geography == 7) {
-                        $areaIdCode = 'con'.$area_id;
-                    }
                     $chitti->update([
                         'description' => $request->content,
                         'Title' => $request->title,
                         'SubTitle' => $request->subtitle,
-
                         'makerStatus' => 'sent_to_checker',
                         'makerId' => Auth::guard('admin')->user()->userId,
 
@@ -283,12 +271,12 @@ class MakerController extends Controller
                         'return_chitti_post_from_checker_id' => 0,
                         'returnDateToChecker' => $currentDateTime,
                         'cityId' => $area_id,
-                        'areaId' => $areaIdCode,
+                        'areaId' => $area_id,
                         'geographyId' => $request->geography,
 
                     ]);
 
-                    Facity::where('from_chittiId', $id)->update([
+                    Facity::where('chittiId', $id)->update([
                         'value' => $request->forTheCity,
                         'updated_at' => $currentDateTime,
                         'updated_by' => Auth::guard('admin')->user()->userId,
@@ -343,11 +331,14 @@ class MakerController extends Controller
 
     public function chittiListReturnFromCheckerL(Request $request)
     {
-        $query = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-            ->whereNotNull('Title')
-            ->where('Title', '!=', '')
-            ->where('finalStatus', '!=', 'deleted')
-            ->where('return_chitti_post_from_checker_id', 1);
+        $query = DB::table('chitti as ch')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->whereNotNull('ch.Title')
+            ->where('ch.Title', '!=', '')
+            ->where('ch.finalStatus', '!=', 'deleted')
+            ->where('ch.return_chitti_post_from_checker_id', 1);
 
         if ($request->has('search') && $request->input('search') != '') {
             $search = $request->input('search');
@@ -360,9 +351,8 @@ class MakerController extends Controller
         $chittis = $query->paginate(30);
 
         $notification = Chitti::where('return_chitti_post_from_checker_id', 1)->count();
-        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
-        return view('admin.maker.chitti-rejected-from-checker-listing', compact('geographyOptions', 'notification', 'chittis'));
+        return view('admin.maker.chitti-rejected-from-checker-listing', compact('notification', 'chittis'));
     }
 
     public function makerDelete($id)
@@ -384,7 +374,10 @@ class MakerController extends Controller
     {
 
         $validatedData = $request->validate([
-            'Title' => 'required|string|max:255',
+            'Title' => [
+                'required',
+                'regex:/^[^@#;"`~\[\]\\\\]+$/',
+            ],
             'subTitle' => [
                 'required',
                 'regex:/^[a-zA-Z0-9 -]+$/',
@@ -392,11 +385,13 @@ class MakerController extends Controller
             'chittiId' => 'required|integer|exists:chitti,chittiId',
         ], [
             'Title.required' => 'The title field is required.',
+            'Title.regex' => 'must contain only letters and numbers.',
             'subTitle.required' => 'The subtitle field is required.',
             'subTitle.regex' => 'The subtitle must contain only letters and numbers.',
             'chittiId.required' => 'Chitti ID is required.',
             'chittiId.exists' => 'The provided Chitti ID does not exist.',
         ]);
+
         $chitti = Chitti::where('chittiId', $validatedData['chittiId'])->firstOrFail();
         $chitti->Title = $validatedData['Title'];
         $chitti->subTitle = $validatedData['subTitle'];

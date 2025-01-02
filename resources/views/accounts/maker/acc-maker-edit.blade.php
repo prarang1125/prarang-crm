@@ -30,7 +30,7 @@
                     @endif
                     <h6 class="mb-0 text-uppercase text-primary">Maker Edit</h6>
                     <hr />
-                    <form action="{{ route('accounts.acc-maker-update',  $chitti->chittiId) }}" method="POST"
+                    <form action="{{ route('accounts.acc-maker-update', $chitti->chittiId) }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -222,6 +222,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Man And His Senses -->
@@ -248,6 +251,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Man And His Inventions -->
@@ -274,6 +280,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Geography -->
@@ -300,6 +309,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Fauna -->
@@ -326,6 +338,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Content for Flora -->
@@ -349,6 +364,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error('tagId')
+                                        <p class="text-danger" style="font-size: 0.875em;">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -357,8 +375,11 @@
                         <a href="{{ route('admin.checker-listing', $chitti->chittiId) }}" class="btn btn-primary">Send to Checker</a> --}}
                             <button type="submit" class="btn btn-primary" name="action" value="update_maker">Update
                                 Maker</button>
-                            <button type="submit" class="btn btn-primary" name="action" value="send_to_checker">Send
-                                to Checker</button>
+                            @if ($chitti->return_chitti_post_from_checker_id == 0)
+                                <button type="submit" class="btn btn-primary" name="action"
+                                    value="send_to_checker">Send
+                                    to Checker</button>
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -369,7 +390,7 @@
     <script>
         const uploadUrl = "{{ route('accounts.acc-ckeditor-upload') }}";
         const csrfToken = "{{ csrf_token() }}";
-        const postId="{{$chitti->chittiId}}";
+        const postId = "{{ $chitti->chittiId }}";
     </script>
     <script>
         function previewImage() {

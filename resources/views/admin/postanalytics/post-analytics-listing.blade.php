@@ -133,7 +133,7 @@
                                             @if ($mapping->geographyId == 5 && $mapping->region)
                                                 {{ $mapping->region->regionnameInEnglish }} <!-- Show region name -->
                                             @elseif ($mapping->geographyId == 6 && $mapping->city)
-                                                {{ $mapping->city->cityNameInEnglish }} <!-- Show city name -->
+                                                {{ $mapping->city->citynameInEnglish }} <!-- Show city name -->
                                             @elseif ($mapping->geographyId == 7 && $mapping->country)
                                                 {{ $mapping->country->countryNameInEnglish }} <!-- Show country name -->
                                             @else
@@ -188,7 +188,7 @@
             options = regions.map(region => `<option value="${region.regionId}">${region.regionnameInEnglish}</option>`);
             label = 'Select Region';
         } else if (selectedValue == 6) { // City selected
-            options = cities.map(city => `<option value="${city.cityId}">${city.cityNameInEnglish}</option>`);
+            options = cities.map(city => `<option value="${city.cityId}">${city.citynameInEnglish}</option>`);
             label = 'Select City';
         } else if (selectedValue == 7) { // Country selected
             options = countries.map(country => `<option value="${country.countryId}">${country.countryNameInEnglish}</option>`);

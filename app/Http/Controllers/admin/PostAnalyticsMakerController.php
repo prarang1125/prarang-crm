@@ -4,35 +4,24 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Chitti;
-use App\Models\Mcity;
+use App\Services\Posts\ChittiListService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PostAnalyticsMakerController extends Controller
 {
-    //this method is use for show the listing of live city maker
-    // public function index()
-    // {
-    //     $mcitys  = Mcity::where('isActive', 1)->get();
-    //     $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
-    //     $chittis = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->get();
-
-    //     return view('admin.postanalyticsmaker.post-analytics-maker-city-listing', compact('mcitys', 'notification', 'chittis'));
-    // }
-
     public function index(Request $request)
     {
-        // $query = Mcity::where('isActive', 1);
+
         $query = DB::table('vGeography');
-        // Search functionality
+
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
-                $q->where('cityNameInEnglish', 'LIKE', "%{$search}%")
-                    ->orWhere('cityNameInUnicode', 'LIKE', "%{$search}%");
+                $q->where('geography', 'LIKE', "%{$search}%")
+                    ->orWhere('geography', 'LIKE', "%{$search}%");
             });
         }
-
         // Paginate results
         $mcitys = $query->paginate(20);
         $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
@@ -40,21 +29,16 @@ class PostAnalyticsMakerController extends Controller
         return view('admin.postanalyticsmaker.post-analytics-maker-city-listing', compact('mcitys', 'notification'));
     }
 
-    //this method is use for show the listing post analytics maker according to city
-    public function postAnalyticsMakerListing(Request $request)
+    public function postAnalyticsMakerListing(Request $request, ChittiListService $chittiListService)
     {
         // Get the cityCode from the request
         $cityCode = $request->query('cityCode');
-        // $numericPart = preg_replace('/[^0-9]/', '', $cityCode);
-        // $areaId = (int) $numericPart;
-        // dd($cityCode);
-        // $chittis = Chitti::with('city')->where('cityId', $areaId)->get();
-        $chittis = Chitti::where('areaId', $cityCode)
-            ->where('finalStatus', 'approved')->paginate(20);
 
-        // dd($chittis);
-        // $notification = Chitti::where('post_anlytics_rtrn_to_mkr_id', 0)->count();
-        return view('admin.postanalyticsmaker.post-analytics-maker-listing', compact('chittis'));
+        $geography = DB::table('vGeography')->select('geography', 'geographycode')->get();
+
+        $chittis = $chittiListService->getChittiListingsForAnalytics($request, 'maker', $cityCode);
+
+        return view('admin.postanalyticsmaker.post-analytics-maker-listing', compact('chittis', 'geography'));
     }
 
     //this method is use for  show the post analytics maker edit data and page
@@ -62,7 +46,13 @@ class PostAnalyticsMakerController extends Controller
     {
         $cid = $request->query('id');
         $cityCode = $request->query('city');
-        $chitti = Chitti::where('chittiId', $cid)->first();
+
+        $chitti = DB::table('chitti as ch')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'city.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->join('mcity as city', 'city.cityId', '=', 'ch.areaId')
+            ->where('ch.chittiId', $cid)->first();
 
         return view('admin.postanalyticsmaker.post-analytics-maker-create', compact('chitti'));
     }
@@ -70,6 +60,7 @@ class PostAnalyticsMakerController extends Controller
     // this method is use for update the post analytics method
     public function postAnalyticsMakerUpdate(Request $request, $id)
     {
+
         $validated = $request->validate([
             'postNumber' => 'required|string',
             'titleOfPost' => 'required|string',
@@ -90,6 +81,8 @@ class PostAnalyticsMakerController extends Controller
             'instagram' => 'nullable|string',
         ]);
 
+        // dd($request->all());
+        $currentDateTime = getUserCurrentTime();
         $chitti = Chitti::findOrFail($id);
         $chitti->update([
             'postViewershipDate' => $request->postViewershipFrom,
@@ -108,10 +101,11 @@ class PostAnalyticsMakerController extends Controller
             'fb_link_click' => $request->facebookLinkClick,
             'postStatusMakerChecker' => 'send_to_post_checker',
             'post_anlytics_rtrn_to_mkr_id' => 1,
+            // 'createDate' => $currentDateTime
         ]);
 
         // Redirect with success message
-        return redirect()->route('admin.post-analytics-maker-city-listing')
+        return redirect()->route('admin.post-analytics-maker-listing', ['cityCode' => $request->cityCode])
             ->with('success', 'Data updated successfully.');
 
     }
