@@ -32,7 +32,11 @@ use App\Http\Controllers\admin\UploaderController;
 use App\Http\Controllers\admin\UserCityController;
 use App\Http\Controllers\admin\UserCountryController;
 use App\Http\Controllers\LoginController;
+use App\Livewire\Localization\Portal;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+
+// dd(Hash::make('password'));
 
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
 Route::group(['prefix' => 'accounts'], function () {
@@ -292,8 +296,9 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('update.title');
 
         Route::resource('portal', PortalController::class);
+        Route::get('portal-localization', Portal::class)->name('portal.localization');
         Route::resource('our-team', OurTeamController::class);
     });
 });
 
-Route::get('get-out-teams', [OurTeamController::class, 'getAllTeamsJson']);
+Route::get('get-our-teams', [OurTeamController::class, 'getAllTeamsJson']);
