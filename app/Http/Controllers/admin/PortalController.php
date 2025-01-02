@@ -92,7 +92,7 @@ class PortalController extends Controller
             'city_name' => 'required|string|max:255',
             'city_name_local' => 'required|string|max:255',
             'city_slogan' => 'required|string|max:255',
-            'map_link' => 'required|url',
+            'map_link' => 'required',
             'weather_widget_code' => 'required|string',
             'sports_widget_code' => 'required|string',
             'news_widget_code' => 'required|string',
