@@ -30,7 +30,10 @@ use App\Http\Controllers\admin\UserCityController;
 use App\Http\Controllers\admin\UserCountryController;
 use App\Http\Controllers\LoginController;
 use App\Livewire\Localization\Portal;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+
+// dd(Hash::make('password'));
 
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
 Route::group(['prefix' => 'accounts'], function () {
