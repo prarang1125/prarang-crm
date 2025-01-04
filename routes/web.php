@@ -32,6 +32,7 @@ use App\Http\Controllers\admin\UploaderController;
 use App\Http\Controllers\admin\UserCityController;
 use App\Http\Controllers\admin\UserCountryController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\VisitorLocationController;
 use App\Livewire\Localization\Portal;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -302,3 +303,4 @@ Route::group(['prefix' => 'admin'], function () {
 });
 
 Route::get('get-our-teams', [OurTeamController::class, 'getAllTeamsJson']);
+Route::any('visitor-location',[VisitorLocationController::class,'storeVisitorLocation']);
