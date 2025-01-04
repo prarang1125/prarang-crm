@@ -28,7 +28,9 @@ class VisitorLocationController extends Controller
     
             // Prepare the data to be saved
             $visitorData = [
-                $request->input('currentUrl'),
+                // $request->input('currentUrl'),
+                $request->input('post_id'),
+                $request->input('city'),
                 $request->input('ipAddress'),
                 $request->input('latitude'),
                 $request->input('longitude'),
@@ -41,7 +43,7 @@ class VisitorLocationController extends Controller
     
             // Check if the file exists, if not, add a header row
             if (!file_exists($filePath)) {
-                $header = ['Current URL', 'IP Address', 'Latitude', 'Longitude', 'Language', 'Screen Width', 'Screen Height', 'Timestamp'];
+                $header = ['Post id','Posted For', 'IP Address', 'Latitude', 'Longitude', 'Language', 'Screen Width', 'Screen Height', 'Timestamp'];
                 $this->appendToCSV($filePath, $header);
             }
     
