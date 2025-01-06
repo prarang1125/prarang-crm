@@ -13,7 +13,7 @@
 <ul class="metismenu" id="menu">
     @if (Auth::guard('admin')->check())
         {{-- Admin Sidebar --}}
-        <li>
+        <li class="mm-active">
             <a href="javascript:void(0)" class="has-arrow active">
                 <div class="parent-icon active"><i class='bx bx-home-circle'></i></div>
                 <div class="menu-title">Dashboard</div>
