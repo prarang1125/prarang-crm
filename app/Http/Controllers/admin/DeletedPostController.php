@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Makerlebal;
 use App\Models\Chitti;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -41,9 +42,9 @@ class DeletedPostController extends Controller
                         ->orWhere('ch.SubTitle', 'LIKE', "%{$search}%"); // Assuming SubTitle might store another language
                 });
             })
-            ->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"))
+            ->orderByDesc(DB::raw("STR_TO_DATE(dateOfApprove, '%d-%b-%y %H:%i:%s')"))
             // ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus')
-            ->paginate(30); // Adjust the number of items per page as needed
+            ->paginate(30);
 
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         return view('admin.deleted-post.deleted-post-listing', compact('chittis', 'geographyOptions'));

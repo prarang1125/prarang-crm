@@ -123,7 +123,6 @@ class AccPostAnalyticsCheckerController extends Controller
         $reportDate = date('d-m-Y');
         $chitti = Chitti::findOrFail($id);
         $chitti->update([
-            'dateOfApprove' => $uploadDate,
             'uploadDataTime' => $currentDate,
             'approveDate' => $reportDate,
             'postStatusMakerChecker' => 'approved',

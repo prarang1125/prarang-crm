@@ -24,35 +24,7 @@ use Illuminate\Support\Facades\DB;
 
 class PostAnalyticsController extends Controller
 {
-    // public function index()
-    // {
-        //     #show the select country city region accrording to giography data
-        //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-        //     #Fetch all regions, cities, and countries
-        //     $regions    = Mregion::all();
-        //     $cities     = Mcity::all();
-        //     $countries  = Mcountry::all();
-
-        //     #show the geography and counry in analytics listing
-        //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country', 'likes', 'comments'])
-        //     ->whereNotNull('Title')
-        //     ->where('Title', '!=', '')
-        //     ->select('*')
-        //     ->paginate(10);
-
-        //     #get the all current month date year and
-        //     $startDate  = Carbon::now()->startOfMonth();
-        //     $endDate    = Carbon::now()->endOfMonth();
-
-        //     $dates = [];
-        //     while ($startDate <= $endDate) {
-        //         $dates[] = $startDate->format('d-m-Y');
-        //         $startDate->addDay();
-        //     }
-
-    //     return view('admin.postanalytics.post-analytics-listing', compact('dates', 'geographyOptions', 'regions', 'cities', 'countries', 'chittis'));
-    // }
-
+   
 
 
     public function index(Request $request)
@@ -70,26 +42,6 @@ class PostAnalyticsController extends Controller
             ->whereNotNull('Title')
             ->where('Title', '!=', '')
             ->select('*');
-
-       /* $chittisQuery = DB::table('chitti as ch')
-            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId', 'like.*', 'comment.*')
-            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
-            ->join('chittilike as like', 'like.chittiId', '=', 'ch.chittiId')
-            ->join('chitticomment as comment', 'comment.chittiId', '=', 'ch.chittiId');
-
-        # Search functionality
-        if ($request->has('search') && !empty($request->search)) {
-            $searchTerm = $request->search;
-
-            $chittisQuery->where(function ($query) use ($searchTerm) {
-                $query->where('Title', 'like', "%{$searchTerm}%")
-                    ->orWhere('TitleInHindi', 'like', "%{$searchTerm}%")  // Assuming 'TitleInHindi' is the field for Hindi
-                    ->orWhereHas('comments', function($q) use ($searchTerm) {
-                        $q->where('comment', 'like', "%{$searchTerm}%");
-                    });
-            });
-        }*/
 
         # Paginate results
         $chittis = $chittisQuery->paginate(20);
