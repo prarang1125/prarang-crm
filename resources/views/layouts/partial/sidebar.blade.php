@@ -14,8 +14,8 @@
     @if (Auth::guard('admin')->check())
         {{-- Admin Sidebar --}}
         <li>
-            <a href="javascript:;" class="has-arrow">
-                <div class="parent-icon"><i class='bx bx-home-circle'></i></div>
+            <a href="javascript:void(0)" class="has-arrow active">
+                <div class="parent-icon active"><i class='bx bx-home-circle'></i></div>
                 <div class="menu-title">Dashboard</div>
             </a>
             <ul>
