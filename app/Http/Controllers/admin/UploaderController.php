@@ -107,15 +107,15 @@ class UploaderController extends Controller
                 $reader = json_decode($data['reader'], true);
                 $data['reader'] = $reader['id'] ?? null; // Use the `id` field from the decoded object
             }
-
+            try {
+                $approveDate = Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A');
+            } catch (\Exception $e) { 
+                return redirect()->back()->with('success', 'Approve Date is Incorrect');
+            }
             // Update Chitti record with approved
             $chitti = Chitti::findOrFail($id);
             if ($request->action === 'approvd') {
-                try {
-                    $approveDate = Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A');
-                } catch (\Exception $e) { 
-                    return redirect()->back()->with('success', 'Approve Date is Incorrect');
-                }
+               
                 
                 $approveDate=Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A');
                 $chitti->update([
@@ -155,7 +155,7 @@ class UploaderController extends Controller
                     'geographyId' => $request->geography,
                     'writercolor' => $request->writercolor,
                     'color_value' => $readerValue,
-                    'dateOfApprove' => Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A'),
+                    'dateOfApprove' => $approveDate,
                 ]);
 
                 // Update Facity record

@@ -87,7 +87,11 @@ class AccUploaderController extends Controller
                 $readerValue = $decoded['id'];
             }
         }
-
+        try {
+            $approveDate = Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A');
+        } catch (\Exception $e) { 
+            return redirect()->back()->with('success', 'Approve Date is Incorrect');
+        }
         if ($validator->passes()) {
 
             $currentDateTime = getUserCurrentTime();
@@ -141,7 +145,7 @@ class AccUploaderController extends Controller
                     'geographyId' => $request->geography,
                     'writercolor' => $request->writercolor,
                     'color_value' => $readerValue,
-                    'dateOfApprove' => Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A'),
+                    'dateOfApprove' =>$approveDate,
                 ]);
 
                 // Update Facity record
