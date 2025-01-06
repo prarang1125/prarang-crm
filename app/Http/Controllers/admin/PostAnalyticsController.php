@@ -44,7 +44,7 @@ class PostAnalyticsController extends Controller
             ->select('*');
 
         # Paginate results
-        $chittis = $chittisQuery->paginate(20);
+        $chittis = $chittisQuery->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"))->paginate(30);
         // dd($chittis);
         # Get the current month dates for the date picker
         $startDate = Carbon::now()->startOfMonth();
