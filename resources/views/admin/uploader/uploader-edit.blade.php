@@ -138,7 +138,7 @@
 
                                     <!-- Options for all available colors -->
                                     @foreach ($colorOptions as $color)
-                                        <option style="background-color: {{chitti->writercolor == $color->colorcode ?? ''}} value="{{ $color->id }}"
+                                        <option style="background-color: {{$chitti->writercolor == $color->colorcode ?? ''}} value="{{ $color->id }}"
                                             {{ $chitti->writercolor == $color->id ? 'selected' : '' }}>
                                             {{ $color->name }}
                                         </option>
