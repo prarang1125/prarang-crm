@@ -31,7 +31,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row mt-3">
-                        <div class="col-md-3">
+                        <!-- <div class="col-md-3">
                             <label for="inputGeography" class="form-label">Geography</label>
                             <select id="inputGeography1" class="form-select @error('geography') is-invalid @enderror" name="geography">
                                 <option selected disabled>Choose...</option>
@@ -42,8 +42,8 @@
                             @error('geography')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
-                        </div>
-                        <div class="col-md-3">
+                        </div> -->
+                        <!-- <div class="col-md-3">
                             <label id="inputLanguageLabel1" for="inputLanguageScript" class="form-label">Select</label>
                             <select id="inputLanguageScript1" class="form-select @error('c2rselect') is-invalid @enderror" name="c2rselect">
                                 <option selected disabled>Choose...</option>
@@ -51,36 +51,36 @@
                             @error('c2rselect')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
-                        </div>
+                        </div> -->
 
-                        <div class="col-md-3" style="margin-right: 60px;">
+                        <!-- <div class="col-md-3" style="margin-right: 60px;">
                             <label for="to" class="form-label">Date</label>
                             <input type="date" class="form-control @error('to') is-invalid @enderror" id="to" name="to" value="{{ old('to', date('Y-m-d')) }}">
                             @error('to')
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
-                        </div>
+                        </div> -->
 
-                        <div class="col-md-1">
+                        <!-- <div class="col-md-1">
                             <button type="submit" class="btn btn-primary" style="margin-top: 28px;">
                                 Search
                             </button>
-                        </div>
+                        </div> -->
 
-                        <div class="col-md-1 mr-2">
+                        <!-- <div class="col-md-1 mr-2">
                             <a href="{{ route('postanalytics.export', ['format' => 'csv']) }}" class="btn btn-success" style="margin-top: 28px"><i class="lni lni-files"></i></a>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="row mt-3">
-                        <div class="col-md-2">
+                        <!-- <div class="col-md-2">
                             <a class="dt-button buttons-excel buttons-html5 btn btn-success" tabindex="0" aria-controls="datatable-default" href="{{ route('postanalytics.export',['format' => 'xlsx']) }}"><span>Excel</span></a>
-                        </div>
+                        </div> -->
                         <div class="col-md-6"></div>
                         <div class="col-md-4">
                             <div class="card-body d-flex justify-content-end align-items-end">
                                 <!-- Search Form -->
-                                <form action="{{ url('admin/post-analytics-listing') }}" method="GET" class="d-flex me-3">
+                                <!-- <form action="{{ url('admin/post-analytics-listing') }}" method="GET" class="d-flex me-3">
                                     <input type="text" name="search" class="form-control me-2" placeholder="Search by Post Name" value="{{ request()->input('search') }}">
                                     <button type="submit" class="btn btn-secondary">Search</button>
                                 </form>
@@ -88,7 +88,7 @@
                                     <a class="btn btn-primary me-1" href="{{ url()->current() }}">
                                         <i class="bx bx-refresh"></i>
                                     </a>
-                                @endif
+                                @endif -->
                             </div>
                         </div>
                     </div>
@@ -117,7 +117,7 @@
                             @foreach ($chittis as $chitti)
                                 <tr>
                                     {{-- <td class="">{{ $date }}</td> --}}
-                                    <td class="">{{ $index }}</td>
+                                    <td class="">{{ $chitti->chittiId }}</td>
                                     @foreach ($chitti->geographyMappings as $mapping)
                                         @php
                                             $option = $geographyOptions->firstWhere('id', $mapping->geographyId);
