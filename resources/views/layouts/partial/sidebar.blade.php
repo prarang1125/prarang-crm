@@ -91,7 +91,7 @@
 </li>
 @elseif (Auth::check())
 {{-- Other Roles Sidebar --}}
-<li>
+<li class="mm-active">
     <a href="javascript:;" class="has-arrow">
         <div class="parent-icon"><i class='bx bx-home-circle'></i></div>
         <div class="menu-title">Dashboard</div>
