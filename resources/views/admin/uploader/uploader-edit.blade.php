@@ -129,7 +129,7 @@
                                 <select class="form-control" id="writercolor" name="writercolor">
                                     <!-- Pre-selected option -->
                                     @if (isset($chitti->writercolor))
-                                        <option value="{{ $chitti->writercolor }}" selected>
+                                        <option style="background-color: {{$chitti->writerColor->colorcode ?? ''}};" value="{{ $chitti->writercolor }}" selected>
                                             {{ $chitti->writerColor->name ?? 'Select' }}
                                         </option>
                                     @else
@@ -138,7 +138,7 @@
 
                                     <!-- Options for all available colors -->
                                     @foreach ($colorOptions as $color)
-                                        <option value="{{ $color->id }}"
+                                        <option style="background-color: {{chitti->writercolor == $color->colorcode ?? ''}} value="{{ $color->id }}"
                                             {{ $chitti->writercolor == $color->id ? 'selected' : '' }}>
                                             {{ $color->name }}
                                         </option>
