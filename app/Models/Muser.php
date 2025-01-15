@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Muser extends Authenticatable
 {
@@ -16,13 +17,10 @@ class Muser extends Authenticatable
     // Specify the primary key if it's not 'id'
     protected $primaryKey = 'userId';
 
-    // If the primary key is not auto-incrementing, uncomment the following line:
-    // public $incrementing = false;
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
 
-    // If your primary key is a non-integer type, specify the key type
-    // protected $keyType = 'string';
 
-    // Disable Laravel's timestamps if you are not using `created_at` and `updated_at` fields
     public $timestamps = false;
 
     protected $fillable = [
