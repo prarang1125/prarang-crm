@@ -109,14 +109,14 @@ class UploaderController extends Controller
             }
             try {
                 $approveDate = Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A');
-            } catch (\Exception $e) { 
+            } catch (\Exception $e) {
                 return redirect()->back()->with('success', 'Approve Date is Incorrect');
             }
             // Update Chitti record with approved
             $chitti = Chitti::findOrFail($id);
             if ($request->action === 'approvd') {
-               
-                
+
+
                 $approveDate=Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A');
                 $chitti->update([
                     'description' => $request->content,
