@@ -69,18 +69,22 @@
         <h1>Welcome to Prarang, {{ $request->firstName }}!</h1>
         <p>We're excited to have you join our platform. Below are your login details for accessing the Prarang CRM:</p>
         <ul>
-            <li><strong>URL:</strong> <a href="https://crm-test.prarang.com"
-                    target="_blank">https://crm-test.prarang.com</a>
+            <li><strong>CRM URL:</strong> <a href="https://admin.prarang.in"
+                    target="_blank">https://admin.prarang.in</a>
             </li>
             <li><strong>Email:</strong> {{ $request->emailId }}</li>
             <li><strong>Password:</strong> {{ $request->empPassword }}</li>
+
+            <li><strong>Website:</strong> <a href="https://www.prarang.in"
+                target="_blank">https://www.prarang.in</a>
+            </li>
         </ul>
         <p>Please keep your login credentials safe and secure. If you need any assistance, our team is always
             here to help.</p>
         <p>Feel free to contact us at <a href="mailto:query@prarang.in">query@prarang.in</a>.</p>
         <p>Welcome aboard, and happy exploring!</p>
         <p>Best regards,</p>
-        <p><strong></strong><br>Prarang</p>
+        <p><strong></strong><br>Team Prarang</p>
         <div class="footer">
             &copy; {{ date('Y') }} Prarang. All rights reserved.
         </div>
