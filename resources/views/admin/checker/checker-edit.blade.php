@@ -42,18 +42,18 @@
                             <p>{{$chitti->SubTitle}}</p>
                             <div class="row">
                                 <div class="col">
-                                    {{ \Carbon\Carbon::parse($chitti->createDate)->format('d-m-Y H:i A') }}
+                                    Create at:{{ \Carbon\Carbon::parse($chitti->createDate)->format('d-m-Y H:i A') }}
                                 </div>
-                                <div class="col">
-                                   <div class="p-2 shadow border" style="font-size: 14px;"> {{ $chitti->geography ?? 'N/A' }}</div>
-                                </div>
+                                {{-- <div class="col">
+                                 {{ $chitti->geography ?? 'N/A' }}
+                                </div> --}}
                             </div>
                             <hr>
                             <br>
                             <img class="img-fluid w-100"  src="{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}">
                             <br>
                             <br><br>
-                            {!! $chitti->description ?? 'N/A' !!}
+                            <div class="p-2 shadow border" style="font-size: 14px;">  {!! $chitti->description ?? 'N/A' !!}</div>
                         </section>
 
 
