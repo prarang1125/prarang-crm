@@ -61,7 +61,7 @@ class UploaderController extends Controller
 
     public function uploaderUpdate(Request $request, $id, ImageUploadService $imageUploadService)
     {
-        return redirect()->back()->with('error', 'Something went wrong!');
+
         $validator = Validator::make($request->all(), [
             'content' => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
