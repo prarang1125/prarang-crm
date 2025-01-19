@@ -30,21 +30,50 @@
                     @endif
                     <h6 class="mb-0 text-uppercase text-primary">Checker Edit</h6>
                     <hr />
-                    <form action="{{ route('admin.checker-update', $chitti->chittiId) }}" method="POST"
+                    <form action="" method=""
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        {{-- image preview and image thumbnail and content section --}}
-                        <div class="row">
-                            <div class="col-lg-6">
+
+                        <section class="container p-4 m-2">
+                            <h6>Post Preview</h6>
+
+                            <h2>{{ $chitti->Title }}</h2>
+                            <p>{{$chitti->SubTitle}}</p>
+                            <div class="row">
+                                <div class="col">
+                                    {{ \Carbon\Carbon::parse($chitti->dateOfApprove)->format('d-m-Y H:i A') }}
+                                    <br>
+                                    {{ $chitti->tagInEnglish ?? 'N/A' }}
+                                    {{ $chitti->tagInUnicode ?? 'N/A' }}
+
+
+                                </div>
+                                <div class="col">
+                                    {{ $chitti->geography ?? 'N/A' }}
+                                </div>
+                            </div>
+                            <hr>
+                            <br>
+                            <img class="img-fluid w-100"  src="{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}">
+                            <br>
+                            <br><br>
+                            {!! $chitti->description ?? 'N/A' !!}
+                        </section>
+
+
+
+
+                        {{-- <div class="row"> --}}
+                            {{-- <div class="col-lg-6">
                                 <label for="content" class="form-label">Content</label>
                                 <textarea class="@error('content') is-invalid @enderror" name="content" id="editor">{{ old('text', $chitti->description) }}</textarea>
                                 @error('content')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
-                            </div>
+                            </div> --}}
                             <!-- Image Preview and Thumbnails -->
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                                 <label>Image Preview</label>
                                 <div class="image-preview-mt" id="image-preview"
                                     style="max-width: 300px; max-height: 300px; overflow: hidden; border: 1px solid #ccc; padding: 5px;">
@@ -52,8 +81,8 @@
                                         src="{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}"
                                         alt="Image Preview" style="width: 288px; height: 250px; background-size: cover;" />
                                 </div>
-                            </div>
-                            <div class="col-md-2">
+                            </div> --}}
+                            {{-- <div class="col-md-2">
                                 <label>Thumbnail</label>
                                 <div id="thumbnail" class="d-flex flex-wrap"
                                     style="gap: 10px; border: 1px solid #ccc; padding: 5px; min-height: 80px; background-color: #28252517;">
@@ -61,11 +90,11 @@
                                         style="background-image: url('{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}'); background-size: cover; width:100%; height:100px;position:relative;">
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </div> --}}
+                        {{-- </div> --}}
 
                         {{-- image upload --}}
-                        <div class="row mt-3">
+                        {{-- <div class="row mt-3">
                             <div class="col-md-12">
                                 <label for="makerImage" class="form-label">Upload Image</label>
                                 <input type="file" class="form-control @error('makerImage') is-invalid @enderror"
@@ -73,20 +102,11 @@
                                 @error('makerImage')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
-                                {{-- @if ($image)
-                                <p>Current Image: {{ $image->imageName }}</p>
-                            @else
-                                <p>No image uploaded</p>
-                            @endif --}}
+
                             </div>
-                        </div>
-
-                        {{-- geography and area code start --}}
-                        @livewire('post.geography-selector', ['geography' => $chitti->geographyId, 'c2rselect' => $chitti->cityId])
-                        {{-- geography and area code end --}}
-
-                        {{-- title and subtitle code start --}}
-                        <div class="row mt-3">
+                        </div> --}}
+                         {{-- title and subtitle code start --}}
+                         <div class="row mt-3">
                             <div class="col-md-6">
                                 <label for="title" class="form-label">Title</label>
                                 <input type="text" class="form-control  @error('title') is-invalid @enderror"
@@ -106,6 +126,11 @@
                             </div>
                         </div>
                         {{-- title and subtitle code end --}}
+                        {{-- geography and area code start --}}
+                        @livewire('post.geography-selector', ['geography' => $chitti->geographyId, 'c2rselect' => $chitti->cityId])
+                        {{-- geography and area code end --}}
+
+
 
                         {{-- above city or about city code start --}}
                         <div class="row mt-1">
