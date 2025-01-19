@@ -35,9 +35,8 @@
                         @csrf
                         @method('PUT')
 
-                        <section class="container p-4 m-2 shadow" style="font-size: 22px !important;">
+                        <section class="p-4" style="font-size: 22px !important;">
                             <h6>Post Preview</h6>
-
                             <h2>{{ $chitti->Title }}</h2>
                             <p>{{$chitti->SubTitle}}</p>
                             <div class="row">
@@ -54,7 +53,8 @@
                             <br>
                             <br><br>
                             {!! $chitti->description ?? 'N/A' !!}
-                        </section>
+                        </section> <hr>
+                        <br>
 
 
 
