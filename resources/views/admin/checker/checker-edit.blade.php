@@ -42,15 +42,10 @@
                             <p>{{$chitti->SubTitle}}</p>
                             <div class="row">
                                 <div class="col">
-                                    {{ \Carbon\Carbon::parse($chitti->dateOfApprove)->format('d-m-Y H:i A') }}
-                                    <br>
-                                    {{ $chittiTagMapping->tagId->tagInEnglish ?? 'N/A' }}
-                                    {{ $chittiTagMapping->tagId->tagInUnicode ?? 'N/A' }}
-
-
+                                    {{ \Carbon\Carbon::parse($chitti->createDate)->format('d-m-Y H:i A') }}
                                 </div>
                                 <div class="col">
-                                    {{ $chitti->geography ?? 'N/A' }}
+                                   <div class="p-2 shadow border" style="font-size: 14px;"> {{ $chitti->geography ?? 'N/A' }}</div>
                                 </div>
                             </div>
                             <hr>
