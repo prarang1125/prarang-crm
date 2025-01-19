@@ -35,7 +35,7 @@
                         @csrf
                         @method('PUT')
 
-                        <section class="container p-4 m-2">
+                        <section class="container p-4 m-2 shadow" style="font-size: 14px;">
                             <h6>Post Preview</h6>
 
                             <h2>{{ $chitti->Title }}</h2>
@@ -53,7 +53,7 @@
                             <img class="img-fluid w-100"  src="{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}">
                             <br>
                             <br><br>
-                            <div class="p-2 shadow border" style="font-size: 14px;">  {!! $chitti->description ?? 'N/A' !!}</div>
+                            {!! $chitti->description ?? 'N/A' !!}
                         </section>
 
 
