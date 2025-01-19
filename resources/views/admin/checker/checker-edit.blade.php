@@ -35,7 +35,7 @@
                         @csrf
                         @method('PUT')
 
-                        <section class="container p-4 m-2 shadow" style="font-size: 14px;">
+                        <section class="container p-4 m-2 shadow" style="font-size: 22px !important;">
                             <h6>Post Preview</h6>
 
                             <h2>{{ $chitti->Title }}</h2>
