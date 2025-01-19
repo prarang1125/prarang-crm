@@ -44,8 +44,8 @@
                                 <div class="col">
                                     {{ \Carbon\Carbon::parse($chitti->dateOfApprove)->format('d-m-Y H:i A') }}
                                     <br>
-                                    {{ $chitti->tagInEnglish ?? 'N/A' }}
-                                    {{ $chitti->tagInUnicode ?? 'N/A' }}
+                                    {{ $chittiTagMapping->tagId->tagInEnglish ?? 'N/A' }}
+                                    {{ $chittiTagMapping->tagId->tagInUnicode ?? 'N/A' }}
 
 
                                 </div>
