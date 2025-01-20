@@ -420,11 +420,16 @@
             input.classList.add('disabled');
             input.setAttribute('disabled', 'disabled');
         });
+        const allSelectTypes = document.querySelectorAll('select');
+        allInputTypes.forEach(select => {
+            select.classList.add('disabled');
+            select.setAttribute('disabled', 'disabled');
+        });
 
         const allImages = document.querySelectorAll('img'); // Corrected `documm` to `document`
         allImages.forEach(image => {
             image.classList.add('img-fluid', 'w-100');
-            // Removed the disabled attribute line as it's not valid for images
+
         });
 
         function previewImage() {
