@@ -119,7 +119,7 @@
                                             {{ $chitti->Title }}
                                             </a></td>
                                         <td>{{ $chitti->userName ?? 'N/A' }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($chitti->createDate)->format('d M, Y') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($chitti->dateOfCreation)->format('d M, Y h:i a') }}</td>
 
                                         <td>
                                             @if (array_key_exists($chitti->geographyId, config('geography')))
