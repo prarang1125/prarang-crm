@@ -431,6 +431,22 @@
             image.classList.add('img-fluid', 'w-100');
 
         });
+        const allRadioInputs = document.querySelectorAll('input[type="radio"]');
+
+        // Function to add or remove classes based on the checked status
+        allRadioInputs.forEach(radio => {
+            radio.addEventListener('change', () => {
+                allRadioInputs.forEach(input => {
+                    // Remove classes from all radio inputs
+                    input.classList.remove('text-primary', 'fw-500', 'bg-light');
+                });
+
+                // Add classes to the checked radio input
+                if (radio.checked) {
+                    radio.classList.add('text-primary', 'fw-500', 'bg-light');
+                }
+            });
+        });
 
         function previewImage() {
             const input = document.getElementById('makerImage');
