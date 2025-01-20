@@ -30,7 +30,7 @@
                     @endif
                     <h6 class="mb-0 text-uppercase text-primary">Checker Edit</h6>
                     <hr />
-                    <form action="{{ route('admin.checker-update', $chitti->chittiId) }}" method="GET"
+                    <form action="{{ route('admin.checker-update', $chitti->chittiId) }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -61,48 +61,7 @@
 
 
 
-                        {{-- <div class="row"> --}}
-                        {{-- <div class="col-lg-6">
-                                <label for="content" class="form-label">Content</label>
-                                <textarea class="@error('content') is-invalid @enderror" name="content" id="editor">{{ old('text', $chitti->description) }}</textarea>
-                                @error('content')
-                                    <p class="invalid-feedback">{{ $message }}</p>
-                                @enderror
-                            </div> --}}
-                        <!-- Image Preview and Thumbnails -->
-                        {{-- <div class="col-md-4">
-                                <label>Image Preview</label>
-                                <div class="image-preview-mt" id="image-preview"
-                                    style="max-width: 300px; max-height: 300px; overflow: hidden; border: 1px solid #ccc; padding: 5px;">
-                                    <img id="preview-img"
-                                        src="{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}"
-                                        alt="Image Preview" style="width: 288px; height: 250px; background-size: cover;" />
-                                </div>
-                            </div> --}}
-                        {{-- <div class="col-md-2">
-                                <label>Thumbnail</label>
-                                <div id="thumbnail" class="d-flex flex-wrap"
-                                    style="gap: 10px; border: 1px solid #ccc; padding: 5px; min-height: 80px; background-color: #28252517;">
-                                    <div class="thumbnail-slot"
-                                        style="background-image: url('{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}'); background-size: cover; width:100%; height:100px;position:relative;">
-                                    </div>
-                                </div>
-                            </div> --}}
-                        {{-- </div> --}}
 
-                        {{-- image upload --}}
-                        {{-- <div class="row mt-3">
-                            <div class="col-md-12">
-                                <label for="makerImage" class="form-label">Upload Image</label>
-                                <input type="file" class="form-control @error('makerImage') is-invalid @enderror"
-                                    id="makerImage" name="makerImage" onchange="previewImage()">
-                                @error('makerImage')
-                                    <p class="invalid-feedback">{{ $message }}</p>
-                                @enderror
-
-                            </div>
-                        </div> --}}
-                        {{-- title and subtitle code start --}}
                         <div class="row mt-3">
                             <div class="col-md-6">
                                 <label for="title" class="form-label">Title</label>
