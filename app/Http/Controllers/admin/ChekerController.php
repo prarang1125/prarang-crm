@@ -81,6 +81,7 @@ class ChekerController extends Controller
                     'updated_at' => $currentDateTime,
                     'dateSentToUploader' => $dateofcreation,
                     'updated_by' => Auth::guard('admin')->user()->userId,
+                    // 'checker'=>
 
                 ]);
 
