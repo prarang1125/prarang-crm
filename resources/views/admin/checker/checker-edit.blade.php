@@ -30,7 +30,7 @@
                     @endif
                     <h6 class="mb-0 text-uppercase text-primary">Checker Edit</h6>
                     <hr />
-                    <form action="{{ route('admin.checker-update', $chitti->chittiId) }}" method="POST"
+                    <form action="{{ route('admin.checker-update', $chitti->chittiId) }}" method="put"
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -431,6 +431,7 @@
             image.classList.add('img-fluid', 'w-100');
 
         });
+        x
         const allRadioInputs = document.querySelectorAll('input[type="radio"]');
 
         // Function to add or remove classes based on the checked status
