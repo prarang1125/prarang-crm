@@ -350,14 +350,8 @@
                         </div>
                         <form action="{{ route('admin.checker-update', $chitti->chittiId) }}" method="POST">
                             @csrf
-                            {{-- @method('PUT') --}}
+                            @method('PUT')
                         <div class="modal-footer mt-3">
-                            {{-- <button type="submit" class="btn btn-primary">Update Checker</button>
-                        <a href="{{ url('/admin/uploader/uploader-listing', $chitti->chittiId) }}" class="btn btn-primary">Send to Uploader</a> --}}
-                            {{-- <button type="submit" class="btn btn-primary" name="action" value="update_checker">Update
-                                Checker</button> --}}
-
-                            {{-- <button type="submit" class="btn btn-primary" name="action" value="send_to_maker">Send to maker</button> --}}
 
                             <a href="{{ route('admin.checker-chitti-return-to-maker-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}"
                                 class="btn btn-primary">Return to maker</a>
