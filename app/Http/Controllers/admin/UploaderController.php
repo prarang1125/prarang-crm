@@ -182,9 +182,8 @@ class UploaderController extends Controller
                         $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
                         if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
                             DB::rollBack();
-
                             return redirect()->back()->with('error', 'Error while image uploading, please try again.');
-                        }dd('data3');
+                        }
                         Chittiimagemapping::where('chittiId', $id)->update([
                             'imageName' => $uploadImage['path'],
                             'imageUrl' => $uploadImage['full_url'],
