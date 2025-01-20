@@ -421,14 +421,12 @@
             input.setAttribute('disabled', 'disabled');
         });
 
-        const allImages=documm.querySelectorAll('img');
+        const allImages = document.querySelectorAll('img'); // Corrected `documm` to `document`
         allImages.forEach(image => {
             image.classList.add('img-fluid', 'w-100');
-            // image.setAttribute('disabled', 'disabled');
+            // Removed the disabled attribute line as it's not valid for images
         });
 
-    </script>
-    <script>
         function previewImage() {
             const input = document.getElementById('makerImage');
             const preview = document.getElementById('preview-img');
