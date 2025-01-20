@@ -99,7 +99,7 @@
                                     <th scope="col" class="">Sr.</th>
                                     <th scope="col" class="">Title</th>
                                     <th scope="col" class="">Maker</th>
-                                    <th scope="col" class="">Sent Time </th>
+                                    <th scope="col" class="">Created at</th>
                                     <th scope="col" class="">Geography</th>
                                     <th scope="col" class="">Area</th>
                                     <th></th>
