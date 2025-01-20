@@ -30,9 +30,7 @@
                     @endif
                     <h6 class="mb-0 text-uppercase text-primary">Checker Edit</h6>
                     <hr />
-                    <form action="{{ route('admin.checker-update', $chitti->chittiId) }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        {{-- @method('PUT') --}}
+
 
                         <section class="p-4" style="font-size: 22px !important;">
                             <h6>Post Preview</h6>
@@ -350,6 +348,9 @@
                                 </div>
                             </div>
                         </div>
+                        <form action="{{ route('admin.checker-update', $chitti->chittiId) }}" method="POST">
+                            @csrf
+                            {{-- @method('PUT') --}}
                         <div class="modal-footer mt-3">
                             {{-- <button type="submit" class="btn btn-primary">Update Checker</button>
                         <a href="{{ url('/admin/uploader/uploader-listing', $chitti->chittiId) }}" class="btn btn-primary">Send to Uploader</a> --}}
@@ -360,11 +361,9 @@
 
                             <a href="{{ route('admin.checker-chitti-return-to-maker-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}"
                                 class="btn btn-primary">Return to maker</a>
-                            @if ($chitti->uploaderStatus !== 'sent_to_checker')
                                 <button type="submit" onclick="return confirm('Do You want to send to Uploader?');"
-                                    class="btn btn-primary" name="action" value="send_to_uploader">Send to
-                                    Uploader</button>
-                            @endif
+                                class="btn btn-primary" name="action" value="send_to_uploader">Send to
+                                Uploader</button>
                         </div>
                     </form>
                 </div>
