@@ -30,7 +30,7 @@
                     @endif
                     <h6 class="mb-0 text-uppercase text-primary">Checker Edit</h6>
                     <hr />
-                    <form action="{{ route('admin.checker-update', $chitti->chittiId) }}" method="put"
+                    <form action="{{ route('admin.checker-update', $chitti->chittiId) }}" method="GET"
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
