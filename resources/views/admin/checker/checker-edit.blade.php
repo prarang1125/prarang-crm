@@ -32,7 +32,7 @@
                     <hr />
                     <form action="{{ route('admin.checker-update', $chitti->chittiId) }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        @method('PUT')
+                        {{-- @method('PUT') --}}
 
                         <section class="p-4" style="font-size: 22px !important;">
                             <h6>Post Preview</h6>
