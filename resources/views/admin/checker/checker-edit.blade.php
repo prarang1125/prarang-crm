@@ -38,7 +38,7 @@
                         <section class="p-4" style="font-size: 22px !important;">
                             <h6>Post Preview</h6>
                             <h2>{{ $chitti->Title }}</h2>
-                            <p>{{$chitti->SubTitle}}</p>
+                            <p>{{ $chitti->SubTitle }}</p>
                             <div class="row">
                                 <div class="col">
                                     Create at:{{ \Carbon\Carbon::parse($chitti->createDate)->format('d-m-Y H:i A') }}
@@ -49,26 +49,28 @@
                             </div>
                             <hr>
                             <br>
-                            <img class="img-fluid w-100"  src="{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}">
+                            <img class="img-fluid w-100"
+                                src="{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}">
                             <br>
                             <br><br>
                             {!! $chitti->description ?? 'N/A' !!}
-                        </section> <hr>
+                        </section>
+                        <hr>
                         <br>
 
 
 
 
                         {{-- <div class="row"> --}}
-                            {{-- <div class="col-lg-6">
+                        {{-- <div class="col-lg-6">
                                 <label for="content" class="form-label">Content</label>
                                 <textarea class="@error('content') is-invalid @enderror" name="content" id="editor">{{ old('text', $chitti->description) }}</textarea>
                                 @error('content')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
                             </div> --}}
-                            <!-- Image Preview and Thumbnails -->
-                            {{-- <div class="col-md-4">
+                        <!-- Image Preview and Thumbnails -->
+                        {{-- <div class="col-md-4">
                                 <label>Image Preview</label>
                                 <div class="image-preview-mt" id="image-preview"
                                     style="max-width: 300px; max-height: 300px; overflow: hidden; border: 1px solid #ccc; padding: 5px;">
@@ -77,7 +79,7 @@
                                         alt="Image Preview" style="width: 288px; height: 250px; background-size: cover;" />
                                 </div>
                             </div> --}}
-                            {{-- <div class="col-md-2">
+                        {{-- <div class="col-md-2">
                                 <label>Thumbnail</label>
                                 <div id="thumbnail" class="d-flex flex-wrap"
                                     style="gap: 10px; border: 1px solid #ccc; padding: 5px; min-height: 80px; background-color: #28252517;">
@@ -100,8 +102,8 @@
 
                             </div>
                         </div> --}}
-                         {{-- title and subtitle code start --}}
-                         <div class="row mt-3">
+                        {{-- title and subtitle code start --}}
+                        <div class="row mt-3">
                             <div class="col-md-6">
                                 <label for="title" class="form-label">Title</label>
                                 <input type="text" class="form-control  @error('title') is-invalid @enderror"
@@ -400,11 +402,11 @@
 
                             <a href="{{ route('admin.checker-chitti-return-to-maker-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}"
                                 class="btn btn-primary">Return to maker</a>
-                            @if($chitti->uploaderStatus!=='sent_to_checker')
-
-                            <button type="submit" onclick="return confirm('Do You want to send to Uploader?');"
-                                class="btn btn-primary" name="action" value="send_to_uploader">Send to Uploader</button>
-                                @endif
+                            @if ($chitti->uploaderStatus !== 'sent_to_checker')
+                                <button type="submit" onclick="return confirm('Do You want to send to Uploader?');"
+                                    class="btn btn-primary" name="action" value="send_to_uploader">Send to
+                                    Uploader</button>
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -413,16 +415,17 @@
     </div>
     <!--end page wrapper -->
     <script>
-
         const allInputTypes = document.querySelectorAll('input');
-
         allInputTypes.forEach(input => {
-            input.classList.add('desabled');
-            input.atribute('disabled', 'disabled');
-        })
-        // const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
-        // const csrfToken = "{{ csrf_token() }}";
-        // const postId = "{{ $chitti->chittiId }}";
+            input.classList.add('disabled');
+            input.setAttribute('disabled', 'disabled');
+        });
+
+        const allImages=documm.querySelectorAll('img');
+        allImages.forEach(image => {
+            image.classList.add('img-fluid', 'w-100');
+            // image.setAttribute('disabled', 'disabled');
+        });
 
     </script>
     <script>
