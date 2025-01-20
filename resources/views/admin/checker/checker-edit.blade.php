@@ -348,9 +348,9 @@
                                 </div>
                             </div>
                         </div>
-                        <form action="{{ route('admin.checker-update', $chitti->chittiId) }}" method="POST">
-                            @csrf
-                            @method('PUT')
+                        <form action="{{ route('admin.checker-update', $chitti->chittiId) }}" method="GET">
+                            {{-- @csrf --}}
+                            {{-- @method('PUT') --}}
                         <div class="modal-footer mt-3">
 
                             <a href="{{ route('admin.checker-chitti-return-to-maker-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}"
