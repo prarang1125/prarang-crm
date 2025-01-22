@@ -46,6 +46,8 @@ class PortalController extends Controller
             'local_matrics' => 'nullable',
             'header_image' => 'required|max:2048',
             'footer_image' => 'required|max:2048',
+            'header_scripts'=>'nullable',
+            'footer_scripts'=>'nullable',
             'local_info_image' => 'required|max:2048',
             'local_lang' => 'required|string|max:50',
         ]);
@@ -99,6 +101,8 @@ class PortalController extends Controller
             'local_matrics' => 'nullable',
             'header_image' => 'nullable|max:2048',
             'footer_image' => 'nullable|max:2048',
+            'header_scripts'=>'nullable',
+            'footer_scripts'=>'nullable',
             'local_info_image' => 'nullable|max:2048',
             'local_lang' => 'required|string|max:50',
         ]);

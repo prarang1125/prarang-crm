@@ -25,5 +25,7 @@ class Portal extends Model
         'city_name_local',
         'local_lang',
         'slug',
+        'footer_scripts',
+        'header_scripts'
     ];
 }

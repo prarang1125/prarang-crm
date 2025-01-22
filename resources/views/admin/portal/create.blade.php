@@ -149,6 +149,20 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
+                                <div class="mt-3">
+                                    <label for="header_scripts">Header Scripts</label>
+                                    <textarea class="form-control " rows="8" name="header_scripts" id="header_scripts">{{ old('header_scripts') }}</textarea>
+                                    @error('header_scripts')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="mt-3">
+                                    <label for="footer_scripts">Footer Scripts</label>
+                                    <textarea class="form-control " rows="8"  name="footer_scripts" id="footer_scripts">{{ old('footer_scripts') }}</textarea>
+                                    @error('footer_scripts')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
                                 <!-- Header Image -->
                                 <div class="row">
