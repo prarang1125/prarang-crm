@@ -30,7 +30,7 @@
                 @endif
                 <h6 class="mb-0 text-uppercase text-primary">Edit Portals</h6>
                 <hr/>
-                <div class="">                  
+                <div class="">
                     <div class="card-body">
                         <form  action="{{ route('portal.update',['portal'=>$portal->id]) }}" method="POST" enctype="multipart/form-data">
                             @csrf
@@ -58,8 +58,8 @@
                                     @enderror
                                 </div>
                             </div>
-                           
-                    
+
+
                          <div class="row mt-3">
                             <div class="col-sm-6">
                                 <label for="city_name_local">City Name Local</label>
@@ -77,8 +77,8 @@
                             </div>
                          </div>
 
-                      
-                    
+
+
                             <div class="row mt-3">
                                 <div class="col-sm-6">
                                     <label for="local_lang">Local Language</label>
@@ -105,8 +105,8 @@
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                            
-                    
+
+
                             <!-- Weather Widget Code -->
                             <div class="mt-3">
                                 <label for="weather_widget_code">Weather Widget Code</label>
@@ -115,7 +115,7 @@
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                    
+
                             <!-- Sports Widget Code -->
                             <div class="mt-3">
                                 <label for="sports_widget_code">Sports Widget Code</label>
@@ -124,7 +124,7 @@
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                    
+
                             <!-- News Widget Code -->
                             <div class="mt-3">
                                 <label for="news_widget_code">News Widget Code</label>
@@ -133,7 +133,7 @@
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                    
+
                             <!-- Local Matrics -->
                             <div class="mt-3">
                                 <label for="local_matrics">Local Metrics</label>
@@ -142,7 +142,21 @@
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                    
+                            <div class="mt-3">
+                                <label for="header_scripts">Header Scripts</label>
+                                <textarea class="form-control " rows="8" name="header_scripts" id="header_scripts">{{ old('header_scripts',$portal->header_scripts) }}</textarea>
+                                @error('header_scripts')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mt-3">
+                                <label for="footer_scripts">Footer Scripts</label>
+                                <textarea class="form-control " rows="8"  name="footer_scripts" id="footer_scripts">{{ old('footer_scripts',$portal->footer_scripts) }}</textarea>
+                                @error('footer_scripts')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                              <!-- Image Upload Fields -->
         <div class="row mt-3">
             <div class="col-md-4">
@@ -182,7 +196,7 @@
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
                 <div class="mt-2">
-                   
+
                     @if($portal->local_info_image)
                         <img id="local_info_preview" src="{{ Storage::url($portal->local_info_image) }}" alt="Image" alt="Local Info Image Preview" style="max-height: 100px;">
                     @else
@@ -190,8 +204,8 @@
                     @endif
                 </div>
             </div>
-        </div>                            
-                    
+        </div>
+
                             <button class="text-end btn btn-success  mt-4" type="submit">Update Portal</button>
                         </form>
                     </div>
