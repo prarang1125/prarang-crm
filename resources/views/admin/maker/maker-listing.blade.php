@@ -99,7 +99,7 @@
                                     <th scope="col" class="">Sr.</th>
                                     <th scope="col" class="">Title</th>
                                     <th scope="col" class="">Maker</th>
-                                    <th scope="col" class="">Sent Time </th>
+                                    <th scope="col" class="">Created at</th>
                                     <th scope="col" class="">Geography</th>
                                     <th scope="col" class="">Area</th>
                                     <th></th>
@@ -119,7 +119,7 @@
                                             {{ $chitti->Title }}
                                             </a></td>
                                         <td>{{ $chitti->userName ?? 'N/A' }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($chitti->createDate)->format('d M, Y') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($chitti->dateOfCreation)->format('d M, Y h:i a') }}</td>
 
                                         <td>
                                             @if (array_key_exists($chitti->geographyId, config('geography')))

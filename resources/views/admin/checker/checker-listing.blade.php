@@ -103,7 +103,7 @@
                                                 <i class="bx bx-info-circle text-warning"></i>
                                             @endif
                                             <a href="{{ route('admin.checker-edit', $chitti->chittiId) }}"
-                                                class="btn btn-sm btn-primary edit-user">Edit</a>
+                                                class="btn btn-sm btn-primary edit-user">Review</a>
 
                                         </td>
                                     </tr>

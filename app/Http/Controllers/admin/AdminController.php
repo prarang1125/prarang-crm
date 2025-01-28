@@ -245,19 +245,24 @@ class AdminController extends Controller
         if ($validator->passes()) {
             $user = Muser::findOrFail($id);
             $currentDateTime = getUserCurrentTime();
-            // dd('hi');
-            // Update the user with additional fields
-            $user->update([
+            $updateData = [
                 'firstName' => $request->firstName,
                 'lastName' => $request->lastName,
                 'emailId' => $request->email,
-                'empPassword' => bcrypt($request->password),
                 'roleId' => $request->roleId,
                 'languageId' => $request->languageId,
                 'isActive' => $request->isActive,
                 'updated_at' => $currentDateTime,
                 'updated_by' => Auth::guard('admin')->user()->userId,
-            ]);
+            ];
+
+            // Only update the password if it's not empty
+            if (!empty($request->password)) {
+                $updateData['empPassword'] = bcrypt($request->password);
+            }
+
+            $user->update($updateData);
+
 
             return redirect()->route('admin.user-listing')->with('success', 'User updated successfully.');
         } else {

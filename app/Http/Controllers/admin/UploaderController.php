@@ -109,14 +109,14 @@ class UploaderController extends Controller
             }
             try {
                 $approveDate = Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A');
-            } catch (\Exception $e) { 
+            } catch (\Exception $e) {
                 return redirect()->back()->with('success', 'Approve Date is Incorrect');
             }
             // Update Chitti record with approved
             $chitti = Chitti::findOrFail($id);
             if ($request->action === 'approvd') {
-               
-                
+
+
                 $approveDate=Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A');
                 $chitti->update([
                     'description' => $request->content,
@@ -182,9 +182,8 @@ class UploaderController extends Controller
                         $uploadImage = $imageUploadService->uploadImage($request->file('makerImage'), $chitti->chittiId);
                         if (isset($uploadImage['error']) && $uploadImage['error'] === true) {
                             DB::rollBack();
-
                             return redirect()->back()->with('error', 'Error while image uploading, please try again.');
-                        }dd('data3');
+                        }
                         Chittiimagemapping::where('chittiId', $id)->update([
                             'imageName' => $uploadImage['path'],
                             'imageUrl' => $uploadImage['full_url'],

@@ -30,62 +30,35 @@
                     @endif
                     <h6 class="mb-0 text-uppercase text-primary">Checker Edit</h6>
                     <hr />
-                    <form action="{{ route('admin.checker-update', $chitti->chittiId) }}" method="POST"
-                        enctype="multipart/form-data">
-                        @csrf
-                        @method('PUT')
-                        {{-- image preview and image thumbnail and content section --}}
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <label for="content" class="form-label">Content</label>
-                                <textarea class="@error('content') is-invalid @enderror" name="content" id="editor">{{ old('text', $chitti->description) }}</textarea>
-                                @error('content')
-                                    <p class="invalid-feedback">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <!-- Image Preview and Thumbnails -->
-                            <div class="col-md-4">
-                                <label>Image Preview</label>
-                                <div class="image-preview-mt" id="image-preview"
-                                    style="max-width: 300px; max-height: 300px; overflow: hidden; border: 1px solid #ccc; padding: 5px;">
-                                    <img id="preview-img"
-                                        src="{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}"
-                                        alt="Image Preview" style="width: 288px; height: 250px; background-size: cover;" />
+
+
+                        <section class="p-4" style="font-size: 22px !important;">
+                            <h6>Post Preview</h6>
+                            <h2>{{ $chitti->Title }}</h2>
+                            <p>{{ $chitti->SubTitle }}</p>
+                            <div class="row">
+                                <div class="col">
+                                    Create at:{{ \Carbon\Carbon::parse($chitti->createDate)->format('d-m-Y H:i A') }}
                                 </div>
+                                {{-- <div class="col">
+                                 {{ $chitti->geography ?? 'N/A' }}
+                                </div> --}}
                             </div>
-                            <div class="col-md-2">
-                                <label>Thumbnail</label>
-                                <div id="thumbnail" class="d-flex flex-wrap"
-                                    style="gap: 10px; border: 1px solid #ccc; padding: 5px; min-height: 80px; background-color: #28252517;">
-                                    <div class="thumbnail-slot"
-                                        style="background-image: url('{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}'); background-size: cover; width:100%; height:100px;position:relative;">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            <hr>
+                            <br>
+                            <img class="img-fluid w-100"
+                                src="{{ $image ? Storage::url($image->accessUrl) : '/img/blankImage2.png' }}">
+                            <br>
+                            <br><br>
+                            {!! $chitti->description ?? 'N/A' !!}
+                        </section>
+                        <hr>
+                        <br>
 
-                        {{-- image upload --}}
-                        <div class="row mt-3">
-                            <div class="col-md-12">
-                                <label for="makerImage" class="form-label">Upload Image</label>
-                                <input type="file" class="form-control @error('makerImage') is-invalid @enderror"
-                                    id="makerImage" name="makerImage" onchange="previewImage()">
-                                @error('makerImage')
-                                    <p class="invalid-feedback">{{ $message }}</p>
-                                @enderror
-                                {{-- @if ($image)
-                                <p>Current Image: {{ $image->imageName }}</p>
-                            @else
-                                <p>No image uploaded</p>
-                            @endif --}}
-                            </div>
-                        </div>
 
-                        {{-- geography and area code start --}}
-                        @livewire('post.geography-selector', ['geography' => $chitti->geographyId, 'c2rselect' => $chitti->cityId])
-                        {{-- geography and area code end --}}
 
-                        {{-- title and subtitle code start --}}
+
+
                         <div class="row mt-3">
                             <div class="col-md-6">
                                 <label for="title" class="form-label">Title</label>
@@ -106,6 +79,11 @@
                             </div>
                         </div>
                         {{-- title and subtitle code end --}}
+                        {{-- geography and area code start --}}
+                        @livewire('post.geography-selector', ['geography' => $chitti->geographyId, 'c2rselect' => $chitti->cityId])
+                        {{-- geography and area code end --}}
+
+
 
                         {{-- above city or about city code start --}}
                         <div class="row mt-1">
@@ -370,21 +348,16 @@
                                 </div>
                             </div>
                         </div>
+                        <form action="{{ route('admin.checker-update', $chitti->chittiId) }}" method="GET">
+                            {{-- @csrf --}}
+                            {{-- @method('PUT') --}}
                         <div class="modal-footer mt-3">
-                            {{-- <button type="submit" class="btn btn-primary">Update Checker</button>
-                        <a href="{{ url('/admin/uploader/uploader-listing', $chitti->chittiId) }}" class="btn btn-primary">Send to Uploader</a> --}}
-                            <button type="submit" class="btn btn-primary" name="action" value="update_checker">Update
-                                Checker</button>
 
-                            {{-- <button type="submit" class="btn btn-primary" name="action" value="send_to_maker">Send to maker</button> --}}
-                          
                             <a href="{{ route('admin.checker-chitti-return-to-maker-region', ['id' => $chitti->chittiId]) }}?checkerId={{ $chitti->makerId }}&City={{ $chitti->areaId }}"
                                 class="btn btn-primary">Return to maker</a>
-                            @if($chitti->uploaderStatus!=='sent_to_checker')
-                          
-                            <button type="submit" onclick="return confirm('Do You want to send to Uploader?');"
-                                class="btn btn-primary" name="action" value="send_to_uploader">Send to Uploader</button>
-                                @endif
+                                <button type="submit" onclick="return confirm('Do You want to send to Uploader?');"
+                                class="btn btn-primary" name="action" value="send_to_uploader">Send to
+                                Uploader</button>
                         </div>
                     </form>
                 </div>
@@ -393,11 +366,40 @@
     </div>
     <!--end page wrapper -->
     <script>
-        const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
-        const csrfToken = "{{ csrf_token() }}";
-        const postId = "{{ $chitti->chittiId }}";
-    </script>
-    <script>
+        const allInputTypes = document.querySelectorAll('input');
+        allInputTypes.forEach(input => {
+            input.classList.add('disabled');
+            input.setAttribute('disabled', 'disabled');
+        });
+        const allSelectTypes = document.querySelectorAll('select');
+        allInputTypes.forEach(select => {
+            select.classList.add('disabled');
+            select.setAttribute('disabled', 'disabled');
+        });
+
+        const allImages = document.querySelectorAll('img'); // Corrected `documm` to `document`
+        allImages.forEach(image => {
+            image.classList.add('img-fluid', 'w-100');
+
+        });
+        x
+        const allRadioInputs = document.querySelectorAll('input[type="radio"]');
+
+        // Function to add or remove classes based on the checked status
+        allRadioInputs.forEach(radio => {
+            radio.addEventListener('change', () => {
+                allRadioInputs.forEach(input => {
+                    // Remove classes from all radio inputs
+                    input.classList.remove('text-primary', 'fw-500', 'bg-light');
+                });
+
+                // Add classes to the checked radio input
+                if (radio.checked) {
+                    radio.classList.add('text-primary', 'fw-500', 'bg-light');
+                }
+            });
+        });
+
         function previewImage() {
             const input = document.getElementById('makerImage');
             const preview = document.getElementById('preview-img');

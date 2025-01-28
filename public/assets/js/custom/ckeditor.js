@@ -78,14 +78,93 @@ function SimpleUploadAdapterPlugin(editor) {
     .catch(error => {
         console.error(error);
     });*/
-
     ClassicEditor
     .create(document.querySelector('#editor'), {
         extraPlugins: [SimpleUploadAdapterPlugin], // Add your custom adapter
         toolbar: [
-            'heading', '|', 'bold', 'italic', '|', 'link', 'bulletedList', 'numberedList', '|',
-            'imageUpload', 'mediaEmbed', '|', 'undo', 'redo', '|', 'fullscreen'
+            'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', '|',
+            'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+            'link', 'bulletedList', 'numberedList', 'alignment', '|',
+            'imageUpload', 'mediaEmbed', 'insertTable', '|',
+            'undo', 'redo', '|', 'fullscreen'
         ],
+        fontSize: {
+            options: [
+                'tiny',
+                'small',
+                'default',
+                'big',
+                'huge'
+            ]
+        },
+        fontColor: {
+            colors: [
+                {
+                    color: 'hsl(0, 0%, 0%)',
+                    label: 'Black'
+                },
+                {
+                    color: 'hsl(0, 0%, 30%)',
+                    label: 'Dim gray'
+                },
+                {
+                    color: 'hsl(0, 0%, 60%)',
+                    label: 'Gray'
+                },
+                {
+                    color: 'hsl(0, 0%, 90%)',
+                    label: 'Light gray'
+                },
+                {
+                    color: 'hsl(0, 0%, 100%)',
+                    label: 'White',
+                    hasBorder: true
+                },
+                {
+                    color: 'hsl(0, 75%, 60%)',
+                    label: 'Red'
+                },
+                {
+                    color: 'hsl(30, 75%, 60%)',
+                    label: 'Orange'
+                },
+                {
+                    color: 'hsl(60, 75%, 60%)',
+                    label: 'Yellow'
+                },
+                {
+                    color: 'hsl(90, 75%, 60%)',
+                    label: 'Light green'
+                },
+                {
+                    color: 'hsl(120, 75%, 60%)',
+                    label: 'Green'
+                },
+                {
+                    color: 'hsl(150, 75%, 60%)',
+                    label: 'Aquamarine'
+                },
+                {
+                    color: 'hsl(180, 75%, 60%)',
+                    label: 'Turquoise'
+                },
+                {
+                    color: 'hsl(210, 75%, 60%)',
+                    label: 'Light blue'
+                },
+                {
+                    color: 'hsl(240, 75%, 60%)',
+                    label: 'Blue'
+                },
+                {
+                    color: 'hsl(270, 75%, 60%)',
+                    label: 'Purple'
+                }
+            ]
+        },
+        table: {
+            contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+        },
         mediaEmbed: {
             previewsInData: true // Allows embedding previews in the editor
         }
@@ -93,6 +172,7 @@ function SimpleUploadAdapterPlugin(editor) {
     .catch(error => {
         console.error(error);
     });
+
 
 
 function calculateTotal() {

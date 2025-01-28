@@ -80,12 +80,12 @@
                             @enderror
                         </div>
                         <!-- TODO::need TO Improve this code  -->
-                        <div class="col-md-6"> 
+                        <div class="col-md-6">
                             <label for="languageId" class="form-label">Language Script</label>
                             <select id="languageId" class="form-select @error('languageId') is-invalid @enderror" name="languageId">
                                 <option selected disabled>Choose...</option>
                                 @foreach ($languagescripts as $languagescript)
-                                    <option value="{{ $languagescript->id }}" 
+                                    <option value="{{ $languagescript->id }}"
                                         {{ old('languageId', $user->languageId) == $languagescript->id ? 'selected' : '' }}>
                                         {{ $languagescript->language }}
                                     </option>
@@ -95,7 +95,7 @@
                                 <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
-                        
+
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-6">
@@ -121,7 +121,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-3">
-                                <h6 class="mb-0">Reset Password</h6>
+                                <h6 class="mb-0">Confirm Password</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
                                 <input type="password" name="password_confirmation" class="form-control" value="" />
