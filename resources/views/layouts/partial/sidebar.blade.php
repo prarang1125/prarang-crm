@@ -39,7 +39,7 @@
                             class="bx bx-right-arrow-alt"></i>Post Analytics</a>
                 </li>
                 <li> <a href="{{ route('visitor') }}"><i
-                            class="bx bx-right-arrow-alt"></i>visitors</a>
+                            class="bx bx-user"></i>Visitors</a>
                 </li>
 
             </ul>
