@@ -31,12 +31,15 @@
     {{-- <link rel="stylesheet" href="{{ asset('assets/css/ckeditor5.css') }}"> --}}
     {{-- <link rel="stylesheet" href="{{ asset('assets/plugins/ckeditor/contents.css') }}"> --}}
     <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
     {{-- <title>Prarang Admin Home</title> --}}
     <title>@yield('title', 'Login')</title>
     <style>
-        .lni-close{
- display:none !important;
-}
+        .lni-close {
+            display: none !important;
+        }
     </style>
     @livewireStyles
 </head>
