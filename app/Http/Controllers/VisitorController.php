@@ -44,7 +44,7 @@ class VisitorController extends Controller
                 'chitti.Title',
 
                 DB::raw('COUNT(visitors.id) as record_count'),
-                DB::raw('SUM(visitors.visit_count) as total_visits')
+                DB::raw('SUM(visitors.visit_count) as visit_count')
             )->groupBy('visitors.post_id', 'chitti.Title','chitti.dateOfApprove','visitors.city');
         } else {
             $query->select('chitti.dateOfApprove', 'chitti.Title', 'visitors.*');

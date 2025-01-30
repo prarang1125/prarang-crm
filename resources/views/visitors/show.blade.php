@@ -80,7 +80,7 @@
                     <td><a href="https://prarang.in/post-summary/{{$visitor->city}}/{{$visitor->post_id}}/{{$visitor->Title}}" target='_blank'>{{ $visitor->Title }}</a></td>
                     <td>{{$visitor->dateOfApprove}}</td>
                     <td>{{ $visitor->record_count }}</td>
-                    <td>{{ $visitor->total_visits }}</td>
+                    <td>{{ $visitor->visit_count }}</td>
                 </tr>
             @endforeach
         </tbody>
