@@ -17,13 +17,17 @@ class RoleMiddleware
     public function handle(Request $request, Closure $next, $role): Response
     {
         $user = Auth::user();
-        // dd($user);
-        if ($user && $user->roleId == $role) {
-            return $next($request);
-        }
-        Auth::logout();
 
-        // return redirect()->route('accounts.login')->with('error', 'Unauthorized access');
+        $roles = explode('|',$role);
+        
+       
+        if (is_array($roles)) {
+            if (in_array($user->roleId, $roles)) {
+                return $next($request);
+            }
+        }
+        
+        Auth::logout();
         return redirect()->route('loginOption')->with('error', 'Unauthorized access');
     }
 }

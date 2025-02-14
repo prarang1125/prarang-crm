@@ -38,8 +38,7 @@
                 <li> <a href="{{ url('/admin/postanalytics/post-analytics-listing') }}"><i
                             class="bx bx-right-arrow-alt"></i>Post Analytics</a>
                 </li>
-                <li> <a href="{{ route('visitor') }}"><i
-                            class="bx bx-user"></i>Visitors</a>
+                <li> <a href="{{ route('visitor') }}"><i class="bx bx-user"></i>Visitors</a>
                 </li>
 
             </ul>
@@ -101,30 +100,24 @@
         <div class="menu-title">Dashboard</div>
     </a>
     <ul>
-
-        @php
-            $user = Auth::user();
-        @endphp
-
-        @if ($user->roleId == '2')
+        @if (Auth::user()->roleId == 2 || Auth::user()->roleId == 13 || Auth::user()->roleId == 14)
             <li>
-                <a href="{{ url('/accounts/dashboard') }}">
-                    <i class="bx bx-right-arrow-alt"></i> Home
-                </a>
-            </li>
-            <li>
-                <a href="{{ url('/accounts/maker-dashboard') }}">
+                <a href="{{ url('/accounts/maker/dashboard') }}">
                     <i class="bx bx-right-arrow-alt"></i> Maker
                 </a>
             </li>
-        @elseif ($user->roleId == '3')
+        @endif
+        @if (Auth::user()->roleId == 3 || Auth::user()->roleId == 14)
             <li> <a href="{{ url('/accounts/checker/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Checker</a>
-            @elseif ($user->roleId == '4')
-            <li> <a href="{{ url('/accounts/uploader/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Uploader</a>
-            @elseif ($user->roleId == '6')
+        @endif
+        @if (Auth::user()->roleId == 4 || Auth::user()->roleId == 13 || Auth::user()->roleId == 14)
+            <li> <a href="{{ url('/accounts/uploader/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Uploader</a></li>
+        @endif
+        @if (Auth::user()->roleId == 6 )
             <li> <a href="{{ url('/accounts/postanalyticsmaker/acc-post-analytics-maker-city-listing') }}"><i
                         class="bx bx-right-arrow-alt"></i>Analytics Maker</a>
-            @elseif ($user->roleId == '7')
+        @endif
+        @if (Auth::user()->roleId == 7 )
             <li> <a href="{{ url('/accounts/postanalyticschecker/acc-post-analytics-checker-city-listing') }}"><i
                         class="bx bx-right-arrow-alt"></i>Analytics Checker</a>
         @endif

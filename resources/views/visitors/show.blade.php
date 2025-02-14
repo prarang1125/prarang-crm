@@ -2,193 +2,221 @@
 @section('title', 'Account Checker Edit')
 
 @section('content')
-<section class="p-4">
+    <style>
+        /* Rounded */
+        .page-wrapper .pt-3 .rounded {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: normal;
+        }
 
-    @php
-        // Set default start and end dates if not provided
-        $currentMonthStart = now()->startOfMonth()->format('d-m-Y H:i A');
-        $currentMonthEnd = now()->endOfMonth()->format('d-m-Y H:i A');
+        /* Col 6 */
+        .pt-3 .col-sm-6 {
+            display: flex;
+            justify-content: normal;
+            align-items: center;
+        }
 
-        $startDate = $startDate ?? $currentMonthStart;
-        $endDate = $endDate ?? $currentMonthEnd;
-    @endphp
+        /* Rounded */
+        .page-wrapper .pt-3 .rounded {
+            padding-bottom: 7px !important;
+        }
 
-    <form action="" method="GET">
-        <div class="row">
-            <!-- City Dropdown -->
+        /* Button */
+        .text-end p a {
+            font-weight: 300;
+            font-size: 12px;
+            text-transform: capitalize;
+            padding-left: 4px;
+            padding-right: 4px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            margin-right: -8px;
+            margin-left: 9px;
+        }
 
-            <div class="col-sm-3">
-                <label for="city">Select City</label>
-                <select class="form-control" name="city" id="city">
-                    <option value="">Select city</option>
-                    @foreach ($cities as $cityo)
-                        <option value="{{ $cityo }}" {{ request('city') == $cityo ? 'selected' : '' }}>{{ ucfirst($cityo) }}</option>
-                    @endforeach
-                </select>
-            </div>
+        /* Paragraph */
+        .modal-dialog form p {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+        }
 
-            <!-- Start Date -->
-            <div class="col-sm-2">
-                <label for="s">Start Date & Time</label>
-                <input id="s" name="s" value="{{ request('s', '') }}" class="form-control datetimepicker" type="text" placeholder="DD-MM-YYYY hh:mm A">
-            </div>
+        /* Span Tag */
+        .modal-body .ordate span {
+            border-style: solid;
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+            border-bottom-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #1462c1;
+            color: #ffffff;
+        }
 
-            <!-- End Date -->
-            <div class="col-sm-2">
-                <label for="e">End Date & Time</label>
-                <input id="e" name="e" class="form-control datetimepicker" value="{{ request('e','') }}" type="text" placeholder="DD-MM-YYYY hh:mm A">
-            </div>
+        /* Paragraph */
+        .modal-dialog form p {
+            margin-top: 4px;
+        }
 
-            <!-- Group By Toggle -->
-            <div class="col-sm-2">
-                <label for="group">Group By Post</label>
-                <select class="form-control" name="group" id="group">
-                    <option value="0" {{ request('group') == '0' ? 'selected' : '' }}>No</option>
-                    <option value="1" {{ request('group') == '1' ? 'selected' : '' }}>Yes</option>
-                </select>
-            </div>
+        /* Table Data */
+        .table-sm tr td {
+            font-size: 12px;
+        }
 
-            <!-- Submit Button -->
-            <div class="col-sm-3">
-                <input type="submit" class="btn btn-sm btn-success mt-4" value="Filter">
-            </div>
-        </div>
-    </form>
+        /* Th */
+        .table-sm tr th {
+            font-size: 12px;
+        }
 
-@if(request('group'))
-<div class="p-4 mt-3 shadow">
-    <div class="row mb-3">
-        <div class="col h5">Total Visit: {{ $totalVisit }}</div>
-        <div class="col h5">Total Link Clicks/Hits: {{ $totalHits }}</div>
-        <div class="col"></div>
-    </div>
-    <hr>
-    <table class="table table-sm">
-        <thead>
-            <tr>
-                <th>Sr.</th>
-                <th>Post Title</th>
-                <th>Post Date</th>
-                <th>Total Hit/Click</th>
-                <th>Total Visit</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($visitors as $visitor)
-                <tr>
-                    <td>{{$loop->iteration}}</td>
-                    <td><a href="https://prarang.in/post-summary/{{$visitor->city}}/{{$visitor->post_id}}/{{$visitor->Title}}" target='_blank'>{{ $visitor->Title }}</a></td>
-                    <td>{{$visitor->dateOfApprove}}</td>
-                    <td>{{ $visitor->record_count }}</td>
-                    <td>{{ $visitor->visit_count }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+        /* Post table */
+        .pt-3 .post-table {
+            overflow: scroll;
+            max-height: 60vh;
+        }
 
-    <!-- Pagination with query persistence -->
-    {{ $visitors->appends(request()->query())->links('pagination::bootstrap-5') }}
+        /* Th */
+        .table-sm tr th {
+            position: sticky;
+            top: 0px;
+            background-color: #ffffff;
+        }
+        /* Heading */
+.overflow-hidden div h6{
+ font-size:14px;
+}
+/* For Webkit Browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+    width: 2px; /* Scrollbar width */
+}
 
-</div>
-@else
-    <div class="p-4 mt-3 shadow">
-        <div class="row mb-3">
-            <div class="col h5">Total Visit: {{ $totalVisit }}</div>
-            <div class="col h5">Total Link Clicks/Hits: {{ $totalHits }}</div>
-            <div class="col"></div>
-        </div>
-        <hr>
+::-webkit-scrollbar-thumb {
+    background-color: #888; /* Scrollbar color */
+    border-radius: 5px; /* Rounded corners */
+}
 
-        <table class="table table-sm">
-            <thead>
-                <tr>
-                    <th>Sr.</th>
-                    <th>Post ID</th>
-                    <th>Post City</th>
-                    <th>Visitor City</th>
-                    <th>Visits</th>
-                    <th>IP Address</th>
-                    <th>Visitor Type</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($visitors as $visitor)
-                    <tr>
-                        <td>{{$loop->iteration}}</td>
-                        <td><a href="https://prarang.in/post-summary/{{$visitor->city}}/{{$visitor->post_id}}/{{$visitor->Title}}" target='_blank'>{{ $visitor->post_id }}</a></td>
-                        <td>{{ ucfirst($visitor->city) }}</td>
-                        <td>{{ $visitor->visitor_city }}</td>
-                        <td>{{ $visitor->visit_count }}</td>
-                        <td>{{ $visitor->ip_address }}</td>
-                        <td>{{ detectUserType($visitor->user_agent) }}</td>
-                        <td>
-                            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#visModal{{ $visitor->post_id }}">
-                                More
-                            </button>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+::-webkit-scrollbar-track {
+    background: transparent; /* Track background */
+}
 
-        <!-- Pagination with query persistence -->
-        {{ $visitors->appends(request()->query())->links('pagination::bootstrap-5') }}
+/* For Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #888 transparent;
+}
+.custom-scroll {
+    overflow-y: auto; /* Enable scrolling */
+    max-height: 400px; /* Set height */
+}
 
-        <!-- Visitor Modals -->
-        @foreach ($visitors as $visitor)
-            <div class="modal fade" id="visModal{{ $visitor->post_id }}" tabindex="-1" aria-labelledby="visModal{{ $visitor->post_id }}Label" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="visModal{{ $visitor->post_id }}Label">{{ $visitor->Title }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            @php
-                                $fields = [
-                                    'City' => ucfirst($visitor->city),
-                                    'Post ID' => $visitor->post_id,
-                                    'IP Address' => $visitor->ip_address,
-                                    'Visitor City' => $visitor->visitor_city,
-                                    'Visit Count' => $visitor->visit_count,
-                                    'Latitude' => $visitor->latitude,
-                                    'Longitude' => $visitor->longitude,
-                                    'Language' => $visitor->language,
-                                    'Screen Width' => "{$visitor->screen_width} px",
-                                    'Screen Height' => "{$visitor->screen_height} px",
-                                    'Timestamp' => $visitor->timestamp,
-                                    'Visitor Address' => $visitor->visitor_address,
-                                ];
-                            @endphp
+.custom-scroll::-webkit-scrollbar {
+    width: 1px;
+}
 
-                            @foreach ($fields as $label => $value)
-                                <div class="row mb-2">
-                                    <div class="col-4"><strong>{{ $label }}:</strong></div>
-                                    <div class="col-8">{{ $value }}</div>
-                                </div>
-                            @endforeach
+.custom-scroll::-webkit-scrollbar-thumb {
+    background-color: #888;
+}
+/* Small Tag */
+.overflow-hidden .card-body p{
+ white-space:normal;
+}
 
-                            <div>{{ $visitor->user_agent }}</div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div>
-    @endif
-</section>
+/* Heading */
+.overflow-hidden .card-body h6{
+ margin-bottom:5px !important;
+}
 
-<script>
-    flatpickr(".datetimepicker", {
-        enableTime: true,
-        dateFormat: "d-m-Y h:i K", // Format: DD-MM-YYYY hh:mm AM/PM
-        time_24hr: false, // Use 12-hour format with AM/PM
-        minuteIncrement: 1,
-        defaultHour: 12
-    });
-</script>
+/* Small Tag */
+.overflow-hidden .card-body p{
+ margin-bottom:7px;
+ font-weight:600;
+ color:#076bce;
+ font-size:12px;
+ /* padding-bottom: 5px; */
+ min-height: 35px;
+
+}
+/* Post table */
+.wrapper .page-wrapper .pt-3 span .p-2 .row .card .post-table{
+ height:594px !important;
+}
+
+/* Post table */
+.pt-3 span .post-table{
+ max-height:540px;
+}
+
+@keyframes blurEffect {
+    0% {
+        filter: blur(0px);
+    }
+    25% {
+        filter: blur(4px);
+    }
+    50% {
+        filter: blur(8px);
+    }
+    100% {
+        filter: blur(12.28px);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+    100% {
+        background-position: 200px 0;
+    }
+}
+
+/* Blur effect on loading */
+.loading-effect {
+    animation: blurEffect 0.3s ease-in-out forwards;
+    pointer-events: none; /* Disable interactions */
+    position: relative;
+}
+
+/* Placeholder shimmer effect */
+.loading-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #f6f7f8 0%, #edeef1 50%, #f6f7f8 100%);
+    background-size: 400px 100%;
+    animation: shimmer 1.5s infinite linear;
+    opacity: 0.7;
+    border-radius: 5px;
+}
+
+.post-frem{
+ overflow:scroll;
+ max-height:526px;
+}
+/* Post date */
+.pt-3 span .post-date{
+ display:flex;
+ justify-content:flex-end;
+ align-items:center;
+}
+
+
+
+    </style>
+    <section class="p-2 pt-3">
+        @livewire('visitors.top-cards', ['city' => $city, 'startDate' => $startDate, 'endDate' => $endDate])
+    </section>
+
+
+
+
+
 @endsection
