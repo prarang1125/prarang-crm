@@ -29,7 +29,6 @@ class TopCards extends Component
         // $this->dispatch('updateChart', $this->reffData);
     }
 
-
     public function render()
     {
         $visitorDats = $this->getPostWiseData();
@@ -44,8 +43,11 @@ class TopCards extends Component
         $this->postTitle = '';
 
         //  $this->dispatch('updateChart', $this->reffData);
+        // $this->reffData = $this->getDataBasedOnRefference();
         $this->reffData = $this->getDataBasedOnRefference();
-        $this->reffData = $this->getDataBasedOnRefference();
+        $this->userType = null;
+        $this->scroll = null;
+        $this->get5th31th = null;
         $this->postReffData = $this->reffData;
         $this->userType = $this->getDataBasedOnBots();
         $this->scroll = $this->getScrollDuration();
@@ -60,6 +62,7 @@ class TopCards extends Component
         $this->userType = $this->getDataBasedOnBots($postId);
         $this->scroll = $this->getScrollDuration($postId);
         $this->get5th31th = $this->day5th31th($postId);
+
     }
 
     public function changePostData()
@@ -208,7 +211,9 @@ class TopCards extends Component
                 'view_5th' => 0,
                 'click_5th' => 0,
                 'view_31st' => 0,
-                'click_31st' => 0
+                'click_31st' => 0,
+                'visit_count_by_city' => 0,
+                'hit_count_by_city'=>0
             ];
         }
         $query = DB::table('visitors')
@@ -226,7 +231,9 @@ class TopCards extends Component
                     AND DATE_ADD(STR_TO_DATE(chitti.dateOfApprove, '%d-%m-%Y %h:%i %p'), INTERVAL 31 DAY) THEN visit_count ELSE 0 END) as view_31st"),
 
                 DB::raw("COUNT(CASE WHEN visitors.created_at BETWEEN STR_TO_DATE(chitti.dateOfApprove, '%d-%m-%Y %h:%i %p')
-                    AND DATE_ADD(STR_TO_DATE(chitti.dateOfApprove, '%d-%m-%Y %h:%i %p'), INTERVAL 31 DAY) THEN 1 ELSE NULL END) as click_31st")
+                    AND DATE_ADD(STR_TO_DATE(chitti.dateOfApprove, '%d-%m-%Y %h:%i %p'), INTERVAL 31 DAY) THEN 1 ELSE NULL END) as click_31st"),
+                DB::raw("SUM(CASE WHEN visitors.visitor_city LIKE '%$this->city%' OR visitors.visitor_address LIKE '%$this->city%' THEN visitors.visit_count ELSE 0 END) as visit_count_by_city"),
+                DB::raw("COUNT(CASE WHEN visitors.visitor_city LIKE '%$this->city%' OR visitors.visitor_address LIKE '%$this->city%' THEN 1 ELSE 0 END) as hit_count_by_city"),
             )
             ->first();
 
@@ -235,7 +242,9 @@ class TopCards extends Component
                 'view_5th' => 0,
                 'click_5th' => 0,
                 'view_31st' => 0,
-                'click_31st' => 0
+                'click_31st' => 0,
+                'visit_count_by_city' => 0,
+                'hit_count_by_city'=>0
             ];
         }
 

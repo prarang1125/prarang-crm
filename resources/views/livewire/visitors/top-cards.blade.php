@@ -199,7 +199,7 @@
                         </h6>
                         <p>{{ $postTitle }}</p>
                         <div class="post-frem">
-                            <div class="table-responsive" wire:loading.class="loading-effect">
+                            <div class="table-responsive " wire:loading.class="loading-effect">
                                 {{-- get5th31th --}}
                                 @isset($get5th31th)
                                     <table class="table align-items-center table-sm mb-0">
@@ -211,13 +211,18 @@
                                             </tr>
                                             <tr>
                                                 <th class="ps-4">5<sup>th</sup></th>
-                                                <td>{{ $get5th31th->view_5th }}</td>
+                                                <td>{{ $get5th31th->click_5th }}</td>
                                                 <td>{{ $get5th31th->view_5th }}</td>
                                             </tr>
                                             <tr>
                                                 <th class="ps-4"> 31 <sup>st</sup></th>
+                                                <td>{{ $get5th31th->click_31st }}</td>
                                                 <td>{{ $get5th31th->view_31st }}</td>
-                                                <td>{{ $get5th31th->view_31st }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="ps-4">Hyperlocal</th>
+                                                <td>{{ $get5th31th->hit_count_by_city }}</td>
+                                                <td>{{ $get5th31th->visit_count_by_city }}</td>
                                             </tr>
                                         </tbody>
                                     </table> <br>
