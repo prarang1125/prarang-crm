@@ -208,6 +208,33 @@
  align-items:center;
 }
 
+/* Card */
+.mt-2 .card{
+ background-color:#ff2828;
+ background-image:linear-gradient(to right, #ffeeee 0%, #ddefbb 100%);
+}
+
+/* Rounded */
+.pt-3 span .rounded{
+ background-image:linear-gradient(to right, #bbd2c5 0%, #536976 33%, #292e49 100%);
+}
+
+/* Bold */
+.text-end p .fw-bold{
+ color:#ffffff;
+}
+
+/* Paragraph */
+.pt-3 .text-end p{
+ color:#ffffff;
+ font-family:Verdana,Geneva,sans-serif;
+}
+
+/* Bold */
+.pt-3 p.fw-bold{
+ color:#086dd2;
+}
+
 
 
     </style>
