@@ -6,12 +6,13 @@ use App\Models\Subscriber;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class SubscriberList extends Component
 {
     use WithPagination;
 
-    public $date;
+    public $date,$cities;
     public $subscriberCounts;
 
     public function mount($date = null)
@@ -19,6 +20,8 @@ class SubscriberList extends Component
 
         $this->date = request()->date;
         $this->fetchSubscriberCounts();
+        $this->cities = DB::connection('yp')->table('cities')->select('id','name')->distinct('city')->pluck('name','id');
+
     }
 
     public function fetchSubscriberCounts()
