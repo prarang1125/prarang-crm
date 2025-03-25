@@ -17,7 +17,8 @@ use App\Http\Controllers\{
 use App\Http\Controllers\Admin\OurTeamController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\MakerController;
-
+use App\Livewire\Marketing\HitBox;
+use App\Livewire\Marketing\SubscriberList;
 
 Route::get('/', [LoginController::class, 'loginOption'])->name('loginOption');
 Route::group(['prefix' => 'accounts'], function () {
@@ -120,3 +121,5 @@ Route::get('visitor',[VisitorController::class,'index'])->name('visitor');
 Route::get('show-visitor',[VisitorController::class,'showVisitor'])->name('visitor.show');
 Route::get('get-our-teams', [OurTeamController::class, 'getAllTeamsJson']);
 Route::any('visitor-location',[VisitorLocationController::class,'storeVisitorLocation']);
+Route::get('marketing-hit-box',HitBox::class)->name('marketing.hit-box');
+Route::get('subscribers',SubscriberList::class)->name('marketing.hit-box')->name('subscribers');

@@ -82,6 +82,19 @@ return [
             ]) : [],
         ],
 
+        'yp' => [
+            'driver' => 'mysql',
+            'host' => env('DB2_HOST', '127.0.0.1'),
+            'database' => env('DB2_DATABASE', 'yellowpages'),
+            'username' => env('DB2_USERNAME', 'vivek'),
+            'password' => env('DB2_PASSWORD', 'phpmyadmin'),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DB_URL'),

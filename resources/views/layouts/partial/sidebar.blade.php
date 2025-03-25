@@ -38,6 +38,8 @@
                 <li> <a href="{{ url('/admin/postanalytics/post-analytics-listing') }}"><i
                             class="bx bx-right-arrow-alt"></i>Post Analytics</a>
                 </li>
+                <li> <a href="/subscribers"><i class="bx bx-user"></i>Subscribers</a>
+                </li>
                 <li> <a href="{{ route('visitor') }}"><i class="bx bx-user"></i>Visitors</a>
                 </li>
 
