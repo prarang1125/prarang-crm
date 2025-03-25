@@ -82,6 +82,7 @@ section form i{
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
+                            <th>City</th>
                             <th>Phone No.</th>
                             <th>Email</th>
                             <th>Role</th>
@@ -93,6 +94,7 @@ section form i{
                             <tr class="{{ $loop->even ? 'table-light' : '' }}">
                                 <td>{{ $subscriber->id }}</td>
                                 <td>{{ $subscriber->name }}</td>
+                                <td>{{ $subscriber->city_id ? $cities[$subscriber->city_id] : '-' }}</td>
                                 <td>{{ $subscriber->phone }}</td>
                                 <td>{{ $subscriber->email }}</td>
                                 <td>{{ $subscriber->role == 2 ? 'vCard' : 'Post Subscriber' }}</td>
