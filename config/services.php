@@ -35,4 +35,16 @@ return [
         ],
     ],
 
+    'twilio' => [
+        'sid' => env('TWILIO_SID'),
+        'auth_token' => env('TWILIO_AUTH_TOKEN'),
+        'whatsapp_number' => env('TWILIO_WHATSAPP_NUMBER'),
+    ],
+
+    'whatsapp' => [
+        'api_url' => env('WHATSAPP_API_URL', 'https://graph.facebook.com/v22.0'),
+        'phone_id' => env('WHATSAPP_PHONE_ID'),
+        'token' => env('WHATSAPP_API_TOKEN'),
+    ],
+
 ];

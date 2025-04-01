@@ -45,7 +45,7 @@
             </form>
             <p class="text-center  muted small">Prarang Visitor Analytics City Wise posts visitors matrics</p>
         </div>
-
+        {{-- @livewire('marketing.hit-box') --}}
 
         {{-- <section class="shadow p-2 rounded border">
 de
