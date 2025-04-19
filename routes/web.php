@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\OurTeamController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\MakerController;
 use App\Http\Controllers\WhatsappApi\WebHook;
+use App\Livewire\AutoContent\PostListing;
 use App\Livewire\Marketing\HitBox;
 use App\Livewire\Marketing\SubscriberList;
 
@@ -124,6 +125,9 @@ Route::get('get-our-teams', [OurTeamController::class, 'getAllTeamsJson']);
 Route::any('visitor-location',[VisitorLocationController::class,'storeVisitorLocation']);
 Route::get('marketing-hit-box',HitBox::class)->name('marketing.hit-box');
 Route::get('subscribers',SubscriberList::class)->name('marketing.hit-box')->name('subscribers');
-
+Route::get('content/post-listing',PostListing::class);
 Route::get('whatsapp-webhook', [WebHook::class, 'index'])->name('whatsapp-webhook');
 // Route::get('sendWhatsAppMessage',[VisitorController::class,'sendWhatsAppMessage'])->name('sendWhatsAppMessage');
+
+
+
