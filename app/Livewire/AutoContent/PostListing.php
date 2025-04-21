@@ -12,7 +12,7 @@ class PostListing extends Component
 {
     use WithPagination;
 
-    public $posts = [];
+    // public $posts = [];
     public $tags = [], $cities = [];
     public $city, $startDate, $endDate, $tag, $comparator, $value;
     public $profession, $education, $professionArr, $educationArr, $emotion, $emotionArr;
