@@ -98,7 +98,7 @@ class PostListing extends Component
         $start = microtime(true);
 
         $query = DB::table('chitiInfo')
-            ->where('geoCode', $this->city)
+            // ->where('geoCode', $this->city)
             ->when($this->startDate && $this->endDate, function ($query) {
                 $query->whereBetween(
                     DB::raw("STR_TO_DATE(uploadDate, '%d-%m-%Y %h:%i %p')"),
@@ -107,19 +107,19 @@ class PostListing extends Component
                         Carbon::parse($this->endDate)->format('Y-m-d H:i:s'),
                     ]
                 );
-            })
-            ->when(!empty($this->selectedTags), function ($query) {
-                $query->whereIn('tagId', $this->selectedTags);
-            })
-            ->when(!empty($this->selectedProfessions), function ($query) {
-                $query->whereIn('professioncode', $this->selectedProfessions);
-            })
-            ->when(!empty($this->selectedEducations), function ($query) {
-                $query->whereIn('subjectcode', $this->selectedEducations);
-            })
-            ->when(!empty($this->selectedEmotions), function ($query) {
-                $query->whereIn('color_value', $this->selectedEmotions);
             });
+            // ->when(!empty($this->selectedTags), function ($query) {
+            //     $query->whereIn('tagId', $this->selectedTags);
+            // })
+            // ->when(!empty($this->selectedProfessions), function ($query) {
+            //     $query->whereIn('professioncode', $this->selectedProfessions);
+            // })
+            // ->when(!empty($this->selectedEducations), function ($query) {
+            //     $query->whereIn('subjectcode', $this->selectedEducations);
+            // })
+            // ->when(!empty($this->selectedEmotions), function ($query) {
+            //     $query->whereIn('color_value', $this->selectedEmotions);
+            // });
 
         $posts = $query->paginate(6);
 
