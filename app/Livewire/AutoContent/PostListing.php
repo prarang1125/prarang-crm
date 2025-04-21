@@ -12,7 +12,7 @@ class PostListing extends Component
     use WithPagination;
 
     public $tags = [], $cities = [];
-    public $city, $startDate, $endDate;
+    public $city, $startDate, $endDate, $tag,$comparator, $value;
     public $profession, $education, $emotion;
     public $professionArr, $educationArr, $emotionArr;
 
