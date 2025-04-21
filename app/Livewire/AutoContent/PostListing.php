@@ -61,6 +61,14 @@ class PostListing extends Component
         $this->loadTimeInSeconds = round($end - $start, 2);
     }
 
+    public function updating($field)
+    {
+        // Reset pagination if anything changes (only after submit)
+        if ($this->submitted) {
+            $this->resetPage();
+        }
+    }
+
 
     public function toggleSelectAll($modelKey, $allValues)
     {
@@ -80,7 +88,7 @@ class PostListing extends Component
 
     public function render()
     {
-        $posts = collect(); // empty by default
+
 
         if ($this->submitted) {
             $start = microtime(true);
@@ -110,18 +118,18 @@ class PostListing extends Component
             );
         })
 
-        // ->when(!empty($this->selectedTags), function ($query) {
-        //     $query->whereIn('tagId', $this->selectedTags);
-        // })
-        // ->when(!empty($this->selectedProfessions), function ($query) {
-        //     $query->whereIn('professioncode', $this->selectedProfessions);
-        // })
-        // ->when(!empty($this->selectedEducations), function ($query) {
-        //     $query->whereIn('subjectcode', $this->selectedEducations);
-        // })
-        // ->when(!empty($this->selectedEmotions), function ($query) {
-        //     $query->whereIn('color_value', $this->selectedEmotions);
-        // })
+        ->when(!empty($this->selectedTags), function ($query) {
+            $query->whereIn('tagId', $this->selectedTags);
+        })
+        ->when(!empty($this->selectedProfessions), function ($query) {
+            $query->whereIn('professioncode', $this->selectedProfessions);
+        })
+        ->when(!empty($this->selectedEducations), function ($query) {
+            $query->whereIn('subjectcode', $this->selectedEducations);
+        })
+        ->when(!empty($this->selectedEmotions), function ($query) {
+            $query->whereIn('color_value', $this->selectedEmotions);
+        })
         ->paginate(6);
 }
 
