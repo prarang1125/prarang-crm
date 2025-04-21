@@ -65,7 +65,7 @@ class PostListing extends Component
     public function submit()
     {
         $this->validate();
-
+        dd($this->getFilteredPosts());
         $this->submitted = true;
         $this->resetPage();
     }
@@ -125,7 +125,7 @@ class PostListing extends Component
 
         $end = microtime(true);
         $this->loadTimeInSeconds = round($end - $start, 2);
-
+            // dd($posts);
         return $posts;
     }
 }
