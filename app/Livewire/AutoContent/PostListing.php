@@ -98,7 +98,7 @@ class PostListing extends Component
 {
 
 
-    return DB::table('chittiInfo')
+    return DB::table('chitiInfo')
         ->where('geoCode', $this->city)
         ->when($this->startDate && $this->endDate, function ($query) {
             $query->whereBetween(
