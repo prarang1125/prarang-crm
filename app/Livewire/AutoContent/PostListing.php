@@ -5,9 +5,13 @@ namespace App\Livewire\AutoContent;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Livewire\WithPagination;
+
 
 class PostListing extends Component
 {
+    use WithPagination;
+
     public $posts = [];
     public $tags = [], $cities = [];
     public $city, $startDate, $endDate, $tag, $comparator, $value;
@@ -17,6 +21,7 @@ class PostListing extends Component
     public $selectedEducations = [];
     public $selectedEmotions = [];
     public $loadTimeInSeconds = null;
+    public $submitted = false;
 
 
     protected $rules = [
@@ -30,8 +35,6 @@ class PostListing extends Component
         'endDate.required' => 'End Date is required.',
         'endDate.after_or_equal' => 'End Date must be after or equal to Start Date.',
     ];
-
-
     public function mount()
     {
         // tags
@@ -44,17 +47,20 @@ class PostListing extends Component
         $this->professionArr = DB::table('professionmapping')->select('professioncode', 'profession')->get();
         $this->educationArr = DB::table('subjectmapping')->select('subjectname', 'subjectcode')->get();
         $this->emotionArr = DB::table('colorinfo')->select('id', 'name', 'colorcode')->where('emotionType', 0)->get();
-
     }
 
     public function submit()
     {
-        $start = microtime(true);
         $this->validate();
-        $this->posts = $this->getDailyPost();
+
+        $this->submitted = true;
+        $this->resetPage(); // reset pagination on submit
+
+        $start = microtime(true);
         $end = microtime(true);
         $this->loadTimeInSeconds = round($end - $start, 2);
     }
+
 
     public function toggleSelectAll($modelKey, $allValues)
     {
@@ -67,64 +73,56 @@ class PostListing extends Component
         }
     }
 
-    public function ok(){
+    public function ok()
+    {
         return;
     }
 
     public function render()
     {
-        return view('livewire.auto-content.post-listing')->layout('components.layouts.admin.base');
+        $posts = collect(); // empty by default
+
+        if ($this->submitted) {
+            $start = microtime(true);
+            $posts = $this->getDailyPost(); // fetch only after submit
+            $end = microtime(true);
+            $this->loadTimeInSeconds = round($end - $start, 2);
+        }
+
+        return view('livewire.auto-content.post-listing', [
+            'posts' => $posts
+        ])->layout('components.layouts.admin.base');
     }
 
     function getDailyPost()
-    {
-        $data = DB::table('chitti as post')
-            ->join('chittiimagemapping as image', 'post.chittiId', '=', 'image.chittiId')
-            ->join('chittitagmapping as tag', 'post.chittiId', '=', 'tag.chittiId')
-            ->join('mtag as tagInfo', 'tag.tagId', '=', 'tagInfo.tagId')
-            ->join('professiontagmapping as pt', 'tagInfo.tagId', '=', 'pt.tagId')
-            ->join('professionmapping as pro', 'pt.professioncode', '=', 'pro.professioncode')
-            ->join('submaptag as subtag', 'tagInfo.tagId', '=', 'subtag.tagid')
-            ->join('subjectmapping as sub', 'subtag.subjectcode', '=', 'sub.subjectcode')
-            ->join('muser as maker', 'post.makerId', '=', 'maker.userId')
-            ->join('muser as checker', 'post.checkerId', '=', 'checker.userId')
-            ->join('muser as uploader', 'post.uploaderId', '=', 'uploader.userId')
-            ->join('vchittigeography as geo', 'geo.chittiId', '=', 'post.chittiId')
-            ->join('vgeography as vgeo', 'vgeo.geographycode', '=', 'geo.Geography')
-            ->join('colorinfo as emotion', function ($join) {
-                $join->on('emotion.id', '=', 'post.color_value')
-                    ->where('emotion.emotionType', '=', 0);
-            })
-            ->join('facity as lgb', 'lgb.chittiId', '=', 'post.chittiId')
-            ->where('post.finalStatus', 'Approved')
-            ->select(
-                'post.chittiId as id',
-                'post.dateOfApprove as uploadDate',
-                'post.Title',
-                'vgeo.geographycode as geoCode',
-                'vgeo.geography as geography',
-                'emotion.name as emptionName',
-                'emotion.colorcode as colorCode',
-                'image.imageUrl as image',
-                'post.totalViewerCount as totalViews',
-                'post.makerId',
-                'post.checkerId',
-                'post.uploaderId',
-                'maker.firstName as makerName',
-                'checker.firstName as CheckerName',
-                'uploader.firstName as UploaderName',
-                'tagInfo.tagId as tagId',
-                'tagInfo.tagInUnicode as tagName',
-                'lgb.value as localGlobal',
-                'pro.professioncode',
-                'pro.profession',
-                'sub.subjectcode',
-                'sub.subjectname',
-                'post.description'
-            )
-            ->limit(20)
-            ->get();
+{
 
-        return $data;
-    }
+
+    return DB::table('chittiinfo')
+        ->where('geoCode', $this->city)
+        ->when($this->startDate && $this->endDate, function ($query) {
+            $query->whereBetween(
+                DB::raw("STR_TO_DATE(uploadDate, '%d-%m-%Y %h:%i %p')"),
+                [
+                    Carbon::parse($this->startDate)->format('Y-m-d H:i:s'),
+                    Carbon::parse($this->endDate)->format('Y-m-d H:i:s'),
+                ]
+            );
+        })
+
+        ->when(!empty($this->selectedTags), function ($query) {
+            $query->whereIn('tagId', $this->selectedTags);
+        })
+        ->when(!empty($this->selectedProfessions), function ($query) {
+            $query->whereIn('professioncode', $this->selectedProfessions);
+        })
+        ->when(!empty($this->selectedEducations), function ($query) {
+            $query->whereIn('subjectcode', $this->selectedEducations);
+        })
+        ->when(!empty($this->selectedEmotions), function ($query) {
+            $query->whereIn('color_value', $this->selectedEmotions);
+        })
+        ->paginate(6);
+}
+
 }

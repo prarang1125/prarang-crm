@@ -192,6 +192,7 @@
     </section>
 
     <!-- Posts Result -->
+    @if(count($posts))
     <section class="p-2">
         <table class="table table-striped">
             <thead>
@@ -221,7 +222,16 @@
                 @endforelse
             </tbody>
         </table>
+        <div class="mt-4">
+            {{ $posts->links() }}
+        </div>
     </section>
+
+    @elseif($submitted)
+        <p class="text-center">
+            No posts found! Change Filter.
+        </p>
+        @endif
 
     <!-- MODALS -->
 
