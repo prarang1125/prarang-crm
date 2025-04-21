@@ -92,6 +92,20 @@
         .bg-white .row small {
             margin-bottom: 4px;
         }
+          /* Selectable card style */
+          .selectable-card {
+                        cursor: pointer;
+                    }
+
+                    .selectable-input:checked + .selectable-body {
+                        background-color: #dee2e6; /* Bootstrap's light gray */
+                        border: 2px solid #6c757d;
+                    }
+
+                    /* Smooth transition */
+                    .selectable-body {
+                        transition: background-color 0.3s, border 0.3s;
+                    }
     </style>
 
     <section class="p-4 shadow rounded bg-white m-3 mt-4">
@@ -103,28 +117,37 @@
             <div class="col-md-8">
                 <div class="row g-3">
                     <div class="col-md-12">
-                        <label for="city" class="form-label fw-semibold">Geography <span class="text-danger">*</span></label>
+                        <label for="city" class="form-label fw-semibold">Geography <span
+                                class="text-danger">*</span></label>
                         <select id="city" wire:model="city" class="form-select">
                             <option value="">Select Geography</option>
                             @foreach ($cities as $cityData)
-                            <option value="{{ $cityData->cityId }}">{{ $cityData->citynameInEnglish }}</option>
+                                <option value="{{ $cityData->cityId }}">{{ $cityData->citynameInEnglish }}</option>
                             @endforeach
                         </select>
-                        @error('city') <span class="text-danger small muted">{{ $message }}</span> @enderror
+                        @error('city')
+                            <span class="text-danger small muted">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="col-md-6">
-                        <label for="startDate" class="form-label fw-semibold">Start Date <span class="text-danger">*</span></label>
+                        <label for="startDate" class="form-label fw-semibold">Start Date <span
+                                class="text-danger">*</span></label>
                         <input type="date" id="startDate" wire:model="startDate" class="form-control">
-                        @error('startDate') <span class="text-danger small muted">{{ $message }}</span> @enderror
+                        @error('startDate')
+                            <span class="text-danger small muted">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="col-md-6">
-                        <label for="endDate" class="form-label fw-semibold">End Date <span class="text-danger">*</span></label>
+                        <label for="endDate" class="form-label fw-semibold">End Date <span
+                                class="text-danger">*</span></label>
                         <input type="date" id="endDate" wire:model="endDate" class="form-control">
-                        @error('endDate') <span class="text-danger small muted">{{ $message }}</span> @enderror
+                        @error('endDate')
+                            <span class="text-danger small muted">{{ $message }}</span>
+                        @enderror
                     </div>
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                         <label for="intentType" class="form-label fw-semibold">Intent Type</label>
                         <select id="intentType" wire:model="intentType" class="form-select" disabled>
                             <option value="">All Intent Types</option>
@@ -132,37 +155,64 @@
                             <option value="Persuasive">💬 Persuasive</option>
                             <option value="Entertaining">😂 Entertaining</option>
                         </select>
+                    </div> --}}
+                    <div class="col-md-6">
+                        <label for="postType" class="form-label fw-semibold">Post Type</label>
+                        <select id="postType" wire:model="forAbout" class="form-select">
+                            <option value="">For/About Geography</option>
+                            <option value="0">About The City</option>
+                            <option value="1">For The City</option>
+                        </select>
                     </div>
 
                     <!-- View Count Filter -->
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">View Count Filter</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" disabled value="Views is" style="max-width: 100px;">
+                            <input type="text" class="form-control" disabled value="Views is"
+                                style="max-width: 100px;">
                             <select wire:model="comparator" class="form-select" style="max-width: 180px;">
                                 <option value="0">Lower Then</option>
                                 <option value="1">Greter Then</option>
                             </select>
-                            <input type="number" wire:model="value" class="form-control" placeholder="Enter View Count">
+                            <input type="number" wire:model="value" class="form-control"
+                                placeholder="Enter View Count">
                         </div>
                     </div>
+
                 </div>
             </div>
 
             <!-- Tag Modal Trigger -->
             <div class="col-md-4">
                 <small>Smart Filter</small>
-                <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal" data-bs-target="#tagModal">
-                    Select Tags @if(count($selectedTags)==0) @else <span class="badge bg-danger">{{count($selectedTags)}}</span>@endif
+                <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal"
+                    data-bs-target="#tagModal">
+                    Select Tags @if (count($selectedTags) == 0)
+                    @else
+                        <span class="badge bg-danger">{{ count($selectedTags) }}</span>
+                    @endif
                 </button>
-                <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal" data-bs-target="#professionModal">
-                    Select Professions @if(count($selectedProfessions)==0) @else <span class="badge bg-danger">{{count($selectedProfessions)}}</span>@endif
+                <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal"
+                    data-bs-target="#professionModal">
+                    Select Professions @if (count($selectedProfessions) == 0)
+                    @else
+                        <span class="badge bg-danger">{{ count($selectedProfessions) }}</span>
+                    @endif
                 </button>
-                <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal" data-bs-target="#educationModal">
-                    Select Education @if(count($selectedEducations)==0) @else <span class="badge bg-danger">{{count($selectedEducations)}}</span>@endif
+                <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal"
+                    data-bs-target="#educationModal">
+                    Select Education @if (count($selectedEducations) == 0)
+                    @else
+                        <span class="badge bg-danger">{{ count($selectedEducations) }}</span>
+                    @endif
                 </button>
-                <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal" data-bs-target="#emotionModal">
-                    Select Emotions @if(count($selectedEmotions)==0) @else <span class="badge bg-danger">{{count($selectedEmotions)}}</span>@endif
+                <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal"
+                    data-bs-target="#emotionModal">
+                    Select Emotions @if (count($selectedEmotions) == 0)
+                    @else
+                        <span class="badge bg-danger">{{ count($selectedEmotions) }}</span>
+                    @endif
                 </button>
             </div>
 
@@ -181,96 +231,68 @@
                     </span> 🔍 Filter
                 </button>
                 <p class="text-end">
-                <span id="countdown"></span>
-                    @if( $loadTimeInSeconds > 0)
-
-                    {{ $loadTimeInSeconds }} seconds
+                    <span id="countdown"></span>
+                    @if ($loadTimeInSeconds > 0)
+                        {{ $loadTimeInSeconds }} seconds
                     @endif
                 </p>
             </div>
         </form>
     </section>
 
-    <!-- Posts Result -->
+    <section class="p-4 shadow rounded bg-white m-3 mt-4">
+        <p class="text-center h5">{{ $posts->total() }} Posts Found.</p>
+        <div class="row g-3">
+            @if (count($posts) > 0)
+                @foreach ($posts as $post)
 
-    <section class="p-2">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Date</th>
-                    <th>Views</th>
-                    <th>Tag</th>
-                    <th>City</th>
-                    <th>Image</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($posts as $post)
-                <tr>
-                    <td>{{ $post->Title }}</td>
-                    <td>{{ $post->uploadDate }}</td>
-                    <td>{{ $post->totalViews }}</td>
-                    <td>{{ $post->tagName }}</td>
-                    <td>{{ $post->geography }}</td>
-                    <td><img src="{{ $post->image }}" alt="Post Image" style="max-width: 100px;"></td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="6" class="text-center">No posts found.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-        <div class="mt-4">
+                <div class="col-md-4">
+                    <label class="selectable-card">
+                        <input type="checkbox" wire:model="selectedPosts" value="{{ $post->id }}" class="d-none selectable-input">
+                        <div class="card mb-3 shadow-sm selectable-body">
+                            <img src="{{ $post->image }}" class="card-img-top img-fluid" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $post->Title }}</h5>
+                            </div>
+                        </div>
+                    </label>
+                </div>
 
+
+
+
+                @endforeach
+                <div class="col-md-12">
+                    <div class="d-flex justify-content-center">
+                        {{ $posts->links() }}
+                    </div>
+                </div>
+
+            @else
+                <div class="col-md-12">
+                    <div class="alert alert-info text-center" role="alert">
+                        No posts found for the selected filters.
+                    </div>
+                </div>
+            @endif
         </div>
-    </section>
 
+        {{-- Tag Modal --}}
+        <x-multiselect-modal modalId="tagModal" title="Select Tags" :data="$tags" groupBy="catg"
+            labelKey="tagName" valueKey="tagId" model="selectedTags" selectAllModel="selectAllTags" />
 
+        {{-- Profession Modal --}}
+        <x-multiselect-modal modalId="professionModal" title="Select Professions" :data="$professionArr"
+            labelKey="profession" valueKey="professioncode" model="selectedProfessions"
+            selectAllModel="selectAllProfessions" />
 
-    <!-- MODALS -->
-
-    {{-- Tag Modal --}}
-    <x-multiselect-modal
-        modalId="tagModal"
-        title="Select Tags"
-        :data="$tags"
-        groupBy="catg"
-        labelKey="tagName"
-        valueKey="tagId"
-        model="selectedTags"
-        selectAllModel="selectAllTags" />
-
-    {{-- Profession Modal --}}
-    <x-multiselect-modal
-        modalId="professionModal"
-        title="Select Professions"
-        :data="$professionArr"
-        labelKey="profession"
-        valueKey="professioncode"
-        model="selectedProfessions"
-        selectAllModel="selectAllProfessions" />
-
-    {{-- Education Modal --}}
-    <x-multiselect-modal
-        modalId="educationModal"
-        title="Select Education"
-        :data="$educationArr"
-        labelKey="subjectname"
-        valueKey="subjectcode"
-        model="selectedEducations"
-        selectAllModel="selectAllEducations" />
-    {{-- Emotion Modal --}}
-    <x-multiselect-modal
-        modalId="emotionModal"
-        title="Select Emotions"
-        :data="$emotionArr"
-        labelKey="name"
-        valueKey="id"
-        model="selectedEmotions"
-        selectAllModel="selectAllEmotions"
-        :colorKey="'colorcode'" />
+        {{-- Education Modal --}}
+        <x-multiselect-modal modalId="educationModal" title="Select Education" :data="$educationArr"
+            labelKey="subjectname" valueKey="subjectcode" model="selectedEducations"
+            selectAllModel="selectAllEducations" />
+        {{-- Emotion Modal --}}
+        <x-multiselect-modal modalId="emotionModal" title="Select Emotions" :data="$emotionArr" labelKey="name"
+            valueKey="id" model="selectedEmotions" selectAllModel="selectAllEmotions" :colorKey="'colorcode'" />
 
 
 </div>
