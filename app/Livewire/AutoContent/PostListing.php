@@ -89,7 +89,7 @@ class PostListing extends Component
     public function render()
     {
 
-
+        $posts=[];
         if ($this->submitted) {
             $start = microtime(true);
             $posts = $this->getDailyPost(); // fetch only after submit
