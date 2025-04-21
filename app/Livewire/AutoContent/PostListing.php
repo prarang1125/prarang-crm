@@ -76,7 +76,9 @@ class PostListing extends Component
             $this->resetPage();
         }
     }
-
+    public function ok(){
+        return ;
+    }
     public function toggleSelectAll($modelKey, $allValues)
     {
         $this->$modelKey = (count($this->$modelKey) === count($allValues)) ? [] : $allValues;
