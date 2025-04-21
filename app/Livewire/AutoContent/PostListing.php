@@ -110,18 +110,18 @@ class PostListing extends Component
             );
         })
 
-        ->when(!empty($this->selectedTags), function ($query) {
-            $query->whereIn('tagId', $this->selectedTags);
-        })
-        ->when(!empty($this->selectedProfessions), function ($query) {
-            $query->whereIn('professioncode', $this->selectedProfessions);
-        })
-        ->when(!empty($this->selectedEducations), function ($query) {
-            $query->whereIn('subjectcode', $this->selectedEducations);
-        })
-        ->when(!empty($this->selectedEmotions), function ($query) {
-            $query->whereIn('color_value', $this->selectedEmotions);
-        })
+        // ->when(!empty($this->selectedTags), function ($query) {
+        //     $query->whereIn('tagId', $this->selectedTags);
+        // })
+        // ->when(!empty($this->selectedProfessions), function ($query) {
+        //     $query->whereIn('professioncode', $this->selectedProfessions);
+        // })
+        // ->when(!empty($this->selectedEducations), function ($query) {
+        //     $query->whereIn('subjectcode', $this->selectedEducations);
+        // })
+        // ->when(!empty($this->selectedEmotions), function ($query) {
+        //     $query->whereIn('color_value', $this->selectedEmotions);
+        // })
         ->paginate(6);
 }
 
