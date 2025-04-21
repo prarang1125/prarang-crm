@@ -97,31 +97,81 @@ class PostListing extends Component
     {
         $start = microtime(true);
 
-        $query = DB::table('chitiInfo')
-            // ->where('geoCode', $this->city)
-            ->when($this->startDate && $this->endDate, function ($query) {
-                $query->whereBetween(
-                    DB::raw("STR_TO_DATE(uploadDate, '%d-%m-%Y %h:%i %p')"),
-                    [
-                        Carbon::parse($this->startDate)->format('Y-m-d H:i:s'),
-                        Carbon::parse($this->endDate)->format('Y-m-d H:i:s'),
-                    ]
-                );
-            });
-            // ->when(!empty($this->selectedTags), function ($query) {
-            //     $query->whereIn('tagId', $this->selectedTags);
-            // })
-            // ->when(!empty($this->selectedProfessions), function ($query) {
-            //     $query->whereIn('professioncode', $this->selectedProfessions);
-            // })
-            // ->when(!empty($this->selectedEducations), function ($query) {
-            //     $query->whereIn('subjectcode', $this->selectedEducations);
-            // })
-            // ->when(!empty($this->selectedEmotions), function ($query) {
-            //     $query->whereIn('color_value', $this->selectedEmotions);
-            // });
+        $query = DB::table('chitti as post')
+        ->select(
+            'post.chittiId as id',
+            'post.dateOfApprove as uploadDate',
+            'post.Title',
+            'vgeo.geographycode as geoCode',
+            'vgeo.geography',
+            'emotion.name as emotionName',
+            'emotion.colorcode as colorCode',
+            'image.imageUrl as image',
+            'post.totalViewerCount as totalViews',
+            'post.makerId',
+            'post.checkerId',
+            'post.uploaderId',
+            'maker.firstName as makerName',
+            'checker.firstName as checkerName',
+            'uploader.firstName as uploaderName',
+            DB::raw('GROUP_CONCAT(DISTINCT tagInfo.tagId) as tagIds'),
+            DB::raw('GROUP_CONCAT(DISTINCT tagInfo.tagInUnicode) as tagNames'),
+            'lgb.value as localGlobal',
+            DB::raw('GROUP_CONCAT(DISTINCT pro.professioncode) as professionCodes'),
+            DB::raw('GROUP_CONCAT(DISTINCT pro.profession) as professions'),
+            DB::raw('GROUP_CONCAT(DISTINCT sub.subjectcode) as subjectCodes'),
+            DB::raw('GROUP_CONCAT(DISTINCT sub.subjectname) as subjectNames'),
+            'post.description'
+        )
+        ->join('chittiimagemapping as image', 'post.chittiId', '=', 'image.chittiId')
+        ->join('chittitagmapping as tag', 'post.chittiId', '=', 'tag.chittiId')
+        ->join('mtag as tagInfo', 'tag.tagId', '=', 'tagInfo.tagId')
+        ->join('professiontagmapping as pt', 'tagInfo.tagId', '=', 'pt.tagId')
+        ->join('professionmapping as pro', 'pt.professioncode', '=', 'pro.professioncode')
+        ->join('submaptag as subtag', 'tagInfo.tagId', '=', 'subtag.tagid')
+        ->join('subjectmapping as sub', 'subtag.subjectcode', '=', 'sub.subjectcode')
+        ->join('muser as maker', 'post.makerId', '=', 'maker.userId')
+        ->join('muser as checker', 'post.checkerId', '=', 'checker.userId')
+        ->join('muser as uploader', 'post.uploaderId', '=', 'uploader.userId')
+        ->join('vchittigeography as geo', 'geo.chittiId', '=', 'post.chittiId')
+        ->join('vgeography as vgeo', 'vgeo.geographycode', '=', 'geo.Geography')
+        ->join('colorinfo as emotion', 'emotion.id', '=', 'post.color_value')
+        ->join('facity as lgb', 'lgb.chittiId', '=', 'post.chittiId')
+        ->whereIn('post.chittiId', [9111, 9112, 9113, 9114])
+        ->where('emotion.emotionType', 0)
+        ->where('post.finalStatus', 'Approved')
+        ->groupBy('post.chittiId')
+        ->orderByDesc('post.dateOfApprove');
 
-        $posts = $query->paginate(6);
+    // Apply filters
+    $query->when($this->city, function ($query) {
+        $query->where('vgeo.geographycode', $this->city);
+    });
+
+    $query->when($this->startDate && $this->endDate, function ($query) {
+        $query->whereBetween(DB::raw("STR_TO_DATE(post.dateOfApprove, '%d-%m-%Y %h:%i %p')"), [
+            Carbon::parse($this->startDate)->format('Y-m-d H:i:s'),
+            Carbon::parse($this->endDate)->format('Y-m-d H:i:s'),
+        ]);
+    });
+
+    $query->when(!empty($this->selectedTags), function ($query) {
+        $query->whereIn('tagInfo.tagId', $this->selectedTags);
+    });
+
+    $query->when(!empty($this->selectedProfessions), function ($query) {
+        $query->whereIn('pro.professioncode', $this->selectedProfessions);
+    });
+
+    $query->when(!empty($this->selectedEducations), function ($query) {
+        $query->whereIn('sub.subjectcode', $this->selectedEducations);
+    });
+
+    $query->when(!empty($this->selectedEmotions), function ($query) {
+        $query->whereIn('post.color_value', $this->selectedEmotions);
+    });
+
+    $posts = $query->paginate(6);
 
         $end = microtime(true);
         $this->loadTimeInSeconds = round($end - $start, 2);
