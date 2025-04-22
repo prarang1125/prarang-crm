@@ -125,7 +125,7 @@ Route::get('get-our-teams', [OurTeamController::class, 'getAllTeamsJson']);
 Route::any('visitor-location',[VisitorLocationController::class,'storeVisitorLocation']);
 Route::get('marketing-hit-box',HitBox::class)->name('marketing.hit-box');
 Route::get('subscribers',SubscriberList::class)->name('marketing.hit-box')->name('subscribers');
-Route::get('content/post-listing',PostListing::class);
+Route::get('content/post-listing',PostListing::class)->name('content.post-listing');
 Route::get('content/post/{ids}',[PostListing::class,'getPostData'])->name('content.post-data');
 Route::get('whatsapp-webhook', [WebHook::class, 'index'])->name('whatsapp-webhook');
 // Route::get('sendWhatsAppMessage',[VisitorController::class,'sendWhatsAppMessage'])->name('sendWhatsAppMessage');
