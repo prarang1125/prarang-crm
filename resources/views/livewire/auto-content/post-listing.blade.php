@@ -134,7 +134,7 @@
     </style>
 
     <section class="p-4 shadow rounded bg-white m-3 mt-4">
-        <p class="text-center h5">Post's Filter</p>
+        <p class="text-center h5">Posts Filter</p>
         <small>Required</small>
         <form class="row g-3" wire:submit.prevent="submit">
 
@@ -218,20 +218,20 @@
                     <span class="badge bg-danger">{{ count($selectedTags) }}</span>
                     @endif
                 </button>
-                <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal"
+                {{--<button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal"
                     data-bs-target="#professionModal">
                     Select Professions @if (count($selectedProfessions) == 0)
                     @else
                     <span class="badge bg-danger">{{ count($selectedProfessions) }}</span>
                     @endif
-                </button>
-                <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal"
+                </button> --}}
+               {{-- <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal"
                     data-bs-target="#educationModal">
                     Select Education @if (count($selectedEducations) == 0)
                     @else
                     <span class="badge bg-danger">{{ count($selectedEducations) }}</span>
                     @endif
-                </button>
+                </button>--}}
                 <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal"
                     data-bs-target="#emotionModal">
                     Select Emotions @if (count($selectedEmotions) == 0)
@@ -240,15 +240,12 @@
                     @endif
                 </button>
             </div>
-
-
             <!-- Intent Type -->
-
 
             <!-- Filter Button -->
             <div class="col-12 text-end">
                 @if ($submitted)
-                <a class="btn btn-danger btn-sm px-4" href="{{ url()->current() }}" >
+                <a class="btn btn-danger btn-sm px-4" href="{{ route('content.post-listing') }}" >
                     Reset Filters
                     </a>
                 @endif
