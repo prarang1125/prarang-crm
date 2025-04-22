@@ -10,17 +10,18 @@ use Livewire\WithPagination;
 class PostListing extends Component
 {
     use WithPagination;
-
+    protected $paginationTheme = 'bootstrap';
     public $tags = [], $cities = [];
-    public $city, $startDate, $endDate, $tag,$comparator, $value;
+    public $city, $startDate, $endDate, $tag, $comparator, $value;
     public $profession, $education, $emotion;
     public $professionArr, $educationArr, $emotionArr;
 
     public $selectedTags = [], $selectAllTags = false;
-    public $selectedProfessions = [], $selectedEducations = [], $selectedEmotions = [];
-
+    public $selectedProfessions = [], $selectedEducations = [], $selectedEmotions = [], $selectedPosts = [];
+    public $forAbout;
     public $loadTimeInSeconds = null;
     public $submitted = false;
+    public $disPostSection = false;
 
     protected $rules = [
         'city' => 'required',
@@ -64,8 +65,8 @@ class PostListing extends Component
 
     public function submit()
     {
+
         $this->validate();
-        dd($this->getFilteredPosts());
         $this->submitted = true;
         $this->resetPage();
     }
@@ -76,106 +77,167 @@ class PostListing extends Component
             $this->resetPage();
         }
     }
-    public function ok(){
-        return ;
+    public function ok()
+    {
+        return;
     }
     public function toggleSelectAll($modelKey, $allValues)
     {
         $this->$modelKey = (count($this->$modelKey) === count($allValues)) ? [] : $allValues;
+    }
+    public function updateSelectedChitti()
+    {
+        if (count($this->selectedPosts) >= 3) {
+            $this->disPostSection = true;
+        } else {
+            $this->disPostSection = false;
+        }
+    }
+    public function resetSelectedPost(){
+        $this->selectedPosts = [];
+        $this->disPostSection = false;
+        $this->resetPage();
     }
 
     public function render()
     {
         $posts = $this->submitted ? $this->getFilteredPosts() : collect();
 
-        return view('livewire.auto-content.post-listing', [
-            'posts' => $posts,
-        ])->layout('components.layouts.admin.base');
+        return view('livewire.auto-content.post-listing', compact('posts'))->layout('components.layouts.admin.base');
     }
 
-    public function getFilteredPosts()
+    function getFilteredPosts($ids = null)
     {
         $start = microtime(true);
 
         $query = DB::table('chitti as post')
-        ->select(
-            'post.chittiId as id',
-            'post.dateOfApprove as uploadDate',
-            'post.Title',
-            'vgeo.geographycode as geoCode',
-            'vgeo.geography',
-            'emotion.name as emotionName',
-            'emotion.colorcode as colorCode',
-            'image.imageUrl as image',
-            'post.totalViewerCount as totalViews',
-            'post.makerId',
-            'post.checkerId',
-            'post.uploaderId',
-            'maker.firstName as makerName',
-            'checker.firstName as checkerName',
-            'uploader.firstName as uploaderName',
-            DB::raw('GROUP_CONCAT(DISTINCT tagInfo.tagId) as tagIds'),
-            DB::raw('GROUP_CONCAT(DISTINCT tagInfo.tagInUnicode) as tagNames'),
-            'lgb.value as localGlobal',
-            DB::raw('GROUP_CONCAT(DISTINCT pro.professioncode) as professionCodes'),
-            DB::raw('GROUP_CONCAT(DISTINCT pro.profession) as professions'),
-            DB::raw('GROUP_CONCAT(DISTINCT sub.subjectcode) as subjectCodes'),
-            DB::raw('GROUP_CONCAT(DISTINCT sub.subjectname) as subjectNames'),
-            'post.description'
-        )
-        ->join('chittiimagemapping as image', 'post.chittiId', '=', 'image.chittiId')
-        ->join('chittitagmapping as tag', 'post.chittiId', '=', 'tag.chittiId')
-        ->join('mtag as tagInfo', 'tag.tagId', '=', 'tagInfo.tagId')
-        ->join('professiontagmapping as pt', 'tagInfo.tagId', '=', 'pt.tagId')
-        ->join('professionmapping as pro', 'pt.professioncode', '=', 'pro.professioncode')
-        ->join('submaptag as subtag', 'tagInfo.tagId', '=', 'subtag.tagid')
-        ->join('subjectmapping as sub', 'subtag.subjectcode', '=', 'sub.subjectcode')
-        ->join('muser as maker', 'post.makerId', '=', 'maker.userId')
-        ->join('muser as checker', 'post.checkerId', '=', 'checker.userId')
-        ->join('muser as uploader', 'post.uploaderId', '=', 'uploader.userId')
-        ->join('vchittigeography as geo', 'geo.chittiId', '=', 'post.chittiId')
-        ->join('vgeography as vgeo', 'vgeo.geographycode', '=', 'geo.Geography')
-        ->join('colorinfo as emotion', 'emotion.id', '=', 'post.color_value')
-        ->join('facity as lgb', 'lgb.chittiId', '=', 'post.chittiId')
-        ->whereIn('post.chittiId', [9111, 9112, 9113, 9114])
-        ->where('emotion.emotionType', 0)
-        ->where('post.finalStatus', 'Approved')
-        ->groupBy('post.chittiId')
-        ->orderByDesc('post.dateOfApprove');
+            ->select(
+                'post.chittiId as id',
+                'post.dateOfApprove as uploadDate',
+                'post.Title',
+                'vgeo.geographycode as geoCode',
+                'vgeo.geography as geography',
+                'emotion.name as emotionName',
+                'emotion.id as emotionId',
+                'emotion.colorcode as colorCode',
+                'image.imageUrl as image',
+                'post.totalViewerCount as totalViews',
+                'post.makerId',
+                'post.checkerId',
+                'post.uploaderId',
+                'maker.firstName as makerName',
+                'checker.firstName as checkerName',
+                'uploader.firstName as uploaderName',
+                'tagInfo.tagId as tagId',
+                'tagInfo.tagInUnicode as tagName',
+                'tagInfo.tagInEnglish as tagEnglish',
+                'lgb.value as localGlobal',
+                'post.description'
+            )->distinct()
+            ->join('chittiimagemapping as image', 'post.chittiId', '=', 'image.chittiId')
+            ->join('chittitagmapping as tag', 'post.chittiId', '=', 'tag.chittiId')
+            ->join('mtag as tagInfo', 'tag.tagId', '=', 'tagInfo.tagId')
+            ->leftJoin('muser as maker', 'post.makerId', '=', 'maker.userId')
+            ->leftJoin('muser as checker', 'post.checkerId', '=', 'checker.userId')
+            ->leftJoin('muser as uploader', 'post.uploaderId', '=', 'uploader.userId')
+            ->join('vChittiGeography as geo', 'geo.chittiId', '=', 'post.chittiId')
+            ->join('vGeography as vgeo', 'vgeo.geographycode', '=', 'geo.Geography')
+            ->join('colorinfo as emotion', function ($join) {
+                $join->on('emotion.id', '=', 'post.color_value')
+                    ->where('emotion.emotionType', '=', 0);
+            })
+            ->join('facity as lgb', 'lgb.chittiId', '=', 'post.chittiId')
+            ->where('post.finalStatus', 'Approved')
+            // ->where('vgeo.geographycode', $this->city)
+            ->when($this->startDate && $this->endDate, function ($query) {
+                $query->whereBetween(
+                    DB::raw("STR_TO_DATE(post.dateOfApprove, '%d-%m-%Y %h:%i %p')"),
+                    [
+                        Carbon::parse($this->startDate)->format('Y-m-d H:i:s'),
+                        Carbon::parse($this->endDate)->format('Y-m-d H:i:s'),
+                    ]
+                );
+            })
+            // where('vgeo.geographycode', $this->city)
+            // ->when(!empty($this->city), function ($query) {
+            //     $query->whereIn('vgeo.geographycode', $this->city);
+            // })
+            ->when(!empty($this->selectedTags), function ($query) {
+                $query->whereIn('tag.tagId', $this->selectedTags);
+            })
+            ->when(!empty($this->selectedEmotions), function ($query) {
+                $query->whereIn('emotion.id', $this->selectedEmotions);
+            })
+            ->when(!empty($this->forAbout), function ($query) {
+                $query->where('lgb.value', $this->selectedEmotions); // You probably meant $this->forAbout instead of selectedEmotions here?
+            });
 
-    // Apply filters
-    $query->when($this->city, function ($query) {
-        $query->where('vgeo.geographycode', $this->city);
-    });
-
-    $query->when($this->startDate && $this->endDate, function ($query) {
-        $query->whereBetween(DB::raw("STR_TO_DATE(post.dateOfApprove, '%d-%m-%Y %h:%i %p')"), [
-            Carbon::parse($this->startDate)->format('Y-m-d H:i:s'),
-            Carbon::parse($this->endDate)->format('Y-m-d H:i:s'),
-        ]);
-    });
-
-    $query->when(!empty($this->selectedTags), function ($query) {
-        $query->whereIn('tagInfo.tagId', $this->selectedTags);
-    });
-
-    $query->when(!empty($this->selectedProfessions), function ($query) {
-        $query->whereIn('pro.professioncode', $this->selectedProfessions);
-    });
-
-    $query->when(!empty($this->selectedEducations), function ($query) {
-        $query->whereIn('sub.subjectcode', $this->selectedEducations);
-    });
-
-    $query->when(!empty($this->selectedEmotions), function ($query) {
-        $query->whereIn('post.color_value', $this->selectedEmotions);
-    });
-
-    $posts = $query->paginate(6);
+        $result = $ids ? $query->whereIn('post.chittiId', $ids)->get() : $query->paginate(10);
 
         $end = microtime(true);
-        $this->loadTimeInSeconds = round($end - $start, 2);
-            // dd($posts);
-        return $posts;
+        $this->loadTimeInSeconds = round($end - $start, 1);
+
+        return $result;
+    }
+
+    function getPostData($ids)
+    {
+        $content = $images = $postImages = $mainImg = $data = [];
+        $links = $mainLink=[];
+
+        $ids = explode('-', $ids);
+        $posts = $this->getFilteredPosts($ids);
+
+        foreach ($posts as $post) {
+            $data[] = $post;
+            $desc = $post->description;
+            $mainImg[] = $post->image;
+            // $desc = preg_replace('/चित्र संदर्भ.*$/su', 'चित्र संदर्भ', $desc);
+            // 1. Extract all image URLs
+            preg_match_all('/<img[^>]+src="([^">]+)"/i', $desc, $imgMatches);
+            $imageUrls = $imgMatches[1];
+
+
+            // 2. Remove all image and anchor tags to get pure text content
+            $cleanText = strip_tags(preg_replace('/<img[^>]*>|<a[^>]*>.*?<\/a>/', '', $desc), '<p><br><b><strong><i><u>');
+            $cleanText = preg_replace('/<img[^>]*>/', '', $desc);
+            // $cleanText = strip_tags($cleanText, '<p><br><b><strong><i><u>');
+
+            $cleanText = html_entity_decode($cleanText);
+            $cleanText = trim(strip_tags($cleanText));
+            // $cleanText = str_replace(["\r\n"], [' '], $cleanText);
+            $cleanedContent = preg_replace('/संदर्भ.*$/su', 'संदर्भ', $content);
+
+            // 2. Extract all URLs from the "संदर्भ" section
+            // preg_match('/संदर्भ\s*(.*?)\s*चित्र संदर्भ/su', $cleanedContent, $referenceSection);
+
+            $cleanTextForLink = strip_tags($cleanText, '<p><br><b><strong><i><u>');
+            $cleanTextForLink = trim(strip_tags($cleanTextForLink));
+
+            preg_match_all('/https?:\/\/[^\s]+/u', $cleanTextForLink, $matches);
+            $links = array_merge($links,   $matches[0]);
+            $cleanTextArray = preg_split('/संदर्भ/su', $cleanText, 2);
+            $cleanText = $cleanTextArray[0];
+            $content[] = "<br><h4>" . $post->Title . "</h4> <br>" . $cleanText;
+            $images = array_merge($images, $imageUrls);
+            $postImages[] = $imageUrls;
+        }
+
+        foreach ($links as $input) {
+            $fixed = preg_replace('/(https?:\/\/)/', ' $1', $input);
+            // Extract all URLs
+            preg_match_all('/https?:\/\/[^\s]+/', $fixed, $matches);
+            $mainLink=array_merge($mainLink,$matches[0]);
+        }
+
+        return view('autocontent.post_data', [
+            'contents' => $content,
+            'images' => $images,
+            'postImages' => $postImages,
+            'mainImg' => $mainImg,
+            'data' => $data,
+            'links' => $mainLink
+
+        ]);
     }
 }
