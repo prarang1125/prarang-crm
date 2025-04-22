@@ -159,9 +159,9 @@ class PostListing extends Component
                 );
             })
             // where('vgeo.geographycode', $this->city)
-            // ->when(!empty($this->city), function ($query) {
-            //     $query->whereIn('vgeo.geographycode', $this->city);
-            // })
+            ->when(!empty($this->city), function ($query) {
+                $query->whereIn('vgeo.geographycode', $this->city);
+            })
             ->when(!empty($this->selectedTags), function ($query) {
                 $query->whereIn('tag.tagId', $this->selectedTags);
             })
