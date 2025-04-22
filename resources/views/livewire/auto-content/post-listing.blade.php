@@ -247,7 +247,12 @@
 
             <!-- Filter Button -->
             <div class="col-12 text-end">
-                <button type="submit" class="btn btn-primary px-4" wire:loading.attr="disabled" onclick="countDown();">
+                @if ($submitted)
+                <a class="btn btn-danger btn-sm px-4" href="{{ url()->current() }}" >
+                    Reset Filters
+                    </a>
+                @endif
+                <button type="submit" class="btn btn-primary btn-sm px-4" wire:loading.attr="disabled" onclick="countDown();">
 
                     <span wire:loading wire:target="submit">
                         <div class="spinner-border text-light spinner-border-sm" role="status">
