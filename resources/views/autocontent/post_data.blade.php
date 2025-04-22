@@ -60,6 +60,25 @@ table {
  font-size:13px;
 }
 
+/* Contentx */
+#contentx{
+ text-align:justify;
+ white-space:normal;
+ padding-left:3px;
+ padding-right:5px;
+}
+
+/* Heading */
+#contentx h4{
+ margin-top:11px;
+ margin-bottom:3px;
+}
+
+/* Bold */
+.pt-3 tr .fw-bold{
+ font-size:14px;
+}
+
 
 </style>
 <section class="p-3 pt-3">
