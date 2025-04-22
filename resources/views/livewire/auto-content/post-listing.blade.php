@@ -92,20 +92,45 @@
         .bg-white .row small {
             margin-bottom: 4px;
         }
-          /* Selectable card style */
-          .selectable-card {
-                        cursor: pointer;
-                    }
 
-                    .selectable-input:checked + .selectable-body {
-                        background-color: #dee2e6; /* Bootstrap's light gray */
-                        border: 2px solid #6c757d;
-                    }
+        /* Selectable card style */
+        .selectable-card {
+            cursor: pointer;
+        }
 
-                    /* Smooth transition */
-                    .selectable-body {
-                        transition: background-color 0.3s, border 0.3s;
-                    }
+        .selectable-input:checked+.selectable-body {
+            background-color: #dee2e6;
+            /* Bootstrap's light gray */
+            border: 2px solid #6c757d;
+        }
+
+        /* Smooth transition */
+        .selectable-body {
+            transition: background-color 0.3s, border 0.3s;
+        }
+
+        /* Image */
+        .wrapper .page-wrapper .mb-4 .bg-white .row table tbody tr td img {
+            width: 115px !important;
+        }
+
+        /* Span Tag */
+        .mb-4 tr span {
+            color: #020202;
+        }
+
+        /* Semibold */
+        .mb-4 tr .fw-semibold {
+            color: #020202;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        /* Paragraph */
+        .mb-4 tr p {
+            margin-bottom: 0px !important;
+            font-size: 13px;
+        }
     </style>
 
     <section class="p-4 shadow rounded bg-white m-3 mt-4">
@@ -122,11 +147,11 @@
                         <select id="city" wire:model="city" class="form-select">
                             <option value="">Select Geography</option>
                             @foreach ($cities as $cityData)
-                                <option value="{{ $cityData->cityId }}">{{ $cityData->citynameInEnglish }}</option>
+                            <option value="{{ $cityData->cityId }}">{{ $cityData->citynameInEnglish }}</option>
                             @endforeach
                         </select>
                         @error('city')
-                            <span class="text-danger small muted">{{ $message }}</span>
+                        <span class="text-danger small muted">{{ $message }}</span>
                         @enderror
                     </div>
 
@@ -135,7 +160,7 @@
                                 class="text-danger">*</span></label>
                         <input type="date" id="startDate" wire:model="startDate" class="form-control">
                         @error('startDate')
-                            <span class="text-danger small muted">{{ $message }}</span>
+                        <span class="text-danger small muted">{{ $message }}</span>
                         @enderror
                     </div>
 
@@ -144,7 +169,7 @@
                                 class="text-danger">*</span></label>
                         <input type="date" id="endDate" wire:model="endDate" class="form-control">
                         @error('endDate')
-                            <span class="text-danger small muted">{{ $message }}</span>
+                        <span class="text-danger small muted">{{ $message }}</span>
                         @enderror
                     </div>
                     {{-- <div class="col-md-6">
@@ -190,28 +215,28 @@
                     data-bs-target="#tagModal">
                     Select Tags @if (count($selectedTags) == 0)
                     @else
-                        <span class="badge bg-danger">{{ count($selectedTags) }}</span>
+                    <span class="badge bg-danger">{{ count($selectedTags) }}</span>
                     @endif
                 </button>
                 <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal"
                     data-bs-target="#professionModal">
                     Select Professions @if (count($selectedProfessions) == 0)
                     @else
-                        <span class="badge bg-danger">{{ count($selectedProfessions) }}</span>
+                    <span class="badge bg-danger">{{ count($selectedProfessions) }}</span>
                     @endif
                 </button>
                 <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal"
                     data-bs-target="#educationModal">
                     Select Education @if (count($selectedEducations) == 0)
                     @else
-                        <span class="badge bg-danger">{{ count($selectedEducations) }}</span>
+                    <span class="badge bg-danger">{{ count($selectedEducations) }}</span>
                     @endif
                 </button>
                 <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal"
                     data-bs-target="#emotionModal">
                     Select Emotions @if (count($selectedEmotions) == 0)
                     @else
-                        <span class="badge bg-danger">{{ count($selectedEmotions) }}</span>
+                    <span class="badge bg-danger">{{ count($selectedEmotions) }}</span>
                     @endif
                 </button>
             </div>
@@ -233,7 +258,7 @@
                 <p class="text-end">
                     <span id="countdown"></span>
                     @if ($loadTimeInSeconds > 0)
-                        {{ $loadTimeInSeconds }} seconds
+                    {{ $loadTimeInSeconds }} seconds
                     @endif
                 </p>
             </div>
@@ -241,12 +266,57 @@
     </section>
 
     <section class="p-4 shadow rounded bg-white m-3 mt-4">
+        @if (count($posts) > 0)
         <p class="text-center h5">{{ $posts->total() }} Posts Found.</p>
+        @endif
         <div class="row g-3">
-            @if (count($posts) > 0)
-                @foreach ($posts as $post)
 
-                <div class="col-md-4">
+
+            @if (count($posts) > 0)
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title/Info</th>
+                        <th scope="col">Tags</th>
+                        <th scope="col">image</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach ($posts as $post)
+                    <tr>
+                        <td>
+                            <input
+                                wire:loading.attr="disabled"
+                                wire:key="post-{{ $post->id }}"
+                                type="checkbox"
+
+                                 wire:model="selectedPosts"
+                                value="{{ $post->id }}"
+                                wire:change="updateSelectedChitti"
+                                class="selectable-input">
+                        </td>
+                        <td>
+                            <p class="fw-semibold">{{ $post->Title }}</p>
+                            <p><span>Emotion:</span>{{$post->emotionName}}</p>
+                        </td>
+                        <td>
+                            <p>{{$post->tagEnglish}}</p>
+                            <p>{{$post->tagName}}</p>
+
+                        </td>
+                        <td>
+                            <img src="{{ $post->image }}" class="img-fluid w-20" alt="">
+                        </td>
+
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+
+            <!-- <div class="col-md-4">
                     <label class="selectable-card">
                         <input type="checkbox" wire:model="selectedPosts" value="{{ $post->id }}" class="d-none selectable-input">
                         <div class="card mb-3 shadow-sm selectable-body">
@@ -256,26 +326,32 @@
                             </div>
                         </div>
                     </label>
+                </div> -->
+
+
+
+
+
+            <div class="col-md-12">
+                <div class="d-flex justify-content-center">
+                    {{ $posts->links() }}
                 </div>
-
-
-
-
-                @endforeach
-                <div class="col-md-12">
-                    <div class="d-flex justify-content-center">
-                        {{ $posts->links() }}
-                    </div>
-                </div>
+            </div>
 
             @else
-                <div class="col-md-12">
-                    <div class="alert alert-info text-center" role="alert">
-                        No posts found for the selected filters.
-                    </div>
+            <div class="col-md-12">
+                <div class="alert alert-info text-center" role="alert">
+                    No posts found for the selected filters.
                 </div>
+            </div>
             @endif
         </div>
+        @if($selectedPosts)
+        <p class="text-end">
+            <a class="btn btn-sm btn-danger" wire:click="resetSelectedPost" wire:loading.attr="disabled">Reset</a>
+                        <a  wire:loading.attr="disabled" class="btn  btn-sm btn-primary" style="width: 150px;" target="_blank" href="{{ route('content.post-data',['ids'=>implode('-', $selectedPosts)]) }}">Get Post Ditails  <br><small>( {{ count($selectedPosts) }} slected)</small></a>
+                        </p>
+        @endif
 
         {{-- Tag Modal --}}
         <x-multiselect-modal modalId="tagModal" title="Select Tags" :data="$tags" groupBy="catg"
