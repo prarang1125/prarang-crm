@@ -203,10 +203,10 @@ class PostListing extends Component
             $cleanText = preg_replace('/<img[^>]*>/', '', $desc);
             // $cleanText = strip_tags($cleanText, '<p><br><b><strong><i><u>');
 
-            $cleanText = html_entity_decode($cleanText);
-            $cleanText = trim(strip_tags($cleanText));
+            // $cleanText = html_entity_decode($cleanText);
+            // $cleanText = trim(strip_tags($cleanText));
             // $cleanText = str_replace(["\r\n"], [' '], $cleanText);
-            $cleanedContent = preg_replace('/संदर्भ.*$/su', 'संदर्भ', $content);
+            $cleanedContent = preg_replace('/संदर्भ.*$/su', 'संदर्भ', $cleanText);
 
             // 2. Extract all URLs from the "संदर्भ" section
             // preg_match('/संदर्भ\s*(.*?)\s*चित्र संदर्भ/su', $cleanedContent, $referenceSection);
