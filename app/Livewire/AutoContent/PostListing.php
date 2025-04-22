@@ -71,12 +71,12 @@ class PostListing extends Component
         $this->resetPage();
     }
 
-    public function updating($field)
-    {
-        if ($this->submitted) {
-            $this->resetPage();
-        }
-    }
+    // public function updating($field)
+    // {
+    //     if ($this->submitted) {
+    //         $this->resetPage();
+    //     }
+    // }
     public function ok()
     {
         return;
@@ -96,7 +96,7 @@ class PostListing extends Component
     public function resetSelectedPost(){
         $this->selectedPosts = [];
         $this->disPostSection = false;
-        $this->resetPage();
+
     }
 
     public function render()
