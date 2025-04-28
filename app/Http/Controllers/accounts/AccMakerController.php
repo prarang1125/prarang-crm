@@ -8,6 +8,7 @@ use App\Models\Chittigeographymapping;
 use App\Models\Chittiimagemapping;
 use App\Models\Chittitagmapping;
 use App\Models\Facity;
+use App\Models\Intent;
 use App\Models\Makerlebal;
 use App\Models\Mcity;
 use App\Models\Mcountry;
@@ -60,6 +61,8 @@ class AccMakerController extends Controller
             'content' => 'required|string',
             'makerImage' => 'required|image|max:2048',
             'geography' => 'required',
+            'intent'=>'required',
+            'summary' => 'required',
             'c2rselect' => [
                 'required',
                 function ($attribute, $value, $fail) {
@@ -170,13 +173,21 @@ class AccMakerController extends Controller
                 $chittitagmapping->created_by = Auth::user()->userId;
                 $chittitagmapping->save();
 
+                $intent = new Intent;
+                $intent->chittiId = $lastId;
+                $intent->intent_type = $request->intent_type;
+                $intent->summary = $request->summary;
+                $intent->created_at = $currentDateTime;
+                $intent->intent = $request->intent;
+                $intent->save();
+
                 DB::commit();  // Commit transaction
 
                 return redirect()->route('accounts.maker-dashboard')->with('success', 'Post created successfully.');
 
             } catch (\Exception $e) {
                 DB::rollBack();  // Rollback transaction
-
+                dd($e->getMessage());
                 return redirect()->route('accounts.acc-maker-register')->with('error', 'An error occurred, please try again.');
             }
         } else {
@@ -223,6 +234,8 @@ class AccMakerController extends Controller
             'content' => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
+            'intent'=>'required',
+            'summary' => 'required',
             'c2rselect' => [
                 'required',
                 function ($attribute, $value, $fail) {
@@ -333,6 +346,11 @@ class AccMakerController extends Controller
                         'tagId' => $request->tagId,
                         'updated_at' => $currentDateTime,
                         'updated_by' => Auth::user()->userId,
+                    ]);
+                    Intent::where('chittiId', $id)->update([
+                        'intent' => $request->intent,
+                        'summary' => $request->summary,
+                        'intent_type' => $request->intent_type,
                     ]);
                     DB::commit();
 

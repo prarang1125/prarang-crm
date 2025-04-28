@@ -32,6 +32,8 @@
                     <hr />
                     <form action="{{ url('/admin/maker/maker-store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        @livewire('post.new-maker')
+                        <br><br>
                         <div class="row">
                             <div class="col-lg-6">
                                 <label for="content" class="form-label">Content</label>

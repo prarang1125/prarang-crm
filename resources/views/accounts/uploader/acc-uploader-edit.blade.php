@@ -34,6 +34,8 @@
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
+                        @livewire('post.new-maker',['id'=>$chitti->chittiId])
+                        <br><br>
                         {{-- image preview and image thumbnail and content section --}}
                         <div class="row">
                             <div class="col-lg-6">
