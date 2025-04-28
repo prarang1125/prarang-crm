@@ -9,7 +9,7 @@ class VGeography extends Model
 {
     use HasFactory;
 
-    protected $table = 'VGeography';
+    protected $table = 'vGeography';
     public $timestamps = false;
 
     protected $fillable = [
