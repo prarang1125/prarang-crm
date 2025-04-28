@@ -79,6 +79,7 @@ class PostListing extends Component
     // }
     public function ok()
     {
+        // dd($profession)
         return;
     }
     public function toggleSelectAll($modelKey, $allValues)

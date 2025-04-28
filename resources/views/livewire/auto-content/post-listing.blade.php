@@ -218,13 +218,13 @@
                     <span class="badge bg-danger">{{ count($selectedTags) }}</span>
                     @endif
                 </button>
-                {{--<button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal"
+                <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal"
                     data-bs-target="#professionModal">
                     Select Professions @if (count($selectedProfessions) == 0)
                     @else
                     <span class="badge bg-danger">{{ count($selectedProfessions) }}</span>
                     @endif
-                </button> --}}
+                </button>
                {{-- <button type="button" class="btn btn-outline-primary w-75" data-bs-toggle="modal"
                     data-bs-target="#educationModal">
                     Select Education @if (count($selectedEducations) == 0)
