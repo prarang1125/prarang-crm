@@ -8,6 +8,7 @@ use App\Models\Chittigeographymapping;
 use App\Models\Chittiimagemapping;
 use App\Models\Chittitagmapping;
 use App\Models\Facity;
+use App\Models\Intent;
 use App\Models\Makerlebal;
 use App\Models\Mcity;
 use App\Models\Mcountry;
@@ -58,6 +59,8 @@ class MakerController extends Controller
         $validator = Validator::make($request->all(), [
             'content' => 'required|string',
             'makerImage' => 'required|image|max:2048',
+            'intent'=>'required',
+            'summary' => 'required',
             'geography' => 'required',
             'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
             'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
@@ -166,6 +169,14 @@ class MakerController extends Controller
                 $chittitagmapping->created_at = $currentDateTime;
                 $chittitagmapping->created_by = Auth::guard('admin')->user()->userId;
                 $chittitagmapping->save();
+
+                $intent = new Intent;
+                $intent->chittiId = $lastId;
+                $intent->intent_type = $request->intent_type;
+                $intent->summary = $request->summary;
+                $intent->created_at = $currentDateTime;
+                $intent->intent = $request->intent;
+                $intent->save();
                 DB::commit();
 
                 return redirect()->route('admin.maker-listing')->with('success', 'Post created successfully.');
@@ -218,6 +229,8 @@ class MakerController extends Controller
         $validator = Validator::make($request->all(), [
             'content' => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
+            'intent'=>'required',
+            'summary' => 'required',
             'geography' => 'required',
             'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
             'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
@@ -310,6 +323,11 @@ class MakerController extends Controller
                         'tagId' => $request->tagId,
                         'updated_at' => $currentDateTime,
                         'updated_by' => Auth::guard('admin')->user()->userId,
+                    ]);
+                    Intent::where('chittiId', $id)->update([
+                        'intent' => $request->intent,
+                        'summary' => $request->summary,
+                        'intent_type' => $request->intent_type,
                     ]);
                     DB::commit();
 

@@ -8,6 +8,7 @@ use App\Models\Chittigeographymapping;
 use App\Models\Chittiimagemapping;
 use App\Models\Chittitagmapping;
 use App\Models\Facity;
+use App\Models\Intent;
 use App\Models\Makerlebal;
 use App\Models\Mcity;
 use App\Models\Mcountry;
@@ -27,7 +28,7 @@ class AccChekerController extends Controller
     {
         $chittis = $chittiListService->getChittiListings($request, 'sent_to_checker', 'checker');
         $notification = Chitti::where('uploaderStatus', 'sent_to_checker')
-        ->whereNotIn('finalStatus', ['approved', 'deleted'])          
+        ->whereNotIn('finalStatus', ['approved', 'deleted'])
         ->count();
 
         return view('accounts.checker.acc-checker-listing', compact('chittis', 'notification'));
@@ -50,13 +51,13 @@ class AccChekerController extends Controller
             ->whereNotNull('Title')
             ->where('Title', '!=', '')
             // ->where('checkerStatus', '!=', '')
-         
+
             ->where('makerStatus', 'sent_to_checker')
             ->select('chittiId', 'Title', 'TitleHindi', 'dateOfCreation', 'finalStatus', 'checkerStatus')
             ->paginate(30); // Pagination with 10 items per page
 
             $notification = Chitti::where('uploaderStatus', 'sent_to_checker')
-            ->whereNotIn('finalStatus', ['approved', 'deleted'])          
+            ->whereNotIn('finalStatus', ['approved', 'deleted'])
             ->count();
 
         return view('accounts.checker.acc-checker-listing', compact('chittis', 'geographyOptions', 'notification'));
@@ -201,6 +202,11 @@ class AccChekerController extends Controller
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::user()->userId,
                 ]);
+                Intent::where('chittiId', $id)->update([
+                    'intent' => $request->intent,
+                    'summary' => $request->summary,
+                    'intent_type' => $request->intent_type,
+                ]);
 
                 return redirect()->route('accounts.checker-dashboard')->with('success', 'Chitti Post have been updated successfully.');
             }
@@ -264,8 +270,8 @@ class AccChekerController extends Controller
             ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')->whereNotNull('Title')
             ->where('finalStatus', '!=', 'deleted')
             ->where('finalStatus', '=', 'sent_to_checker')
-           
-            
+
+
 
             ->when($search, function ($query, $search) {
                 $query->where(function ($query) use ($search) {
@@ -279,7 +285,7 @@ class AccChekerController extends Controller
             ->paginate(30); // Adjust the number per page
 
             $notification = Chitti::where('uploaderStatus', 'sent_to_checker')
-            ->whereNotIn('finalStatus', ['approved', 'deleted'])          
+            ->whereNotIn('finalStatus', ['approved', 'deleted'])
             ->count();
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
