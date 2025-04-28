@@ -16,6 +16,8 @@ use App\Models\Mcountry;
 use App\Models\Mregion;
 use App\Models\Mcity;
 use App\Models\Chitti;
+use App\Models\VGeography;
+use Carbon\Carbon;
 use Exception;
 
 class AdminController extends Controller
@@ -70,47 +72,16 @@ class AdminController extends Controller
             'growthUploader'
         ));
     }
+
     public function userProfile()
     {
-
         $user     = Auth::guard('admin')->user();
-
-
         $roleName   = $user->role ? $user->role->roleName : 'No Role Assigned';
         $roleId     = $user->role ? $user->role->roleID : null;
-
         $language   = $user->languageScript ? $user->languageScript->language : 'No Language Assigned';
         $languageId = $user->languageScript ? $user->languageScript->id : null;
-
         return view('admin.user-profile', compact('user', 'roleName', 'language', 'roleId', 'languageId'));
     }
-
-    #this method is use for update admin user profile
-    // public function updateProfile(Request $request)
-    // {
-        //     $user = Auth::guard('admin')->user();
-
-        //     $user->firstName = explode(' ', $request->input('fullName'))[0];
-        //     $user->lastName = explode(' ', $request->input('fullName'))[1];
-        //     $user->emailId = $request->input('emailId');
-        //     $user->languageId = $request->input('languageId');
-        //     $user->save();
-
-        //     return response()->json(['success' => true]);
-        // }
-
-        #this method is use for show user listing data
-        // public function userListing(Request $request) {
-        //     $role = $request->query('role');
-        //     if ($role) {
-        //         $users = Muser::whereHas('role', function($query) use ($role) {
-        //             $query->where('roleName', $role);
-        //         })->get();
-        //     } else {
-        //         $users = Muser::with('role')->get();
-        //     }
-    //     return view('admin.user-listing', compact('users'));
-    // }
 
     public function userListing(Request $request)
     {
@@ -153,12 +124,16 @@ class AdminController extends Controller
     {
         $roles = Mrole::where('status', 1)->get();
         $languagescripts = Mlanguagescript::where('isActive', 1)->get();
-        return view('admin.user-register', compact('roles', 'languagescripts'));
+
+        $geography=VGeography::all();
+
+        return view('admin.user-register', compact('roles', 'languagescripts','geography'));
     }
 
     #this method is use for store/save data in db
     public function userStore(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'firstName' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
@@ -166,6 +141,7 @@ class AdminController extends Controller
             'empPassword' => 'required|string|min:5',
             'roleId' => 'required|exists:mrole,roleID',
             'languageScriptId' => 'required|exists:mlanguagescript,id',
+            'geographies' => 'required|array|min:1',
         ]);
 
         if ($validator->passes()) {
@@ -177,11 +153,11 @@ class AdminController extends Controller
                 'empPassword' => bcrypt($request->empPassword),
                 'roleId' => $request->roleId,
                 'languageId' => $request->languageScriptId,
-                'created_at' => $currentDateTime,
+                'created_at' => Carbon::now(),
                 'created_by' => Auth::guard('admin')->user()->userId,
-                'isActive' => 1
+                'isActive' => 1,
+                'geography'=>$request->geographies
             ]);
-
 
             try {
                 Mail::to($request->emailId)->send(new NewRegistrationMail($request));
@@ -220,8 +196,8 @@ class AdminController extends Controller
         $user = Muser::findOrFail($id);
         $languagescripts = Mlanguagescript::where('isActive', 1)->get();
         $roles = Mrole::where('status', 1)->get();
-
-        return view('admin.user-edit', compact('user', 'roles', 'languagescripts'));
+        $geography=VGeography::all();
+        return view('admin.user-edit', compact('user', 'roles', 'languagescripts','geography'));
     }
 
     #this method is use for update the user data
@@ -240,6 +216,7 @@ class AdminController extends Controller
             'roleId' => 'required|exists:mrole,roleID',
             'languageId' => 'required',
             'isActive' => 'required|boolean',
+            'geographies' => 'required|array|min:1',
         ]);
 
         if ($validator->passes()) {
@@ -254,12 +231,13 @@ class AdminController extends Controller
                 'isActive' => $request->isActive,
                 'updated_at' => $currentDateTime,
                 'updated_by' => Auth::guard('admin')->user()->userId,
+                'geography'=>$request->geographies,
             ];
-
             // Only update the password if it's not empty
-            if (!empty($request->password)) {
+            if (filled(trim($request->password))) {
                 $updateData['empPassword'] = bcrypt($request->password);
             }
+
 
             $user->update($updateData);
 

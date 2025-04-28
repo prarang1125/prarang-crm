@@ -21,13 +21,13 @@
         <div class="card" style="padding-top: 15px;">
             <div class="col-xl-9 mx-auto w-100">
                 <!-- Success Message -->
-                    @if(session('success'))
-                        <div class="alert alert-success mt-3">
-                            {{ session('success') }}
-                        </div>
-                    @endif
+                @if(session('success'))
+                <div class="alert alert-success mt-3">
+                    {{ session('success') }}
+                </div>
+                @endif
                 <h6 class="mb-0 text-uppercase">User Edit</h6>
-                <hr/>
+                <hr />
                 @if($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <ul class="mb-0">
@@ -38,30 +38,30 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 @endif
-                <form  action="{{ route('admin.user-update', $user->userId) }}" method="POST">
+                <form action="{{ route('admin.user-update', $user->userId) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="row">
                         <div class="col-md-6">
                             <label for="inputFirstName" class="form-label">First Name</label>
-                            <input type="text" class="form-control  @error('firstName') is-invalid @enderror" id="inputFirstName" name="firstName" value="{{ old('firstName', $user->firstName) }}" >
+                            <input type="text" class="form-control  @error('firstName') is-invalid @enderror" id="inputFirstName" name="firstName" value="{{ old('firstName', $user->firstName) }}">
                             @error('firstName')
-                                <p class="invalid-feedback">{{ $message }}</p>
+                            <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="inputLastName" class="form-label">Last Name</label>
-                            <input type="text" class="form-control @error('lastName') is-invalid @enderror" id="inputLastName" name="lastName" value="{{ old('lastName', $user->lastName) }}" >
+                            <input type="text" class="form-control @error('lastName') is-invalid @enderror" id="inputLastName" name="lastName" value="{{ old('lastName', $user->lastName) }}">
                             @error('lastName')
-                                <p class="invalid-feedback">{{ $message }}</p>
+                            <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
                     <div class="col-md-6">
                         <label for="email" class="form-label">EmailID</label>
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $user->emailId) }}" >
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $user->emailId) }}">
                         @error('email')
-                            <p class="invalid-feedback">{{ $message }}</p>
+                        <p class="invalid-feedback">{{ $message }}</p>
                         @enderror
                     </div>
                     <div class="row mt-3">
@@ -70,13 +70,13 @@
                             <select id="inputRole" class="form-select @error('roleId') is-invalid @enderror" name="roleId">
                                 <option selected disabled>Choose...</option>
                                 @foreach($roles as $role)
-                                    <option value="{{ $role->roleID }}" {{ $role->roleID == $user->roleId ? 'selected' : '' }}>
-                                        {{ $role->roleName }}
-                                    </option>
+                                <option value="{{ $role->roleID }}" {{ $role->roleID == $user->roleId ? 'selected' : '' }}>
+                                    {{ $role->roleName }}
+                                </option>
                                 @endforeach
                             </select>
                             @error('roleId')
-                                <p class="invalid-feedback">{{ $message }}</p>
+                            <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
                         <!-- TODO::need TO Improve this code  -->
@@ -85,14 +85,40 @@
                             <select id="languageId" class="form-select @error('languageId') is-invalid @enderror" name="languageId">
                                 <option selected disabled>Choose...</option>
                                 @foreach ($languagescripts as $languagescript)
-                                    <option value="{{ $languagescript->id }}"
-                                        {{ old('languageId', $user->languageId) == $languagescript->id ? 'selected' : '' }}>
-                                        {{ $languagescript->language }}
-                                    </option>
+                                <option value="{{ $languagescript->id }}"
+                                    {{ old('languageId', $user->languageId) == $languagescript->id ? 'selected' : '' }}>
+                                    {{ $languagescript->language }}
+                                </option>
                                 @endforeach
                             </select>
                             @error('languageId')
-                                <p class="invalid-feedback">{{ $message }}</p>
+                            <p class="invalid-feedback">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <br>
+                        <div class="col-md-6">
+                            <label class="form-label">Assign Geography</label>
+
+                            <div class="border rounded p-2" style="height: 150px; overflow-y: auto;">
+                                @foreach($geography as $geo)
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                        type="checkbox"
+                                        name="geographies[]"
+                                        value="{{ $geo->geographycode }}"
+                                        id="geo_{{ $geo->geographycode }}"
+                                        {{ (is_array(old('geographies')) && in_array($geo->geographycode, old('geographies'))) ? 'checked' : '' }}
+                                        {{ (is_array($user->geography) && in_array($geo->geographycode, $user->geography)) ? 'checked' : '' }}
+                                        >
+                                    <label class="form-check-label" for="geo_{{ $geo->geographycode }}">
+                                        {{ $geo->geography }}
+                                    </label>
+                                </div>
+                                @endforeach
+                            </div>
+
+                            @error('geographies')
+                            <p class="invalid-feedback d-block">{{ $message }}</p>
                             @enderror
                         </div>
 
@@ -106,7 +132,7 @@
                                 <option value="0" {{ old('isActive', $user->isActive) == '0' ? 'selected' : '' }}>Deactive</option>
                             </select>
                             @error('isActive')
-                                <p class="invalid-feedback">{{ $message }}</p>
+                            <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>

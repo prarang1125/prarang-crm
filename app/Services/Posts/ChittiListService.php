@@ -2,6 +2,7 @@
 
 namespace App\Services\Posts;
 
+use App\Models\Muser;
 use Illuminate\Support\Facades\DB;
 
 class ChittiListService
@@ -20,10 +21,21 @@ class ChittiListService
      * @author Vivek Yadav <dev.vivek16@email.com>#ASG Kali
      * @copyright 2024, Indoeuropeans India Pvt. Ltd. #Prarang
      */
+
+    public $user;
+    public $allowGeo;
+    public function __construct()
+    {
+        $this->user = auth()->user()->userId ?? auth()->guard('admin')->user()->userId;
+        $this->allowGeo=Muser::where('userId', $this->user)->first()->geography;
+
+
+    }
+
+
     public function getChittiListings($request, $makerStatus = null, $listingType = null)
     {
         $search = $request->input('search');
-
         $query = DB::table('chitti as ch')
             ->select('ch.*', 'vg.*', 'vCg.*', DB::raw("CONCAT(user.firstName, ' ', user.lastName) as userName"), 'ch.chittiId as chittiId')
             ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
@@ -32,22 +44,28 @@ class ChittiListService
             ->where('Title', '!=', '')
             ->where('finalStatus', '!=', 'deleted');
 
+        // $query = $this->users($query, 'ch.makerId');
         if ($makerStatus) {
             $query->where('makerStatus', '=', $makerStatus);
         }
         if ($listingType == 'checker') {
             $query->whereIn('checkerStatus', ['maker_to_checker']);
             $query->whereNotIn('finalStatus', ['approved', 'deleted']);
-            $query = $this->users($query, 'ch.makerId');
+
+            // $query = $this->users($query, 'ch.makerId');
+            $query= $query->leftJoin('muser as user', 'user.userId', '=','ch.makerId');
         } elseif ($listingType == 'uploader') {
             $query->orderBy('ch.finalStatus', 'asc');
             $query->whereIn('uploaderStatus', ['sent_to_uploader', 'approved']);
-
-            $query = $this->users($query, 'ch.checkerId');
-        } else {
+            $query= $query->leftJoin('muser as user', 'user.userId', '=','ch.checkerId');
+            // $query = $this->users($query, 'ch.checkerId');
+         }
+         else {
             $query = $this->users($query, 'ch.makerId');
         }
-
+        if (!auth()->guard('admin')->check()) {
+            $query->whereIn('vg.geographycode', $this->allowGeo);
+        }
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('Title', 'LIKE', "%{$search}%")
@@ -95,6 +113,8 @@ class ChittiListService
 
     private function users($query, $field)
     {
-        return $query->leftJoin('muser as user', 'user.userId', '=', $field);
+        return $query->join('muser as user', 'user.userId', '=', $field)
+                     ->where('user.userId',  $this->user);
     }
+
 }

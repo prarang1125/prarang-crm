@@ -31,11 +31,17 @@ class Muser extends Authenticatable
         'roleId',
         'languageId',
         'isActive',
+        'geography',
         'created_at',
         'created_by',
         'updated_at',
         'updated_by',
     ];
+
+    protected $casts = [
+        'geography' => 'array',
+    ];
+
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';

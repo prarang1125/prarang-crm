@@ -34,6 +34,8 @@
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
+                        @livewire('post.new-maker',['id'=>$chitti->chittiId])
+                        <br><br>
                         {{-- image preview and image thumbnail and content section --}}
                         <div class="row">
                             <div class="col-lg-6">
@@ -444,7 +446,6 @@
                     document.querySelector('#nature-tab3').style.display = 'block';
 
                     document.querySelector('#culture-tab1').style.display = 'none';
-                    document.querySelector('#culture-tab2').style.display = 'none';
                     document.querySelector('#culture-tab3').style.display = 'none';
 
                     // Make the first nature tab active

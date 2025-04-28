@@ -9,6 +9,7 @@ use App\Models\Chittiimagemapping;
 use App\Models\Chittitagmapping;
 use App\Models\ColorInfo;
 use App\Models\Facity;
+use App\Models\Intent;
 use App\Models\Makerlebal;
 use App\Models\Mcity;
 use App\Models\Mcountry;
@@ -89,7 +90,7 @@ class AccUploaderController extends Controller
         }
         try {
             $approveDate = Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A');
-        } catch (\Exception $e) { 
+        } catch (\Exception $e) {
             return redirect()->back()->with('success', 'Approve Date is Incorrect');
         }
         if ($validator->passes()) {
@@ -107,7 +108,7 @@ class AccUploaderController extends Controller
             if ($request->action === 'approvd') {
                 try {
                     $approveDate = Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A');
-                } catch (\Exception $e) { 
+                } catch (\Exception $e) {
                     return redirect()->back()->with('success', 'Approve Date is Incorrect');
                 }
                 $chitti->update([
@@ -199,6 +200,11 @@ class AccUploaderController extends Controller
                     'tagId' => $request->tagId,
                     'updated_at' => $currentDateTime,
                     'updated_by' => Auth::user()->userId,
+                ]);
+                Intent::where('chittiId', $id)->update([
+                    'intent' => $request->intent,
+                    'summary' => $request->summary,
+                    'intent_type' => $request->intent_type,
                 ]);
 
                 return redirect()->back()->with('success', 'Uploader updated successfully.');
