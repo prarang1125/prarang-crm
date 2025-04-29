@@ -88,7 +88,7 @@ class OurTeamController extends Controller
 
     public function getAllTeamsJson()
     {
-        $teams = OurTeam::all();
+        $teams = OurTeam::orderBy('list_order', 'asc')->get();
 
         return response()->json([
             'status' => 'success',
