@@ -92,9 +92,9 @@
                                             <label for="intent_type" wire:model.defer="intent_type" class="form-label">Intent Type</label>
                                             <select class="form-select @error('intent_type') is-invalid @enderror" name="intent_type" id="intent_type">
                                                 <option value="">Select Intent Type</option>
-                                                <option value="1" {{ old('intent_type')?? $intent_type == '1' ? 'selected' : '' }}>For City</option>
-                                                <option value="2" {{ old('intent_type')??  $intent_type == '2' ? 'selected' : '' }}>About City</option>
-                                                <option value="3" {{ old('intent_type')??  $intent_type == '3' ? 'selected' : '' }}>For World</option>
+                                                <option value="1" {{ old('intent_type')?? $intent_type == '1' ? 'selected' : '' }}>World</option>
+                                                <option value="2" {{ old('intent_type')??  $intent_type == '2' ? 'selected' : '' }}>Country/State</option>
+                                                <option value="3" {{ old('intent_type')??  $intent_type == '3' ? 'selected' : '' }}>About City</option>
                                                 <option value="4" {{ old('intent_type')??  $intent_type == '4' ? 'selected' : '' }}>Matching Generated</option>
                                             </select>
                                             @error('intent_type')
