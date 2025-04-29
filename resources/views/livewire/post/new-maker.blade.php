@@ -56,7 +56,11 @@
                             <h2 class="accordion-header" id="flush-headingOne">
                                 <button class="accordion-button collapsed @error('summary') bg-danger @enderror @error('intent') bg-danger @enderror" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                                    Intent / Summary
+                                    Intent / Summary <small> @error('intent')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror @error('summary')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror</small>
                                 </button>
                             </h2>
                             <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
