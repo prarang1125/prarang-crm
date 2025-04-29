@@ -56,8 +56,14 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <label for="city_code">City Code</label>
-                                        <input class="form-control" type="text" name="city_code" id="city_code"
-                                            value="{{ old('city_code') }}" required>
+                                        <select class="form-control" name="city_code" id="city_code" required>
+                                            <option value="">Select City Code</option>
+                                            @foreach ($geoGrapgy as $geo)
+                                                <option value="{{ $geo->geographycode }}" {{ old('city_code') == $geo->geographycode ? 'selected' : '' }}>
+                                                    {{ $geo->geography }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                         @error('city_code')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror

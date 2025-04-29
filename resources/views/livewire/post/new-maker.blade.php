@@ -46,11 +46,7 @@
  padding-left:8px;
  padding-right:9px;
 }
-
-
-
 </style>
-
 <div class="accordion accordion-flush" id="accordionFlushExample">
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="flush-headingOne">
