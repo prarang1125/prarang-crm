@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Portal;
+use App\Models\VGeography;
 use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,9 @@ class PortalController extends Controller
      */
     public function create()
     {
-        return view('admin.portal.create');
+        $geoGrapgy=VGeography::get();
+
+        return view('admin.portal.create',compact('geoGrapgy'));
     }
 
     /**
