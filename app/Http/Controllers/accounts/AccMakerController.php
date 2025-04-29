@@ -234,8 +234,8 @@ class AccMakerController extends Controller
             'content' => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
             'geography' => 'required',
-            'intent'=>'required',
-            'summary' => 'required',
+            // 'intent'=>'required',
+            // 'summary' => 'required',
             'c2rselect' => [
                 'required',
                 function ($attribute, $value, $fail) {

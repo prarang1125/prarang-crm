@@ -229,8 +229,8 @@ class MakerController extends Controller
         $validator = Validator::make($request->all(), [
             'content' => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
-            'intent'=>'required',
-            'summary' => 'required',
+            // 'intent'=>'required',
+            // 'summary' => 'required',
             'geography' => 'required',
             'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
             'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
