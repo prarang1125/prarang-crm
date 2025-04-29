@@ -19,4 +19,6 @@ class Intent extends Model
         'intent',
     ];
 
+    //
+
 }
