@@ -76,5 +76,9 @@ class Muser extends Authenticatable
     {
         return $this->belongsTo(Muser::class, 'analyticsMaker', 'userId');
     }
+    public function latestChitti()
+{
+    return $this->hasMany(Chitti::class, 'makerId', 'userId');
+}
 
 }
