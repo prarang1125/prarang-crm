@@ -117,7 +117,7 @@ class ChittiListService
         $query->join('muser as user', 'user.userId', '=', $field);
         if (!auth()->guard('admin')->check()) {
             $query->where('user.userId',  $this->user);
-            dd($this->allowGeo);
+            // dd($this->allowGeo);
         }
         return $query;
 
