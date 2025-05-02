@@ -35,7 +35,7 @@ class WriterReport extends Component
 
         $this->startDate = Carbon::createFromDate($this->selectedYear, $this->selectedMonth, 1)->format('d-m-Y h:i A');
         $this->endDate = Carbon::createFromDate($this->selectedYear, $this->selectedMonth, 1)->endOfMonth()->format('d-m-Y h:i A');
-        $this->writers = Muser::where('roleId', 2)
+        $this->writers = Muser::where('userId', $this->writerId)
         ->join('chitti', 'chitti.makerId', '=', 'muser.userId')
         ->whereBetween(
             DB::raw("STR_TO_DATE(chitti.dateOfApprove, '%d-%m-%Y %h:%i %p')"),
