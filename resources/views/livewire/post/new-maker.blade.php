@@ -2,15 +2,12 @@
 <style>
     /* Accordion button */
     #flush-headingOne .accordion-button {
-        background-color: #cdcdd9;
+
         transform: translatex(0px) translatey(0px);
         font-weight: 700;
     }
 
     /* Accordion button (active) */
-    #flush-headingOne .accordion-button:active {
-        background-color: #dddde2;
-    }
 
     /* Form label */
     .accordion-body .form-label {
@@ -29,7 +26,7 @@
 /* Row */
 #flush-collapseOne .accordion-body .row{
  padding-bottom:12px;
- background-color:rgba(0,0,0,0.14);
+ /* background-color:rgba(0,0,0,0.14); */
  padding-left:3px;
  transform:translatex(0px) translatey(0px);
 }
@@ -50,7 +47,7 @@
 <div class="accordion accordion-flush" id="accordionFlushExample">
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="flush-headingOne">
-                                <button class="accordion-button collapsed @error('summary') bg-danger @enderror @error('intent') bg-danger @enderror" type="button" data-bs-toggle="collapse"
+                                <button class="accordion-button  collapsed @error('summary') text-danger  @enderror @error('intent') text-danger @enderror" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
                                     Intent / Summary <small> @error('intent')
                                             <div class="invalid-feedback">{{ $message }}</div>

@@ -19,7 +19,7 @@ class ImageUploadService
             }
 
             $filename = $prefix.'_'.date('F_Y').'_'.uniqid().'.'.$image->getClientOriginalExtension();
-            $disk = 's3';
+            $disk = env('FILESYSTEM_DISK', 'local');
 
             if ($disk === 's3') {
                 $data['path'] = Storage::disk('s3')->putFileAs($folder, $image, $filename);

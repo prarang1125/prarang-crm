@@ -277,7 +277,7 @@ class MakerController extends Controller
                         'Title' => $request->title,
                         'SubTitle' => $request->subtitle,
                         'makerStatus' => 'sent_to_checker',
-                        'makerId' => Auth::guard('admin')->user()->userId,
+                        // 'makerId' => Auth::guard('admin')->user()->userId,
 
                         'updated_at' => $currentDateTime,
                         'updated_by' => Auth::guard('admin')->user()->userId,
