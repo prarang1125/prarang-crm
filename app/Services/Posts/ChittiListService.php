@@ -65,7 +65,7 @@ class ChittiListService
         }
         if (!auth()->guard('admin')->check()) {
             $query->whereIn('vg.geographycode', $this->allowGeo);
-            dd($this->allowGeo);
+            // dd($this->allowGeo);
         }
         if ($search) {
             $query->where(function ($q) use ($search) {
