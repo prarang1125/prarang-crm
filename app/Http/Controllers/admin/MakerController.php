@@ -61,6 +61,7 @@ class MakerController extends Controller
             'makerImage' => 'required|image|max:2048',
             'intent' => 'required',
             'summary' => 'required',
+            'type' => 'required',
             'geography' => 'required',
             'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
             'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
@@ -181,7 +182,7 @@ class MakerController extends Controller
 
                 return redirect()->route('admin.maker-listing')->with('success', 'Post created successfully.');
             } catch (\Exception $e) {
-                // dd($e->getMessage());
+                dd($e->getMessage());
                 DB::rollBack();
 
                 return redirect()->route('admin.maker-register')->with('error', 'An error occurred, please try again.');
