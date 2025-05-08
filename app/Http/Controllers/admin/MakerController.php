@@ -61,7 +61,7 @@ class MakerController extends Controller
             'makerImage' => 'required|image|max:2048',
             'intent' => 'required',
             'summary' => 'required',
-            'type' => 'required',
+            'intent_type' => 'required',
             'geography' => 'required',
             'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
             'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
