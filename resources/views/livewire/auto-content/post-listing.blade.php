@@ -351,7 +351,7 @@
         @if($selectedPosts)
         <p class="text-end">
             <a class="btn btn-sm btn-danger" wire:click="resetSelectedPost" wire:loading.attr="disabled">Reset</a>
-                        <a  wire:loading.attr="disabled" class="btn  btn-sm btn-primary" style="width: 150px;" target="_blank" href="{{ route('content.post-data',['ids'=>implode('-', $selectedPosts)]) }}">Get Post Ditails  <br><small>( {{ count($selectedPosts) }} slected)</small></a>
+                        <a  wire:loading.attr="disabled" class="btn  btn-sm btn-primary" style="width: 150px;" target="_blank" href="{{ route('content.post-data',['ids'=>implode('-', $selectedPosts)]) }}">Get Post Details  <br><small>( {{ count($selectedPosts) }} slected)</small></a>
                         </p>
         @endif
 
