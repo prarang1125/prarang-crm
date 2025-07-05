@@ -21,12 +21,12 @@ class WhatsAppService
     /**
      * Send WhatsApp Message (Text or Template)
      */
-    public function sendMessage($to, $message = null, $templateName = null, $templateParams = [])
+    public function sendMessage($to, $message = null, $templateName = 'post_1_hi', $templateParams = [])
     {
         try {
             // Prepare Payload based on whether it's a template or text
             $payload = $templateName
-                ? $this->getTemplatePayload($to, $templateName, $templateParams)
+                ? $this->getTemplatePayload($to, 'post_1_hi', $templateParams)
                 : $this->getTextPayload($to, $message);
 
             // Send Request to WhatsApp API
