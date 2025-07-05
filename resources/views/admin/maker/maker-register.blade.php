@@ -374,6 +374,18 @@
 </div>
 <!--end page wrapper -->
 <script>
+    document.getElementById('makerImage').addEventListener('change', function() {
+        const file = this.files[0];
+        const maxSize = 200 * 1024; // 200 KB
+
+        if (file && file.size > maxSize) {
+            alert("The selected image is larger than 200KB. Please choose a smaller file.");
+            this.value = ""; // Clear the file input
+        }
+    });
+</script>
+
+<script>
     const uploadUrl = "{{ route('admin.ckeditor-upload') }}";
     const csrfToken = "{{ csrf_token() }}";
 </script>
