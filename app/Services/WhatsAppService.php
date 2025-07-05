@@ -27,7 +27,7 @@ class WhatsAppService
             // Prepare Payload based on whether it's a template or text
             $payload = $templateName
                 ? $this->getTemplatePayload($to, 'post_1_hi', $templateParams)
-                : $this->getTextPayload($to, $message);
+                : $this->getTemplatePayload($to, 'post_1_hi', $templateParams);
 
             // Send Request to WhatsApp API
             $response = Http::withToken($this->accessToken)->post("{$this->apiUrl}/{$this->phoneId}/messages", $payload);
@@ -71,7 +71,7 @@ class WhatsAppService
             'type' => 'template',
             'template' => [
                 'name' => $templateName,
-                'language' => ['code' => 'hi_US'], // You can change the language code
+                'language' => ['code' => 'hi'], // You can change the language code
                 'components' => [
                     [
                         'type' => 'body',
