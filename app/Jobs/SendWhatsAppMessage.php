@@ -30,7 +30,7 @@ class SendWhatsAppMessage implements ShouldQueue
     public function handle(WhatsAppService $whatsappService)
     {
         try {
-            $response = $whatsappService->sendMessage($this->phone, $this->message, 'post_1_hi');
+            $response = $whatsappService->sendMessage(917619876249, $this->message, 'post_1_hi');
             Log::info("Message sent to {$this->phone} {$response}");
         } catch (\Exception $e) {
             Log::error("WhatsApp Message Error for {$this->phone}: " . $e->getMessage());
