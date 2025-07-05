@@ -71,7 +71,7 @@ class WhatsAppService
             'type' => 'template',
             'template' => [
                 'name' => $templateName,
-                'language' => ['code' => 'en_US'], // You can change the language code
+                'language' => ['code' => 'hi_US'], // You can change the language code
                 'components' => [
                     [
                         'type' => 'body',
