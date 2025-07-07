@@ -28,7 +28,7 @@ class HitBox extends Component
         $this->templates = $this->getTemplates();
         $this->setTemplates();
         $this->posts = $this->getDailyPost();
-        $dd = Chitti::select('chittiId', 'Title', 'SubTitle')->orderBydesc('created_at')->limit(10)->get();
+        // $dd = Chitti::select('chittiId', 'Title', 'SubTitle')->orderBydesc('created_at')->limit(10)->get();
     }
 
     public function cityUpdate()
@@ -60,15 +60,17 @@ class HitBox extends Component
     {
 
         $this->contacts = $this->getContacts();
-        SendWhatsAppMessage::dispatch('917619876249', 'hello_world')->onQueue('whatsapp');
 
-        // foreach ($this->contacts as $user) {
-        //     $phone="91".ltrim($user->phone, '0');
-        //     $this->content = str_replace('{user}', $user->name, $this->content);
-        //     $this->content = str_replace('{city_name}', collect($this->city)->pluck('name')->implode(', '), $this->content);
-        //     SendWhatsAppMessage::dispatch($phone, $this->content)->onQueue('whatsapp');
-        // }
-
+        // SendWhatsAppMessage::dispatch('917619876249', 'hello_world')->onQueue('whatsapp');
+        $msg = [];
+        foreach ($this->contacts as $user) {
+            $phone = "91" . ltrim($user->phone, '0');
+            $this->content = str_replace('{user}', $user->name, $this->content);
+            $this->content = str_replace('{city_name}', collect($this->city)->pluck('name')->implode(', '), $this->content);
+            $msg[$phone] = $this->content;
+            // SendWhatsAppMessage::dispatch($phone, $this->content)->onQueue('whatsapp');
+        }
+        dd($msg);
         session()->flash('success', 'Message sent successfully!');
     }
 
@@ -83,7 +85,6 @@ class HitBox extends Component
 
     public function getTemplates()
     {
-
         return [
             ['id' => 1, 'name' => 'Daily Post', 'format' => "नमस्ते {user},पढ़े आज का लेख़:"],
             ['id' => 2, 'name' => 'Template 2', 'format' => 'Dear {name},\n Need To Update It Welcome to our site-2'],

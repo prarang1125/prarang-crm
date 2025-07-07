@@ -53,6 +53,7 @@ class WhatsAppService
         return [
             'messaging_product' => 'whatsapp',
             'recipient_type' => 'individual',
+
             'to' => $to,
             'type' => 'text',
             'text' => ['body' => $message],
