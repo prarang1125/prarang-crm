@@ -39,15 +39,14 @@ class HitBox extends Component
 
     public function handaleCustomUsers()
     {
-        // $data = array_filter(array_map('trim', explode(',', $this->customUsers)), function($user) {
-        //     if (!preg_match('/^\d{10}$/', $user)) {
-        //         $this->addError('customUsers', 'Each mobile number must be 10 digit number');
-        //         return false;
-        //     }
-        //     return true;
-        // });
-
-        // $this->contacts = array_merge($this->contacts,$data);
+        $data = array_filter(array_map('trim', explode(',', $this->customUsers)), function ($user) {
+            if (!preg_match('/^\d{10}$/', $user)) {
+                $this->addError('customUsers', 'Each mobile number must be 10 digit number');
+                return false;
+            }
+            return true;
+        });
+        $this->contacts = array_merge($this->contacts, $data);
     }
 
 
@@ -60,7 +59,7 @@ class HitBox extends Component
     {
 
         $this->contacts = $this->getContacts();
-
+        // dd($this->contacts);
         // SendWhatsAppMessage::dispatch('917619876249', 'hello_world')->onQueue('whatsapp');
         $msg = [];
         foreach ($this->contacts as $user) {
@@ -80,6 +79,7 @@ class HitBox extends Component
         if ($this->city) {
             $contacts = DB::connection('yp')->table('users')->whereIn('city_id', collect($this->city)->pluck('id'))->whereIn('role', $this->userGroup)->get()->toArray();
         }
+        dd($contacts[1]->name);
         return $contacts;
     }
 
