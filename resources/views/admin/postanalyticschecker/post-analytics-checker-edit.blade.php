@@ -273,7 +273,7 @@
     <script>
         function calculateTotal() {
             const fields = ['citySubscribers', 'prarangApplication', 'facebookLinkClick', 'websiteGd', 'email',
-                'instagram'
+                'instagram', 'whatsappCount'
             ];
             let total = 0;
 

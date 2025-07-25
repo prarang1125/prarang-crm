@@ -152,7 +152,7 @@ ClassicEditor
 
 // total post analytics maker data
 function calculateTotal() {
-    const fields = ['citySubscribers', 'prarangApplication', 'websiteGd', 'email', 'instagram'];
+    const fields = ['citySubscribers', 'prarangApplication', 'websiteGd', 'email', 'instagram', 'whatsappCount'];
     let total = 0;
 
     fields.forEach(field => {

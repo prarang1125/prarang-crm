@@ -67,6 +67,7 @@ class Chitti extends Model
         'emailCount',
         'sponsoredBy',
         'instagramCount',
+        'whatsappCount',
         'analyticsChecker',
         'analyticsMaker',
         'postStatusMakerChecker',
