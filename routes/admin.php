@@ -195,5 +195,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('portal-localization', Portal::class)->name('portal.localization');
         Route::resource('our-team', OurTeamController::class);
         Route::get('writer-report', WriterReport::class)->name('writer.report');
+        
+
     });
 });
+
