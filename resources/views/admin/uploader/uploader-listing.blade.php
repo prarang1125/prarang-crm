@@ -87,15 +87,14 @@
                                         <td>
                                             <i 
                                             class="bx bx-copy fs-5" 
-                                            data-url="https://prarang.in/sp/{{strtolower(base64_encode($chitti->chittiId)) }}"
+                                            data-url="https://prarang.in/00-0{{$chitti->chittiId }}"
                                             onclick="
                                                 navigator.clipboard.writeText(this.getAttribute('data-url'));
 
                                                 this.classList.add('text-success');
                                             "
                                             style="cursor: pointer;"
-                                         ></i>
-                                         
+                                         ></i>                                         
                                         </td>
                                         @if ($chitti->finalStatus == 'approved')
                                             <td><i class="bx bx-check-circle text-success fs-5"></i></td>
