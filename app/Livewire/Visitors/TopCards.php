@@ -62,7 +62,6 @@ class TopCards extends Component
         $this->userType = $this->getDataBasedOnBots($postId);
         $this->scroll = $this->getScrollDuration($postId);
         $this->get5th31th = $this->day5th31th($postId);
-
     }
 
     public function changePostData()
@@ -79,7 +78,7 @@ class TopCards extends Component
         $groupedData = DB::table('visitors')
             ->select(DB::raw('
             CASE
-                WHEN referrer IN ("facebook", "google", "prarang") THEN referrer
+                WHEN referrer IN ("facebook", "google", "prarang","whatsapp") THEN referrer
                 ELSE "others"
             END as referrer,
             SUM(visit_count) as total_visits,
@@ -92,7 +91,7 @@ class TopCards extends Component
             })
             ->groupBy(DB::raw('
             CASE
-                WHEN referrer IN ("facebook", "google", "prarang") THEN referrer
+                WHEN referrer IN ("facebook", "google", "prarang","whatsapp") THEN referrer
                 ELSE "others"
             END
         '))
@@ -175,9 +174,9 @@ class TopCards extends Component
         $query = DB::table('chitti')
             ->leftJoin('visitors', 'chitti.chittiId', '=', 'visitors.post_id')
             ->whereRaw("STR_TO_DATE(chitti.dateOfApprove, '%d-%m-%Y %h:%i %p') BETWEEN ? AND ?", [$postStartDate, $postEndDate])
-            ->where(function ($query) use ($city,$startDate,$endDate) {
+            ->where(function ($query) use ($city, $startDate, $endDate) {
                 $query->where('visitors.post_city', $city)
-                ->whereBetween('visitors.created_at', [$startDate, $endDate])
+                    ->whereBetween('visitors.created_at', [$startDate, $endDate])
                     ->orWhereNull('visitors.post_city');
             });
 
@@ -213,7 +212,7 @@ class TopCards extends Component
                 'view_31st' => 0,
                 'click_31st' => 0,
                 'visit_count_by_city' => 0,
-                'hit_count_by_city'=>0
+                'hit_count_by_city' => 0
             ];
         }
         $query = DB::table('visitors')
@@ -244,7 +243,7 @@ class TopCards extends Component
                 'view_31st' => 0,
                 'click_31st' => 0,
                 'visit_count_by_city' => 0,
-                'hit_count_by_city'=>0
+                'hit_count_by_city' => 0
             ];
         }
 
