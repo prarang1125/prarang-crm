@@ -61,15 +61,16 @@ class AccMakerController extends Controller
             'content' => 'required|string',
             'makerImage' => 'required|image|max:2048',
             'geography' => 'required',
-            'intent'=>'required',
+            'intent' => 'required',
             'summary' => 'required',
             'c2rselect' => [
                 'required',
                 function ($attribute, $value, $fail) {
                     if ($value === 'Select Select') {
-                        $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
+                        $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
                     }
-                }],
+                }
+            ],
             'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
             'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
             'forTheCity' => 'required|boolean',
@@ -90,11 +91,11 @@ class AccMakerController extends Controller
 
                 $areaIdCode = '';
                 if ($request->geography == 6) { //6 is use for city
-                    $areaIdCode = 'c'.$area_id;
+                    $areaIdCode = 'c' . $area_id;
                 } elseif ($request->geography == 5) { //5 is use for region
-                    $areaIdCode = 'r'.$area_id;
+                    $areaIdCode = 'r' . $area_id;
                 } elseif ($request->geography == 7) { // 7 is use for country
-                    $areaIdCode = 'con'.$area_id;
+                    $areaIdCode = 'con' . $area_id;
                 }
 
                 $chitti->languageId = 1;
@@ -184,7 +185,6 @@ class AccMakerController extends Controller
                 DB::commit();  // Commit transaction
 
                 return redirect()->route('accounts.maker-dashboard')->with('success', 'Post created successfully.');
-
             } catch (\Exception $e) {
                 DB::rollBack();  // Rollback transaction
                 dd($e->getMessage());
@@ -240,9 +240,10 @@ class AccMakerController extends Controller
                 'required',
                 function ($attribute, $value, $fail) {
                     if ($value === 'Select Select') {
-                        $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
+                        $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
                     }
-                }],
+                }
+            ],
             'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
             'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
             // 'subtitle' => 'required|string|max:255',
@@ -283,11 +284,11 @@ class AccMakerController extends Controller
                     $area_id = $request->c2rselect;
                     $areaIdCode = '';
                     if ($request->geography == 6) { //6 is use for city
-                        $areaIdCode = 'c'.$area_id;
+                        $areaIdCode = 'c' . $area_id;
                     } elseif ($request->geography == 5) { //5 is use for region
-                        $areaIdCode = 'r'.$area_id;
+                        $areaIdCode = 'r' . $area_id;
                     } elseif ($request->geography == 7) { // 7 is use for country
-                        $areaIdCode = 'con'.$area_id;
+                        $areaIdCode = 'con' . $area_id;
                     }
 
                     $chitti->update([
@@ -359,7 +360,7 @@ class AccMakerController extends Controller
             } catch (\Exception $e) {
 
                 DB::rollBack();
-                Log::error('Maker Update Error: '.$e->getMessage(), ['exception' => $e]);
+                Log::error('Maker Update Error: ' . $e->getMessage(), ['exception' => $e]);
 
                 return redirect()->back()->with('error', 'An error occurred while updating the maker.')->withInput();
             }
