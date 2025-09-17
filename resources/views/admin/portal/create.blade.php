@@ -56,8 +56,14 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <label for="city_code">City Code</label>
-                                        <input class="form-control" type="text" name="city_code" id="city_code"
-                                            value="{{ old('city_code') }}" required>
+                                        <select class="form-control" name="city_code" id="city_code" required>
+                                            <option value="">Select City Code</option>
+                                            @foreach($cityCodes as $cityCode)
+                                                <option value="{{ $cityCode->geographycode }}" {{ old('city_code') == $cityCode->geographycode ? 'selected' : '' }}>
+                                                    {{ $cityCode->geographycode }} - {{ $cityCode->geography }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                         @error('city_code')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
@@ -89,8 +95,22 @@
                                 <div class="row mt-3">
                                     <div class="col-sm-6">
                                         <label for="local_lang">Local Language</label>
-                                        <input class="form-control" type="text" name="local_lang" id="local_lang"
-                                            value="{{ old('local_lang') }}">
+                                        <select class="form-control" name="local_lang" id="local_lang">
+                                            <option value="">Select Language</option>
+                                            <option value="en" {{ old('local_lang') == 'en' ? 'selected' : '' }}>English (en)</option>
+                                            <option value="hi" {{ old('local_lang') == 'hi' ? 'selected' : '' }}>Hindi (hi)</option>
+                                            <option value="bn" {{ old('local_lang') == 'bn' ? 'selected' : '' }}>Bengali (bn)</option>
+                                            <option value="te" {{ old('local_lang') == 'te' ? 'selected' : '' }}>Telugu (te)</option>
+                                            <option value="mr" {{ old('local_lang') == 'mr' ? 'selected' : '' }}>Marathi (mr)</option>
+                                            <option value="ta" {{ old('local_lang') == 'ta' ? 'selected' : '' }}>Tamil (ta)</option>
+                                            <option value="ur" {{ old('local_lang') == 'ur' ? 'selected' : '' }}>Urdu (ur)</option>
+                                            <option value="gu" {{ old('local_lang') == 'gu' ? 'selected' : '' }}>Gujarati (gu)</option>
+                                            <option value="kn" {{ old('local_lang') == 'kn' ? 'selected' : '' }}>Kannada (kn)</option>
+                                            <option value="or" {{ old('local_lang') == 'or' ? 'selected' : '' }}>Odia (or)</option>
+                                            <option value="pa" {{ old('local_lang') == 'pa' ? 'selected' : '' }}>Punjabi (pa)</option>
+                                            <option value="ml" {{ old('local_lang') == 'ml' ? 'selected' : '' }}>Malayalam (ml)</option>
+                                            <option value="as" {{ old('local_lang') == 'as' ? 'selected' : '' }}>Assamese (as)</option>
+                                        </select>
                                         @error('local_lang')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
