@@ -191,6 +191,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/maker/maker-update-title', [MakerController::class, 'updateTitle'])->name('update.title');
 
         Route::resource('portal', PortalController::class);
+        Route::put('portal/update-language/{portal}', [PortalController::class, 'updateLanguage'])->name('portal.update-language');
         Route::get('portal-localization', Portal::class)->name('portal.localization');
         Route::resource('our-team', OurTeamController::class);
     });

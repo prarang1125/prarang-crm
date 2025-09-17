@@ -51,7 +51,7 @@ class PortalController extends Controller
             'header_scripts'=>'nullable',
             'footer_scripts'=>'nullable',
             'local_info_image' => 'required|max:2048',
-            'local_lang' => 'required|string|max:50',
+            'local_lang' => 'required|string',
         ]);
 
         $fileFields = ['header_image', 'footer_image', 'local_info_image'];
@@ -81,7 +81,8 @@ class PortalController extends Controller
      */
     public function edit(Portal $portal)
     {
-        return view('admin.portal.edit', compact('portal'));
+        $cityCodes = VGeography::orderBy('geographycode')->get(['geographycode', 'geography']);
+        return view('admin.portal.edit', compact('portal', 'cityCodes'));
     }
 
     /**
@@ -106,7 +107,7 @@ class PortalController extends Controller
             'header_scripts'=>'nullable',
             'footer_scripts'=>'nullable',
             'local_info_image' => 'nullable|max:2048',
-            'local_lang' => 'required|string|max:50',
+            'local_lang' => 'required|string',
         ]);
 
         // Handle file uploads (if any)
@@ -126,6 +127,20 @@ class PortalController extends Controller
         $portal->update($validated);
 
         return redirect()->route('portal.index')->with('success', 'Portal updated successfully.');
+    }
+
+    /**
+     * Update the language field via AJAX.
+     */
+    public function updateLanguage(Request $request, Portal $portal)
+    {
+        $validated = $request->validate([
+            'local_lang' => 'required|string',
+        ]);
+
+        $portal->update($validated);
+
+        return response()->json(['success' => true, 'message' => 'Language updated successfully.']);
     }
 
     /**
