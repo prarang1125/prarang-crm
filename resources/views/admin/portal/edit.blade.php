@@ -2,6 +2,7 @@
 @section('title', 'Portals')
 
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
 <!--start page wrapper -->
 <div class="page-content">
@@ -52,7 +53,14 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="city_code">City Code</label>
-                                    <input class="form-control"  type="text" name="city_code" id="city_code" value="{{ old('city_code',$portal->city_code) }}" required>
+                                    <select class="form-control" name="city_code" id="city_code" required>
+                                        <option value="">Select City Code</option>
+                                        @foreach($cityCodes as $cityCode)
+                                            <option value="{{ $cityCode->geographycode }}" {{ (old('city_code') ?: $portal->city_code) == $cityCode->geographycode ? 'selected' : '' }}>
+                                                {{ $cityCode->geographycode }} - {{ $cityCode->geography }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     @error('city_code')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -82,7 +90,23 @@
                             <div class="row mt-3">
                                 <div class="col-sm-6">
                                     <label for="local_lang">Local Language</label>
-                                    <input class="form-control"  type="text" name="local_lang" id="local_lang" value="{{ old('local_lang',$portal->local_lang) }}">
+                                    <select class="form-control" name="local_lang" id="local_lang">
+                                        <option value="">Select Language</option>
+                                        <option value="en" {{ (old('local_lang') ?: $portal->local_lang) == 'en' ? 'selected' : '' }}>English (en)</option>
+                                        <option value="hi" {{ (old('local_lang') ?: $portal->local_lang) == 'hi' ? 'selected' : '' }}>Hindi (hi)</option>
+                                        <option value="bn" {{ (old('local_lang') ?: $portal->local_lang) == 'bn' ? 'selected' : '' }}>Bengali (bn)</option>
+                                        <option value="te" {{ (old('local_lang') ?: $portal->local_lang) == 'te' ? 'selected' : '' }}>Telugu (te)</option>
+                                        <option value="mr" {{ (old('local_lang') ?: $portal->local_lang) == 'mr' ? 'selected' : '' }}>Marathi (mr)</option>
+                                        <option value="ta" {{ (old('local_lang') ?: $portal->local_lang) == 'ta' ? 'selected' : '' }}>Tamil (ta)</option>
+                                        <option value="ur" {{ (old('local_lang') ?: $portal->local_lang) == 'ur' ? 'selected' : '' }}>Urdu (ur)</option>
+                                        <option value="gu" {{ (old('local_lang') ?: $portal->local_lang) == 'gu' ? 'selected' : '' }}>Gujarati (gu)</option>
+                                        <option value="kn" {{ (old('local_lang') ?: $portal->local_lang) == 'kn' ? 'selected' : '' }}>Kannada (kn)</option>
+                                        <option value="or" {{ (old('local_lang') ?: $portal->local_lang) == 'or' ? 'selected' : '' }}>Odia (or)</option>
+                                        <option value="pa" {{ (old('local_lang') ?: $portal->local_lang) == 'pa' ? 'selected' : '' }}>Punjabi (pa)</option>
+                                        <option value="ml" {{ (old('local_lang') ?: $portal->local_lang) == 'ml' ? 'selected' : '' }}>Malayalam (ml)</option>
+                                        <option value="as" {{ (old('local_lang') ?: $portal->local_lang) == 'as' ? 'selected' : '' }}>Assamese (as)</option>
+                                    </select>
+                                    <div id="language-feedback" class="mt-2"></div>
                                     @error('local_lang')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -243,6 +267,67 @@
     });
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const languageSelect = document.getElementById('local_lang');
+        const feedbackDiv = document.getElementById('language-feedback');
+
+        languageSelect.addEventListener('change', function() {
+            const selectedValue = this.value;
+            if (!selectedValue) return; // Don't update if empty
+
+            // Show loading state
+            languageSelect.disabled = true;
+            feedbackDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-primary" role="status"><span class="visually-hidden">Loading...</span></div> Updating...';
+
+            // Highlight selected option
+            Array.from(languageSelect.options).forEach(option => {
+                option.classList.remove('bg-success', 'text-white');
+            });
+            this.options[this.selectedIndex].classList.add('bg-success', 'text-white');
+
+            // Prepare data
+            const formData = new FormData();
+            formData.append('local_lang', selectedValue);
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+            formData.append('_method', 'PUT');
+
+            // Make AJAX request
+            fetch(`{{ route('portal.update-language', $portal->id) }}`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    feedbackDiv.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                        '<i class="bi bi-check-circle-fill"></i> ' + data.message +
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                        '</div>';
+                } else {
+                    throw new Error(data.message || 'Update failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                feedbackDiv.innerHTML = '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                    '<i class="bi bi-exclamation-triangle-fill"></i> Error updating language: ' + error.message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                    '</div>';
+                // Revert highlight on error
+                Array.from(languageSelect.options).forEach(option => {
+                    option.classList.remove('bg-success', 'text-white');
+                });
+            })
+            .finally(() => {
+                languageSelect.disabled = false;
+            });
+        });
+    });
+</script>
 @endsection
 
 
