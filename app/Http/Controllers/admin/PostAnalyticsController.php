@@ -29,47 +29,115 @@ class PostAnalyticsController extends Controller
 
     public function index(Request $request)
     {
-        # Show the select country, city, and region according to geography data
-        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+        $request->validate([
+            'search' => 'nullable|string|max:255',
+            'geography' => 'nullable|integer',
+            'area' => 'nullable|integer',
+            'from_date' => 'nullable|date',
+            'to_date' => 'nullable|date|after_or_equal:from_date',
+            'sort_by' => 'nullable|string|in:chittiId,makerId,checkerId,uploaderId,comments_count,likes_count,prarangApplication,SubTitle,dateOfCreation',
+            'sort_order' => 'nullable|string|in:asc,desc',
+            'per_page' => 'nullable|integer|in:10,30,50,100',
+        ]);
 
-        # Fetch all regions, cities, and countries
+        $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
         $regions = Mregion::all();
         $cities = Mcity::all();
         $countries = Mcountry::all();
 
-        # Initialize base query
-        $chittisQuery = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country', 'likes', 'comments'])
+        $chittisQuery = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])->withCount(['likes', 'comments'])
             ->whereNotNull('Title')
-            ->where('Title', '!=', '')
-            ->select('*');
+            ->where('Title', '!=', '');
 
-        # Paginate results
-        $chittis = $chittisQuery->orderByDesc(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"))->paginate(30);
-        // dd($chittis);
-        # Get the current month dates for the date picker
-        $startDate = Carbon::now()->startOfMonth();
-        $endDate = Carbon::now()->endOfMonth();
-
-        $dates = [];
-        while ($startDate <= $endDate) {
-            $dates[] = $startDate->format('d-m-Y');
-            $startDate->addDay();
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $chittisQuery->where(function ($q) use ($search) {
+                $q->where('Title', 'like', "%{$search}%")
+                    ->orWhere('SubTitle', 'like', "%{$search}%");
+            });
         }
 
-        return view('admin.postanalytics.post-analytics-listing', compact('dates', 'geographyOptions', 'regions', 'cities', 'countries', 'chittis'));
+        // Filters
+        if ($request->filled('geography')) {
+            $chittisQuery->whereHas('geographyMappings', function ($q) use ($request) {
+                $q->where('geographyId', $request->input('geography'));
+            });
+        }
+        if ($request->filled('area')) {
+            $chittisQuery->whereHas('geographyMappings', function ($q) use ($request) {
+                $q->where('areaId', $request->input('area'));
+            });
+        }
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $startDate = Carbon::createFromFormat('Y-m-d', $request->input('from_date'))->startOfDay();
+            $endDate = Carbon::createFromFormat('Y-m-d', $request->input('to_date'))->endOfDay();
+            $chittisQuery->whereBetween(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"), [$startDate, $endDate]);
+        }
+
+        // Sorting
+        $sortBy = $request->input('sort_by', 'dateOfCreation');
+        $sortOrder = $request->input('sort_order', 'desc');
+
+        if ($sortBy == 'dateOfCreation') {
+            $chittisQuery->orderBy(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"), $sortOrder);
+        } else {
+            $chittisQuery->orderBy($sortBy, $sortOrder);
+        }
+
+        $perPage = $request->input('per_page', 30);
+        $chittis = $chittisQuery->paginate($perPage);
+
+        return view('admin.postanalytics.post-analytics-listing', compact('geographyOptions', 'regions', 'cities', 'countries', 'chittis'));
     }
 
 
     #this method is use for get the export data
-    public function getPostAnalyticsData()
+    public function getPostAnalyticsData(Request $request)
     {
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
-        $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country', 'likes', 'comments'])
-        ->whereNotNull('Title')
-        ->where('Title', '!=', '')
-        ->select('*')
-        ->get();
+        $chittisQuery = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])->withCount(['likes', 'comments'])
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '');
+
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $chittisQuery->where(function ($q) use ($search) {
+                $q->where('Title', 'like', "%{$search}%")
+                    ->orWhere('SubTitle', 'like', "%{$search}%");
+            });
+        }
+
+        // Filters
+        if ($request->filled('geography')) {
+            $chittisQuery->whereHas('geographyMappings', function ($q) use ($request) {
+                $q->where('geographyId', $request->input('geography'));
+            });
+        }
+        if ($request->filled('area')) {
+            $chittisQuery->whereHas('geographyMappings', function ($q) use ($request) {
+                $q->where('areaId', $request->input('area'));
+            });
+        }
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $startDate = Carbon::createFromFormat('Y-m-d', $request->input('from_date'))->startOfDay();
+            $endDate = Carbon::createFromFormat('Y-m-d', $request->input('to_date'))->endOfDay();
+            $chittisQuery->whereBetween(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"), [$startDate, $endDate]);
+        }
+
+        // Sorting
+        $sortBy = $request->input('sort_by', 'dateOfCreation');
+        $sortOrder = $request->input('sort_order', 'desc');
+
+        if ($sortBy == 'dateOfCreation') {
+            $chittisQuery->orderBy(DB::raw("STR_TO_DATE(dateOfCreation, '%d-%b-%y %H:%i:%s')"), $sortOrder);
+        } else {
+            $chittisQuery->orderBy($sortBy, $sortOrder);
+        }
+
+        $chittis = $chittisQuery->get();
 
         $data = [];
         if ($chittis->isEmpty()) {
@@ -77,9 +145,6 @@ class PostAnalyticsController extends Controller
                 'S.No' => 1,
                 'Geography' => 'No Data',
                 'Area' => 'No Data',
-                'Maker' => 0,
-                'Checker' => 0,
-                'Uploader' => 0,
                 'Comments' => 0,
                 'Likes' => 0,
                 'App Visits' => 0,
@@ -88,36 +153,44 @@ class PostAnalyticsController extends Controller
         } else {
             $index = 1;
             foreach ($chittis as $chitti) {
-                foreach ($chitti->geographyMappings as $mapping){
+                if ($chitti->geographyMappings->isNotEmpty()) {
+                    foreach ($chitti->geographyMappings as $mapping) {
                         $option = $geographyOptions->firstWhere('id', $mapping->geographyId);
-                        if($option)
-                            $geographies = $option->labelInEnglish;
-                        else
-                            $geographies = $mapping->geographyId;
+                        $geographies = $option ? $option->labelInEnglish : $mapping->geographyId;
 
-                        if ($mapping->geographyId == 5 && $mapping->region)
+                        if ($mapping->geographyId == 5 && $mapping->region) {
                             $areas = $mapping->region->regionnameInEnglish;
-                        elseif ($mapping->geographyId == 6 && $mapping->city)
-                            $areas = $mapping->city->cityNameInEnglish ;
-                        elseif ($mapping->geographyId == 7 && $mapping->country)
+                        } elseif ($mapping->geographyId == 6 && $mapping->city) {
+                            $areas = $mapping->city->citynameInEnglish;
+                        } elseif ($mapping->geographyId == 7 && $mapping->country) {
                             $areas = $mapping->country->countryNameInEnglish;
-                        else
+                        } else {
                             $areas = $mapping->areaId;
-                }
-                $data[] = [
-                    'S.No' => $index,
-                    'Geography' => $geographies,
-                    'Area' => $areas,
-                    'Maker' => $chitti->makerId ?? 0,
-                    'Checker' => $chitti->checkerId ?? 0,
-                    'Uploader' => $chitti->uploaderId ?? 0,
-                    'Comments' => $chitti->comments->count() ?? 0,
-                    'Likes' => $chitti->likes->count() ?? 0,
-                    'App Visits' => $chitti->prarangApplication ?? 0,
-                    'Sub Title' => $chitti->SubTitle ?? '--',
-                ];
+                        }
 
-                $index++;
+                        $data[] = [
+                            'S.No' => $index,
+                            'Geography' => $geographies,
+                            'Area' => $areas,
+                            'Comments' => $chitti->comments_count ?? 0,
+                            'Likes' => $chitti->likes_count ?? 0,
+                            'App Visits' => $chitti->prarangApplication ?? 0,
+                            'Sub Title' => $chitti->SubTitle ?? '--',
+                        ];
+                        $index++;
+                    }
+                } else {
+                    $data[] = [
+                        'S.No' => $index,
+                        'Geography' => 'No Data',
+                        'Area' => 'No Data',
+                        'Comments' => $chitti->comments_count ?? 0,
+                        'Likes' => $chitti->likes_count ?? 0,
+                        'App Visits' => $chitti->prarangApplication ?? 0,
+                        'Sub Title' => $chitti->SubTitle ?? '--',
+                    ];
+                    $index++;
+                }
             }
         }
         return $data;
@@ -129,7 +202,7 @@ class PostAnalyticsController extends Controller
         // Retrieve the format from the query string;
         $format = $request->query('format', 'csv');
 
-        $data = $this->getPostAnalyticsData();
+        $data = $this->getPostAnalyticsData($request);
 
         if ($format === 'csv') {
             // Define CSV headers
@@ -139,16 +212,13 @@ class PostAnalyticsController extends Controller
             ];
 
             // Generate CSV content
-            $csvContent = "S.No,Geography,Area,Maker,Checker,Uploader,Comments,Likes,App Visits,Sub Title\n";
+            $csvContent = "S.No,Geography,Area,Comments,Likes,App Visits,Sub Title\n";
 
             foreach ($data as $row) {
                 $csvContent .= implode(',', [
                     $row['S.No'],
                     "\"{$row['Geography']}\"",
                     "\"{$row['Area']}\"",
-                    $row['Maker'],
-                    $row['Checker'],
-                    $row['Uploader'],
                     $row['Comments'],
                     $row['Likes'],
                     $row['App Visits'],
