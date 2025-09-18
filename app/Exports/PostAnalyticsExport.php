@@ -21,7 +21,7 @@ class PostAnalyticsExport implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return ['S.No', 'Geography', 'Area', 'Maker', 'Checker', 'Uploader', 'Comments', 'Likes', 'App Visits', 'Sub Title'];
+        return ['S.No', 'Geography', 'Area', 'Comments', 'Likes', 'App Visits', 'Sub Title'];
     }
 }
 
