@@ -77,6 +77,20 @@
         <li> <a href="{{ route('portal.index') }}"><i class="bx bx-right-arrow-alt"></i>Portals</a>
         </li>
         {{-- End Portal:Vivek --}}
+        {{-- Bilateral Portal Management --}}
+        <li>
+            <a href="javascript:;" class="has-arrow">
+                <div class="parent-icon"><i class="bx bx-globe"></i></div>
+                <div class="menu-title">Bilateral Portal</div>
+            </a>
+            <ul>
+                <li> <a href="{{ route('admin.bilateral-portals.index') }}"><i class="bx bx-right-arrow-alt"></i>Manage
+                        Portals</a></li>
+                <li> <a href="{{ route('admin.country-portals.index') }}"><i class="bx bx-right-arrow-alt"></i>Manage
+                        Countries</a></li>
+            </ul>
+        </li>
+        {{-- End Bilateral Portal Management --}}
         </li>
         <li> <a href="{{ url('/admin/tagcategory/tag-category-listing') }}"><i class="bx bx-right-arrow-alt"></i>Tag
                 Category</a>
