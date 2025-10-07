@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\AdminLoginController;
+use App\Http\Controllers\admin\BilateralPortalController;
 use App\Http\Controllers\admin\ChekerController;
 use App\Http\Controllers\admin\CKEditorController;
 use App\Http\Controllers\admin\CountryController;
+use App\Http\Controllers\admin\CountryPortalController;
 use App\Http\Controllers\admin\DeletedPostController;
 use App\Http\Controllers\admin\LanguageScriptController;
 use App\Http\Controllers\admin\LiveCityController;
@@ -25,7 +27,6 @@ use App\Http\Controllers\admin\UploaderController;
 use App\Http\Controllers\admin\UserCityController;
 use App\Http\Controllers\admin\UserCountryController;
 use App\Livewire\Localization\Portal;
-use App\Livewire\Post\WriterReport;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin'], function () {
@@ -194,9 +195,33 @@ Route::group(['prefix' => 'admin'], function () {
         Route::resource('portal', PortalController::class);
         Route::get('portal-localization', Portal::class)->name('portal.localization');
         Route::resource('our-team', OurTeamController::class);
-        Route::get('writer-report', WriterReport::class)->name('writer.report');
+        // Bilateral Portal routes
+        Route::resource('bilateral-portals', BilateralPortalController::class)->names([
+            'index' => 'admin.bilateral-portals.index',
+            'create' => 'admin.bilateral-portals.create',
+            'store' => 'admin.bilateral-portals.store',
+            'show' => 'admin.bilateral-portals.show',
+            'edit' => 'admin.bilateral-portals.edit',
+            'update' => 'admin.bilateral-portals.update',
+            'destroy' => 'admin.bilateral-portals.destroy',
+        ]);
+        Route::get('bilateral-portals/country/{country_id}', [BilateralPortalController::class, 'getByCountry'])->name('admin.bilateral-portals.by-country');
+        Route::delete('bilateral-portals/bulk-delete', [BilateralPortalController::class, 'bulkDelete'])->name('admin.bilateral-portals.bulk-delete');
 
+        // Country Portal routes
+        Route::resource('country-portals', CountryPortalController::class)->names([
+            'index' => 'admin.country-portals.index',
+            'create' => 'admin.country-portals.create',
+            'store' => 'admin.country-portals.store',
+            'show' => 'admin.country-portals.show',
+            'edit' => 'admin.country-portals.edit',
+            'update' => 'admin.country-portals.update',
+            'destroy' => 'admin.country-portals.destroy',
+        ]);
+        Route::delete('country-portals/bulk-delete', [CountryPortalController::class, 'bulkDelete'])->name('admin.country-portals.bulk-delete');
 
+        // API endpoint for country dropdown
+        Route::get('api/countries-dropdown', [CountryController::class, 'getCountriesForDropdown'])->name('admin.api.countries-dropdown');
     });
 });
 

@@ -25,9 +25,8 @@ class PortalController extends Controller
      */
     public function create()
     {
-        $geoGrapgy=VGeography::get();
-
-        return view('admin.portal.create',compact('geoGrapgy'));
+        $cityCodes = VGeography::orderBy('geographycode')->get(['geographycode', 'geography']);
+        return view('admin.portal.create', compact('cityCodes'));
     }
 
     /**
@@ -139,3 +138,4 @@ class PortalController extends Controller
         return redirect()->route('portal.index')->with('success', 'Portal deleted successfully!');
     }
 }
+
