@@ -39,7 +39,8 @@ class CountryPortalController extends Controller
      */
     public function create()
     {
-        return view('admin.country_portal.create');
+        $countries = DB::table('mcountry')->where('isActive', 1)->get();
+        return view('admin.country_portal.create', compact('countries'));
     }
 
     /**
@@ -55,7 +56,7 @@ class CountryPortalController extends Controller
             'country_name_locale' => 'nullable|string|max:255',
             'slogan' => 'nullable|string|max:255',
             'locale_lang' => 'nullable|string|max:10',
-            'maps' => 'nullable|string|max:255',
+            'maps' => 'nullable|string|max:1000',
             'embassy_link' => 'nullable|string|max:500',
             'timezone' => 'nullable|string|max:255',
             'weather' => 'nullable|string',
@@ -98,6 +99,14 @@ class CountryPortalController extends Controller
                         // Special handling for important_links which now comes as JSON
                         if ($field === 'important_links') {
                             // The important_links field now comes as pre-formatted JSON
+                            $decoded = json_decode($request->$field);
+                            if (json_last_error() === JSON_ERROR_NONE) {
+                                $data[$field] = $request->$field;
+                            } else {
+                                $data[$field] = null;
+                            }
+                        } elseif ($field === 'news' || $field === 'local_metrics') {
+                            // For news and local_metrics, the data comes as JSON string from frontend
                             $decoded = json_decode($request->$field);
                             if (json_last_error() === JSON_ERROR_NONE) {
                                 $data[$field] = $request->$field;
@@ -160,7 +169,8 @@ class CountryPortalController extends Controller
      */
     public function edit(CountryPortal $countryPortal)
     {
-        return view('admin.country_portal.edit', compact('countryPortal'));
+        $countries = DB::table('mcountry')->where('isActive', 1)->get();
+        return view('admin.country_portal.edit', compact('countryPortal', 'countries'));
     }
 
     /**
@@ -168,6 +178,7 @@ class CountryPortalController extends Controller
      */
     public function update(Request $request, CountryPortal $countryPortal)
     {
+
         $validator = Validator::make($request->all(), [
             'country_name' => 'required|string|max:255',
             'country_code' => 'required|string|max:10|unique:country_portals,country_code,' . $countryPortal->id,
@@ -176,7 +187,7 @@ class CountryPortalController extends Controller
             'country_name_locale' => 'nullable|string|max:255',
             'slogan' => 'nullable|string|max:255',
             'locale_lang' => 'nullable|string|max:10',
-            'maps' => 'nullable|string|max:255',
+            'maps' => 'nullable|string|max:1000',
             'embassy_link' => 'nullable|string|max:500',
             'timezone' => 'nullable|string|max:255',
             'weather' => 'nullable|string',
@@ -194,12 +205,6 @@ class CountryPortalController extends Controller
         try {
             DB::beginTransaction();
 
-            // Debug logging
-            Log::info('Embassy Link Update Debug', [
-                'has_embassy_link' => $request->has('embassy_link'),
-                'embassy_link_value' => $request->input('embassy_link'),
-                'all_inputs' => $request->except(['_token', '_method'])
-            ]);
 
             $data = $request->only([
                 'country_name',
@@ -251,6 +256,14 @@ class CountryPortalController extends Controller
                             } else {
                                 $data[$field] = null;
                             }
+                        } elseif ($field === 'news' || $field === 'local_metrics') {
+                            // For news and local_metrics, the data comes as JSON string from frontend
+                            $decoded = json_decode($request->$field);
+                            if (json_last_error() === JSON_ERROR_NONE) {
+                                $data[$field] = $request->$field;
+                            } else {
+                                $data[$field] = null;
+                            }
                         } else {
                             // Validate JSON string for other fields
                             $decoded = json_decode($request->$field);
@@ -268,29 +281,19 @@ class CountryPortalController extends Controller
                     $data[$field] = null;
                 }
             }
-
+            $data['news'] = $request->news ?? null;
             $countryPortal->update($data);
 
             DB::commit();
 
-            Log::info('Country Portal updated successfully', [
-                'country_id' => $countryPortal->id,
-                'country_name' => $countryPortal->country_name,
-                'updated_by' => Auth::id()
-            ]);
 
             return redirect()->route('admin.country-portals.index')
                 ->with('success', 'Country Portal updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error updating country portal', [
-                'error' => $e->getMessage(),
-                'country_id' => $countryPortal->id,
-                'user_id' => Auth::id()
-            ]);
 
             return redirect()->back()
-                ->with('error', 'Error updating country portal: ' . $e->getMessage())
+                ->with('error', 'Error updating country portal: ')
                 ->withInput();
         }
     }

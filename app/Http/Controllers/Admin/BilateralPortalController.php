@@ -167,6 +167,7 @@ class BilateralPortalController extends Controller
     public function edit(ByletralPortal $bilateralPortal)
     {
         $countries = CountryPortal::orderBy('country_name', 'asc')->get();
+
         $bilateralPortal->load(['primaryCountry', 'secondaryCountry']);
         return view('admin.bilateral_portal.edit', compact('bilateralPortal', 'countries'));
     }
