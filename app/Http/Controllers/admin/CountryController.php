@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
@@ -21,7 +22,7 @@ class CountryController extends Controller
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('countryNameInEnglish', 'like', '%' . $search . '%')
-                    ->orWhere('countryNameInUnicode', 'like', '%' . $search . '%');
+                        ->orWhere('countryNameInUnicode', 'like', '%' . $search . '%');
                 });
             })
             ->paginate(30);
@@ -117,11 +118,12 @@ class CountryController extends Controller
     public function countryEdit($id)
     {
         $mcountry = Mcountry::findOrFail($id);
-        return view('admin.country.country-edit' , compact('mcountry'));
+        return view('admin.country.country-edit', compact('mcountry'));
     }
 
     public function countryUpdate(Request $request, $id, ImageUploadService $imageUploadService)
     {
+
         $validator = Validator::make($request->all(), [
             'countryNameInUnicode' => 'required|string|max:255',
             'countryNameInEnglish' => 'required|string|max:255',
@@ -188,5 +190,25 @@ class CountryController extends Controller
                 ->withErrors($validator);
         }
     }
+
+    /**
+     * Get countries for dropdown (AJAX endpoint)
+     */
+    public function getCountriesForDropdown()
+    {
+        try {
+            $countries = Mcountry::where('isActive', 1)
+                ->select('countryCode as country_code', 'countryNameInEnglish as country_name', 'countryNameInUnicode as country_name_unicode')
+                ->orderBy('countryNameInEnglish', 'asc')
+                ->get();
+
+            return response()->json($countries);
+        } catch (\Exception $e) {
+            Log::error('Error loading countries for dropdown', [
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json(['error' => 'Failed to load countries'], 500);
+        }
+    }
 }
-?>
