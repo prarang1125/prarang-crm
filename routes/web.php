@@ -14,7 +14,7 @@ use App\Http\Controllers\{
     VisitorController,
     VisitorLocationController
 };
-use App\Http\Controllers\Admin\OurTeamController;
+use App\Http\Controllers\admin\OurTeamController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\MakerController;
 use App\Http\Controllers\WhatsappApi\WebHook;

@@ -10,7 +10,7 @@ use App\Http\Controllers\admin\LanguageScriptController;
 use App\Http\Controllers\admin\LiveCityController;
 use App\Http\Controllers\admin\MakerController;
 use App\Http\Controllers\admin\MisReportController;
-use App\Http\Controllers\Admin\OurTeamController;
+use App\Http\Controllers\admin\OurTeamController;
 use App\Http\Controllers\admin\PortalController;
 use App\Http\Controllers\admin\PostAnalyticsCheckerController;
 use App\Http\Controllers\admin\PostAnalyticsController;
