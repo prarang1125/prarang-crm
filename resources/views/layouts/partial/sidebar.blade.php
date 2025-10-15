@@ -38,7 +38,7 @@
                 <li> <a href="{{ url('/admin/postanalytics/post-analytics-listing') }}"><i
                             class="bx bx-right-arrow-alt"></i>Post Analytics</a>
                 </li>
-                <li> <a href="{{route('content.post-listing')}}"><i class="bx bx-right-arrow-alt"></i>Posts Filter</a>
+                <li> <a href="{{ route('content.post-listing') }}"><i class="bx bx-right-arrow-alt"></i>Posts Filter</a>
                 </li>
                 <li> <a href="/subscribers"><i class="bx bx-user"></i>Subscribers</a>
                 </li>
@@ -77,6 +77,20 @@
         <li> <a href="{{ route('portal.index') }}"><i class="bx bx-right-arrow-alt"></i>Portals</a>
         </li>
         {{-- End Portal:Vivek --}}
+        {{-- Bilateral Portal Management --}}
+        <li>
+            <a href="javascript:;" class="has-arrow">
+                <div class="parent-icon"><i class="bx bx-globe"></i></div>
+                <div class="menu-title">Bilateral Portal</div>
+            </a>
+            <ul>
+                <li> <a href="{{ route('admin.bilateral-portals.index') }}"><i class="bx bx-right-arrow-alt"></i>Manage
+                        Portals</a></li>
+                <li> <a href="{{ route('admin.country-portals.index') }}"><i class="bx bx-right-arrow-alt"></i>Manage
+                        Countries</a></li>
+            </ul>
+        </li>
+        {{-- End Bilateral Portal Management --}}
         </li>
         <li> <a href="{{ url('/admin/tagcategory/tag-category-listing') }}"><i class="bx bx-right-arrow-alt"></i>Tag
                 Category</a>
@@ -115,13 +129,14 @@
             <li> <a href="{{ url('/accounts/checker/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Checker</a>
         @endif
         @if (Auth::user()->roleId == 4 || Auth::user()->roleId == 13 || Auth::user()->roleId == 14)
-            <li> <a href="{{ url('/accounts/uploader/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Uploader</a></li>
+            <li> <a href="{{ url('/accounts/uploader/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Uploader</a>
+            </li>
         @endif
-        @if (Auth::user()->roleId == 6 )
+        @if (Auth::user()->roleId == 6)
             <li> <a href="{{ url('/accounts/postanalyticsmaker/acc-post-analytics-maker-city-listing') }}"><i
                         class="bx bx-right-arrow-alt"></i>Analytics Maker</a>
         @endif
-        @if (Auth::user()->roleId == 7 )
+        @if (Auth::user()->roleId == 7)
             <li> <a href="{{ url('/accounts/postanalyticschecker/acc-post-analytics-checker-city-listing') }}"><i
                         class="bx bx-right-arrow-alt"></i>Analytics Checker</a>
         @endif

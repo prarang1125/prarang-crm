@@ -18,7 +18,7 @@ class ImageUploadService
                 ];
             }
 
-            $filename = $prefix.'_'.date('F_Y').'_'.uniqid().'.'.$image->getClientOriginalExtension();
+            $filename = $prefix . '_' . date('F_Y') . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
             $disk = env('FILESYSTEM_DISK', 'local');
 
             if ($disk === 's3') {
@@ -42,4 +42,3 @@ class ImageUploadService
         }
     }
 }
-
