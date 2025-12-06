@@ -58,8 +58,9 @@
                                         <label for="city_code">City Code</label>
                                         <select class="form-control" name="city_code" id="city_code" required>
                                             <option value="">Select City Code</option>
-                                            @foreach($cityCodes as $cityCode)
-                                                <option value="{{ $cityCode->geographycode }}" {{ old('city_code') == $cityCode->geographycode ? 'selected' : '' }}>
+               @foreach ($cityCodes as $cityCode)
+                                                <option value="{{ $cityCode->geographycode }}"
+                                                    {{ old('city_code') == $cityCode->geographycode ? 'selected' : '' }}>
                                                     {{ $cityCode->geographycode }} - {{ $cityCode->geography }}
                                                 </option>
                                             @endforeach
@@ -97,19 +98,32 @@
                                         <label for="local_lang">Local Language</label>
                                         <select class="form-control" name="local_lang" id="local_lang">
                                             <option value="">Select Language</option>
-                                            <option value="en" {{ old('local_lang') == 'en' ? 'selected' : '' }}>English (en)</option>
-                                            <option value="hi" {{ old('local_lang') == 'hi' ? 'selected' : '' }}>Hindi (hi)</option>
-                                            <option value="bn" {{ old('local_lang') == 'bn' ? 'selected' : '' }}>Bengali (bn)</option>
-                                            <option value="te" {{ old('local_lang') == 'te' ? 'selected' : '' }}>Telugu (te)</option>
-                                            <option value="mr" {{ old('local_lang') == 'mr' ? 'selected' : '' }}>Marathi (mr)</option>
-                                            <option value="ta" {{ old('local_lang') == 'ta' ? 'selected' : '' }}>Tamil (ta)</option>
-                                            <option value="ur" {{ old('local_lang') == 'ur' ? 'selected' : '' }}>Urdu (ur)</option>
-                                            <option value="gu" {{ old('local_lang') == 'gu' ? 'selected' : '' }}>Gujarati (gu)</option>
-                                            <option value="kn" {{ old('local_lang') == 'kn' ? 'selected' : '' }}>Kannada (kn)</option>
-                                            <option value="or" {{ old('local_lang') == 'or' ? 'selected' : '' }}>Odia (or)</option>
-                                            <option value="pa" {{ old('local_lang') == 'pa' ? 'selected' : '' }}>Punjabi (pa)</option>
-                                            <option value="ml" {{ old('local_lang') == 'ml' ? 'selected' : '' }}>Malayalam (ml)</option>
-                                            <option value="as" {{ old('local_lang') == 'as' ? 'selected' : '' }}>Assamese (as)</option>
+                                            <option value="en" {{ old('local_lang') == 'en' ? 'selected' : '' }}>
+                                                English (en)</option>
+                                            <option value="hi" {{ old('local_lang') == 'hi' ? 'selected' : '' }}>Hindi
+                                                (hi)</option>
+                                            <option value="bn" {{ old('local_lang') == 'bn' ? 'selected' : '' }}>
+                                                Bengali (bn)</option>
+                                            <option value="te" {{ old('local_lang') == 'te' ? 'selected' : '' }}>Telugu
+                                                (te)</option>
+                                            <option value="mr" {{ old('local_lang') == 'mr' ? 'selected' : '' }}>
+                                                Marathi (mr)</option>
+                                            <option value="ta" {{ old('local_lang') == 'ta' ? 'selected' : '' }}>Tamil
+                                                (ta)</option>
+                                            <option value="ur" {{ old('local_lang') == 'ur' ? 'selected' : '' }}>Urdu
+                                                (ur)</option>
+                                            <option value="gu" {{ old('local_lang') == 'gu' ? 'selected' : '' }}>
+                                                Gujarati (gu)</option>
+                                            <option value="kn" {{ old('local_lang') == 'kn' ? 'selected' : '' }}>
+                                                Kannada (kn)</option>
+                                            <option value="or" {{ old('local_lang') == 'or' ? 'selected' : '' }}>Odia
+                                                (or)</option>
+                                            <option value="pa" {{ old('local_lang') == 'pa' ? 'selected' : '' }}>
+                                                Punjabi (pa)</option>
+                                            <option value="ml" {{ old('local_lang') == 'ml' ? 'selected' : '' }}>
+                                                Malayalam (ml)</option>
+                                            <option value="as" {{ old('local_lang') == 'as' ? 'selected' : '' }}>
+                                                Assamese (as)</option>
                                         </select>
                                         @error('local_lang')
                                             <div class="text-danger">{{ $message }}</div>
@@ -178,7 +192,7 @@
                                 </div>
                                 <div class="mt-3">
                                     <label for="footer_scripts">Footer Scripts</label>
-                                    <textarea class="form-control " rows="8"  name="footer_scripts" id="footer_scripts">{{ old('footer_scripts') }}</textarea>
+                                    <textarea class="form-control " rows="8" name="footer_scripts" id="footer_scripts">{{ old('footer_scripts') }}</textarea>
                                     @error('footer_scripts')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror

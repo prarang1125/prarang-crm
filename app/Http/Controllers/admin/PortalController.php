@@ -48,8 +48,8 @@ class PortalController extends Controller
             'local_matrics' => 'nullable',
             'header_image' => 'required|max:2048',
             'footer_image' => 'required|max:2048',
-            'header_scripts'=>'nullable',
-            'footer_scripts'=>'nullable',
+            'header_scripts' => 'nullable',
+            'footer_scripts' => 'nullable',
             'local_info_image' => 'required|max:2048',
             'local_lang' => 'required|string|max:50',
         ]);
@@ -90,9 +90,9 @@ class PortalController extends Controller
     public function update(Request $request, Portal $portal, ImageUploadService $imageUploadService)
     {
         $validated = $request->validate([
-            'city_id' => 'required|integer|unique:portals,city_id,'.$portal->id,
-            'slug' => 'required|string|max:255|unique:portals,slug,'.$portal->id,
-            'city_code' => 'required|string|max:10|unique:portals,city_code,'.$portal->id,
+            'city_id' => 'required|integer|unique:portals,city_id,' . $portal->id,
+            'slug' => 'required|string|max:255|unique:portals,slug,' . $portal->id,
+            'city_code' => 'required|string|max:10|unique:portals,city_code,' . $portal->id,
             'city_name' => 'required|string|max:255',
             'city_name_local' => 'required|string|max:255',
             'city_slogan' => 'required|string|max:255',
@@ -103,8 +103,8 @@ class PortalController extends Controller
             'local_matrics' => 'nullable',
             'header_image' => 'nullable|max:2048',
             'footer_image' => 'nullable|max:2048',
-            'header_scripts'=>'nullable',
-            'footer_scripts'=>'nullable',
+            'header_scripts' => 'nullable',
+            'footer_scripts' => 'nullable',
             'local_info_image' => 'nullable|max:2048',
             'local_lang' => 'required|string|max:50',
         ]);

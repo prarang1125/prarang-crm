@@ -14,7 +14,7 @@ use App\Http\Controllers\{
     VisitorController,
     VisitorLocationController
 };
-use App\Http\Controllers\Admin\OurTeamController;
+use App\Http\Controllers\admin\OurTeamController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\MakerController;
 use App\Http\Controllers\WhatsappApi\WebHook;
@@ -116,7 +116,6 @@ Route::group(['prefix' => 'accounts'], function () {
 });
 
 require __DIR__ . '/admin.php';
-require __DIR__ . '/api.php';
 
 Route::get('visitor', [VisitorController::class, 'index'])->name('visitor');
 Route::get('show-visitor', [VisitorController::class, 'showVisitor'])->name('visitor.show');

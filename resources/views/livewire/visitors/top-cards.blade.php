@@ -98,22 +98,22 @@
 <section class="mt-2">
     <div class="row">
         @foreach (['facebook' => 'bxl-facebook', 'google' => 'bxl-google', 'prarang' => 'bx-user', 'others' => 'bx-time'] as $key => $icon)
-        <div class="col">
-            <div class="card radius-10">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div>
-                            <p class="mb-0 text-secondary">{{ ucfirst($key) }}</p>
-                            <h4 class="my-1">
-                                <span>{{ number_format($reffData[$key][0] ?? 0) }}</span><span>/</span>{{ number_format($reffData[$key][1] ?? 0) }}<span
-                                    class="text-muted">Clicks</span>
-                            </h4>
+            <div class="col">
+                <div class="card radius-10">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <p class="mb-0 text-secondary">{{ ucfirst($key) }}</p>
+                                <h4 class="my-1">
+                                    <span>{{ number_format($reffData[$key][0] ?? 0) }}</span><span>/</span>{{ number_format($reffData[$key][1] ?? 0) }}<span
+                                        class="text-muted">Clicks</span>
+                                </h4>
+                            </div>
+                            <div class="text-primary ms-auto font-35"><i class="bx {{ $icon }}"></i></div>
                         </div>
-                        <div class="text-primary ms-auto font-35"><i class="bx {{ $icon }}"></i></div>
                     </div>
                 </div>
             </div>
-        </div>
         @endforeach
     </div>
 
@@ -132,18 +132,18 @@
             <div class="post-date mb-2">
                 <div>Post Date: &nbsp; &nbsp;</div>
                 <div>
-                    <input id="from" wire:model="postStartDate" wire:change="changePostData" class="form-control datetimepicker" type="text"
-                        placeholder="DD-MM-YYYY hh:mm A">
+                    <input id="from" wire:model="postStartDate" wire:change="changePostData"
+                        class="form-control datetimepicker" type="text" placeholder="DD-MM-YYYY hh:mm A">
                     @error('startDate')
-                    <small class="text-danger ps-1">{{ $message }}</small>
+                        <small class="text-danger ps-1">{{ $message }}</small>
                     @enderror
                 </div>
                 <div class="ps-2 pe-2">To</div>
                 <div>
-                    <input id="to" wire:model="postEndDate" wire:change="changePostData" class="form-control datetimepicker" type="text"
-                        placeholder="DD-MM-YYYY hh:mm A">
+                    <input id="to" wire:model="postEndDate" wire:change="changePostData"
+                        class="form-control datetimepicker" type="text" placeholder="DD-MM-YYYY hh:mm A">
                     @error('startDate')
-                    <small class="text-danger ps-1">{{ $message }}</small>
+                        <small class="text-danger ps-1">{{ $message }}</small>
                     @enderror
                 </div>
             </div>
@@ -160,23 +160,23 @@
                     </thead>
                     <tbody>
                         @forelse ($visitors as $visitor)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>
-                                <a href="javascript:void(0)"
-                                    wire:click="getPostAnalytics({{ $visitor->post_id }}, '{{ addslashes($visitor->Title) }}')">
-                                    {{ $visitor->Title }}
-                                </a>
-                            </td>
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>
+                                    <a href="javascript:void(0)"
+                                        wire:click="getPostAnalytics({{ $visitor->post_id }}, '{{ addslashes($visitor->Title) }}')">
+                                        {{ $visitor->Title }}
+                                    </a>
+                                </td>
 
-                            <td>{{ $visitor->record_count }}</td>
-                            <td>{{ $visitor->visit_count }}</td>
-                            <td>{{ Carbon\Carbon::parse($visitor->dateOfApprove)->format('d-M-Y') }}</td>
-                        </tr>
+                                <td>{{ $visitor->record_count }}</td>
+                                <td>{{ $visitor->visit_count }}</td>
+                                <td>{{ Carbon\Carbon::parse($visitor->dateOfApprove)->format('d-M-Y') }}</td>
+                            </tr>
                         @empty
-                        <tr>
-                            <td colspan="5" class="text-center">No Data Found!</td>
-                        </tr>
+                            <tr>
+                                <td colspan="5" class="text-center">No Data Found!</td>
+                            </tr>
                         @endforelse
 
                     </tbody>
@@ -202,30 +202,30 @@
                             <div class="table-responsive " wire:loading.class="loading-effect">
                                 {{-- get5th31th --}}
                                 @isset($get5th31th)
-                                <table class="table align-items-center table-sm mb-0">
-                                    <tbody>
-                                        <tr>
-                                            <th>Days</th>
-                                            <td>Clicks</td>
-                                            <td>Views</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="ps-4">5<sup>th</sup></th>
-                                            <td>{{ $get5th31th->click_5th }}</td>
-                                            <td>{{ $get5th31th->view_5th }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="ps-4"> 31 <sup>st</sup></th>
-                                            <td>{{ $get5th31th->click_31st }}</td>
-                                            <td>{{ $get5th31th->view_31st }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="ps-4">Hyperlocal</th>
-                                            <td>{{ $get5th31th->hit_count_by_city }}</td>
-                                            <td>{{ $get5th31th->visit_count_by_city }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table> <br>
+                                    <table class="table align-items-center table-sm mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th>Days</th>
+                                                <td>Clicks</td>
+                                                <td>Views</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="ps-4">5<sup>th</sup></th>
+                                                <td>{{ $get5th31th->click_5th }}</td>
+                                                <td>{{ $get5th31th->view_5th }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="ps-4"> 31 <sup>st</sup></th>
+                                                <td>{{ $get5th31th->click_31st }}</td>
+                                                <td>{{ $get5th31th->view_31st }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="ps-4">Hyperlocal</th>
+                                                <td>{{ $get5th31th->hit_count_by_city }}</td>
+                                                <td>{{ $get5th31th->visit_count_by_city }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table> <br>
                                 @endisset
                                 <table class="table align-items-center table-sm mb-0">
                                     <tbody>
@@ -235,18 +235,18 @@
                                             <td>Views</td>
                                         </tr>
                                         @php
-                                        $totalh = 0;
-                                        $totalv = 0;
+                                            $totalh = 0;
+                                            $totalv = 0;
                                         @endphp
-                                        @foreach (['facebook' => 'bxl-facebook', 'google' => 'bxl-google', 'whatsapp' => 'bxl-whatsapp','prarang' => 'bx-user', 'others' => 'bxs-circle'] as $key => $icon)
-                                        @isset($postReffData[$key][1])
-                                        @php
-                                        $totalh = $totalh + $postReffData[$key][1];
-                                        $totalv = $totalv + $postReffData[$key][0];
-                                        @endphp
-                                        @endisset
-                                        <tr>
-                                            <td><i class="bx {{ $icon }} me-2" "></i>
+                                        @foreach (['facebook' => 'bxl-facebook', 'google' => 'bxl-google', 'whatsapp' => 'bxl-whatsapp', 'email' => 'bx-envelope', 'prarang' => 'bx-user', 'meerutrang' => 'bxs-circle', 'others' => 'bxs-circle'] as $key => $icon)
+                                            @isset($postReffData[$key][1])
+                                                @php
+                                                    $totalh = $totalh + $postReffData[$key][1];
+                                                    $totalv = $totalv + $postReffData[$key][0];
+                                                @endphp
+                                            @endisset
+                                            <tr>
+                                                <td><i class="bx {{ $icon }} me-2" "></i>
                                                 {{ ucfirst($key) }}</td>
                                             <td>{{ number_format($postReffData[$key][1] ?? 0) }}</td>
                                             <td>{{ number_format($postReffData[$key][0] ?? 0) }}</td>
@@ -254,9 +254,9 @@
  @endforeach
                                             <tr>
                                                 <th class=" ps-4">Total</th>
-                                            <th>{{ $totalh }}</th>
-                                            <th>{{ $totalv }}</th>
-                                        </tr>
+                                                <th>{{ $totalh }}</th>
+                                                <th>{{ $totalv }}</th>
+                                            </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -270,8 +270,8 @@
                                             <td></td>
                                         </tr>
                                         @foreach (['user' => 'bx-user', 'facebook_bot' => 'bxl-facebook', 'google_bot' => 'bxl-google', 'bing_bot' => 'bxl-bing', 'others' => 'bxs-circle'] as $key => $icon)
-                                        <tr>
-                                            <td><i class="bx {{ $icon }} me-2""></i>
+                                            <tr>
+                                                <td><i class="bx {{ $icon }} me-2""></i>
                                                     {{ ucfirst($key) }}</td>
                                                 <td>{{ number_format($userType[$key] ?? 0) }}</td>
                                             </tr>
@@ -280,24 +280,24 @@
                                 </table>
                             </div> <br>
                             <div class=" table-responsive" wire:loading.class="loading-effect">
-                                                    <table class="table align-items-center table-sm mb-0">
-                                                        <tbody>
-                                                            <tr>
-                                                                <th>Behaviour</th>
+                                <table class="table align-items-center table-sm mb-0">
+                                    <tbody>
+                                        <tr>
+                                            <th>Behaviour</th>
 
-                                                                <td></td>
-                                                            </tr>
-                                                            @foreach (['scroll' => 'bx-mobile', 'duration' => 'bx-time', 'mobile' => 'bx-phone', 'tablet' => 'bx-tab', 'desktop' => 'bx-desktop'] as $key => $icon)
-                                                            <tr>
-                                                                <td><i class="bx {{ $icon }} me-2"></i>
-                                                                    {{ ucfirst($key) }}
-                                                                </td>
-                                                                <td>{{ number_format($scroll->{$key} ?? 0) }}{{ $key == 'scroll' ? '% (agv)' : '' }}{{ $key == 'duration' ? ' min' : '' }}
-                                                                </td>
-                                                            </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
+                                            <td></td>
+                                        </tr>
+                                        @foreach (['scroll' => 'bx-mobile', 'duration' => 'bx-time', 'mobile' => 'bx-phone', 'tablet' => 'bx-tab', 'desktop' => 'bx-desktop'] as $key => $icon)
+                                            <tr>
+                                                <td><i class="bx {{ $icon }} me-2"></i>
+                                                    {{ ucfirst($key) }}
+                                                </td>
+                                                <td>{{ number_format($scroll->{$key} ?? 0) }}{{ $key == 'scroll' ? '% (agv)' : '' }}{{ $key == 'duration' ? ' min' : '' }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -329,7 +329,7 @@
                             <input id="from" wire:model="startDate" class="form-control datetimepicker"
                                 type="text" placeholder="DD-MM-YYYY hh:mm A">
                             @error('startDate')
-                            <small class="text-danger ps-1">{{ $message }}</small>
+                                <small class="text-danger ps-1">{{ $message }}</small>
                             @enderror
                         </div>
                         <div class="col-sm-6 mb-3">
@@ -337,7 +337,7 @@
                             <input id="to" wire:model="endDate" class="form-control datetimepicker"
                                 type="text" placeholder="DD-MM-YYYY hh:mm A">
                             @error('endDate')
-                            <small class="text-danger ps-1">{{ $message }}</small>
+                                <small class="text-danger ps-1">{{ $message }}</small>
                             @enderror
                         </div>
                     </div>
