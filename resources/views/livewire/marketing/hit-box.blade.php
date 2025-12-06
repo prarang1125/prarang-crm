@@ -48,11 +48,11 @@
                                     </button>
                                     <div class="dropdown-menu">
                                         @foreach ($cities as $citySelect)
-                                            <label class="dropdown-item">
-                                                <input type="checkbox" value="{{ $citySelect->id }}"
-                                                    wire:model="cityIds" wire:change="cityUpdate">
-                                                {{ $citySelect->name }}
-                                            </label>
+                                        <label class="dropdown-item">
+                                            <input type="checkbox" value="{{ $citySelect->id }}"
+                                                wire:model="cityIds" wire:change="cityUpdate">
+                                            {{ $citySelect->name }}
+                                        </label>
                                         @endforeach
                                     </div>
                                 </div>
@@ -60,14 +60,14 @@
 
                             <div class="selected-cities mt-3">
                                 @foreach ($city as $cityData)
-                                    <i class='bx bx-current-location bx-tada'></i> {{ $cityData->name }} &nbsp;&nbsp;
+                                <i class='bx bx-current-location bx-tada'></i> {{ $cityData->name }} &nbsp;&nbsp;
                                 @endforeach
 
                             </div>
                         </section>
                         @empty($city)
-                            <div class="text-danger p-2  mt-2">Please select a city</div>
-                            @else
+                        <div class="text-danger p-2  mt-2">Please select a city</div>
+                        @else
 
                         <section class="mt-2 p-2 ">
                             <h6>User Groups</h6>
@@ -92,16 +92,16 @@
                             <h6>Channel</h6>
                             <div class="grpx">
                                 @foreach ($channels as $key => $channelData)
+                                <div class="form-check">
                                     <div class="form-check">
-                                        <div class="form-check">
-                                            <input wire:model="channel" id="{{ $channelData }}"
-                                                class="form-check-input" type="radio" value="{{ $key }}"
-                                                name="channel">
-                                            <label for="{{ $channelData }}" class="form-check-label">
-                                                {{ $channelData }}
-                                            </label>
-                                        </div>
+                                        <input wire:model="channel" id="{{ $channelData }}"
+                                            class="form-check-input" type="radio" value="{{ $key }}"
+                                            name="channel">
+                                        <label for="{{ $channelData }}" class="form-check-label">
+                                            {{ $channelData }}
+                                        </label>
                                     </div>
+                                </div>
                                 @endforeach
 
 
@@ -114,7 +114,7 @@
                                 <select id="template" class="form-select" wire:change='setTemplates()'
                                     wire:model="templateId">
                                     @foreach ($templates as $templateData)
-                                        <option value="{{ $templateData['id'] }}">{{ $templateData['name'] }}</option>
+                                    <option value="{{ $templateData['id'] }}">{{ $templateData['name'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -124,12 +124,13 @@
                                 <div class="mb-3">
                                     <p class="text-danger">
                                         @error('customUsers')
-                                            <span class="text-red-500">{{ $message }}</span>
+                                        <span class="text-red-500">{{ $message }}</span>
                                         @enderror
                                     </p>
                                     <label for="customUser" class="form-label">Custom User</label>
                                     <textarea id="customUser" style="height:100px" class="form-control" wire:model.defer="customUsers"
                                         wire:change="handaleCustomUsers()"></textarea>
+
                                 </div>
                             </div>
                         </section>
@@ -144,49 +145,49 @@
                         <form wire:submit.prevent="sendMessage">
                             <!-- Template Selection -->
                             @if ($showPost)
-                                <div class="mb-3">
-                                    <label for="template" class="form-label">Select Post</label>
-                                    <select id="template" class="form-select" wire:change="setTemplates()"
-                                        wire:model="postId">
-                                        <option>Select Post</option>
-                                        @foreach ($posts as $postData)
-                                            <option value="{{ $postData->chittiId }}">
-                                                {{ $postData->Title }}
-                                            </option>
-                                        @endforeach
-
-                                    </select>
-
-                            @endif
-                            <!-- Message Box -->
                             <div class="mb-3">
-                                <label for="content" class="form-label">Message Box</label>
-                                <textarea id="content" style="height:300px" class="form-control" wire:model.defer="content">
+                                <label for="template" class="form-label">Select Post</label>
+                                <select id="template" class="form-select" wire:change="setTemplates()"
+                                    wire:model="postId">
+                                    <option>Select Post</option>
+                                    @foreach ($posts as $postData)
+                                    <option value="{{ $postData->chittiId }}">
+                                        {{ $postData->Title }}
+                                    </option>
+                                    @endforeach
+
+                                </select>
+
+                                @endif
+                                <!-- Message Box -->
+                                <div class="mb-3">
+                                    <label for="content" class="form-label">Message Box</label>
+                                    <textarea id="content" style="height:300px" class="form-control" wire:model.defer="content">
 
                                 </textarea>
-                            </div>
+                                </div>
 
-                            <!-- Channel Selection -->
-                            <div class="row">
-                                <div class="col-10">
-                                    <select id="channel" class="form-select" wire:model="option">
-                                        <option value="1">WhatsApp</option>
-                                        <option value="2">Email</option>
-                                        <option value="3">SMS</option>
-                                    </select>
+                                <!-- Channel Selection -->
+                                <div class="row">
+                                    <div class="col-10">
+                                        <select id="channel" class="form-select" wire:model="option">
+                                            <option value="1">WhatsApp</option>
+                                            <option value="2">Email</option>
+                                            <option value="3">SMS</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-2 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-primary w-100">Send</button>
+                                    </div>
                                 </div>
-                                <div class="col-2 d-flex align-items-end">
-                                    <button type="submit" class="btn btn-primary w-100">Send</button>
-                                </div>
-                            </div>
                         </form>
 
                         <!-- Success & Error Messages -->
                         @if (session()->has('success'))
-                            <div class="alert alert-success mt-2">{{ session('success') }}</div>
+                        <div class="alert alert-success mt-2">{{ session('success') }}</div>
                         @endif
                         @if (session()->has('error'))
-                            <div class="alert alert-danger mt-2">{{ session('error') }}</div>
+                        <div class="alert alert-danger mt-2">{{ session('error') }}</div>
                         @endif
                     </section>
                 </div>

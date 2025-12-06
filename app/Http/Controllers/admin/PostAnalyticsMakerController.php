@@ -60,7 +60,7 @@ class PostAnalyticsMakerController extends Controller
     // this method is use for update the post analytics method
     public function postAnalyticsMakerUpdate(Request $request, $id)
     {
-
+      
         $validated = $request->validate([
             'postNumber' => 'required|string',
             'titleOfPost' => 'required|string',
@@ -79,9 +79,10 @@ class PostAnalyticsMakerController extends Controller
             'email' => 'nullable|string',
             'sponsored' => 'nullable|string',
             'instagram' => 'nullable|string',
+            'whatsappCount' => 'required|integer',
         ]);
 
-        // dd($request->all());
+    
         $currentDateTime = getUserCurrentTime();
         $chitti = Chitti::findOrFail($id);
         $chitti->update([
@@ -95,6 +96,7 @@ class PostAnalyticsMakerController extends Controller
             'emailCount' => $request->email,
             'sponsoredBy' => $request->sponsored,
             'instagramCount' => $request->instagram,
+            'whatsappCount' => $request->whatsappCount,
             'advertisementPost' => $request->advertisementInPost,
             'analyticsMaker' => Auth::guard('admin')->user()->userId,
             'monthDay' => $request->monthDay,
@@ -103,7 +105,6 @@ class PostAnalyticsMakerController extends Controller
             'post_anlytics_rtrn_to_mkr_id' => 1,
             // 'createDate' => $currentDateTime
         ]);
-
         // Redirect with success message
         return redirect()->route('admin.post-analytics-maker-listing', ['cityCode' => $request->cityCode])
             ->with('success', 'Data updated successfully.');

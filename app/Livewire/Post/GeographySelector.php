@@ -39,79 +39,82 @@ class GeographySelector extends Component
 
     public function changeGeography()
     {
-    $this->filteredOptions = [];
+        $this->filteredOptions = [];
 
 
 
 
-    switch ($this->selectedGeography) {
-        case 3: // Region
-            $query = Mregion::where('isActive', 1);
+        switch ($this->selectedGeography) {
+            case 3: // Region
+                $query = Mregion::where('isActive', 1);
 
-           $query=$this->getGeographyOptions($query, 'regionId','r');
+                $query = $this->getGeographyOptions($query, 'regionId', 'r');
 
-            $this->filteredOptions = $query->get(['regionId as id', 'regionnameInEnglish as name']);
-            $this->changeTitle = 'Region';
-            break;
+                $this->filteredOptions = $query->get(['regionId as id', 'regionnameInEnglish as name']);
+                $this->changeTitle = 'Region';
+                break;
 
-        case 2: // City
-            $query = Mcity::where('isActive', 1);
+            case 2: // City
+                $query = Mcity::where('isActive', 1);
 
-            $query=$this->getGeographyOptions($query, 'cityId','c');
+                $query = $this->getGeographyOptions($query, 'cityId', 'c');
 
-            $this->filteredOptions = $query->get(['cityId as id', 'citynameInEnglish as name']);
-            $this->changeTitle = 'City';
-            break;
+                $this->filteredOptions = $query->get(['cityId as id', 'citynameInEnglish as name']);
+                $this->changeTitle = 'City';
+                break;
 
-        case 1: // Country
-            $query = Mcountry::where('isActive', 1);
+            case 1: // Country
+                $query = Mcountry::where('isActive', 1);
 
-            $query=$this->getGeographyOptions($query, 'countryId','con');
+                $query = $this->getGeographyOptions($query, 'countryId', 'CON');
 
-            $this->filteredOptions = $query->get(['countryId as id', 'countryNameInEnglish as name']);
-            $this->changeTitle = 'Country';
-            break;
+                $this->filteredOptions = $query->get(['countryId as id', 'countryNameInEnglish as name']);
+                $this->changeTitle = 'Country';
 
-        default:
-            $this->changeTitle = 'Select';
-            break;
+                break;
+
+            default:
+                $this->changeTitle = 'Select';
+                break;
+        }
     }
-}
 
-private function getGeographyOptions($query, $field, $con)
-{
-    // If Admin, no filtering needed
-    if (Auth::guard('admin')->check()) {
+    private function getGeographyOptions($query, $field, $con)
+    {
+        // If Admin, no filtering needed
+        if (Auth::guard('admin')->check()) {
+
+            return $query;
+        }
+
+        // Normal User - fetch user's allowed geography
+        $userId = auth()->user()->userId ?? Auth::guard('admin')->user()->userId;
+
+        $user = Muser::find($userId);
+
+        if (!$user) {
+
+            return $query; // no user found, skip
+        }
+
+        $this->allowGeo = collect($user->geography ?? [])->reduce(function ($carry, $item) {
+            if (preg_match('/[a-zA-Z]+/', $item, $key) && preg_match_all('/\d+/', $item, $numbers)) {
+                foreach ($numbers[0] as $num) {
+                    $carry[$key[0]][] = (int) $num;
+                }
+            }
+            return $carry;
+        }, []);
+
+        // Apply whereIn if allowed geographies exist
+        if (!empty($this->allowGeo[$con])) {
+            $query->whereIn($field, $this->allowGeo[$con]);
+        } else {
+            $query->whereIn($field, [3]);
+        }
+
         return $query;
     }
-
-    // Normal User - fetch user's allowed geography
-    $userId = auth()->user()->userId ?? Auth::guard('admin')->user()->userId;
-
-    $user = Muser::find($userId);
-
-    if (!$user) {
-        return $query; // no user found, skip
-    }
-
-    $this->allowGeo = collect($user->geography ?? [])->reduce(function ($carry, $item) {
-        if (preg_match('/[a-zA-Z]+/', $item, $key) && preg_match_all('/\d+/', $item, $numbers)) {
-            foreach ($numbers[0] as $num) {
-                $carry[$key[0]][] = (int) $num;
-            }
-        }
-        return $carry;
-    }, []);
-
-    // Apply whereIn if allowed geographies exist
-    if (!empty($this->allowGeo[$con])) {
-        $query->whereIn($field, $this->allowGeo[$con]);
-    }else{
-        $query->whereIn($field, [3]);
-    }
-
-    return $query;
-}
 
 
     public function render()

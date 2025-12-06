@@ -78,7 +78,7 @@ class TopCards extends Component
         $groupedData = DB::table('visitors')
             ->select(DB::raw('
             CASE
-                WHEN referrer IN ("facebook", "google", "prarang") THEN referrer
+                WHEN referrer IN ("facebook", "google", "prarang","whatsapp") THEN referrer
                 ELSE "others"
             END as referrer,
             SUM(visit_count) as total_visits,
@@ -91,7 +91,7 @@ class TopCards extends Component
             })
             ->groupBy(DB::raw('
             CASE
-                WHEN referrer IN ("facebook", "google", "prarang") THEN referrer
+                WHEN referrer IN ("facebook", "google", "prarang","whatsapp") THEN referrer
                 ELSE "others"
             END
         '))

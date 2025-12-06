@@ -21,13 +21,13 @@ class WhatsAppService
     /**
      * Send WhatsApp Message (Text or Template)
      */
-    public function sendMessage($to, $message = null, $templateName = null, $templateParams = [])
+    public function sendMessage($to, $message = null, $templateName = 'post_1_hi', $templateParams = [])
     {
         try {
             // Prepare Payload based on whether it's a template or text
             $payload = $templateName
-                ? $this->getTemplatePayload($to, $templateName, $templateParams)
-                : $this->getTextPayload($to, $message);
+                ? $this->getTemplatePayload($to, 'post_1_hi', $templateParams)
+                : $this->getTemplatePayload($to, 'post_1_hi', $templateParams);
 
             // Send Request to WhatsApp API
             $response = Http::withToken($this->accessToken)->post("{$this->apiUrl}/{$this->phoneId}/messages", $payload);
@@ -53,6 +53,7 @@ class WhatsAppService
         return [
             'messaging_product' => 'whatsapp',
             'recipient_type' => 'individual',
+
             'to' => $to,
             'type' => 'text',
             'text' => ['body' => $message],
@@ -71,7 +72,7 @@ class WhatsAppService
             'type' => 'template',
             'template' => [
                 'name' => $templateName,
-                'language' => ['code' => 'en_US'], // You can change the language code
+                'language' => ['code' => 'hi'], // You can change the language code
                 'components' => [
                     [
                         'type' => 'body',
