@@ -137,6 +137,25 @@
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
+
+                                    <div class="col-sm-6 mt-2">
+                                        <label for="list_order">Order</label>
+                                        <input class="form-control" type="number" name="list_order" id="list_order"
+                                            value="{{ old('list_order') }}">
+                                        @error('list_order')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-sm-6 mt-2">
+                                        <label for="state">State</label>
+                                        <input class="form-control" type="text" name="state" id="state"
+                                            value="{{ old('state') }}">
+                                        @error('state')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+
                                 </div>
                                 <div class="mt-3">
                                     <label for="map_link">Map Link</label>
@@ -148,56 +167,91 @@
                                 </div>
 
 
-                                <!-- Weather Widget Code -->
-                                <div class="mt-3">
-                                    <label for="weather_widget_code">Weather Widget Code</label>
-                                    <textarea class="form-control" name="weather_widget_code" id="weather_widget_code">{{ old('weather_widget_code') }}</textarea>
-                                    @error('weather_widget_code')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
 
-                                <!-- Sports Widget Code -->
-                                <div class="mt-3">
-                                    <label for="sports_widget_code">Sports Widget Code</label>
-                                    <textarea class="form-control" name="sports_widget_code" id="sports_widget_code">{{ old('sports_widget_code') }}</textarea>
-                                    @error('sports_widget_code')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <!-- Weather Widget Code -->
+                                        <div class="mt-3">
+                                            <label for="weather_widget_code">Weather Widget Code</label>
+                                            <textarea class="form-control" name="weather_widget_code" id="weather_widget_code">{{ old('weather_widget_code') }}</textarea>
+                                            @error('weather_widget_code')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
 
-                                <!-- News Widget Code -->
-                                <div class="mt-3">
-                                    <label for="news_widget_code">News Widget Code</label>
-                                    <textarea class="form-control" name="news_widget_code" id="news_widget_code">{{ old('news_widget_code') }}</textarea>
-                                    @error('news_widget_code')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                                        <!-- Sports Widget Code -->
+                                        <div class="mt-3">
+                                            <label for="sports_widget_code">Sports Widget Code</label>
+                                            <textarea class="form-control" name="sports_widget_code" id="sports_widget_code">{{ old('sports_widget_code') }}</textarea>
+                                            @error('sports_widget_code')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
 
-                                <!-- Local Matrics -->
-                                <div class="mt-3">
-                                    <label for="local_matrics">Local Metrics</label>
-                                    <textarea class="form-control ckeditorinit" name="local_matrics" id="local_matrics">{{ old('local_matrics') }}</textarea>
-                                    @error('local_matrics')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="mt-3">
-                                    <label for="header_scripts">Header Scripts</label>
-                                    <textarea class="form-control " rows="8" name="header_scripts" id="header_scripts">{{ old('header_scripts') }}</textarea>
-                                    @error('header_scripts')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="mt-3">
-                                    <label for="footer_scripts">Footer Scripts</label>
-                                    <textarea class="form-control " rows="8" name="footer_scripts" id="footer_scripts">{{ old('footer_scripts') }}</textarea>
-                                    @error('footer_scripts')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                                        <!-- News Widget Code -->
+                                        <div class="mt-3">
+                                            <label for="news_widget_code">News Widget Code</label>
+                                            <textarea class="form-control" name="news_widget_code" id="news_widget_code">{{ old('news_widget_code') }}</textarea>
+                                            @error('news_widget_code')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
 
+
+                                    </div>
+                                    <div class="col-sm-6">
+
+                                        <!-- Local Matrics -->
+                                        <div class="mt-3">
+                                            <label for="local_matrics">Local Metrics</label>
+                                            <textarea class="form-control ckeditorinit" name="local_matrics" id="local_matrics">{{ old('local_matrics') }}</textarea>
+                                            @error('local_matrics')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="mt-3 col-sm-6">
+                                        <label for="header_scripts">Header Scripts</label>
+                                        <textarea class="form-control " rows="8" name="header_scripts" id="header_scripts">{{ old('header_scripts') }}</textarea>
+                                        @error('header_scripts')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mt-3 col-sm-6">
+                                        <label for="footer_scripts">Footer Scripts</label>
+                                        <textarea class="form-control " rows="8" name="footer_scripts" id="footer_scripts">{{ old('footer_scripts') }}</textarea>
+                                        @error('footer_scripts')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="mt-3 col-sm-6">
+                                        <label for="books">Books (JSON)</label>
+                                        <textarea class="form-control " rows="8" name="books" id="books">{{ old('books') }}</textarea>
+                                        @error('books')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="mt-3 col-sm-6">
+                                        <label for="links">Links (JSON)</label>
+                                        <textarea class="form-control " rows="8" name="links" id="links">{{ old('links') }}</textarea>
+                                        @error('links')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <label for="viewership">Viewership Text (HTML)</label>
+                                    <textarea class="form-control " rows="8" name="viewership" id="viewership">{{ old('viewership') }}</textarea>
+                                    @error('viewership')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <br>
                                 <!-- Header Image -->
                                 <div class="row">
                                     <!-- Header Image -->

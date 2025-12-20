@@ -16,7 +16,6 @@ class PortalController extends Controller
     public function index()
     {
         $portals = Portal::paginate(20);
-
         return view('admin.portal.index', compact('portals'));
     }
 
@@ -29,9 +28,6 @@ class PortalController extends Controller
         return view('admin.portal.create', compact('cityCodes'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request, ImageUploadService $imageUploadService)
     {
         $validated = $request->validate([
@@ -52,6 +48,11 @@ class PortalController extends Controller
             'footer_scripts' => 'nullable',
             'local_info_image' => 'required|max:2048',
             'local_lang' => 'required|string|max:50',
+            'state' => 'required|string|max:100',
+            'list_order' => 'integer|nullable',
+            'viewership' => 'string',
+            'books' => 'string',
+            'links' => 'string',
         ]);
 
         $fileFields = ['header_image', 'footer_image', 'local_info_image'];
@@ -107,6 +108,11 @@ class PortalController extends Controller
             'footer_scripts' => 'nullable',
             'local_info_image' => 'nullable|max:2048',
             'local_lang' => 'required|string|max:50',
+            'state' => 'required|string|max:100',
+            'list_order' => 'integer|nullable',
+            'viewership' => 'string',
+            'books' => 'string',
+            'links' => 'string',
         ]);
 
         // Handle file uploads (if any)
