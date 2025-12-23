@@ -183,8 +183,6 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-
-
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <!-- Weather Widget Code -->
@@ -195,7 +193,6 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-
                                         <!-- Sports Widget Code -->
                                         <div class="mt-3">
                                             <label for="sports_widget_code">Sports Widget Code</label>
@@ -204,7 +201,6 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-
                                         <!-- News Widget Code -->
                                         <div class="mt-3">
                                             <label for="news_widget_code">News Widget Code</label>
@@ -213,11 +209,8 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-
-
                                     </div>
                                     <div class="col-sm-6">
-
                                         <!-- Local Matrics -->
                                         <div class="mt-3">
                                             <label for="local_matrics">Local Metrics</label>
