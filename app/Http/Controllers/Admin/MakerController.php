@@ -53,13 +53,35 @@ class MakerController extends Controller
         return view('admin.maker.maker-register', compact('timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras', 'geographyOptions', 'regions', 'cities', 'countries'));
     }
 
+    public function search(Request $request)
+    {
+        $search = $request->search;
+
+        $query = Chitti::query();
+
+        if (is_numeric($search)) {
+            $query->where('chittiId', $search);
+        } else {
+            $query->where(function ($q) use ($search) {
+                $q->where('Title', 'like', "%{$search}%")
+                    ->orWhere('SubTitle', 'like', "%{$search}%");
+            });
+        }
+
+        return response()->json(
+            $query->select('chittiId', 'Title')->limit(20)->get()
+                ->map(fn($p) => ['id' => $p->chittiId, 'text' => $p->Title])
+        );
+    }
+
+
     public function makerStore(Request $request, ImageUploadService $imageUploadService)
     {
 
         $validator = Validator::make($request->all(), [
             'content' => 'required|string',
             'makerImage' => 'required|image|max:2048',
-            'intent'=>'required',
+            'intent' => 'required',
             'summary' => 'required',
             'geography' => 'required',
             'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
@@ -71,7 +93,7 @@ class MakerController extends Controller
                 'required',
                 function ($attribute, $value, $fail) {
                     if ($value === 'Select Select') {
-                        $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
+                        $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
                     }
                 },
             ],
@@ -91,11 +113,11 @@ class MakerController extends Controller
                 // dd($area_id);
                 $areaIdCode = '';
                 if ($request->geography == 6) {
-                    $areaIdCode = 'c'.$area_id;
+                    $areaIdCode = 'c' . $area_id;
                 } elseif ($request->geography == 5) {
-                    $areaIdCode = 'r'.$area_id;
+                    $areaIdCode = 'r' . $area_id;
                 } elseif ($request->geography == 7) {
-                    $areaIdCode = 'con'.$area_id;
+                    $areaIdCode = 'con' . $area_id;
                 }
                 $chitti->languageId = 1;
                 $chitti->description = $request->content;
@@ -127,6 +149,7 @@ class MakerController extends Controller
                 $chitti->dateOfUpload = '';
                 $chitti->checkerReason = '';
                 $chitti->uploaderReason = '';
+                $chitti->re_upload_chittid = $request->re_upload_chittid;
                 $chitti->save();
                 $lastId = $chitti->chittiId;
 
@@ -242,7 +265,7 @@ class MakerController extends Controller
                 'required',
                 function ($attribute, $value, $fail) {
                     if ($value === 'Select Select') {
-                        $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
+                        $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
                     }
                 },
             ],
@@ -264,6 +287,7 @@ class MakerController extends Controller
                         'return_chitti_post_from_checker_id' => 0,
                         'returnDateToChecker' => $currentDateTime,
                         'makerId' => Auth::guard('admin')->user()->userId,
+                        're_upload_chittid' => $request->re_upload_chittid,
 
                     ]);
                     DB::commit();
@@ -286,6 +310,7 @@ class MakerController extends Controller
                         'cityId' => $area_id,
                         'areaId' => $area_id,
                         'geographyId' => $request->geography,
+                        're_upload_chittid' => $request->re_upload_chittid,
 
                     ]);
 
@@ -309,7 +334,6 @@ class MakerController extends Controller
                             'updated_at' => $currentDateTime,
                             'updated_by' => Auth::guard('admin')->user()->userId,
                         ]);
-
                     }
 
                     Chittigeographymapping::where('chittiId', $id)->update([
@@ -336,7 +360,7 @@ class MakerController extends Controller
             } catch (\Exception $e) {
 
                 DB::rollBack();
-                Log::error('Maker Update Error: '.$e->getMessage(), ['exception' => $e]);
+                Log::error('Maker Update Error: ' . $e->getMessage(), ['exception' => $e]);
 
                 return redirect()->back()->with('error', 'An error occurred while updating the maker.')->withInput();
             }
