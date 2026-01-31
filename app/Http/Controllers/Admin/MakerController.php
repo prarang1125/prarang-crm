@@ -53,6 +53,28 @@ class MakerController extends Controller
         return view('admin.maker.maker-register', compact('timelines', 'manSenses', 'manInventions', 'geographys', 'faunas', 'floras', 'geographyOptions', 'regions', 'cities', 'countries'));
     }
 
+    public function search(Request $request)
+    {
+        $search = $request->search;
+
+        $query = Chitti::query();
+
+        if (is_numeric($search)) {
+            $query->where('chittiId', $search);
+        } else {
+            $query->where(function ($q) use ($search) {
+                $q->where('Title', 'like', "%{$search}%")
+                    ->orWhere('SubTitle', 'like', "%{$search}%");
+            });
+        }
+
+        return response()->json(
+            $query->select('chittiId', 'Title')->limit(20)->get()
+                ->map(fn($p) => ['id' => $p->chittiId, 'text' => $p->Title])
+        );
+    }
+
+
     public function makerStore(Request $request, ImageUploadService $imageUploadService)
     {
 
@@ -128,6 +150,7 @@ class MakerController extends Controller
                 $chitti->dateOfUpload = '';
                 $chitti->checkerReason = '';
                 $chitti->uploaderReason = '';
+                $chitti->re_upload_chittid = $request->re_upload_chittid;
                 $chitti->save();
                 $lastId = $chitti->chittiId;
 
@@ -265,6 +288,7 @@ class MakerController extends Controller
                         'return_chitti_post_from_checker_id' => 0,
                         'returnDateToChecker' => $currentDateTime,
                         'makerId' => Auth::guard('admin')->user()->userId,
+                        're_upload_chittid' => $request->re_upload_chittid,
 
                     ]);
                     DB::commit();
@@ -287,6 +311,7 @@ class MakerController extends Controller
                         'cityId' => $area_id,
                         'areaId' => $area_id,
                         'geographyId' => $request->geography,
+                        're_upload_chittid' => $request->re_upload_chittid,
 
                     ]);
 

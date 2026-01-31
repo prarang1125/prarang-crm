@@ -127,6 +127,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/maker/maker-edit/{id}', [MakerController::class, 'makerEdit'])->name('admin.maker-edit');
         Route::put('/maker/maker-update/{id}', [MakerController::class, 'makerUpdate'])->name('admin.maker-update');
         Route::get('/maker/maker-delete/{id}', [MakerController::class, 'makerdelete'])->name('admin.maker-delete');
+        Route::get('/maker/search-posts', [MakerController::class, 'search'])->name('admin.search.posts');
+
 
         Route::get('/checker/checker-listing', [ChekerController::class, 'indexMain'])->name('admin.checker-listing');
 

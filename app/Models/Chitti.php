@@ -80,6 +80,7 @@ class Chitti extends Model
         'post_anlytics_rtrn_to_mkr_id',
         'return_chitti_post_from_checker',
         'return_chitti_post_from_checker_id',
+        're_upload_chittid',
         'created_at',
         'created_by',
         'updated_at',

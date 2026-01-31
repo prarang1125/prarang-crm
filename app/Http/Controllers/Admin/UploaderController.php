@@ -62,7 +62,7 @@ class UploaderController extends Controller
 
     public function uploaderUpdate(Request $request, $id, ImageUploadService $imageUploadService)
     {
-
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'content' => 'required|string',
             'makerImage' => 'nullable|image|max:2048',
@@ -71,9 +71,10 @@ class UploaderController extends Controller
                 'required',
                 function ($attribute, $value, $fail) {
                     if ($value === 'Select Select') {
-                        $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
+                        $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
                     }
-                }],
+                }
+            ],
             'title' => ['required', 'string', 'max:255', 'regex:/^[^@#;"`~\[\]\\\\]+$/'],
             'subtitle' => ['required', 'string', 'max:255',  'regex:/^[a-zA-Z0-9 -]+$/'],
             'forTheCity' => 'required|boolean',
@@ -118,7 +119,7 @@ class UploaderController extends Controller
             if ($request->action === 'approvd') {
 
 
-                $approveDate=Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A');
+                $approveDate = Carbon::parse($request->dateOfApprove)->format('d-m-Y h:i A');
                 $chitti->update([
                     'description' => $request->content,
                     'Title' => $request->title,
@@ -129,6 +130,7 @@ class UploaderController extends Controller
                     'updated_by' => Auth::guard('admin')->user()->userId,
                     'dateOfApprove' => $approveDate,
                     'uploaderId' => Auth::guard('admin')->user()->userId,
+                    're_upload_chittid' => $request->re_upload_chittid,
                 ]);
 
                 return redirect()->route('admin.uploader-listing', ['id' => $chitti->chittiId])->with('success', 'Uploader updated successfully.');
@@ -136,11 +138,11 @@ class UploaderController extends Controller
                 $area_id = $request->c2rselect;
                 $areaIdCode = '';
                 if ($request->geography == 6) { //6 is use for city
-                    $areaIdCode = 'c'.$area_id;
+                    $areaIdCode = 'c' . $area_id;
                 } elseif ($request->geography == 5) { //5 is use for region
-                    $areaIdCode = 'r'.$area_id;
+                    $areaIdCode = 'r' . $area_id;
                 } elseif ($request->geography == 7) { // 7 is use for country
-                    $areaIdCode = 'con'.$area_id;
+                    $areaIdCode = 'con' . $area_id;
                 }
                 // Update Chitti record
                 $chitti->update([
@@ -157,6 +159,7 @@ class UploaderController extends Controller
                     'writercolor' => $request->writercolor,
                     'color_value' => $readerValue,
                     'dateOfApprove' => $approveDate,
+                    're_upload_chittid' => $request->re_upload_chittid,
                 ]);
 
                 // Update Facity record
@@ -229,10 +232,10 @@ class UploaderController extends Controller
 
         parse_str(parse_url($vidUrl, PHP_URL_QUERY), $queryParams);
         $data['video-id'] = $queryParams['v'] ?? null;
-        $data['video-url'] = '<iframe width="100%" height="500" src="https://www.youtube.com/embed/'.$data['video-id'].'"
+        $data['video-url'] = '<iframe width="100%" height="500" src="https://www.youtube.com/embed/' . $data['video-id'] . '"
         title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
-        $data['video-image'] = 'https://img.youtube.com/vi/'.$data['video-id'].'/0.jpg';
+        $data['video-image'] = 'https://img.youtube.com/vi/' . $data['video-id'] . '/0.jpg';
 
         return $data;
     }
