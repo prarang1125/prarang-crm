@@ -98,7 +98,7 @@
                             </div>
 
                             <div class="col-md-6" wire:ignore>
-                                <label class="form-label">Select Post</label>
+                                <label class="form-label">Related Re Shared Post </label>
                                 <select id="post_search" name="re_upload_chittid" class="form-select"
                                     style="width:100%"></select>
                             </div>
@@ -479,7 +479,7 @@
                         class="btn btn-primary">Update</button>
 
                     <!-- <button type="submit" name="action" value="sent_uploader_to_checker"
-                                                                                                                                                                                                                                                class="btn btn-primary">Sent To Checker</button> -->
+                                                                                                                                                                                                                                                    class="btn btn-primary">Sent To Checker</button> -->
 
                     <a href="{{ route('admin.uploader-chitti-return-to-checker-region', ['id' => $chitti->chittiId]) }}?uploaderId={{ $chitti->uploaderId }}&City={{ $chitti->areaId }}"
                         class="btn btn-primary">Back to Checker</a>

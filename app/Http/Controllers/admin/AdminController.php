@@ -90,7 +90,6 @@ class AdminController extends Controller
         $language = $request->query('language');
 
         $query = Muser::with('role');
-
         // Filter by role if provided
         if ($role) {
             $query->whereHas('role', function ($q) use ($role) {
