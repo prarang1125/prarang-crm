@@ -144,3 +144,4 @@ class PortalController extends Controller
         return redirect()->route('portal.index')->with('success', 'Portal deleted successfully!');
     }
 }
+
