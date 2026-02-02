@@ -60,7 +60,7 @@ class PostAnalyticsMakerController extends Controller
     // this method is use for update the post analytics method
     public function postAnalyticsMakerUpdate(Request $request, $id)
     {
-      
+
         $validated = $request->validate([
             'postNumber' => 'required|string',
             'titleOfPost' => 'required|string',
@@ -82,7 +82,7 @@ class PostAnalyticsMakerController extends Controller
             'whatsappCount' => 'required|integer',
         ]);
 
-    
+
         $currentDateTime = getUserCurrentTime();
         $chitti = Chitti::findOrFail($id);
         $chitti->update([
@@ -108,7 +108,6 @@ class PostAnalyticsMakerController extends Controller
         // Redirect with success message
         return redirect()->route('admin.post-analytics-maker-listing', ['cityCode' => $request->cityCode])
             ->with('success', 'Data updated successfully.');
-
     }
 
     public function postAnalyticsListReturnFromCheckerL(Request $request)

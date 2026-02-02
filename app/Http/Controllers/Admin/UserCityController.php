@@ -19,7 +19,7 @@ class UserCityController extends Controller
             $usercitys = UserCity::where('isActive', 1)
                 ->where(function ($query) use ($search) {
                     $query->where('cityNameInEnglish', 'like', "%$search%")
-                    ->orWhere('cityNameInHindi', 'like', "%$search%");
+                        ->orWhere('cityNameInHindi', 'like', "%$search%");
                 })
                 ->paginate(20);
         } else {
@@ -39,13 +39,13 @@ class UserCityController extends Controller
     #this method is use for store user city data
     public function userCityStore(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'cityNameInEnglish' => 'required|string|max:255',
             'cityNameInHindi' => 'required|string|max:255',
             'countryId' => 'required',
         ]);
 
-        if($validator->passes()){
+        if ($validator->passes()) {
             $currentDateTime = getUserCurrentTime();
             UserCity::create([
                 'cityNameInHindi' => $request->cityNameInHindi,
@@ -57,7 +57,7 @@ class UserCityController extends Controller
 
             ]);
             return redirect()->route('admin.user-city-listing');
-        }else{
+        } else {
             return redirect()->route('admin.user-city-register')
                 ->withInput()
                 ->withErrors($validator);
@@ -82,7 +82,8 @@ class UserCityController extends Controller
     }
 
     #this method is use for show the existing data in field and also we change it.
-    public function userCityEdit($id){
+    public function userCityEdit($id)
+    {
         $userCitys = UserCity::findOrFail($id);
         $userCountries = UserCountry::all();
         return view('admin.usercity.user-city-edit', compact('userCitys', 'userCountries'));

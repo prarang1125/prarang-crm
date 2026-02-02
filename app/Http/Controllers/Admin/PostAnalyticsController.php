@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\DB;
 
 class PostAnalyticsController extends Controller
 {
-   
+
 
 
     public function index(Request $request)
@@ -66,10 +66,10 @@ class PostAnalyticsController extends Controller
         $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
 
         $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country', 'likes', 'comments'])
-        ->whereNotNull('Title')
-        ->where('Title', '!=', '')
-        ->select('*')
-        ->get();
+            ->whereNotNull('Title')
+            ->where('Title', '!=', '')
+            ->select('*')
+            ->get();
 
         $data = [];
         if ($chittis->isEmpty()) {
@@ -88,21 +88,21 @@ class PostAnalyticsController extends Controller
         } else {
             $index = 1;
             foreach ($chittis as $chitti) {
-                foreach ($chitti->geographyMappings as $mapping){
-                        $option = $geographyOptions->firstWhere('id', $mapping->geographyId);
-                        if($option)
-                            $geographies = $option->labelInEnglish;
-                        else
-                            $geographies = $mapping->geographyId;
+                foreach ($chitti->geographyMappings as $mapping) {
+                    $option = $geographyOptions->firstWhere('id', $mapping->geographyId);
+                    if ($option)
+                        $geographies = $option->labelInEnglish;
+                    else
+                        $geographies = $mapping->geographyId;
 
-                        if ($mapping->geographyId == 5 && $mapping->region)
-                            $areas = $mapping->region->regionnameInEnglish;
-                        elseif ($mapping->geographyId == 6 && $mapping->city)
-                            $areas = $mapping->city->cityNameInEnglish ;
-                        elseif ($mapping->geographyId == 7 && $mapping->country)
-                            $areas = $mapping->country->countryNameInEnglish;
-                        else
-                            $areas = $mapping->areaId;
+                    if ($mapping->geographyId == 5 && $mapping->region)
+                        $areas = $mapping->region->regionnameInEnglish;
+                    elseif ($mapping->geographyId == 6 && $mapping->city)
+                        $areas = $mapping->city->cityNameInEnglish;
+                    elseif ($mapping->geographyId == 7 && $mapping->country)
+                        $areas = $mapping->country->countryNameInEnglish;
+                    else
+                        $areas = $mapping->areaId;
                 }
                 $data[] = [
                     'S.No' => $index,
@@ -166,5 +166,3 @@ class PostAnalyticsController extends Controller
         abort(400, 'Invalid format specified.');
     }
 }
-
-?>

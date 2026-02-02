@@ -22,7 +22,7 @@ class LiveCityController extends Controller
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('cityNameInEnglish', 'like', '%' . $search . '%')
-                    ->orWhere('cityNameInUnicode', 'like', '%' . $search . '%');
+                        ->orWhere('cityNameInUnicode', 'like', '%' . $search . '%');
                 });
             })
             ->paginate(30);
@@ -111,14 +111,13 @@ class LiveCityController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('admin.live-city-listing')->with('error', 'There was an error deleting the user: ' . $e->getMessage());
         }
-
     }
 
     #this method is use for edit live city data
     public function liveCityEdit($id)
     {
         $mcity = Mcity::findOrFail($id);
-        return view('admin.livecity.live-city-edit' , compact('mcity'));
+        return view('admin.livecity.live-city-edit', compact('mcity'));
     }
 
     #this method is use for update live city data
@@ -196,5 +195,3 @@ class LiveCityController extends Controller
         }
     }
 }
-
-?>

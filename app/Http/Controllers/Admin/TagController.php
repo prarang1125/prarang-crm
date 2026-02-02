@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
@@ -19,7 +20,7 @@ class TagController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('tagInEnglish', 'LIKE', "%{$search}%")
-                ->orWhere('tagInUnicode', 'LIKE', "%{$search}%");
+                    ->orWhere('tagInUnicode', 'LIKE', "%{$search}%");
             });
         }
 
@@ -28,7 +29,8 @@ class TagController extends Controller
     }
 
     #this method is use for create/register new tag form page
-    public function tagRegister(){
+    public function tagRegister()
+    {
         $mtagcategorys = Mtagcategory::all();
         return view('admin.tag.tag-register', compact('mtagcategorys'));
     }
@@ -36,14 +38,13 @@ class TagController extends Controller
     #this method is use for store tag data
     public function tagStore(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'tagInEnglish' => 'required|string|max:255',
             'tagInUnicode' => 'required|string|max:255',
             'tagCategoryId' => 'required',
         ]);
 
-        if($validator->passes())
-        {
+        if ($validator->passes()) {
             $currentDateTime = getUserCurrentTime();
             $mtag = new Mtag();
             $mtag->tagInEnglish = $request->tagInEnglish;
@@ -54,7 +55,7 @@ class TagController extends Controller
             $mtag->created_by = Auth::guard('admin')->user()->userId;
             $mtag->save();
             return redirect()->route('admin.tag-listing')->with('success', 'Tag created successfully.');
-        }else{
+        } else {
             return redirect()->route('admin.tag-register')
                 ->withErrors($validator)
                 ->withInput();
@@ -83,7 +84,7 @@ class TagController extends Controller
     {
         $mtags = Mtag::findOrFail($id);
         $mtagcategorys = Mtagcategory::all();
-        return view('admin.tag.tag-edit' , compact('mtags', 'mtagcategorys'));
+        return view('admin.tag.tag-edit', compact('mtags', 'mtagcategorys'));
     }
 
     public function tagUpdate(Request $request, $id)

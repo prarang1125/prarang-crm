@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
@@ -20,7 +21,7 @@ class TagCategoryController extends Controller
             $query->where(function ($q) use ($keywords) {
                 foreach ($keywords as $keyword) {
                     $q->orWhere('tagCategoryInEnglish', 'LIKE', "%{$keyword}%")
-                    ->orWhere('tagCategoryInUnicode', 'LIKE', "%{$keyword}%");
+                        ->orWhere('tagCategoryInUnicode', 'LIKE', "%{$keyword}%");
                 }
             });
         }
@@ -39,13 +40,12 @@ class TagCategoryController extends Controller
     #this method is use for store tag category register
     public function tagCategoryStore(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'tagCategoryInEnglish' => 'required|string|max:255',
             'tagCategoryInUnicode' => 'required|string|max:255',
         ]);
 
-        if($validator->passes())
-        {
+        if ($validator->passes()) {
             $currentDateTime = getUserCurrentTime();
             $mtagcategorys = new Mtagcategory();
             $mtagcategorys->tagCategoryInEnglish = $request->tagCategoryInEnglish;
@@ -55,7 +55,7 @@ class TagCategoryController extends Controller
             $mtagcategorys->created_by = Auth::guard('admin')->user()->userId;
             $mtagcategorys->save();
             return redirect()->route('admin.tag-category-listing')->with('success', 'Tag Category created successfully.');
-        }else{
+        } else {
             return redirect()->route('admin.tag-category-register')
                 ->withErrors($validator)
                 ->withInput();
@@ -82,7 +82,7 @@ class TagCategoryController extends Controller
     public function tagCategoryEdit($id)
     {
         $mtagcategory = Mtagcategory::findOrFail($id);
-        return view('admin.tagcategory.tag-category-edit' , compact('mtagcategory'));
+        return view('admin.tagcategory.tag-category-edit', compact('mtagcategory'));
     }
 
     #this method is use for update tag category data

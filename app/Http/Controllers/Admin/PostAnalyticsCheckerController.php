@@ -45,7 +45,7 @@ class PostAnalyticsCheckerController extends Controller
         $numericPart = preg_replace('/[^0-9]/', '', $cityCode);
         $areaId = (int) $numericPart;
         $search = $request->input('search');
-        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
+        $cacheKey = 'chittis_' . $request->input('search') . $request->input('page');
 
         $chitti = DB::table('chitti')
             ->where('chitti.chittiId', $cid)->first();
@@ -121,7 +121,6 @@ class PostAnalyticsCheckerController extends Controller
 
         return redirect()->route('admin.post-analytics-checker-listing', ['cityCode' => $request->cityCode])
             ->with('success', 'Post Analytics have been approved successfully.');
-
     }
 
     //this method is use for make page for write the region of return to maker

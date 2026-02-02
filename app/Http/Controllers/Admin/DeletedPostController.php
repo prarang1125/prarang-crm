@@ -16,14 +16,14 @@ class DeletedPostController extends Controller
     #this method is use for show the listing of maker
     // public function index()
     // {
-        //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
-        //     ->whereNotNull('Title')
-        //     ->where('Title', '!=', '')
-        //     ->where('finalStatus', '=', 'deleted')
-        //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'makerStatus', 'checkerStatus')
-        //     ->get();
-        //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
-        //     return view('admin.deleted-post.deleted-post-listing', compact('chittis', 'geographyOptions'));
+    //     $chittis = Chitti::with(['geographyMappings.region', 'geographyMappings.city', 'geographyMappings.country'])
+    //     ->whereNotNull('Title')
+    //     ->where('Title', '!=', '')
+    //     ->where('finalStatus', '=', 'deleted')
+    //     ->select('chittiId', 'Title', 'dateOfCreation', 'finalStatus', 'makerStatus', 'checkerStatus')
+    //     ->get();
+    //     $geographyOptions = Makerlebal::whereIn('id', [5, 6, 7])->get();
+    //     return view('admin.deleted-post.deleted-post-listing', compact('chittis', 'geographyOptions'));
     // }
 
     public function index(Request $request)
@@ -59,7 +59,7 @@ class DeletedPostController extends Controller
         $chitti->update([
             'makerStatus'   => 'sent_to_checker',
             'checkerStatus' => 'maker_to_checker',
-            'uploaderStatus'=>'',
+            'uploaderStatus' => '',
             'updated_at'    => $currentDateTime,
             'updated_by'    => Auth::guard('admin')->user()->userId,
             'return_chitti_post_from_checker_id' => 0,
@@ -67,6 +67,6 @@ class DeletedPostController extends Controller
             'makerId'       => Auth::guard('admin')->user()->userId,
             'finalStatus'   => '',
         ]);
-        return redirect()->route('admin.deleted-post-listing')->with('success','Post sent to checker.');
+        return redirect()->route('admin.deleted-post-listing')->with('success', 'Post sent to checker.');
     }
 }

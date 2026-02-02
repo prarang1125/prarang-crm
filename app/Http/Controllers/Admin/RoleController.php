@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
@@ -19,7 +20,7 @@ class RoleController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('roleName', 'LIKE', "%{$search}%")
-                ->orWhere('roleName', 'LIKE', "%{$search}%");
+                    ->orWhere('roleName', 'LIKE', "%{$search}%");
             });
         }
 
@@ -37,11 +38,11 @@ class RoleController extends Controller
     #this method is use for new role created
     public function roleStore(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'roleName' => 'required|string|max:255|unique:mrole,roleName',
         ]);
 
-        if($validator->passes()){
+        if ($validator->passes()) {
             $currentDateTime = getUserCurrentTime();
             $role = new Mrole();
             $role->roleName = $request->input('roleName');
@@ -50,7 +51,7 @@ class RoleController extends Controller
             $role->created_by = Auth::guard('admin')->user()->userId;
             $role->save();
             return redirect()->route('admin.role-listing');
-        }else{
+        } else {
             return redirect()->route('admin.role-register')
                 ->withInput()
                 ->withErrors($validator);
@@ -78,7 +79,7 @@ class RoleController extends Controller
     public function roleEdit($id)
     {
         $role = Mrole::findOrFail($id);
-        return view('admin.role.role-edit' , compact('role'));
+        return view('admin.role.role-edit', compact('role'));
     }
 
     #this method is use for update/change role data

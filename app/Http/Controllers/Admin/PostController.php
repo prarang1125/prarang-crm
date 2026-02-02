@@ -27,9 +27,9 @@ class PostController extends Controller
         $search = $request->input('search');
 
         $chittis = DB::table('chitti as ch')
-        ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
-        ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
-        ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
+            ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
+            ->join('vChittiGeography as vCg', 'ch.chittiId', '=', 'vCg.chittiId')
+            ->join('vGeography as vg', 'vg.geographycode', '=', 'vCg.Geography')
             ->when($search, function ($query, $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('ch.Title', 'LIKE', "%{$search}%")
@@ -82,9 +82,10 @@ class PostController extends Controller
                 'required',
                 function ($attribute, $value, $fail) {
                     if ($value === 'Select Select') {
-                        $fail('The '.str_replace('_', ' ', $attribute).' field must be properly selected.');
+                        $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be properly selected.');
                     }
-                }],
+                }
+            ],
             'title' => 'required|string|max:255',
             'subtitle' => 'required|string|max:255',
             'forTheCity' => 'required|boolean',
@@ -179,7 +180,7 @@ class PostController extends Controller
 
             return redirect()->route('admin.post-listing')->with('success', 'Post soft deleted successfully.');
         } catch (\Exception $e) {
-            return redirect()->route('admin.post-listing')->with('error', 'There was an error deleting the post: '.$e->getMessage());
+            return redirect()->route('admin.post-listing')->with('error', 'There was an error deleting the post: ' . $e->getMessage());
         }
     }
 

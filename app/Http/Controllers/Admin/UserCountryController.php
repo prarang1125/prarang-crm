@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
@@ -18,7 +19,7 @@ class UserCountryController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('countryNameInEnglish', 'LIKE', "%{$search}%")
-                ->orWhere('countryNameInHindi', 'LIKE', "%{$search}%");
+                    ->orWhere('countryNameInHindi', 'LIKE', "%{$search}%");
             });
         }
 
@@ -37,19 +38,18 @@ class UserCountryController extends Controller
     #this method is use for store user country data
     public function userCountryStore(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'countryNameInEnglish' => 'required|string|max:255',
             'countryNameInHindi' => 'required|string|max:255',
         ]);
 
-        if($validator->passes())
-        {
+        if ($validator->passes()) {
             $lastId = UserCountry::max('countryId');
             $newId = $lastId ? $lastId + 1 : 1;
 
             $currentDateTime = getUserCurrentTime();
             $userCountry = new UserCountry();
-            $userCountry->countryCode = 'UCON'.$newId;
+            $userCountry->countryCode = 'UCON' . $newId;
             $userCountry->countryNameInHindi  = $request->countryNameInHindi;
             $userCountry->countryNameInEnglish = $request->countryNameInEnglish;
             $userCountry->isActive = 1;
@@ -57,7 +57,7 @@ class UserCountryController extends Controller
             $userCountry->created_by = Auth::guard('admin')->user()->userId;
             $userCountry->save();
             return redirect()->route('admin.user-country-listing')->with('success', 'Tag Category created successfully.');
-        }else{
+        } else {
             return redirect()->route('admin.user-country-register')
                 ->withErrors($validator)
                 ->withInput();
@@ -85,7 +85,7 @@ class UserCountryController extends Controller
     public function userCountryEdit($id)
     {
         $userCountry = UserCountry::findOrFail($id);
-        return view('admin.usercountry.user-country-edit' , compact('userCountry'));
+        return view('admin.usercountry.user-country-edit', compact('userCountry'));
     }
 
     #this method is use for update data user country

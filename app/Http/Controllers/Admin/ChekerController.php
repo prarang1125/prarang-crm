@@ -38,7 +38,7 @@ class ChekerController extends Controller
     public function checkerEdit($id)
     {
 
-         $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')
+        $chitti = Chitti::with('chittiimagemappings', 'geographyMappings', 'facity')
             ->whereNotIn('finalStatus', ['approved', 'deleted'])
             ->whereNot('checkerStatus', 'sent_to_uploader')->findOrFail($id);
 
@@ -68,27 +68,27 @@ class ChekerController extends Controller
 
     public function checkerUpdate(Request $request, $id, ImageUploadService $imageUploadService)
     {
-            $currentDateTime = getUserCurrentTime();
-            $date = Carbon::now()->format('Y-m-d');
-            $dateofcreation = Carbon::now()->format('d-M-y H:i:s');
+        $currentDateTime = getUserCurrentTime();
+        $date = Carbon::now()->format('Y-m-d');
+        $dateofcreation = Carbon::now()->format('d-M-y H:i:s');
 
-            $chitti = Chitti::findOrFail($id);
-            if ($request->action === 'send_to_uploader') {
+        $chitti = Chitti::findOrFail($id);
+        if ($request->action === 'send_to_uploader') {
 
-                $chitti->update([
-                    'uploaderStatus' => 'sent_to_uploader',
-                    'checkerStatus' => 'sent_to_uploader',
-                    'updated_at' => $currentDateTime,
-                    'dateSentToUploader' => $dateofcreation,
-                    'updated_by' => Auth::guard('admin')->user()->userId,
-                    // 'checker'=>
+            $chitti->update([
+                'uploaderStatus' => 'sent_to_uploader',
+                'checkerStatus' => 'sent_to_uploader',
+                'updated_at' => $currentDateTime,
+                'dateSentToUploader' => $dateofcreation,
+                'updated_by' => Auth::guard('admin')->user()->userId,
+                // 'checker'=>
 
-                ]);
+            ]);
 
-                return redirect()->route('admin.checker-listing')
-                    ->with('success', 'Sent to Uploader successfully.');
-            }
+            return redirect()->route('admin.checker-listing')
+                ->with('success', 'Sent to Uploader successfully.');
         }
+    }
 
 
     //this method is use for return from checker to maker with region
@@ -138,7 +138,7 @@ class ChekerController extends Controller
     {
 
         $search = $request->input('search');
-        $cacheKey = 'chittis_'.$request->input('search').$request->input('page');
+        $cacheKey = 'chittis_' . $request->input('search') . $request->input('page');
         $cacheDuration = 180;
         $chittis = DB::table('chitti as ch')
             ->select('ch.*', 'vg.*', 'vCg.*', 'ch.chittiId as chittiId')
@@ -151,7 +151,7 @@ class ChekerController extends Controller
                 $query->where(function ($query) use ($search) {
                     $query->where('Title', 'like', "%{$search}%")
                         ->orWhere('SubTitle', 'like', "%{$search}%")
-                        ->orWhere('createDate', 'LIKE', '%'.$search.'%');
+                        ->orWhere('createDate', 'LIKE', '%' . $search . '%');
                 });
             })
             // ->orderByDesc('ch.chittiId')
