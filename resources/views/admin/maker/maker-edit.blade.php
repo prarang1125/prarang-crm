@@ -83,7 +83,7 @@
                             </div>
 
                             <div class="col-md-6" wire:ignore>
-                                <label class="form-label">Select Post</label>
+                                <label class="form-label">Related Re Shared Post </label>
                                 <select id="post_search" name="re_upload_chittid" class="form-select"
                                     style="width:100%"></select>
                             </div>
