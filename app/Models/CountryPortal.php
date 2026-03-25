@@ -30,7 +30,7 @@ class CountryPortal extends Model
 
     protected $casts = [
         // Remove 'weather' from casts since we're storing widget code, not JSON
-        'news' => 'array',
+        // 'news' => 'array',
         'local_metrics' => 'array',
         'important_links' => 'array'
     ];
