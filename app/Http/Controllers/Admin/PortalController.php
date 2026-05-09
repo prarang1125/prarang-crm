@@ -13,10 +13,18 @@ class PortalController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
+
     public function index()
     {
-        $portals = Portal::paginate(20);
-        return view('admin.portal.index', compact('portals'));
+        $filterByLanguage = request()->query('lang');
+        $portals = $filterByLanguage
+            ? Portal::where('local_lang', $filterByLanguage)->paginate(20)
+            : Portal::paginate(20)->withQueryString();
+        $languages = Portal::groupBy('local_lang')->pluck('local_lang');
+
+        return view('admin.portal.index', compact('portals', 'languages'));
     }
 
     /**
