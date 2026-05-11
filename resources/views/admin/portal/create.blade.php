@@ -412,7 +412,7 @@
     function addBookEntry(data = null) {
         bookCounter++;
         const bookId = `book_${bookCounter}`;
-        
+
         const bookEntry = document.createElement('div');
         bookEntry.className = 'card mb-3 border-primary';
         bookEntry.id = bookId;
@@ -456,7 +456,7 @@
                 </div>
             </div>
         `;
-        
+
         document.getElementById('booksContainer').appendChild(bookEntry);
     }
 
@@ -470,22 +470,22 @@
     function collectBooksData() {
         const books = [];
         const bookEntries = document.querySelectorAll('#booksContainer .card');
-        
+
         bookEntries.forEach((entry, index) => {
             const fields = entry.querySelectorAll('.book-field');
             const bookData = {};
-            
+
             fields.forEach(field => {
                 const fieldName = field.getAttribute('data-field');
                 bookData[fieldName] = field.value.trim();
             });
-            
+
             // Only add if name is provided
             if (bookData.name) {
                 books.push(bookData);
             }
         });
-        
+
         return books;
     }
 
@@ -498,7 +498,7 @@
     function addLinkCategory(categoryName = null, links = []) {
         categoryCounter++;
         const categoryId = `category_${categoryCounter}`;
-        
+
         const categoryEntry = document.createElement('div');
         categoryEntry.className = 'card mb-3 border-success';
         categoryEntry.id = categoryId;
@@ -519,9 +519,9 @@
                 </button>
             </div>
         `;
-        
+
         document.getElementById('linksContainer').appendChild(categoryEntry);
-        
+
         // Add existing links if provided
         if (links && links.length > 0) {
             links.forEach(link => {
@@ -545,7 +545,7 @@
     function addLinkToCategory(categoryId, data = null) {
         linkCounter++;
         const linkId = `link_${linkCounter}`;
-        
+
         const linkEntry = document.createElement('div');
         linkEntry.className = 'row mb-2 align-items-center link-entry';
         linkEntry.id = linkId;
@@ -562,7 +562,7 @@
                 </button>
             </div>
         `;
-        
+
         document.getElementById(`${categoryId}_links`).appendChild(linkEntry);
     }
 
@@ -576,30 +576,30 @@
     function collectLinksData() {
         const linksObject = {};
         const categoryEntries = document.querySelectorAll('#linksContainer .card');
-        
+
         categoryEntries.forEach(categoryEntry => {
             const categoryNameInput = categoryEntry.querySelector('.category-name');
             const categoryName = categoryNameInput.value.trim();
-            
+
             if (!categoryName) return;
-            
+
             const links = [];
             const linkEntries = categoryEntry.querySelectorAll('.link-entry');
-            
+
             linkEntries.forEach(linkEntry => {
                 const name = linkEntry.querySelector('.link-name').value.trim();
                 const url = linkEntry.querySelector('.link-url').value.trim();
-                
+
                 if (name && url) {
                     links.push({ name, url });
                 }
             });
-            
+
             if (links.length > 0) {
                 linksObject[categoryName] = links;
             }
         });
-        
+
         return linksObject;
     }
 
@@ -608,18 +608,18 @@
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.querySelector('form');
-        
+
         form.addEventListener('submit', function(e) {
             // Collect books data
             const books = collectBooksData();
             const booksJSON = JSON.stringify({ books: books }, null, 2);
             document.getElementById('books').value = booksJSON;
-            
+
             // Collect links data
             const links = collectLinksData();
             const linksJSON = JSON.stringify(links, null, 2);
             document.getElementById('links').value = linksJSON;
-            
+
             console.log('Books JSON:', booksJSON);
             console.log('Links JSON:', linksJSON);
         });
@@ -627,7 +627,7 @@
         // Load old data if exists (for validation errors)
         const oldBooks = @json(old('books'));
         const oldLinks = @json(old('links'));
-        
+
         if (oldBooks) {
             try {
                 const booksData = typeof oldBooks === 'string' ? JSON.parse(oldBooks) : oldBooks;
@@ -638,7 +638,7 @@
                 console.error('Error parsing old books data:', e);
             }
         }
-        
+
         if (oldLinks) {
             try {
                 const linksData = typeof oldLinks === 'string' ? JSON.parse(oldLinks) : oldLinks;

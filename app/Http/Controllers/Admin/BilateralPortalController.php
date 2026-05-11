@@ -48,7 +48,9 @@ class BilateralPortalController extends Controller
     public function create()
     {
         $countries = CountryPortal::orderBy('country_name', 'asc')->get();
-        return view('admin.bilateral_portal.create', compact('countries'));
+        $livecountries = DB::table('mcountry')->where('isActive', 1)->get();
+
+        return view('admin.bilateral_portal.create', compact('countries', 'livecountries'));
     }
 
     /**
@@ -56,6 +58,7 @@ class BilateralPortalController extends Controller
      */
     public function store(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'primary_country_id' => 'required|exists:country_portals,id',
             'secondary_country_id' => 'required|exists:country_portals,id|different:primary_country_id',
@@ -63,6 +66,10 @@ class BilateralPortalController extends Controller
             'slogan' => 'nullable|string|max:255',
             'slug' => 'nullable|string|max:255|unique:byletral_portals,slug',
             'content_country_code' => 'nullable|string|max:10',
+            'primary_embassy_link' => 'nullable|string|max:255',
+            'secondary_embassy_link' => 'nullable|string|max:255',
+            'extended_primary_link' => 'nullable|string',
+            'extended_secondary_link' => 'nullable|string',
             'connections' => 'nullable|string',
             'header_scripts' => 'nullable|string',
             'footer_scripts' => 'nullable|string',
@@ -141,10 +148,12 @@ class BilateralPortalController extends Controller
                 ->with('success', 'Bilateral Portal created successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
+            // dd($e->getMessage());
             Log::error('Error creating bilateral portal', [
                 'error' => $e->getMessage(),
                 'user_id' => Auth::id()
             ]);
+
 
             return redirect()->back()
                 ->with('error', 'Error creating bilateral portal: ' . $e->getMessage())
@@ -167,9 +176,10 @@ class BilateralPortalController extends Controller
     public function edit(ByletralPortal $bilateralPortal)
     {
         $countries = CountryPortal::orderBy('country_name', 'asc')->get();
+        $livecountries = DB::table('mcountry')->where('isActive', 1)->get();
 
         $bilateralPortal->load(['primaryCountry', 'secondaryCountry']);
-        return view('admin.bilateral_portal.edit', compact('bilateralPortal', 'countries'));
+        return view('admin.bilateral_portal.edit', compact('bilateralPortal', 'countries', 'livecountries'));
     }
 
     /**
