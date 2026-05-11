@@ -57,7 +57,7 @@ class CountryPortalController extends Controller
             'slogan' => 'nullable|string|max:255',
             'locale_lang' => 'nullable|string|max:10',
             'maps' => 'nullable|string|max:1000',
-            'embassy_link' => 'nullable|string|max:500',
+
             'timezone' => 'nullable|string|max:255',
             'weather' => 'nullable|string',
             'news' => 'nullable|string',
@@ -188,7 +188,7 @@ class CountryPortalController extends Controller
             'slogan' => 'nullable|string|max:255',
             'locale_lang' => 'nullable|string|max:10',
             'maps' => 'nullable|string|max:1000',
-            'embassy_link' => 'nullable|string|max:500',
+
             'timezone' => 'nullable|string|max:255',
             'weather' => 'nullable|string',
             'news' => 'nullable|string',
@@ -215,7 +215,7 @@ class CountryPortalController extends Controller
                 'slogan',
                 'locale_lang',
                 'maps',
-                'embassy_link',
+
                 'timezone',
                 'weather',
                 'news',
@@ -223,9 +223,7 @@ class CountryPortalController extends Controller
                 'important_links'
             ]);
 
-            Log::info('Data after only()', [
-                'embassy_link_in_data' => $data['embassy_link'] ?? 'NOT SET'
-            ]);
+
 
             // Auto-generate analytics slug if not provided
             if (empty($data['analytics_slug'])) {

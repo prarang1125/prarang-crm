@@ -20,7 +20,6 @@ class CountryPortal extends Model
         'slogan',
         'locale_lang',
         'maps',
-        'embassy_link',
         'weather',
         'news',
         'local_metrics',
