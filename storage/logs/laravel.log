@@ -1498,3 +1498,7 @@ The exception occurred while attempting to log: Writing to the log file failed: 
 #52 {main}
 "} 
 [2026-05-09 14:07:29] prod.INFO: Bilateral Portal updated successfully {"portal_id":12,"title":"India-Nepal","updated_by":null} 
+[2026-05-11 10:41:15] prod.INFO: Bilateral Portal updated successfully {"portal_id":12,"title":"India-Nepal","updated_by":null} 
+[2026-05-11 10:46:02] prod.INFO: Bilateral Portal updated successfully {"portal_id":12,"title":"India-Nepal","updated_by":null} 
+[2026-05-11 15:01:34] prod.INFO: Country Portal created successfully {"country_id":8,"country_name":"Pakistan","created_by":null} 
+[2026-05-11 15:03:30] prod.INFO: Bilateral Portal created successfully {"portal_id":13,"title":"India - Pakistan","created_by":null} 
