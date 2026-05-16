@@ -266,74 +266,12 @@ class BilateralPortalController extends Controller
 
             $bilateralPortal->update($data);
 
-            // Update embassy links in country portals if provided
-            if ($request->has('primary_embassy_link')) {
-                $primaryCountry = CountryPortal::find($bilateralPortal->primary_country_id);
-                if ($primaryCountry) {
-                    $primaryCountry->embassy_link = $request->input('primary_embassy_link');
-                    $primaryCountry->save();
-                }
-            }
-
-            if ($request->has('secondary_embassy_link')) {
-                $secondaryCountry = CountryPortal::find($bilateralPortal->secondary_country_id);
-                if ($secondaryCountry) {
-                    $secondaryCountry->embassy_link = $request->input('secondary_embassy_link');
-                    $secondaryCountry->save();
-                }
-            }
-
-            // Update maps in country portals if provided
-            if ($request->has('primary_country_maps')) {
-                $primaryCountry = CountryPortal::find($bilateralPortal->primary_country_id);
-                if ($primaryCountry) {
-                    $primaryCountry->maps = $request->input('primary_country_maps');
-                    $primaryCountry->save();
-                }
-            }
-
-            if ($request->has('secondary_country_maps')) {
-                $secondaryCountry = CountryPortal::find($bilateralPortal->secondary_country_id);
-                if ($secondaryCountry) {
-                    $secondaryCountry->maps = $request->input('secondary_country_maps');
-                    $secondaryCountry->save();
-                }
-            }
-
-            // Update timezones in country portals if provided
-            if ($request->has('primary_country_timezone')) {
-                $primaryCountry = CountryPortal::find($bilateralPortal->primary_country_id);
-                if ($primaryCountry) {
-                    $primaryCountry->timezone = $request->input('primary_country_timezone');
-                    $primaryCountry->save();
-                }
-            }
-
-            if ($request->has('secondary_country_timezone')) {
-                $secondaryCountry = CountryPortal::find($bilateralPortal->secondary_country_id);
-                if ($secondaryCountry) {
-                    $secondaryCountry->timezone = $request->input('secondary_country_timezone');
-                    $secondaryCountry->save();
-                }
-            }
-
             DB::commit();
-
-            Log::info('Bilateral Portal updated successfully', [
-                'portal_id' => $bilateralPortal->id,
-                'title' => $bilateralPortal->title,
-                'updated_by' => Auth::id()
-            ]);
 
             return redirect()->route('admin.bilateral-portals.index')
                 ->with('success', 'Bilateral Portal updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error updating bilateral portal', [
-                'error' => $e->getMessage(),
-                'portal_id' => $bilateralPortal->id,
-                'user_id' => Auth::id()
-            ]);
 
             return redirect()->back()
                 ->with('error', 'Error updating bilateral portal: ' . $e->getMessage())

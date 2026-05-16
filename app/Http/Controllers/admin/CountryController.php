@@ -42,10 +42,10 @@ class CountryController extends Controller
         $validator = Validator::make($request->all(), [
             'countryNameInEnglish' => 'required|string|max:255',
             'countryNameInUnicode' => 'required|string|max:255',
-            'countryImage' => 'required|image|max:2048',
-            'countryMap' => 'required|image|max:2048',
-            'isCultureNature' => 'required|boolean',
-            'content' => 'required|string',
+            'countryImage' => 'image|max:2048|default:"null"',
+            'countryMap' => 'image|max:2048|default:"null"',
+            'isCultureNature' => 'boolean|default:1',
+            'content' => 'required|string|default:"some"',
         ]);
 
         if ($validator->passes()) {
