@@ -90,7 +90,7 @@ class CountryPortalController extends Controller
             }
 
             // Handle JSON fields - only process if not empty
-            $jsonFields = ['news', 'local_metrics', 'important_links'];
+            $jsonFields = ['local_metrics', 'important_links'];
             foreach ($jsonFields as $field) {
                 if ($request->has($field) && !empty($request->$field)) {
                     if (is_array($request->$field)) {
@@ -105,7 +105,7 @@ class CountryPortalController extends Controller
                             } else {
                                 $data[$field] = null;
                             }
-                        } elseif ($field === 'news' || $field === 'local_metrics') {
+                        } elseif ($field === 'local_metrics') {
                             // For news and local_metrics, the data comes as JSON string from frontend
                             $decoded = json_decode($request->$field);
                             if (json_last_error() === JSON_ERROR_NONE) {
@@ -239,7 +239,7 @@ class CountryPortalController extends Controller
             }
 
             // Handle JSON fields - only process if not empty
-            $jsonFields = ['news', 'local_metrics', 'important_links'];
+            $jsonFields = ['local_metrics', 'important_links'];
             foreach ($jsonFields as $field) {
                 if ($request->has($field) && !empty($request->$field)) {
                     if (is_array($request->$field)) {
@@ -254,7 +254,7 @@ class CountryPortalController extends Controller
                             } else {
                                 $data[$field] = null;
                             }
-                        } elseif ($field === 'news' || $field === 'local_metrics') {
+                        } elseif ($field === 'local_metrics') {
                             // For news and local_metrics, the data comes as JSON string from frontend
                             $decoded = json_decode($request->$field);
                             if (json_last_error() === JSON_ERROR_NONE) {

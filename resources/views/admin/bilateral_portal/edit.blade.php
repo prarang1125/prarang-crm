@@ -222,17 +222,15 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <livewire:excel-data-paster label="Primary Link" inputName="extended_primary_link"
                                 :initialData="old('extended_primary_link', $bilateralPortal->extended_primary_link)" />
                             @error('extended_primary_link')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
-                            {{-- <small class="form-text text-muted">Add categorized important links for this country
-                                portal
-                                using the Excel paster component.</small> --}}
-                        </div>
-                        <div class="mb-3">
+
+                        </div> --}}
+                        {{-- <div class="mb-3">
                             <livewire:excel-data-paster label="Secondary Link" inputName="extended_secondary_link"
                                 :initialData="old('extended_secondary_link', $bilateralPortal->extended_secondary_link)" />
                             @error('extended_secondary_link')
@@ -241,7 +239,7 @@
                             <small class="form-text text-muted">Add categorized important links for this country
                                 portal
                                 using the Excel paster component.</small>
-                        </div>
+                        </div> --}}
 
 
 
