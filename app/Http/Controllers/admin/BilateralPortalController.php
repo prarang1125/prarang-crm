@@ -200,6 +200,8 @@ class BilateralPortalController extends Controller
             'secondary_country_maps' => 'nullable|string|max:500',
             'primary_country_timezone' => 'nullable|string|max:100',
             'secondary_country_timezone' => 'nullable|string|max:100',
+            'extended_primary_link' => 'nullable|string',
+            'extended_secondary_link' => 'nullable|string',
             'connections' => 'nullable|string',
             'header_scripts' => 'nullable|string',
             'footer_scripts' => 'nullable|string',
@@ -263,6 +265,9 @@ class BilateralPortalController extends Controller
             if ($request->has('footer_scripts') && is_string($request->footer_scripts)) {
                 $data['footer_scripts'] = $request->footer_scripts;
             }
+
+            $data['extended_primary_link'] = $data['extended_primary_link'] ?? "";
+            $data['extended_secondary_link'] = $data['extended_secondary_link'] ?? "";
 
             $bilateralPortal->update($data);
 
