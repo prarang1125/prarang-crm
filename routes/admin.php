@@ -28,6 +28,8 @@ use App\Http\Controllers\admin\UserCityController;
 use App\Http\Controllers\admin\UserCountryController;
 use App\Livewire\Localization\Portal;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AdController;
+
 
 Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => 'admin.guest'], function () {
@@ -226,3 +228,21 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('api/countries-dropdown', [CountryController::class, 'getCountriesForDropdown'])->name('admin.api.countries-dropdown');
     });
 });
+
+
+Route::prefix('ads')->name('admin.ads.')->group(
+    function () {
+        Route::get('/ad-listing', [AdController::class, 'index'])
+            ->name('index');
+        Route::get('/create', [AdController::class, 'create'])
+            ->name('create');
+        Route::post('/store', [AdController::class, 'store'])
+            ->name('store');
+        Route::get('/{id}/edit', [AdController::class, 'edit'])
+            ->name('edit');
+        Route::put('/{id}', [AdController::class, 'update'])
+            ->name('update');
+        Route::delete('/{id}', [AdController::class, 'destroy'])
+            ->name('destroy');
+    }
+);
