@@ -36,69 +36,55 @@
                         </ul>
                     </div>
                     @endif
-
-                    <form action="{{ route('admin.ads.store') }}" method="POST"
-                        enctype="multipart/form-data">
+                    <form action="{{ route('admin.ads.store') }}"
+                        method="POST">
                         @csrf
                         <div class="mb-3">
-                            <label for="partner_id" class="form-label">
-                                Partner ID
-                            </label>
-                            <input
-                                type="number" class="form-control @error('partner_id') is-invalid @enderror"  id="partner_id" name="partner_id"
-                                value="{{ old('partner_id') }}" placeholder="Enter Partner ID">
+                            <label for="partner_id" class="form-label"> Partner ID </label>
+                            <input type="number" class="form-control @error('partner_id') is-invalid @enderror"
+                                id="partner_id" name="partner_id" value="{{ old('partner_id') }}"
+                                placeholder="Enter Partner ID">
                             @error('partner_id')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                            <div class="invalid-feedback"> {{ $message }} </div>
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="city_id" class="form-label">
-                                City ID
-                            </label>
-                            <input
-                                type="number" class="form-control @error('city_id') is-invalid @enderror"
-                                id="city_id"  name="city_id"
-                                value="{{ old('city_id') }}"  placeholder="Enter City ID">
+                            <label for="city_id" class="form-label"> City ID </label>
+                            <input type="number" class="form-control @error('city_id') is-invalid @enderror"
+                                id="city_id" name="city_id" value="{{ old('city_id') }}"
+                                placeholder="Enter City ID">
                             @error('city_id')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                            <div class="invalid-feedback"> {{ $message }} </div>
                             @enderror
                         </div>
+
                         <div class="mb-3">
                             <label for="creative_link" class="form-label">
                                 Creative Link
                             </label>
                             <input
-                                type="text"
+                                type="url"
                                 class="form-control @error('creative_link') is-invalid @enderror"
                                 id="creative_link"
                                 name="creative_link"
                                 value="{{ old('creative_link') }}"
-                                placeholder="Enter image/video URL">
+                                placeholder="https://example.com/ad-image.jpg">
+
                             @error('creative_link')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                             @enderror
                         </div>
-
                         <div class="mb-3">
                             <label for="ad_link" class="form-label">
                                 Advertisement Link
                             </label>
-                            <input
-                                type="url"
-                                class="form-control @error('ad_link') is-invalid @enderror"
-                                id="ad_link"
-                                name="ad_link"
-                                value="{{ old('ad_link') }}"
-                                placeholder="https://example.com">
+                            <input type="url" class="form-control @error('ad_link') is-invalid @enderror"
+                                id="ad_link" name="ad_link" value="{{ old('ad_link') }}"
+                                placeholder="Enter advertisement link">
                             @error('ad_link')
-                            <div class="invalid-feedback">
-                                {{ $message }}
+                            <div class="invalid-feedback"> {{ $message }}
                             </div>
                             @enderror
                         </div>
@@ -106,17 +92,11 @@
                             <label for="ad_title" class="form-label">
                                 Advertisement Title
                             </label>
-                            <input
-                                type="text"
-                                class="form-control @error('ad_title') is-invalid @enderror"
-                                id="ad_title"
-                                name="ad_title"
-                                value="{{ old('ad_title') }}"
+                            <input type="text" class="form-control @error('ad_title') is-invalid @enderror"
+                                id="ad_title" name="ad_title" value="{{ old('ad_title') }}"
                                 placeholder="Enter advertisement title">
                             @error('ad_title')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                            <div class="invalid-feedback"> {{ $message }} </div>
                             @enderror
                         </div>
                         <div class="mb-3">
@@ -124,11 +104,8 @@
                                 CTA Title
                             </label>
                             <input
-                                type="text"
-                                class="form-control @error('cta_title') is-invalid @enderror"
-                                id="cta_title"
-                                name="cta_title"
-                                value="{{ old('cta_title') }}"
+                                type="text" class="form-control @error('cta_title') is-invalid @enderror"
+                                id="cta_title" name="cta_title" value="{{ old('cta_title') }}"
                                 placeholder="Enter CTA title">
                             @error('cta_title')
                             <div class="invalid-feedback">
@@ -140,12 +117,8 @@
                             <label for="cta_text" class="form-label">
                                 CTA Text
                             </label>
-                            <textarea
-                                class="form-control @error('cta_text') is-invalid @enderror"
-                                id="cta_text"
-                                name="cta_text"
-                                rows="4"
-                                placeholder="Enter CTA text">{{ old('cta_text') }}</textarea>
+                            <textarea class="form-control @error('cta_text') is-invalid @enderror"
+                                id="cta_text" name="cta_text" rows="4" placeholder="Enter CTA text">{{ old('cta_text') }}</textarea>
                             @error('cta_text')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -195,13 +168,11 @@
                                 </option>
                             </select>
                             @error('ad_type')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                            <div class="invalid-feedback"> {{ $message }} </div>
                             @enderror
                         </div>
                         <div class="mt-4">
-                            <a href="{{ route('admin.ads.index') }}"  class="btn btn-secondary">
+                            <a href="{{ route('admin.ads.index') }}" class="btn btn-secondary">
                                 Cancel
                             </a>
                             <button type="submit" class="btn btn-primary">
@@ -215,22 +186,3 @@
     </div>
 </div>
 @endsection
-<script>
-    function previewCreative(event) {
-        const file = event.target.files[0];
-        const preview = document.getElementById('creativePreview');
-        const placeholder = document.getElementById('previewPlaceholder');
-        if (!file) {
-            preview.style.display = 'none';
-            placeholder.style.display = 'block';
-            return;
-        }
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-            placeholder.style.display = 'none';
-        };
-        reader.readAsDataURL(file);
-    }
-</script>
