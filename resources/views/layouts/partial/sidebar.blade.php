@@ -30,12 +30,12 @@
                         class="bx bx-right-arrow-alt"></i>Uploader</a>
             </li>
 
-            <!-- Sudhanshu -->
+            <!-- ad upload button -->
             <li>
                 <a href="{{ url('ads/ad-listing') }}">
                     <i class="bx bx-right-arrow-alt"></i>Ads Uploads</a>
             </li>
-            <!-- Sudhanshu -->
+            <!-- ad upload button -->
 
 
 

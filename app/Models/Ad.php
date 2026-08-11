@@ -18,7 +18,4 @@ class Ad extends Model
         'status',
         'ad_type',
     ];
-    // public $timestamps = false;
 }
-
-

@@ -39,9 +39,6 @@
                     <h5 class="mb-0 text-uppercase text-primary">
                         Advertisement Management
                     </h5>
-                    <!-- <small class="text-muted">
-                        Manage all advertisements
-                    </small> -->
                 </div>
                 <a href="{{ route('admin.ads.create') }}"
                     class="btn btn-primary">
@@ -78,18 +75,21 @@
                                 @if ($ad->creative_link)
                                 @if ($ad->ad_type === 'image')
                                 <a href="{{ $ad->ad_link }}" target="_blank" rel="noopener noreferrer">
-                                    Image
+                                    <img src="{{ asset('storage/' . $ad->creative_link) }}" alt="{{ $ad->ad_title }}"
+                                        style="width: 120px; height: 70px; object-fit: cover; border-radius: 5px;">
                                 </a>
                                 @elseif ($ad->ad_type === 'video')
-                                <a href="{{ $ad->creative_link }}" target="_blank"
-                                    class="btn btn-sm btn-outline-primary">
-                                    <i class="bx bx-video"></i> View Video
+                                <a href="{{ $ad->creative_link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                    <i class="bx bx-video"></i>
+                                    Video
                                 </a>
                                 @else
                                 {{ $ad->creative_link }}
                                 @endif
                                 @else
-                                <span class="text-muted"> No Creative </span>
+                                <span class="text-muted">
+                                    No Creative
+                                </span>
                                 @endif
                             </td>
                             <td> {{ $ad->ad_title }}</td>
@@ -111,23 +111,17 @@
                                 @endif
                             </td>
                             <td>
-                                <a href="{{ route('admin.ads.edit', $ad->id) }}"
-                                    class="btn btn-sm btn-primary">
-                                    <!-- <i class="bx bx-edit"></i> -->
+                                <a href="{{ route('admin.ads.edit', $ad->id) }}" class="btn btn-sm btn-primary">
                                     Edit
                                 </a>
                                 <form action="{{ route('admin.ads.destroy', $ad->id) }}"
-                                    method="POST"
-                                    class="d-inline"
+                                    method="POST" class="d-inline"
                                     onsubmit="return confirm('Are you sure you want to delete this advertisement?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit"
-                                        class="btn btn-sm btn-danger">
-                                        <!-- <i class="bx bx-trash"></i> -->
+                                    <button type="submit" class="btn btn-sm btn-danger">
                                         Delete
                                     </button>
-
                                 </form>
                             </td>
                         </tr>
@@ -136,12 +130,10 @@
                             <td colspan="9"
                                 class="text-center py-4">
                                 <div class="text-muted">
-                                    <i class="bx bx-image-alt"
-                                        style="font-size: 40px;">
+                                    <i class="bx bx-image-alt" style="font-size: 40px;">
                                     </i>
                                     <p class="mb-0"> No advertisements found. </p>
-                                    <a href="{{ route('admin.ads.create') }}"
-                                        class="btn btn-primary btn-sm mt-2">
+                                    <a href="{{ route('admin.ads.create') }}" class="btn btn-primary btn-sm mt-2">
                                         Create Advertisement
                                     </a>
                                 </div>

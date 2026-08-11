@@ -215,7 +215,3 @@ Route::prefix('ads')->name('admin.ads.')->group(
             ->name('destroy');
     }
 );
-
-
-
-
