@@ -39,8 +39,7 @@
                     </div>
                     @endif
                     <form action="{{ route('admin.ads.update', $ad->id) }}"
-                        method="POST"
-                        enctype="multipart/form-data">
+                        method="POST">
                         @csrf
                         @method('PUT')
                         <div class="mb-3">
@@ -63,25 +62,37 @@
                             <div class="invalid-feedback"> {{ $message }} </div>
                             @enderror
                         </div>
+
                         <div class="mb-3">
                             <label for="creative_link" class="form-label">
-                                Upload Creative
+                                Creative Link
                             </label>
-                            {{-- Current Creative --}}
+
+                            {{-- Current Creative Preview --}}
                             @if ($ad->creative_link)
-                            <div class="mb-2">
-                                <img src="{{ asset('storage/' . $ad->creative_link) }}" alt="{{ $ad->ad_title }}"
-                                    style="width: 200px; height: 120px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd;">
+                            <div class="mb-3">
+                                @if ($ad->ad_type === 'image')
+                                <img src="{{ $ad->creative_link }}" alt="{{ $ad->ad_title }}"
+                                    style=" width: 200px; height: 120px; object-fit: cover; border-radius: 5px; border: 1px solid #ddd; ">
+                                @elseif ($ad->ad_type === 'video')
+                                <a
+                                    href="{{ $ad->creative_link }}" target="_blank" rel="noopener noreferrer"
+                                    class="btn btn-sm btn-outline-primary">
+                                    <i class="bx bx-video"></i>
+                                    View Current Video
+                                </a>
+                                @endif
                             </div>
                             @endif
-                            {{-- Upload New Creative --}}
-                            <input type="file" class="form-control @error('creative_link') is-invalid @enderror"
-                                id="creative_link" name="creative_link" accept="image/jpeg,image/png,image/webp,video/mp4">
-                            <small class="text-muted">
-                                Leave empty if you want to keep the current image.
-                            </small>
+
+                            {{-- Creative URL --}}
+                            <input
+                                type="url" class="form-control @error('creative_link') is-invalid @enderror" id="creative_link"
+                                name="creative_link" value="{{ old('creative_link', $ad->creative_link) }}"
+                                placeholder="https://example.com/ad-image.jpg">
                             @error('creative_link')
-                            <div class="invalid-feedback"> {{ $message }}
+                            <div class="invalid-feedback">
+                                {{ $message }}
                             </div>
                             @enderror
                         </div>

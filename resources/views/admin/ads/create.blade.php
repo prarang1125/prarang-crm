@@ -37,8 +37,7 @@
                     </div>
                     @endif
                     <form action="{{ route('admin.ads.store') }}"
-                        method="POST"
-                        enctype="multipart/form-data">
+                        method="POST">
                         @csrf
                         <div class="mb-3">
                             <label for="partner_id" class="form-label"> Partner ID </label>
@@ -58,12 +57,24 @@
                             <div class="invalid-feedback"> {{ $message }} </div>
                             @enderror
                         </div>
+
                         <div class="mb-3">
-                            <label for="creative_link" class="form-label"> Upload Creative </label>
-                            <input type="file" class="form-control @error('creative_link') is-invalid @enderror"
-                                id="creative_link" name="creative_link" accept="image/jpeg,image/png,image/webp,video/mp4">
+                            <label for="creative_link" class="form-label">
+                                Creative Link
+                            </label>
+
+                            <input
+                                type="url"
+                                class="form-control @error('creative_link') is-invalid @enderror"
+                                id="creative_link"
+                                name="creative_link"
+                                value="{{ old('creative_link') }}"
+                                placeholder="https://example.com/ad-image.jpg">
+
                             @error('creative_link')
-                            <div class="invalid-feedback"> {{ $message }} </div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                             @enderror
                         </div>
                         <div class="mb-3">
@@ -158,18 +169,14 @@
                                 </option>
                             </select>
                             @error('ad_type')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                            <div class="invalid-feedback"> {{ $message }} </div>
                             @enderror
                         </div>
                         <div class="mt-4">
-                            <a href="{{ route('admin.ads.index') }}"
-                                class="btn btn-secondary">
+                            <a href="{{ route('admin.ads.index') }}" class="btn btn-secondary">
                                 Cancel
                             </a>
-                            <button type="submit"
-                                class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary">
                                 Save Advertisement
                             </button>
                         </div>
@@ -180,22 +187,3 @@
     </div>
 </div>
 @endsection
-<script>
-    function previewCreative(event) {
-        const file = event.target.files[0];
-        const preview = document.getElementById('creativePreview');
-        const placeholder = document.getElementById('previewPlaceholder');
-        if (!file) {
-            preview.style.display = 'none';
-            placeholder.style.display = 'block';
-            return;
-        }
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-            placeholder.style.display = 'none';
-        };
-        reader.readAsDataURL(file);
-    }
-</script>

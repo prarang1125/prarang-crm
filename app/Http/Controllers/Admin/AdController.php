@@ -22,7 +22,7 @@ class AdController extends Controller
         $data = $request->validate([
             'partner_id' => 'required|integer',
             'city_id' => 'required|integer',
-            'creative_link' => 'required|image|mimes:jpg,jpeg,png,webp,gif,mp4,mov|max:2048',
+            'creative_link' => 'required|url',
             'ad_link' => 'required|url',
             'ad_title' => 'required|string|max:255',
             'cta_title' => 'required|string|max:255',
@@ -30,10 +30,8 @@ class AdController extends Controller
             'status' => 'required|boolean',
             'ad_type' => 'required|string|in:image,video',
         ]);
-        $path = $request->file('creative_link')
-            ->store('ads', 'public');
-        $data['creative_link'] = $path;
         Ad::create($data);
+
         return redirect()
             ->route('admin.ads.index')
             ->with('success', 'Ad created successfully.');
@@ -48,7 +46,7 @@ class AdController extends Controller
         $data = $request->validate([
             'partner_id' => 'required|integer',
             'city_id' => 'required|integer',
-            'creative_link' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif,mp4,mov|max:2048',
+            'creative_link' => 'required|url',
             'ad_link' => 'required|url',
             'ad_title' => 'required|string|max:255',
             'cta_title' => 'required|string|max:255',
@@ -56,15 +54,11 @@ class AdController extends Controller
             'status' => 'required|boolean',
             'ad_type' => 'required|string|in:image,video',
         ]);
+
         $ad = Ad::findOrFail($id);
-        if ($request->hasFile('creative_link')) {
-            $path = $request->file('creative_link')
-                ->store('ads', 'public');
-            $data['creative_link'] = $path;
-        } else {
-            unset($data['creative_link']);
-        }
+
         $ad->update($data);
+
         return redirect()
             ->route('admin.ads.index')
             ->with('success', 'Ad updated successfully.');
