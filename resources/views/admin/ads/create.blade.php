@@ -62,7 +62,6 @@
                             <label for="creative_link" class="form-label">
                                 Creative Link
                             </label>
-
                             <input
                                 type="url"
                                 class="form-control @error('creative_link') is-invalid @enderror"

@@ -71,25 +71,7 @@
                             <td> {{ $ad->id }}</td>
                             <td>{{ $ad->partner_id }}</td>
                             <td>{{ $ad->city_id }} </td>
-                            <!-- <td>
-                                @if ($ad->creative_link)
-                                @if ($ad->ad_type === 'image')
-                                <a href="{{ $ad->ad_link }}" target="_blank" rel="noopener noreferrer">
-                                    <img src="{{ $ad->creative_link }}" alt="{{ $ad->ad_title }}" style=" width: 120px;  height: 70px; object-fit: cover; border-radius: 5px; ">
-                                </a>
-                                @elseif ($ad->ad_type === 'video')
-                                <a href="{{ $ad->creative_link }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                    <i class="bx bx-video"></i> Video
-                                </a>
-                                @else
-                                {{ $ad->creative_link }}
-                                @endif
-                                @else
-                                <span class="text-muted">
-                                    No Creative
-                                </span>
-                                @endif
-                            </td> -->
+                            
                             <td>
                                 @if ($ad->creative_link)
                                 @if ($ad->ad_type === 'image')

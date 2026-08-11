@@ -31,7 +31,6 @@ class AdController extends Controller
             'ad_type' => 'required|string|in:image,video',
         ]);
         Ad::create($data);
-
         return redirect()
             ->route('admin.ads.index')
             ->with('success', 'Ad created successfully.');
@@ -56,7 +55,6 @@ class AdController extends Controller
         ]);
 
         $ad = Ad::findOrFail($id);
-
         $ad->update($data);
 
         return redirect()
