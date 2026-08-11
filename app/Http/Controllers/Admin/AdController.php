@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ad;
+use App\Models\Mcity;
+
 
 class AdController extends Controller
 {
@@ -15,13 +17,15 @@ class AdController extends Controller
     }
     public function create()
     {
-        return view('admin.ads.create');
+        $cities = Mcity::all();
+        return view('admin.ads.create', compact('cities'));
     }
+
     public function store(Request $request)
     {
         $data = $request->validate([
             'partner_id' => 'required|integer',
-            'city_id' => 'required|integer',
+            'city_id' => 'required|integer|exists:mcity,cityId',
             'creative_link' => 'required|url',
             'ad_link' => 'required|url',
             'ad_title' => 'required|string|max:255',
@@ -38,13 +42,14 @@ class AdController extends Controller
     public function edit($id)
     {
         $ad = Ad::findOrFail($id);
-        return view('admin.ads.edit', compact('ad'));
+        $cities = Mcity::all();
+        return view('admin.ads.edit', compact('ad', 'cities'));
     }
     public function update(Request $request, $id)
     {
         $data = $request->validate([
             'partner_id' => 'required|integer',
-            'city_id' => 'required|integer',
+            'city_id' => 'required|integer|exists:mcity,cityId',
             'creative_link' => 'required|url',
             'ad_link' => 'required|url',
             'ad_title' => 'required|string|max:255',

@@ -53,11 +53,20 @@
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="city_id" class="form-label">
-                                City ID
-                            </label>
-                            <input type="number" class="form-control @error('city_id') is-invalid @enderror"
-                                id="city_id" name="city_id" value="{{ old('city_id', $ad->city_id) }}">
+                            <label for="city_id" class="form-label"> Select City </label>
+                            <select class="form-select @error('city_id') is-invalid @enderror"
+                                id="city_id" name="city_id">
+                                <option value="">Select City</option>
+                                @foreach ($cities as $city)
+                                <!-- <option value="{{ $city->cityId }}" {{ old('city_id') == $city->cityId ? 'selected' : '' }}>
+                                    {{ $city->citynameInEnglish }}
+                                </option> -->
+                                <option value="{{ $city->cityId }}"
+                                    {{ old('city_id', $ad->city_id) == $city->cityId ? 'selected' : '' }}>
+                                    {{ $city->citynameInEnglish }}
+                                </option>
+                                @endforeach
+                            </select>
                             @error('city_id')
                             <div class="invalid-feedback"> {{ $message }} </div>
                             @enderror
@@ -66,7 +75,6 @@
                             <label for="creative_link" class="form-label">
                                 Creative Link
                             </label>
-
                             {{-- Current Creative Preview --}}
                             @if ($ad->creative_link)
                             <div class="mb-3">
@@ -83,7 +91,6 @@
                                 @endif
                             </div>
                             @endif
-
                             {{-- Creative URL --}}
                             <input
                                 type="url" class="form-control @error('creative_link') is-invalid @enderror" id="creative_link"
@@ -190,6 +197,10 @@
                                 class="btn btn-primary">
                                 Update Advertisement
                             </button>
+                            <a href="{{ route('admin.ads.chitti-maps', $ad->id) }}"
+                                class="btn btn-success">
+                                Manage Chittis
+                            </a>
                         </div>
                     </form>
                 </div>

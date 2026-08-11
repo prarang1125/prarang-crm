@@ -48,16 +48,24 @@
                             <div class="invalid-feedback"> {{ $message }} </div>
                             @enderror
                         </div>
+
+                       
                         <div class="mb-3">
-                            <label for="city_id" class="form-label"> City ID </label>
-                            <input type="number" class="form-control @error('city_id') is-invalid @enderror"
-                                id="city_id" name="city_id" value="{{ old('city_id') }}"
-                                placeholder="Enter City ID">
+                            <label for="city_id" class="form-label"> Select City </label>
+                            <select class="form-select @error('city_id') is-invalid @enderror"
+                                id="city_id" name="city_id">
+                                <option value="">Select City</option>
+
+                                @foreach ($cities as $city)
+                                <option value="{{ $city->cityId }}" {{ old('city_id') == $city->cityId ? 'selected' : '' }}>
+                                    {{ $city->citynameInEnglish }}
+                                </option>
+                                @endforeach
+                            </select>
                             @error('city_id')
                             <div class="invalid-feedback"> {{ $message }} </div>
                             @enderror
                         </div>
-
                         <div class="mb-3">
                             <label for="creative_link" class="form-label">
                                 Creative Link
