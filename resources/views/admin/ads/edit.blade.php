@@ -38,8 +38,7 @@
                         </ul>
                     </div>
                     @endif
-                    <form action="{{ route('admin.ads.update', $ad->id) }}"
-                        method="POST">
+                    <form action="{{ route('admin.ads.update', $ad->id) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="mb-3">
@@ -54,16 +53,15 @@
                         </div>
                         <div class="mb-3">
                             <label for="city_id" class="form-label"> Select City </label>
-                            <select class="form-select @error('city_id') is-invalid @enderror"
-                                id="city_id" name="city_id">
+                            <select class="form-select @error('city_id') is-invalid @enderror" id="city_id"
+                                name="city_id">
                                 <option value="">Select City</option>
                                 @foreach ($cities as $city)
-                                <!-- <option value="{{ $city->cityId }}" {{ old('city_id') == $city->cityId ? 'selected' : '' }}>
-                                    {{ $city->citynameInEnglish }}
-                                </option> -->
-                                <option value="{{ $city->cityId }}"
-                                    {{ old('city_id', $ad->city_id) == $city->cityId ? 'selected' : '' }}>
-                                    {{ $city->citynameInEnglish }}
+                                <option value="{{ $city->geographycode }}" {{ old('city_id')==$city->geographycode ?
+                                    'selected'
+                                    : ''
+                                    }}>
+                                    {{ $city->geography }}
                                 </option>
                                 @endforeach
                             </select>
@@ -82,8 +80,7 @@
                                 <img src="{{ $ad->creative_link }}" alt="{{ $ad->ad_title }}"
                                     style=" width: 200px; height: 120px; object-fit: cover; border-radius: 5px; border: 1px solid #ddd; ">
                                 @elseif ($ad->ad_type === 'video')
-                                <a
-                                    href="{{ $ad->creative_link }}" target="_blank" rel="noopener noreferrer"
+                                <a href="{{ $ad->creative_link }}" target="_blank" rel="noopener noreferrer"
                                     class="btn btn-sm btn-outline-primary">
                                     <i class="bx bx-video"></i>
                                     View Current Video
@@ -92,9 +89,9 @@
                             </div>
                             @endif
                             {{-- Creative URL --}}
-                            <input
-                                type="url" class="form-control @error('creative_link') is-invalid @enderror" id="creative_link"
-                                name="creative_link" value="{{ old('creative_link', $ad->creative_link) }}"
+                            <input type="url" class="form-control @error('creative_link') is-invalid @enderror"
+                                id="creative_link" name="creative_link"
+                                value="{{ old('creative_link', $ad->creative_link) }}"
                                 placeholder="https://example.com/ad-image.jpg">
                             @error('creative_link')
                             <div class="invalid-feedback">
@@ -106,8 +103,8 @@
                             <label for="ad_link" class="form-label">
                                 Advertisement Link
                             </label>
-                            <input type="url" class="form-control @error('ad_link') is-invalid @enderror"
-                                id="ad_link" name="ad_link" value="{{ old('ad_link', $ad->ad_link) }}">
+                            <input type="url" class="form-control @error('ad_link') is-invalid @enderror" id="ad_link"
+                                name="ad_link" value="{{ old('ad_link', $ad->ad_link) }}">
                             @error('ad_link')
                             <div class="invalid-feedback"> {{ $message }} </div>
                             @enderror
@@ -136,8 +133,8 @@
                             <label for="cta_text" class="form-label">
                                 CTA Text
                             </label>
-                            <textarea class="form-control @error('cta_text') is-invalid @enderror"
-                                id="cta_text" name="cta_text" rows="4">{{ old('cta_text', $ad->cta_text) }}</textarea>
+                            <textarea class="form-control @error('cta_text') is-invalid @enderror" id="cta_text"
+                                name="cta_text" rows="4">{{ old('cta_text', $ad->cta_text) }}</textarea>
                             @error('cta_text')
                             <div class="invalid-feedback"> {{ $message }} </div>
                             @enderror
@@ -146,15 +143,12 @@
                             <label for="status" class="form-label">
                                 Status
                             </label>
-                            <select class="form-select @error('status') is-invalid @enderror"
-                                id="status" name="status">
+                            <select class="form-select @error('status') is-invalid @enderror" id="status" name="status">
                                 <option value=""> Select Status </option>
-                                <option value="1"
-                                    {{ old('status', $ad->status) == 1 ? 'selected' : '' }}>
+                                <option value="1" {{ old('status', $ad->status) == 1 ? 'selected' : '' }}>
                                     Active
                                 </option>
-                                <option value="0"
-                                    {{ old('status', $ad->status) == 0 ? 'selected' : '' }}>
+                                <option value="0" {{ old('status', $ad->status) == 0 ? 'selected' : '' }}>
                                     Inactive
                                 </option>
                             </select>
@@ -168,17 +162,15 @@
                             <label for="ad_type" class="form-label">
                                 Advertisement Type
                             </label>
-                            <select class="form-select @error('ad_type') is-invalid @enderror"
-                                id="ad_type" name="ad_type">
+                            <select class="form-select @error('ad_type') is-invalid @enderror" id="ad_type"
+                                name="ad_type">
                                 <option value="">
                                     Select Ad Type
                                 </option>
-                                <option value="image"
-                                    {{ old('ad_type', $ad->ad_type) == 'image' ? 'selected' : '' }}>
+                                <option value="image" {{ old('ad_type', $ad->ad_type) == 'image' ? 'selected' : '' }}>
                                     Image
                                 </option>
-                                <option value="video"
-                                    {{ old('ad_type', $ad->ad_type) == 'video' ? 'selected' : '' }}>
+                                <option value="video" {{ old('ad_type', $ad->ad_type) == 'video' ? 'selected' : '' }}>
                                     Video
                                 </option>
                             </select>
@@ -189,16 +181,13 @@
                             @enderror
                         </div>
                         <div class="mt-4">
-                            <a href="{{ route('admin.ads.index') }}"
-                                class="btn btn-secondary">
+                            <a href="{{ route('admin.ads.index') }}" class="btn btn-secondary">
                                 Cancel
                             </a>
-                            <button type="submit"
-                                class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary">
                                 Update Advertisement
                             </button>
-                            <a href="{{ route('admin.ads.chitti-maps', $ad->id) }}"
-                                class="btn btn-success">
+                            <a href="{{ route('admin.ads.chitti-maps', $ad->id) }}" class="btn btn-success">
                                 Manage Chittis
                             </a>
                         </div>

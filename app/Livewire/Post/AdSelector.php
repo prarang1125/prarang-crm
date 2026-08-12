@@ -79,13 +79,13 @@ class AdSelector extends Component
         $this->validate();
 
         $hasAtLeastOne = collect($this->selectedAds)
-            ->filter(fn ($v) => !empty($v))
+            ->filter(fn($v) => !empty($v))
             ->isNotEmpty();
 
-        if (! $hasAtLeastOne) {
-            $this->addError('selectedAds', 'Kam se kam 1 ad select karna zaroori hai.');
-            return;
-        }
+        // if (! $hasAtLeastOne) {
+        //     $this->addError('selectedAds', 'Kam se kam 1 ad select karna zaroori hai.');
+        //     return;
+        // }
 
         foreach ($this->selectedAds as $adCode => $adId) {
             if (empty($adId)) {
