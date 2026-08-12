@@ -23,18 +23,19 @@
             </li>
             <li> <a href="{{ url('/admin/maker/maker-listing') }}"><i class="bx bx-right-arrow-alt"></i>Maker</a>
             </li>
-            <li> <a href="{{ url('/admin/checker/checker-listing') }}"><i class="bx bx-right-arrow-alt"></i>Checker</a>
+            <li> <a href="{{ url('/admin/checker/checker-listing') }}"><i
+                        class="bx bx-right-arrow-alt"></i>Checker</a>
             </li>
             <li> <a href="{{ url('/admin/uploader/uploader-listing') }}"><i
                         class="bx bx-right-arrow-alt"></i>Uploader</a>
             </li>
 
-            <!-- ad upload button -->
+            <!-- Sudhanshu -->
             <li>
                 <a href="{{ url('ads/ad-listing') }}">
                     <i class="bx bx-right-arrow-alt"></i>Ads Uploads</a>
             </li>
-            <!-- ad upload button -->
+            <!-- Sudhanshu -->
 
 
 
@@ -101,8 +102,8 @@
     </li>
     <li> <a href="{{ url('/admin/post/post-listing') }}"><i class="bx bx-right-arrow-alt"></i>Post</a>
     </li>
-    <li> <a href="{{ url('/admin/deleted-post/deleted-post-listing') }}"><i class="bx bx-right-arrow-alt"></i>Deleted
-            Post</a>
+    <li> <a href="{{ url('/admin/deleted-post/deleted-post-listing') }}"><i
+                class="bx bx-right-arrow-alt"></i>Deleted Post</a>
     </li>
 </ul>
 </li>
@@ -125,14 +126,13 @@
         <li> <a href="{{ url('/accounts/checker/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Checker</a>
             @endif
             @if (Auth::user()->roleId == 4 || Auth::user()->roleId == 13 || Auth::user()->roleId == 14)
-        <li> <a href="{{ url('/accounts/uploader/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Uploader</a>
-        </li>
+        <li> <a href="{{ url('/accounts/uploader/dashboard') }}"><i class="bx bx-right-arrow-alt"></i>Uploader</a></li>
         @endif
-        @if (Auth::user()->roleId == 6)
+        @if (Auth::user()->roleId == 6 )
         <li> <a href="{{ url('/accounts/postanalyticsmaker/acc-post-analytics-maker-city-listing') }}"><i
                     class="bx bx-right-arrow-alt"></i>Analytics Maker</a>
             @endif
-            @if (Auth::user()->roleId == 7)
+            @if (Auth::user()->roleId == 7 )
         <li> <a href="{{ url('/accounts/postanalyticschecker/acc-post-analytics-checker-city-listing') }}"><i
                     class="bx bx-right-arrow-alt"></i>Analytics Checker</a>
             @endif

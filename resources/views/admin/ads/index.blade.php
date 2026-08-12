@@ -71,7 +71,6 @@
                             <td> {{ $ad->id }}</td>
                             <td>{{ $ad->partner_id }}</td>
                             <td>{{ $ad->city_id }} </td>
-                            
                             <td>
                                 @if ($ad->creative_link)
                                 @if ($ad->ad_type === 'image')
