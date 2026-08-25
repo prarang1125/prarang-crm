@@ -20,7 +20,7 @@ class ImageUploadService
             }
 
             $filename = $prefix . '_' . date('F_Y') . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $disk = env('FILESYSTEM_DISK', 'local');
+           $disk = config('filesystems.default');
 
             if ($disk === 's3') {
 
