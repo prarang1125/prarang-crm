@@ -5,11 +5,11 @@
     <!--start page wrapper -->
     <div class="page-content">
         <!--breadcrumb-->
-        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-            <div class="breadcrumb-title pe-3">Admin</div>
+        <div class="d-sm-flex align-items-center mb-3 page-breadcrumb d-none">
+            <div class="pe-3 breadcrumb-title">Admin</div>
             <div class="ps-3">
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-0 p-0">
+                    <ol class="mb-0 p-0 breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ url('admin/uploader/uploader-listing') }}"><i
                                     class="bx bx-user"></i></a>
                         </li>
@@ -21,10 +21,10 @@
         <!--end breadcrumb-->
         <div class="row">
             <div class="card" style="padding-top: 15px;">
-                <div class="col-xl-9 mx-auto w-100">
+                <div class="mx-auto w-100 col-xl-9">
                     <!-- Success Message -->
                     @if (session('success'))
-                        <div class="alert alert-success mt-3">
+                        <div class="mt-3 alert alert-success">
                             {{ session('success') }}
                         </div>
                     @endif
@@ -38,7 +38,7 @@
                         </div>
                     @endif
 
-                    <h6 class="mb-0 text-uppercase text-primary">Uploader Edit</h6>
+                    <h6 class="mb-0 text-primary text-uppercase">Uploader Edit</h6>
                     <hr />
                     <form action="{{ route('admin.uploader-update', $chitti->chittiId) }}" method="POST"
                         enctype="multipart/form-data">
@@ -75,14 +75,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-3">
+                        <div class="mt-3 row">
                             <div class="col-md-12">
                                 <label for="makerImage" class="form-label">Video Link (Only youtube)</label>
                                 <input type="text" class="form-control" name="Videourl" />
                             </div>
                         </div>
                         {{-- image upload --}}
-                        <div class="row mt-3">
+                        <div class="mt-3 row">
                             <div class="col-md-12">
                                 <label for="makerImage" class="form-label">Upload Image</label>
                                 <input type="file" class="form-control @error('makerImage') is-invalid @enderror"
@@ -103,7 +103,7 @@
                         {{-- geography and area code end --}}
 
                         {{-- title and subtitle code start --}}
-                        <div class="row mt-3">
+                        <div class="mt-3 row">
                             <div class="col-md-6">
                                 <label for="title" class="form-label">Title</label>
                                 <input type="text" class="form-control  @error('title') is-invalid @enderror"
@@ -125,7 +125,7 @@
                         {{-- title and subtitle code end --}}
 
                         {{-- Select Writer Emotion start --}}
-                        <div class="row mt-3">
+                        <div class="mt-3 row">
                             <div class="col-md-6">
                                 <label for="writer" class="form-label">Select Writer Emotion (select one):</label>
                                 <select class="form-control" id="writercolor" name="writercolor">
@@ -192,12 +192,12 @@
 
                         {{-- above city or about city code start --}}
                         <div class="row">
-                            <div class="row align-items-center">
-                                <div class="col-md-4 mt-2">
+                            <div class="align-items-center row">
+                                <div class="mt-2 col-md-4">
                                     <label class="form-label">Select</label>
                                 </div>
                                 <div class="col-md-8 forcity">
-                                    <div class="form-check me-3">
+                                    <div class="me-3 form-check">
                                         <input class="form-check-input @error('forTheCity') is-invalid @enderror"
                                             type="radio" name="forTheCity" id="forTheCityYes" value="1"
                                             {{ old('forTheCity', $facityValue) == '1' ? 'checked' : '' }}>
@@ -233,7 +233,7 @@
                         </div>
                 </div>
                 {{-- nature and culture code start --}}
-                <div class="row mt-3">
+                <div class="mt-3 row">
                     <div class="col-sm-2">
                         <div class="form-check">
                             <input class="form-check-input @error('isCultureNature') is-invalid @enderror"
@@ -305,7 +305,7 @@
                                 @foreach ($timelines as $timeline)
                                     <div class="col-md-4">
                                         <div class="card">
-                                            <div class="card-body cardbodselect mt-3"
+                                            <div class="mt-3 card-body cardbodselect"
                                                 style="background-color: #ff0006; color: white;">
                                                 <div class="d-flex align-items-center">
                                                     <input type="radio" name="tagId" value="{{ $timeline->tagId }}"
@@ -314,7 +314,7 @@
                                                         class="me-2">
                                                     <label for="timeline{{ $timeline->id }}"
                                                         class="mb-0">{{ $timeline->tagInEnglish }}</label>
-                                                    <i class="lni lni-close ms-auto"></i>
+                                                    <i class="ms-auto lni lni-close"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -334,7 +334,7 @@
                                     <div class="col-md-4">
                                         <div class="card">
 
-                                            <div class="card-body cardbodselect mt-3"
+                                            <div class="mt-3 card-body cardbodselect"
                                                 style="background-color: #ffff18; color: #282828;">
                                                 <div class="d-flex align-items-center">
                                                     <input type="radio" name="tagId" value="{{ $sense->tagId }}"
@@ -342,7 +342,7 @@
                                                         id="sense{{ $sense->id }}" class="me-2">
                                                     <label for="sense{{ $sense->id }}"
                                                         class="mb-0">{{ $sense->tagInEnglish }}</label>
-                                                    <i class="lni lni-close ms-auto"></i>
+                                                    <i class="ms-auto lni lni-close"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -361,7 +361,7 @@
                                 @foreach ($manInventions as $invention)
                                     <div class="col-md-4">
                                         <div class="card">
-                                            <div class="card-body cardbodselect mt-3"
+                                            <div class="mt-3 card-body cardbodselect"
                                                 style="background-color: #1919d9; color: white;">
                                                 <div class="d-flex align-items-center">
                                                     <input type="radio" name="tagId" value="{{ $invention->tagId }}"
@@ -370,7 +370,7 @@
                                                         class="me-2">
                                                     <label for="invention{{ $invention->id }}"
                                                         class="mb-0">{{ $invention->tagInEnglish }}</label>
-                                                    <i class="lni lni-close ms-auto"></i>
+                                                    <i class="ms-auto lni lni-close"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -389,7 +389,7 @@
                                 @foreach ($geographys as $geography)
                                     <div class="col-md-4">
                                         <div class="card">
-                                            <div class="card-body cardbodselect mt-3"
+                                            <div class="mt-3 card-body cardbodselect"
                                                 style="background-color: #faff98; color: #282828;">
                                                 <div class="d-flex align-items-center">
                                                     <input type="radio" name="tagId" value="{{ $geography->tagId }}"
@@ -398,7 +398,7 @@
                                                         class="me-2">
                                                     <label for="geography{{ $geography->id }}"
                                                         class="mb-0">{{ $geography->tagInEnglish }}</label>
-                                                    <i class="lni lni-close ms-auto"></i>
+                                                    <i class="ms-auto lni lni-close"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -417,7 +417,7 @@
                                 @foreach ($faunas as $fauna)
                                     <div class="col-md-4">
                                         <div class="card">
-                                            <div class="card-body cardbodselect mt-3"
+                                            <div class="mt-3 card-body cardbodselect"
                                                 style="background-color: #c8ff00; color: #282828;">
                                                 <div class="d-flex align-items-center">
                                                     <input type="radio" name="tagId" value="{{ $fauna->tagId }}"
@@ -426,7 +426,7 @@
                                                         class="me-2">
                                                     <label for="fauna{{ $fauna->id }}"
                                                         class="mb-0">{{ $fauna->tagInEnglish }}</label>
-                                                    <i class="lni lni-close ms-auto"></i>
+                                                    <i class="ms-auto lni lni-close"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -444,7 +444,7 @@
                             <div class="row">
                                 @foreach ($floras as $flora)
                                     <div class="col-md-4">
-                                        <div class="card-body cardbodselect mt-3"
+                                        <div class="mt-3 card-body cardbodselect"
                                             style="background-color: #339933; color: #fff;">
                                             <div class="d-flex align-items-center">
                                                 <input type="radio" name="tagId" value="{{ $flora->tagId }}"
@@ -453,7 +453,7 @@
                                                     class="me-2">
                                                 <label for="flora{{ $flora->id }}"
                                                     class="mb-0">{{ $flora->tagInEnglish }}</label>
-                                                <i class="lni lni-close ms-auto"></i>
+                                                <i class="ms-auto lni lni-close"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -465,7 +465,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer mt-3">
+                <div class="mt-3 modal-footer">
+                    @livewire('post.ad-selector',['chittiId'=>$chitti->chittiId])
+
                     @if ($chitti->finalStatus === 'approved')
                         <p>Published at {{ $chitti->dateOfApprove }}</p>
                     @endif

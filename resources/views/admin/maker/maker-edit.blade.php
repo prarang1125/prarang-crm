@@ -34,7 +34,7 @@
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        @livewire('post.new-maker',['id'=>$chitti->chittiId])
+                        @livewire('post.new-maker', ['id' => $chitti->chittiId])
                         <br><br>
                         {{-- image preview and image thumbnail and content section --}}
                         <div class="row">
@@ -68,7 +68,7 @@
 
                         {{-- image upload --}}
                         <div class="row mt-3">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <label for="makerImage" class="form-label">Upload Image</label>
                                 <input type="file" class="form-control @error('makerImage') is-invalid @enderror"
                                     id="makerImage" name="makerImage" onchange="previewImage()">
@@ -81,7 +81,17 @@
                                 <p>No image uploaded</p>
                             @endif --}}
                             </div>
+
+                            <div class="col-md-6" wire:ignore>
+                                <label class="form-label">Related Re Shared Post </label>
+                                <select id="post_search" name="re_upload_chittid" class="form-select"
+                                    style="width:100%"></select>
+                            </div>
+
                         </div>
+
+
+
 
                         @livewire('post.geography-selector', ['geography' => $chitti->geographyId, 'c2rselect' => $chitti->cityId])
 
@@ -481,4 +491,13 @@
             // Get all card-body cardbodselect elements end
         });
     </script>
+
+    <script>
+        $(document).ready(function() {
+            initPostSelect2('#post_search', "{{ $chitti->re_upload_chittid }}");
+        });
+    </script>
+
+
+
 @endsection

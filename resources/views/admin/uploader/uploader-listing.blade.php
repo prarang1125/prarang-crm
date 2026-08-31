@@ -54,6 +54,7 @@
                                     <th scope="col" class="">Geography</th>
                                     <th scope="col" class="">Area</th>
                                     <th scope="col" class=""></th>
+                                    <th scope="col"> </th>
                                     <th scope="col" class="">Action</th>
                                 </tr>
                             </thead>
@@ -83,12 +84,24 @@
                                         <td>
                                             {{ $chitti->geography }}
                                         </td>
+                                        <td>
+                                            <i 
+                                            class="bx bx-copy fs-5" 
+                                            data-url="https://prarang.in/00-0{{$chitti->chittiId }}"
+                                            onclick="
+                                                navigator.clipboard.writeText(this.getAttribute('data-url'));
+
+                                                this.classList.add('text-success');
+                                            "
+                                            style="cursor: pointer;"
+                                         ></i>                                         
+                                        </td>
                                         @if ($chitti->finalStatus == 'approved')
                                             <td><i class="bx bx-check-circle text-success fs-5"></i></td>
                                         @else
                                             <td><i class="bx bx-info-circle text-warning fs-5"></i></td>
                                         @endif
-
+                                        
 
                                         <td class="">
                                             <a href="{{ route('admin.uploader-edit', $chitti->chittiId) }}"

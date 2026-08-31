@@ -81,13 +81,15 @@ function SimpleUploadAdapterPlugin(editor) {
     ClassicEditor
     .create(document.querySelector('#editor'), {
         extraPlugins: [SimpleUploadAdapterPlugin], // Add your custom adapter
-        toolbar: [
+         toolbar: [
             'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', '|',
-            'fontSize', 'fontColor', 'fontBackgroundColor', '|',
-            'link', 'bulletedList', 'numberedList', 'alignment', '|',
-            'imageUpload', 'mediaEmbed', 'insertTable', '|',
-            'undo', 'redo', '|', 'fullscreen'
+            'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
+            'highlight', 'alignment', 'indent', 'outdent', '|',
+            'link', 'bulletedList', 'numberedList', '|',
+            'imageUpload', 'mediaEmbed', 'insertTable', 'blockQuote', '|',
+            'code', 'codeBlock', '|', 'undo', 'redo', '|', 'fullscreen'
         ],
+       // removePlugins: ['ResizeObserver'],
         fontSize: {
             options: [
                 'tiny',
@@ -96,6 +98,9 @@ function SimpleUploadAdapterPlugin(editor) {
                 'big',
                 'huge'
             ]
+        },
+	   fontFamily: {
+            options: ['default', 'Arial', 'Courier New', 'Georgia', 'Times New Roman', 'Verdana']
         },
         fontColor: {
             colors: [
@@ -162,6 +167,13 @@ function SimpleUploadAdapterPlugin(editor) {
                 }
             ]
         },
+	 highlight: {
+            options: [
+                { model: 'yellowMarker', class: 'marker-yellow', title: 'Yellow Marker', color: 'var(--ck-highlight-marker-yellow)', type: 'marker' },
+                { model: 'greenMarker', class: 'marker-green', title: 'Green Marker', color: 'var(--ck-highlight-marker-green)', type: 'marker' },
+                { model: 'redPen', class: 'pen-red', title: 'Red Pen', color: 'var(--ck-highlight-pen-red)', type: 'pen' }
+            ]
+        },
         table: {
             contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
         },
@@ -176,7 +188,7 @@ function SimpleUploadAdapterPlugin(editor) {
 
 
 function calculateTotal() {
-    const fields = ['citySubscribers', 'prarangApplication', 'websiteGd', 'email', 'instagram'];
+    const fields = ['citySubscribers', 'prarangApplication', 'websiteGd', 'email', 'instagram', 'whatsappCount'];
     let total = 0;
 
     fields.forEach(field => {

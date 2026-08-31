@@ -11,5 +11,6 @@ class OurTeam extends Model
         'display_name',
         'role',
         'linkedin_link',
-        'userId'];
+        'userId'
+    ];
 }
