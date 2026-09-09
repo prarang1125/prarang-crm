@@ -37,7 +37,7 @@
             </li>
               <!-- Sudhanshu -->
              <li>
-                <a href="{{ url('admin/portal_ads') }}">
+                <a href="{{ url('admin/portal-ads') }}">
                     <i class="bx-right-arrow-alt bx"></i>Portal Ads</a>
             </li>
           
