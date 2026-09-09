@@ -28,8 +28,8 @@ use App\Http\Controllers\admin\UserCityController;
 use App\Http\Controllers\admin\UserCountryController;
 use App\Livewire\Localization\Portal;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AdController;
-use App\Http\Controllers\Admin\AdChittiMapController;
+use App\Http\Controllers\admin\AdController;
+use App\Http\Controllers\admin\AdChittiMapController;
 use App\Http\Controllers\PortalAdsController;
 
 Route::group(['prefix' => 'admin'], function () {
