@@ -20,8 +20,8 @@ class LanguageScriptController extends Controller
             $query->where(function ($q) use ($keywords) {
                 foreach ($keywords as $keyword) {
                     $q->orWhere('language', 'LIKE', "%{$keyword}%")
-                    ->orWhere('languageInUnicode', 'LIKE', "%{$keyword}%")
-                    ->orWhere('languageUnicode', 'LIKE', "%{$keyword}%");
+                        ->orWhere('languageInUnicode', 'LIKE', "%{$keyword}%")
+                        ->orWhere('languageUnicode', 'LIKE', "%{$keyword}%");
                 }
             });
         }
@@ -47,8 +47,7 @@ class LanguageScriptController extends Controller
             'languageUnicode' => 'required|string|max:255',
         ]);
 
-        if($validator->passes())
-        {
+        if ($validator->passes()) {
             $currentDateTime = getUserCurrentTime();
             $languageScript = new Mlanguagescript();
             $languageScript->language = $request->language;
@@ -59,7 +58,7 @@ class LanguageScriptController extends Controller
             $languageScript->created_by = Auth::guard('admin')->user()->userId;
             $languageScript->save();
             return redirect()->route('admin.languagescript-listing');
-        }else{
+        } else {
             return redirect()->route('admin.languagescript-register')
                 ->withErrors($validator);
         }
@@ -86,7 +85,7 @@ class LanguageScriptController extends Controller
     public function languagescriptEdit($id)
     {
         $languagescript = Mlanguagescript::findOrFail($id);
-        return view('admin.languagescript.languagescript-edit' , compact('languagescript'));
+        return view('admin.languagescript.languagescript-edit', compact('languagescript'));
     }
 
     #this method is use for update language script
@@ -118,5 +117,4 @@ class LanguageScriptController extends Controller
                 ->withErrors($validator);
         }
     }
-
 }

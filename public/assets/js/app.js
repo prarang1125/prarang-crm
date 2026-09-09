@@ -114,3 +114,39 @@ $(function() {
       $('html').attr('class', 'color-sidebar sidebarcolor8');
     }
 });
+
+
+window.initPostSelect2 = function (selector, selectedId = null) {
+
+    if (!$(selector).length) return;
+
+    $(selector).select2({
+        placeholder: 'Search post title...',
+        minimumInputLength: 1,
+        allowClear: true,
+        ajax: {
+            url: window.POST_SEARCH_URL,
+            dataType: 'json',
+            delay: 300,
+            data: function (params) {
+                return { search: params.term };
+            },
+            processResults: function (data) {
+                return { results: data };
+            }
+        }
+    });
+
+    if (selectedId) {
+        $.get(window.POST_SEARCH_URL, { search: selectedId }, function (data) {
+            if (data && data.length) {
+                const option = new Option(data[0].text, data[0].id, true, true);
+                $(selector).append(option).trigger('change');
+            }
+        });
+    }
+};
+
+
+
+

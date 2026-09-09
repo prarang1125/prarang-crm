@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Portal extends Model
 {
     use HasFactory, SoftDeletes;
@@ -26,6 +27,11 @@ class Portal extends Model
         'local_lang',
         'slug',
         'footer_scripts',
-        'header_scripts'
+        'header_scripts',
+        'state',
+        'list_order',
+        'viewership',
+        'books',
+        'links',
     ];
 }

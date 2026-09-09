@@ -2,15 +2,17 @@
 
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\AdminLoginController;
+use App\Http\Controllers\admin\BilateralPortalController;
 use App\Http\Controllers\admin\ChekerController;
 use App\Http\Controllers\admin\CKEditorController;
 use App\Http\Controllers\admin\CountryController;
+use App\Http\Controllers\admin\CountryPortalController;
 use App\Http\Controllers\admin\DeletedPostController;
 use App\Http\Controllers\admin\LanguageScriptController;
 use App\Http\Controllers\admin\LiveCityController;
 use App\Http\Controllers\admin\MakerController;
 use App\Http\Controllers\admin\MisReportController;
-use App\Http\Controllers\Admin\OurTeamController;
+use App\Http\Controllers\admin\OurTeamController;
 use App\Http\Controllers\admin\PortalController;
 use App\Http\Controllers\admin\PostAnalyticsCheckerController;
 use App\Http\Controllers\admin\PostAnalyticsController;
@@ -124,6 +126,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/maker/maker-edit/{id}', [MakerController::class, 'makerEdit'])->name('admin.maker-edit');
         Route::put('/maker/maker-update/{id}', [MakerController::class, 'makerUpdate'])->name('admin.maker-update');
         Route::get('/maker/maker-delete/{id}', [MakerController::class, 'makerdelete'])->name('admin.maker-delete');
+        Route::get('/maker/search-posts', [MakerController::class, 'search'])->name('admin.search.posts');
+
 
         Route::get('/checker/checker-listing', [ChekerController::class, 'indexMain'])->name('admin.checker-listing');
 
@@ -193,5 +197,32 @@ Route::group(['prefix' => 'admin'], function () {
         Route::resource('portal', PortalController::class);
         Route::get('portal-localization', Portal::class)->name('portal.localization');
         Route::resource('our-team', OurTeamController::class);
+        // Bilateral Portal routes
+        Route::resource('bilateral-portals', BilateralPortalController::class)->names([
+            'index' => 'admin.bilateral-portals.index',
+            'create' => 'admin.bilateral-portals.create',
+            'store' => 'admin.bilateral-portals.store',
+            'show' => 'admin.bilateral-portals.show',
+            'edit' => 'admin.bilateral-portals.edit',
+            'update' => 'admin.bilateral-portals.update',
+            'destroy' => 'admin.bilateral-portals.destroy',
+        ]);
+        Route::get('bilateral-portals/country/{country_id}', [BilateralPortalController::class, 'getByCountry'])->name('admin.bilateral-portals.by-country');
+        Route::delete('bilateral-portals/bulk-delete', [BilateralPortalController::class, 'bulkDelete'])->name('admin.bilateral-portals.bulk-delete');
+
+        // Country Portal routes
+        Route::resource('country-portals', CountryPortalController::class)->names([
+            'index' => 'admin.country-portals.index',
+            'create' => 'admin.country-portals.create',
+            'store' => 'admin.country-portals.store',
+            'show' => 'admin.country-portals.show',
+            'edit' => 'admin.country-portals.edit',
+            'update' => 'admin.country-portals.update',
+            'destroy' => 'admin.country-portals.destroy',
+        ]);
+        Route::delete('country-portals/bulk-delete', [CountryPortalController::class, 'bulkDelete'])->name('admin.country-portals.bulk-delete');
+
+        // API endpoint for country dropdown
+        Route::get('api/countries-dropdown', [CountryController::class, 'getCountriesForDropdown'])->name('admin.api.countries-dropdown');
     });
 });

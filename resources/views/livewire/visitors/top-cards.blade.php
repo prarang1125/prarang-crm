@@ -132,16 +132,16 @@
             <div class="post-date mb-2">
                 <div>Post Date: &nbsp; &nbsp;</div>
                 <div>
-                    <input id="from" wire:model="postStartDate" wire:change="changePostData"  class="form-control datetimepicker" type="text"
-                        placeholder="DD-MM-YYYY hh:mm A">
+                    <input id="from" wire:model="postStartDate" wire:change="changePostData"
+                        class="form-control datetimepicker" type="text" placeholder="DD-MM-YYYY hh:mm A">
                     @error('startDate')
                         <small class="text-danger ps-1">{{ $message }}</small>
                     @enderror
                 </div>
                 <div class="ps-2 pe-2">To</div>
                 <div>
-                    <input id="to" wire:model="postEndDate" wire:change="changePostData" class="form-control datetimepicker" type="text"
-                        placeholder="DD-MM-YYYY hh:mm A">
+                    <input id="to" wire:model="postEndDate" wire:change="changePostData"
+                        class="form-control datetimepicker" type="text" placeholder="DD-MM-YYYY hh:mm A">
                     @error('startDate')
                         <small class="text-danger ps-1">{{ $message }}</small>
                     @enderror
@@ -238,7 +238,7 @@
                                             $totalh = 0;
                                             $totalv = 0;
                                         @endphp
-                                        @foreach (['facebook' => 'bxl-facebook', 'google' => 'bxl-google', 'prarang' => 'bx-user', 'others' => 'bxs-circle'] as $key => $icon)
+                                        @foreach (['facebook' => 'bxl-facebook', 'google' => 'bxl-google', 'whatsapp' => 'bxl-whatsapp', 'email' => 'bx-envelope', 'prarang' => 'bx-user', 'meerutrang' => 'bxs-circle', 'others' => 'bxs-circle'] as $key => $icon)
                                             @isset($postReffData[$key][1])
                                                 @php
                                                     $totalh = $totalh + $postReffData[$key][1];
@@ -253,7 +253,7 @@
                                         </tr>
  @endforeach
                                             <tr>
-                                                <th class="ps-4">Total</th>
+                                                <th class=" ps-4">Total</th>
                                                 <th>{{ $totalh }}</th>
                                                 <th>{{ $totalv }}</th>
                                             </tr>
@@ -279,7 +279,7 @@
                                     </tbody>
                                 </table>
                             </div> <br>
-                            <div class="table-responsive" wire:loading.class="loading-effect">
+                            <div class=" table-responsive" wire:loading.class="loading-effect">
                                 <table class="table align-items-center table-sm mb-0">
                                     <tbody>
                                         <tr>
@@ -290,7 +290,8 @@
                                         @foreach (['scroll' => 'bx-mobile', 'duration' => 'bx-time', 'mobile' => 'bx-phone', 'tablet' => 'bx-tab', 'desktop' => 'bx-desktop'] as $key => $icon)
                                             <tr>
                                                 <td><i class="bx {{ $icon }} me-2"></i>
-                                                    {{ ucfirst($key) }}</td>
+                                                    {{ ucfirst($key) }}
+                                                </td>
                                                 <td>{{ number_format($scroll->{$key} ?? 0) }}{{ $key == 'scroll' ? '% (agv)' : '' }}{{ $key == 'duration' ? ' min' : '' }}
                                                 </td>
                                             </tr>

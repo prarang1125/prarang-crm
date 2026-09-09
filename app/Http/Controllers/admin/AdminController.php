@@ -90,7 +90,6 @@ class AdminController extends Controller
         $language = $request->query('language');
 
         $query = Muser::with('role');
-
         // Filter by role if provided
         if ($role) {
             $query->whereHas('role', function ($q) use ($role) {
@@ -125,9 +124,9 @@ class AdminController extends Controller
         $roles = Mrole::where('status', 1)->get();
         $languagescripts = Mlanguagescript::where('isActive', 1)->get();
 
-        $geography=VGeography::all();
+        $geography = VGeography::all();
 
-        return view('admin.user-register', compact('roles', 'languagescripts','geography'));
+        return view('admin.user-register', compact('roles', 'languagescripts', 'geography'));
     }
 
     #this method is use for store/save data in db
@@ -156,7 +155,7 @@ class AdminController extends Controller
                 'created_at' => Carbon::now(),
                 'created_by' => Auth::guard('admin')->user()->userId,
                 'isActive' => 1,
-                'geography'=>$request->geographies
+                'geography' => $request->geographies
             ]);
 
             try {
@@ -196,8 +195,8 @@ class AdminController extends Controller
         $user = Muser::findOrFail($id);
         $languagescripts = Mlanguagescript::where('isActive', 1)->get();
         $roles = Mrole::where('status', 1)->get();
-        $geography=VGeography::all();
-        return view('admin.user-edit', compact('user', 'roles', 'languagescripts','geography'));
+        $geography = VGeography::all();
+        return view('admin.user-edit', compact('user', 'roles', 'languagescripts', 'geography'));
     }
 
     #this method is use for update the user data
@@ -231,7 +230,7 @@ class AdminController extends Controller
                 'isActive' => $request->isActive,
                 'updated_at' => $currentDateTime,
                 'updated_by' => Auth::guard('admin')->user()->userId,
-                'geography'=>$request->geographies,
+                'geography' => $request->geographies,
             ];
             // Only update the password if it's not empty
             if (filled(trim($request->password))) {

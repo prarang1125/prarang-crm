@@ -44,7 +44,7 @@
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        @livewire('post.new-maker',['id'=>$chitti->chittiId])
+                        @livewire('post.new-maker', ['id' => $chitti->chittiId])
                         <br><br>
 
                         {{-- image preview and image thumbnail and content section --}}
@@ -83,7 +83,7 @@
                         </div>
                         {{-- image upload --}}
                         <div class="row mt-3">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <label for="makerImage" class="form-label">Upload Image</label>
                                 <input type="file" class="form-control @error('makerImage') is-invalid @enderror"
                                     id="makerImage" name="makerImage" onchange="previewImage()">
@@ -95,6 +95,12 @@
                             @else
                                 <p>No image uploaded</p>
                             @endif --}}
+                            </div>
+
+                            <div class="col-md-6" wire:ignore>
+                                <label class="form-label">Related Re Shared Post </label>
+                                <select id="post_search" name="re_upload_chittid" class="form-select"
+                                    style="width:100%"></select>
                             </div>
                         </div>
 
@@ -140,7 +146,7 @@
 
                                     <!-- Options for all available colors -->
                                     @foreach ($colorOptions as $color)
-                                        <option value="{{ $color->id }}" style="background:{{$color->colorcode}};"
+                                        <option value="{{ $color->id }}" style="background:{{ $color->colorcode }};"
                                             {{ $chitti->writercolor == $color->id ? 'selected' : '' }}>
                                             {{ $color->name }}
                                         </option>
@@ -172,7 +178,7 @@
                                     <!-- Options for all available colors -->
                                     @foreach ($readerOptions as $color)
                                         {{-- @dd($color->id); --}}
-                                        <option value="{{ $color->id }}" style="background:{{$color->colorcode}};"
+                                        <option value="{{ $color->id }}" style="background:{{ $color->colorcode }};"
                                             {{ $chitti->readercolor == $color->colorcode ? 'selected' : '' }}>
                                             {{ $color->name }}
                                         </option>
@@ -473,7 +479,7 @@
                         class="btn btn-primary">Update</button>
 
                     <!-- <button type="submit" name="action" value="sent_uploader_to_checker"
-                                                                                                                                                                                                                                    class="btn btn-primary">Sent To Checker</button> -->
+                                                                                                                                                                                                                                                    class="btn btn-primary">Sent To Checker</button> -->
 
                     <a href="{{ route('admin.uploader-chitti-return-to-checker-region', ['id' => $chitti->chittiId]) }}?uploaderId={{ $chitti->uploaderId }}&City={{ $chitti->areaId }}"
                         class="btn btn-primary">Back to Checker</a>
@@ -619,6 +625,12 @@
                     levelSelect.innerHTML += options.join('');
                 }
             });*/
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            initPostSelect2('#post_search', "{{ $chitti->re_upload_chittid }}");
         });
     </script>
 @endsection

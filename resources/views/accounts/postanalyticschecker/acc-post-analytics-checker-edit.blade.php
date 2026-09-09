@@ -274,7 +274,7 @@
     <script>
         function calculateTotal() {
             const fields = ['citySubscribers', 'prarangApplication', , 'websiteGd', 'email',
-                'instagram'
+                'instagram', 'whatsappCount'
             ];
             let total = 0;
 

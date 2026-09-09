@@ -23,7 +23,7 @@ class SCityController extends Controller
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('citynameInEnglish', 'like', '%' . $searchTerm . '%')
-                ->orWhere('citynameInUnicode', 'like', '%' . $searchTerm . '%');
+                    ->orWhere('citynameInUnicode', 'like', '%' . $searchTerm . '%');
             });
         }
 
@@ -126,7 +126,7 @@ class SCityController extends Controller
     public function SCityEdit($id)
     {
         $s_city = S_Cities::findOrFail($id);
-        return view('admin.scities.scities-edit' , compact('s_city'));
+        return view('admin.scities.scities-edit', compact('s_city'));
     }
 
     #this method is use for update specific data

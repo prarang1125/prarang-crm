@@ -14,7 +14,7 @@ use App\Http\Controllers\{
     VisitorController,
     VisitorLocationController
 };
-use App\Http\Controllers\Admin\OurTeamController;
+use App\Http\Controllers\admin\OurTeamController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\MakerController;
 use App\Http\Controllers\WhatsappApi\WebHook;
@@ -112,23 +112,18 @@ Route::group(['prefix' => 'accounts'], function () {
 
             Route::put('/postanalyticschecker/acc-post-analytics-checker-sendtomaker/sendtomaker/{id}', [AccPostAnalyticsCheckerController::class, 'accPostAnalyticsCheckerSendToMaker'])->name('accounts.acc-post-analytics-checker-sendtomaker');
         });
-
     });
-
 });
 
-require __DIR__.'/admin.php';
+require __DIR__ . '/admin.php';
 
-Route::get('visitor',[VisitorController::class,'index'])->name('visitor');
-Route::get('show-visitor',[VisitorController::class,'showVisitor'])->name('visitor.show');
+Route::get('visitor', [VisitorController::class, 'index'])->name('visitor');
+Route::get('show-visitor', [VisitorController::class, 'showVisitor'])->name('visitor.show');
 Route::get('get-our-teams', [OurTeamController::class, 'getAllTeamsJson']);
-Route::any('visitor-location',[VisitorLocationController::class,'storeVisitorLocation']);
-Route::get('marketing-hit-box',HitBox::class)->name('marketing.hit-box');
-Route::get('subscribers',SubscriberList::class)->name('marketing.hit-box')->name('subscribers');
-Route::get('content/post-listing',PostListing::class)->name('content.post-listing');
-Route::get('content/post/{ids}',[PostListing::class,'getPostData'])->name('content.post-data');
+Route::any('visitor-location', [VisitorLocationController::class, 'storeVisitorLocation']);
+Route::get('marketing-hit-box', HitBox::class)->name('marketing.hit-box');
+Route::get('subscribers', SubscriberList::class)->name('marketing.hit-box')->name('subscribers');
+Route::get('content/post-listing', PostListing::class)->name('content.post-listing');
+Route::get('content/post/{ids}', [PostListing::class, 'getPostData'])->name('content.post-data');
 Route::get('whatsapp-webhook', [WebHook::class, 'index'])->name('whatsapp-webhook');
 // Route::get('sendWhatsAppMessage',[VisitorController::class,'sendWhatsAppMessage'])->name('sendWhatsAppMessage');
-
-
-

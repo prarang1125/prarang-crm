@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
@@ -17,13 +18,13 @@ class RegionController extends Controller
     {
         $search = $request->input('search');
         $regions = Mregion::where('isActive', 1)
-                    ->when($search, function ($query, $search) {
-                        $query->where(function ($q) use ($search) {
-                            $q->where('regionnameInEnglish', 'like', "%{$search}%")
-                            ->orWhere('regionnameInUnicode', 'like', "%{$search}%");
-                        });
-                    })
-                    ->paginate(30);
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('regionnameInEnglish', 'like', "%{$search}%")
+                        ->orWhere('regionnameInUnicode', 'like', "%{$search}%");
+                });
+            })
+            ->paginate(30);
 
         return view("admin.region.region-listing", compact('regions'));
     }
@@ -123,7 +124,7 @@ class RegionController extends Controller
     public function regionEdit($id)
     {
         $region = Mregion::findOrFail($id);
-        return view('admin.region.region-edit' , compact('region'));
+        return view('admin.region.region-edit', compact('region'));
     }
 
     public function regionUpdate(Request $request, $id, ImageUploadService $imageUploadService)

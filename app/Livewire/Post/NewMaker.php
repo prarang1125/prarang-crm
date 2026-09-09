@@ -7,13 +7,13 @@ use Livewire\Component;
 
 class NewMaker extends Component
 {
-    public $intent,$summary,$intent_type;
+    public $intent, $summary, $intent_type;
 
     public function mount($id = null)
     {
 
         if ($id) {
-            $intentDb = Intent::where('chittiId',$id)->first();
+            $intentDb = Intent::where('chittiId', $id)->first();
 
             if ($intentDb) {
                 $this->intent = $intentDb->intent;
@@ -21,7 +21,6 @@ class NewMaker extends Component
                 $this->intent_type = $intentDb->intent_type;
             }
         }
-
     }
 
     public function render()

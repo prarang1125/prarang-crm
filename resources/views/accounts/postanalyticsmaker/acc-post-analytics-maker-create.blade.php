@@ -182,6 +182,19 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="row mt-1">
+                                <div class="col-md-6">
+                                    <label for="whatsappCount" class="form-label">Whatsapp</label>
+                                    <input type="text"
+                                        class="form-control @error('whatsappCount') is-invalid @enderror"
+                                        id="whatsappCount" name="whatsappCount"
+                                        value="{{ old('whatsappCount', $chitti->whatsappCount) }}"
+                                        oninput="calculateTotal()">
+                                    @error('whatsappCount')
+                                        <p class="invalid-feedback">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
 
                             <div class="row mt-1">
                                 <div class="col-md-6">
@@ -282,6 +295,18 @@
                                         id="facebookLinkClick" name="facebookLinkClick"
                                         value="{{ old('facebookLinkClick') }}" oninput="calculateTotal()">
                                     @error('facebookLinkClick')
+                                        <p class="invalid-feedback">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-6">
+                                    <label for="whatsappCount" class="form-label">Whatsapp</label>
+                                    <input type="text"
+                                        class="form-control  @error('whatsappCount') is-invalid @enderror"
+                                        id="whatsappCount" name="whatsappCount"
+                                        value="{{ old('whatsappCount') }}" oninput="calculateTotal()">
+                                    @error('whatsappCount')
                                         <p class="invalid-feedback">{{ $message }}</p>
                                     @enderror
                                 </div>

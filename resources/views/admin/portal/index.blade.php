@@ -28,6 +28,13 @@
                     <h6 class="mb-0 text-uppercase text-primary">Portals</h6>
                     <hr />
                     <div class="">
+                        <div>
+                            <h6 class="small">Filter by Language</h6>
+                            @foreach ($languages as $langs)
+                                <a href="?lang={{ $langs }}" class="btn btn-info btn-sm me-2"
+                                    style="text-transform: uppercase;">{{ $langs }}</a>
+                            @endforeach
+                        </div>
                         <div class="d-flex justify-content-end align-items-end">
                             <a target="_blank" class="btn btn-info btn-sm me-2"
                                 href="{{ route('portal.localization') }}">Portal
@@ -75,7 +82,7 @@
                                 </tbody>
                             </table>
                             <div class="mt-3 text-end">
-                                {{ $portals->links('pagination::bootstrap-4') }}
+                                {{ $portals->links('pagination::bootstrap-5') }}
                             </div>
                         </div>
                     </div>
